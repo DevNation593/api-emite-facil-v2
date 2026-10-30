@@ -102,4 +102,28 @@ describe('censura por clave a cualquier profundidad', () => {
     logger.info(payload, 'x');
     expect(payload).toEqual({ a: { password: 'secreta' }, items: [{ token: 't0k3n' }] });
   });
+
+  it('censura las propiedades propias de un Error, en err y en otras claves', () => {
+    const { logger, lines } = jsonLogger();
+    const failure = () =>
+      Object.assign(new Error('fallo upstream'), {
+        config: { headers: { Authorization: 'Bearer s3cr3t' } },
+      });
+    logger.error({ upstream: failure() }, 'a');
+    logger.error({ err: failure() }, 'b');
+    for (const line of lines) expect(line).not.toContain('s3cr3t');
+    expect(lines[0]).toContain('fallo upstream');
+    const viaErr = JSON.parse(lines[1]!);
+    expect(viaErr.stack_trace).toContain('fallo upstream');
+    expect(viaErr.message).toBe('b');
+  });
+
+  it('un objeto de 1000 niveles no lanza', () => {
+    const { logger, lines } = jsonLogger();
+    const root: Record<string, unknown> = {};
+    let node = root;
+    for (let i = 0; i < 1000; i++) node = (node['n'] = {}) as Record<string, unknown>;
+    expect(() => logger.info(root, 'x')).not.toThrow();
+    expect(lines[0]).toContain('[Truncado]');
+  });
 });

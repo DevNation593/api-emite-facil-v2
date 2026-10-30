@@ -26,17 +26,21 @@ const SENSITIVE_KEYS = new Set(
   ['password', 'p12', 'secret', 'token', 'masterkey', 'authorization', 'cookie', 'x-api-key'],
 );
 
+const MAX_DEPTH = 20;
+const TRUNCATED = '[Truncado]';
+
 /**
  * Censura por nombre de clave a cualquier profundidad (también dentro de
- * arrays). Copia al escribir: el objeto del llamador no se muta y, si no hay
- * nada que censurar, se devuelve la misma referencia. Los ciclos se cortan.
+ * arrays y de las propiedades propias de un Error, p. ej. `config.headers` de
+ * un cliente HTTP). Copia al escribir: el objeto del llamador no se muta y, si
+ * no hay nada que censurar, se devuelve la misma referencia. Los ciclos se
+ * cortan y la profundidad se acota para no desbordar la pila dentro del log.
  */
 function censor(value: unknown, path: Set<object> = new Set()): unknown {
   if (typeof value !== 'object' || value === null) return value;
-  if (value instanceof Error || ArrayBuffer.isView(value) || value instanceof Date) {
-    return value;
-  }
+  if (ArrayBuffer.isView(value) || value instanceof Date) return value;
   if (path.has(value)) return '[Circular]';
+  if (path.size >= MAX_DEPTH) return TRUNCATED;
   path.add(value);
   let copy: Record<string, unknown> | unknown[] | undefined;
   const entries: Array<[string | number, unknown]> = Array.isArray(value)
@@ -53,7 +57,12 @@ function censor(value: unknown, path: Set<object> = new Set()): unknown {
     }
   }
   path.delete(value);
-  return copy ?? value;
+  if (copy === undefined) return value;
+  if (value instanceof Error) {
+    // Un Error censurado pasa a objeto plano conservando lo que el formato necesita.
+    return { ...(copy as Record<string, unknown>), type: value.constructor.name, message: value.message, stack: value.stack };
+  }
+  return copy;
 }
 
 /** Rutas censuradas: nunca deben llegar a un log (restricción global del proyecto). */
