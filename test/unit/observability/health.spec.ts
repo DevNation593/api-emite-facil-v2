@@ -1,4 +1,7 @@
-import { checkHealth, type HealthCheck } from '../../../src/observability/health.js';
+import {
+  checkHealth,
+  type HealthCheck,
+} from '../../../src/observability/health.js';
 
 const ok = (name: string): HealthCheck => ({
   name,
@@ -49,7 +52,9 @@ describe('checkHealth', () => {
       name: 'redis',
       timeoutMs: 50,
       run: () =>
-        new Promise((_, reject) => setTimeout(() => reject(new Error('tarde')), 150)),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('tarde')), 150),
+        ),
     };
     await expect(checkHealth([late])).resolves.toBe('DOWN');
     await new Promise((resolve) => setTimeout(resolve, 200));

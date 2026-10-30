@@ -5,8 +5,15 @@ import type { Redis } from 'ioredis';
 import { APP_CONFIG, type AppConfig } from '../config/app-config.js';
 import { DATABASE, DatabaseModule } from '../database/database.module.js';
 import type { DB } from '../database/schema.js';
-import { RabbitConnection, RabbitModule } from '../infrastructure/rabbit.module.js';
-import { ensureRedisReady, REDIS, RedisModule } from '../infrastructure/redis.module.js';
+import {
+  RabbitConnection,
+  RabbitModule,
+} from '../infrastructure/rabbit.module.js';
+import {
+  ensureRedisReady,
+  REDIS,
+  RedisModule,
+} from '../infrastructure/redis.module.js';
 import { checkHealth, type HealthCheck } from './health.js';
 import { readiness } from './lifecycle.js';
 

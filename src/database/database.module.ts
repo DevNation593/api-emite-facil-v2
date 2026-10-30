@@ -38,6 +38,9 @@ export function createDatabase(config: AppConfig['database']): Kysely<DB> {
     password: config.password,
     max: config.poolSize,
     idleTimeoutMillis: 120_000,
+    // Mismo plazo que la comprobación de health: sin él, un servidor que acepta y no
+    // completa el handshake dejaría cada consulta pendiente para siempre.
+    connectionTimeoutMillis: 2_000,
     ssl: sslOption(config.params['sslmode']),
   });
   if (config.schema !== null) {

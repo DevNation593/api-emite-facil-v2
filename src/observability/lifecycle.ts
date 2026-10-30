@@ -1,6 +1,6 @@
 import type { Server } from 'node:http';
 import net from 'node:net';
-import type { INestApplication } from '@nestjs/common';
+import { Logger, type INestApplication } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
 
 export type ReadinessState = 'UP' | 'OUT_OF_SERVICE';
@@ -26,7 +26,11 @@ export const readiness = {
 let inFlight = 0;
 
 /** Cuenta las peticiones en curso para saber cuándo se ha vaciado el servidor. */
-export function inFlightMiddleware(_req: Request, res: Response, next: NextFunction): void {
+export function inFlightMiddleware(
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
   inFlight++;
   // 'close' se emite siempre al terminar la respuesta, incluso si el cliente se va antes.
   res.once('close', () => {
@@ -36,7 +40,9 @@ export function inFlightMiddleware(_req: Request, res: Response, next: NextFunct
 }
 
 const POLL_MS = 25;
-const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const CLOSE_GRACE_MS = 2_000;
+const sleep = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 /**
  * Cierre ordenado, como el graceful shutdown de Spring: readiness pasa a OUT_OF_SERVICE, el
@@ -60,10 +66,37 @@ export async function gracefulShutdown(
     while (inFlight > 0 && Date.now() < deadline) await sleep(POLL_MS);
     server.closeIdleConnections();
     // Lo que no haya terminado a tiempo se corta, para que el cierre nunca se cuelgue.
-    const timer = setTimeout(() => server.closeAllConnections(), Math.max(0, deadline - Date.now()));
+    const timer = setTimeout(
+      () => server.closeAllConnections(),
+      Math.max(0, deadline - Date.now()),
+    );
     timer.unref();
     await closed;
     clearTimeout(timer);
   }
-  await app.close();
+  await closeBounded(app);
+}
+
+/**
+ * app.close() cierra pool, Redis y RabbitMQ; si alguno se cuelga (p. ej. una base que no
+ * responde), se avisa y se sigue para que main.ts pueda salir.
+ */
+async function closeBounded(app: INestApplication): Promise<void> {
+  let timer: NodeJS.Timeout | undefined;
+  const expired = new Promise<'expired'>((resolve) => {
+    timer = setTimeout(() => resolve('expired'), CLOSE_GRACE_MS);
+  });
+  try {
+    const result = await Promise.race([
+      app.close().then(() => 'closed' as const),
+      expired,
+    ]);
+    if (result === 'expired') {
+      new Logger('Lifecycle').warn(
+        `El cierre de conexiones no terminó en ${CLOSE_GRACE_MS} ms; se continúa`,
+      );
+    }
+  } finally {
+    clearTimeout(timer);
+  }
 }

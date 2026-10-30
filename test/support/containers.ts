@@ -1,8 +1,22 @@
 import path from 'node:path';
-import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
-import { RabbitMQContainer, type StartedRabbitMQContainer } from '@testcontainers/rabbitmq';
-import { RedisContainer, type StartedRedisContainer } from '@testcontainers/redis';
-import { GenericContainer, Network, type StartedNetwork, Wait } from 'testcontainers';
+import {
+  PostgreSqlContainer,
+  type StartedPostgreSqlContainer,
+} from '@testcontainers/postgresql';
+import {
+  RabbitMQContainer,
+  type StartedRabbitMQContainer,
+} from '@testcontainers/rabbitmq';
+import {
+  RedisContainer,
+  type StartedRedisContainer,
+} from '@testcontainers/redis';
+import {
+  GenericContainer,
+  Network,
+  type StartedNetwork,
+  Wait,
+} from 'testcontainers';
 
 // Mismas versiones que infra/docker-compose.yml y que la API Java.
 const POSTGRES_IMAGE = 'postgres:16';
@@ -68,9 +82,18 @@ export async function runFlyway(
     .withBindMounts([
       { source: migrationsDir, target: '/flyway/sql', mode: 'ro' },
       { source: migrateScript, target: '/scripts/migrate.sh', mode: 'ro' },
-      { source: connectionUrlScript, target: '/scripts/connection-url.sh', mode: 'ro' },
+      {
+        source: connectionUrlScript,
+        target: '/scripts/connection-url.sh',
+        mode: 'ro',
+      },
     ])
-    .withEntrypoint(['sh', '-c', 'sh /scripts/migrate.sh "$0"; echo "FLYWAY_EXIT_CODE=$?"', command])
+    .withEntrypoint([
+      'sh',
+      '-c',
+      'sh /scripts/migrate.sh "$0"; echo "FLYWAY_EXIT_CODE=$?"',
+      command,
+    ])
     .withWaitStrategy(Wait.forLogMessage(/FLYWAY_EXIT_CODE=\d+/))
     .withStartupTimeout(120_000)
     .start();
@@ -86,12 +109,16 @@ export async function runFlyway(
   }
 }
 
-export async function migratedDatabase(): Promise<{ databaseUrl: string; stop(): Promise<void> }> {
+export async function migratedDatabase(): Promise<{
+  databaseUrl: string;
+  stop(): Promise<void>;
+}> {
   const pg = await startPostgres();
   const stop = () => pg.stop();
   try {
     const result = await runFlyway(pg.internalUrl, pg.network, 'migrate');
-    if (result.exitCode !== 0) throw new Error(`Flyway falló:\n${result.output}`);
+    if (result.exitCode !== 0)
+      throw new Error(`Flyway falló:\n${result.output}`);
   } catch (error) {
     await stop();
     throw error;
@@ -108,7 +135,11 @@ export interface RabbitHandle {
 
 export async function startRabbit(): Promise<RabbitHandle> {
   const container = await new RabbitMQContainer(RABBIT_IMAGE).start();
-  return { container, rabbitUrl: container.getAmqpUrl(), stop: () => container.stop().then(() => undefined) };
+  return {
+    container,
+    rabbitUrl: container.getAmqpUrl(),
+    stop: () => container.stop().then(() => undefined),
+  };
 }
 
 export interface RedisHandle {
@@ -119,7 +150,11 @@ export interface RedisHandle {
 
 export async function startRedis(): Promise<RedisHandle> {
   const container = await new RedisContainer(REDIS_IMAGE).start();
-  return { container, redisUrl: container.getConnectionUrl(), stop: () => container.stop().then(() => undefined) };
+  return {
+    container,
+    redisUrl: container.getConnectionUrl(),
+    stop: () => container.stop().then(() => undefined),
+  };
 }
 
 export interface StackHandle {
@@ -137,13 +172,18 @@ export interface StackHandle {
 
 /** PostgreSQL migrado + RabbitMQ + Redis, como infra/docker-compose.yml. */
 export async function startStack(): Promise<StackHandle> {
-  const [pg, rabbit, redis] = await Promise.all([startPostgres(), startRabbit(), startRedis()]);
+  const [pg, rabbit, redis] = await Promise.all([
+    startPostgres(),
+    startRabbit(),
+    startRedis(),
+  ]);
   const stop = async () => {
     await Promise.allSettled([pg.stop(), rabbit.stop(), redis.stop()]);
   };
   try {
     const result = await runFlyway(pg.internalUrl, pg.network, 'migrate');
-    if (result.exitCode !== 0) throw new Error(`Flyway falló:
+    if (result.exitCode !== 0)
+      throw new Error(`Flyway falló:
 ${result.output}`);
   } catch (error) {
     await stop();
@@ -153,7 +193,11 @@ ${result.output}`);
     databaseUrl: pg.databaseUrl,
     rabbitUrl: rabbit.rabbitUrl,
     redisUrl: redis.redisUrl,
-    containers: { postgres: pg.container, rabbit: rabbit.container, redis: redis.container },
+    containers: {
+      postgres: pg.container,
+      rabbit: rabbit.container,
+      redis: redis.container,
+    },
     stop,
   };
 }

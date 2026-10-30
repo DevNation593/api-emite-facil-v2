@@ -13,7 +13,8 @@ class FakeModel extends EventEmitter {
   createConfirmChannel = vi.fn(async () => ({}));
 }
 
-const asModel = (model: FakeModel) => model as unknown as Awaited<ReturnType<typeof connect>>;
+const asModel = (model: FakeModel) =>
+  model as unknown as Awaited<ReturnType<typeof connect>>;
 
 afterEach(() => {
   vi.useRealTimers();

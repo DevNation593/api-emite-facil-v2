@@ -15,7 +15,10 @@ function shutdown(): void {
   gracefulShutdown(app).then(
     () => process.exit(0),
     (error: unknown) => {
-      console.error('Error durante el cierre', error instanceof Error ? error.message : error);
+      console.error(
+        'Error durante el cierre',
+        error instanceof Error ? error.message : error,
+      );
       process.exit(1);
     },
   );

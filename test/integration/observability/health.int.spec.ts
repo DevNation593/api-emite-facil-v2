@@ -12,7 +12,9 @@ let stack: StackHandle;
 const saved = { ...process.env };
 const apps: NestExpressApplication[] = [];
 
-async function appWith(env: Record<string, string>): Promise<NestExpressApplication> {
+async function appWith(
+  env: Record<string, string>,
+): Promise<NestExpressApplication> {
   Object.assign(process.env, env);
   const app = await createApp();
   await app.init();
@@ -38,7 +40,9 @@ it('UP con la pila real y DOWN al parar Redis, sin colgarse', async () => {
   });
   const http = request(app.getHttpServer());
   const res = await http.get('/actuator/health').expect(200, UP);
-  expect(res.headers['content-type']).toBe('application/vnd.spring-boot.actuator.v3+json');
+  expect(res.headers['content-type']).toBe(
+    'application/vnd.spring-boot.actuator.v3+json',
+  );
 
   await stack.containers.redis.stop();
   const started = Date.now();
@@ -63,7 +67,9 @@ it('Redis colgado (acepta y no contesta) no cuelga el health', async () => {
       REDIS_TIMEOUT: '500ms',
     });
     const started = Date.now();
-    await request(app.getHttpServer()).get('/actuator/health').expect(503, DOWN);
+    await request(app.getHttpServer())
+      .get('/actuator/health')
+      .expect(503, DOWN);
     expect(Date.now() - started).toBeLessThan(2_000);
   } finally {
     for (const socket of sockets) socket.destroy();
@@ -89,7 +95,9 @@ it('readiness refleja el estado de ciclo de vida', async () => {
   readiness.markReady();
   await http.get('/actuator/health/readiness').expect(200, { status: 'UP' });
   readiness.markOutOfService();
-  await http.get('/actuator/health/readiness').expect(503, { status: 'OUT_OF_SERVICE' });
+  await http
+    .get('/actuator/health/readiness')
+    .expect(503, { status: 'OUT_OF_SERVICE' });
 });
 
 it('las rutas de actuator no llevan el prefijo /api/v1', async () => {

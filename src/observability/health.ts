@@ -11,12 +11,18 @@ export interface HealthCheck {
 function withDeadline(check: HealthCheck): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const timer = setTimeout(
-      () => reject(new Error(`${check.name}: sin respuesta en ${check.timeoutMs} ms`)),
+      () =>
+        reject(
+          new Error(`${check.name}: sin respuesta en ${check.timeoutMs} ms`),
+        ),
       check.timeoutMs,
     );
     timer.unref();
     // Si la comprobación vencida falla más tarde, el rechazo ya está atendido aquí.
-    check.run().then(resolve, reject).finally(() => clearTimeout(timer));
+    check
+      .run()
+      .then(resolve, reject)
+      .finally(() => clearTimeout(timer));
   });
 }
 
@@ -24,7 +30,11 @@ function withDeadline(check: HealthCheck): Promise<void> {
  * Ejecuta todas las comprobaciones en paralelo; la respuesta tarda, como mucho, lo que la
  * más lenta de los plazos. Cualquier fallo o plazo vencido da DOWN.
  */
-export async function checkHealth(checks: HealthCheck[]): Promise<HealthStatus> {
+export async function checkHealth(
+  checks: HealthCheck[],
+): Promise<HealthStatus> {
   const results = await Promise.allSettled(checks.map(withDeadline));
-  return results.every((result) => result.status === 'fulfilled') ? 'UP' : 'DOWN';
+  return results.every((result) => result.status === 'fulfilled')
+    ? 'UP'
+    : 'DOWN';
 }

@@ -2,8 +2,12 @@ import { spawn } from 'node:child_process';
 import http from 'node:http';
 import net from 'node:net';
 import { setTimeout as sleep } from 'node:timers/promises';
+import request from 'supertest';
 import { createApp } from '../../../src/bootstrap.js';
-import { gracefulShutdown, readiness } from '../../../src/observability/lifecycle.js';
+import {
+  gracefulShutdown,
+  readiness,
+} from '../../../src/observability/lifecycle.js';
 import { startStack, type StackHandle } from '../../support/containers.js';
 import { SlowModule } from '../../support/slow.module.js';
 
@@ -35,7 +39,9 @@ it('gracefulShutdown deja terminar la petición en curso y pone readiness en OUT
 
   // Conexión abierta antes del cierre, con una petición ya servida.
   const keepAlive = new http.Agent({ keepAlive: true, maxSockets: 1 });
-  expect((await get(port, '/actuator/health/readiness', keepAlive)).status).toBe(200);
+  expect(
+    (await get(port, '/actuator/health/readiness', keepAlive)).status,
+  ).toBe(200);
 
   const slow = get(port, '/api/v1/test/slow');
   await sleep(100);
@@ -56,6 +62,35 @@ it('gracefulShutdown deja terminar la petición en curso y pone readiness en OUT
   expect(Date.now() - started).toBeLessThan(5_000);
   keepAlive.destroy();
 });
+
+it('gracefulShutdown no se cuelga con una base que acepta y no contesta', async () => {
+  const sockets = new Set<net.Socket>();
+  const hung = net.createServer((socket) => {
+    sockets.add(socket);
+    socket.on('error', () => undefined);
+  });
+  await new Promise<void>((resolve) => hung.listen(0, '127.0.0.1', resolve));
+  const saved = { ...process.env };
+  try {
+    const { port } = hung.address() as net.AddressInfo;
+    process.env.DATABASE_URL = `postgresql://app:app@127.0.0.1:${port}/einvoice`;
+    const app = await createApp();
+    await app.init();
+    const http = request(app.getHttpServer());
+    // Cada sondeo deja una consulta pendiente: el plazo abandona la espera, no la consulta.
+    await http.get('/actuator/health').expect(503);
+    await http.get('/actuator/health').expect(503);
+
+    const started = Date.now();
+    await gracefulShutdown(app);
+    // Sin peticiones en curso: sin espera de drenaje + 2 s de plazo del cierre + 1 s de margen.
+    expect(Date.now() - started).toBeLessThan(3_000);
+  } finally {
+    process.env = saved;
+    for (const socket of sockets) socket.destroy();
+    hung.close();
+  }
+}, 30_000);
 
 describe('proceso real', () => {
   let stack: StackHandle;
@@ -80,10 +115,14 @@ describe('proceso real', () => {
         },
         stdio: 'ignore',
       });
-      const exited = new Promise<number | null>((resolve) => child.on('exit', resolve));
+      const exited = new Promise<number | null>((resolve) =>
+        child.on('exit', resolve),
+      );
       const deadline = Date.now() + 30_000;
       for (;;) {
-        const ready = await get(port, '/actuator/health/readiness').catch(() => undefined);
+        const ready = await get(port, '/actuator/health/readiness').catch(
+          () => undefined,
+        );
         if (ready?.status === 200) break;
         if (Date.now() > deadline) {
           child.kill('SIGKILL');

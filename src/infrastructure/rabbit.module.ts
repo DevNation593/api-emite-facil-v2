@@ -1,4 +1,10 @@
-import { Inject, Injectable, Logger, Module, type OnApplicationShutdown } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  Module,
+  type OnApplicationShutdown,
+} from '@nestjs/common';
 import { connect, type ChannelModel, type ConfirmChannel } from 'amqplib';
 import { APP_CONFIG, type AppConfig } from '../config/app-config.js';
 
@@ -39,7 +45,8 @@ export class RabbitConnection implements OnApplicationShutdown {
   }
 
   private open(): Promise<ChannelModel> {
-    if (this.closed) return Promise.reject(new Error('RabbitMQ: conexión cerrada'));
+    if (this.closed)
+      return Promise.reject(new Error('RabbitMQ: conexión cerrada'));
     if (this.connection) return Promise.resolve(this.connection);
     this.connecting ??= this.connectOnce().finally(() => {
       this.connecting = null;
