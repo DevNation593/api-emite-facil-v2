@@ -129,6 +129,23 @@ describe('loadConfig', () => {
     expect(config.providerRuc).toBe('1790012345001');
   });
 
+  it('EINVOICE_PROVIDER_RUC debe tener 13 dígitos aunque no haya ambientes SRI', () => {
+    expect(messageOf({ ...base(), EINVOICE_PROVIDER_RUC: 'abc' })).toContain(
+      'EINVOICE_PROVIDER_RUC',
+    );
+    expect(
+      messageOf({
+        ...base(),
+        SRI_ENABLED_ENVIRONMENTS: '1,2',
+        EINVOICE_PROVIDER_RUC: '123456789012',
+      }),
+    ).toContain('13 dígitos');
+    expect(
+      loadConfig({ ...base(), EINVOICE_PROVIDER_RUC: '1790012345001' }).providerRuc,
+    ).toBe('1790012345001');
+    expect(loadConfig({ ...base(), EINVOICE_PROVIDER_RUC: '   ' }).providerRuc).toBeNull();
+  });
+
   it('SRI_ENABLED_ENVIRONMENTS rechaza ambientes desconocidos', () => {
     expect(messageOf({ ...base(), SRI_ENABLED_ENVIRONMENTS: '3' })).toContain(
       'SRI_ENABLED_ENVIRONMENTS',

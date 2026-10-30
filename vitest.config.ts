@@ -20,7 +20,11 @@ export default defineConfig({
       {
         extends: true,
         resolve: { tsconfigPaths: true },
-        test: { name: 'golden', include: ['test/golden/**/*.spec.ts'] },
+        test: {
+          name: 'golden',
+          include: ['test/golden/**/*.spec.ts'],
+          setupFiles: ['test/support/setup-env.ts'],
+        },
       },
       {
         extends: true,

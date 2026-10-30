@@ -151,6 +151,9 @@ export function loadConfig(env: NodeJS.ProcessEnv): AppConfig {
 
   const enabledEnvironments = loadSriEnvironments(env);
   const providerRuc = read(env, 'EINVOICE_PROVIDER_RUC') ?? null;
+  if (providerRuc !== null && !/^[0-9]{13}$/.test(providerRuc)) {
+    throw new Error('EINVOICE_PROVIDER_RUC debe ser un RUC de 13 dígitos');
+  }
   if (enabledEnvironments.includes('2') && providerRuc === null) {
     throw new Error(
       'EINVOICE_PROVIDER_RUC es obligatorio cuando SRI_ENABLED_ENVIRONMENTS incluye 2 (Resolución NAC-DGERCGC26-00000027)',
