@@ -21,6 +21,41 @@ export function severityOf(level: string): Severity {
   }
 }
 
+const CENSORED = '[Redacted]';
+const SENSITIVE_KEYS = new Set(
+  ['password', 'p12', 'secret', 'token', 'masterkey', 'authorization', 'cookie', 'x-api-key'],
+);
+
+/**
+ * Censura por nombre de clave a cualquier profundidad (también dentro de
+ * arrays). Copia al escribir: el objeto del llamador no se muta y, si no hay
+ * nada que censurar, se devuelve la misma referencia. Los ciclos se cortan.
+ */
+function censor(value: unknown, path: Set<object> = new Set()): unknown {
+  if (typeof value !== 'object' || value === null) return value;
+  if (value instanceof Error || ArrayBuffer.isView(value) || value instanceof Date) {
+    return value;
+  }
+  if (path.has(value)) return '[Circular]';
+  path.add(value);
+  let copy: Record<string, unknown> | unknown[] | undefined;
+  const entries: Array<[string | number, unknown]> = Array.isArray(value)
+    ? value.map((v, i) => [i, v])
+    : Object.entries(value);
+  for (const [key, original] of entries) {
+    const next =
+      typeof key === 'string' && SENSITIVE_KEYS.has(key.toLowerCase())
+        ? CENSORED
+        : censor(original, path);
+    if (next !== original) {
+      copy ??= Array.isArray(value) ? [...value] : { ...value };
+      (copy as Record<string | number, unknown>)[key] = next;
+    }
+  }
+  path.delete(value);
+  return copy ?? value;
+}
+
 /** Rutas censuradas: nunca deben llegar a un log (restricción global del proyecto). */
 const REDACTED_PATHS = [
   'req.headers.authorization',
@@ -42,6 +77,10 @@ const REDACTED_PATHS = [
  * Nest registra errores como `err` (objeto con stack); el formato de Cloud
  * Logging espera `stack_trace` y el texto en `message`.
  */
+function formatLog(raw: Record<string, unknown>): Record<string, unknown> {
+  return flattenError(censor(raw) as Record<string, unknown>);
+}
+
 function flattenError(object: Record<string, unknown>): Record<string, unknown> {
   const { err, ...rest } = object as {
     err?: { message?: string; stack?: string };
@@ -77,7 +116,7 @@ export function createPinoLogger(
     level,
     messageKey: 'message',
     base: undefined,
-    redact: { paths: REDACTED_PATHS, censor: '[REDACTED]' },
+    redact: { paths: REDACTED_PATHS, censor: CENSORED },
     mixin: () => {
       const correlationId = currentCorrelationId();
       return correlationId === undefined ? {} : { correlationId };
@@ -91,7 +130,7 @@ export function createPinoLogger(
         timestamp: () => `,"@timestamp":"${new Date().toISOString()}"`,
         formatters: {
           level: (label) => ({ severity: severityOf(label) }),
-          log: flattenError,
+          log: formatLog,
         },
       },
       destination,
@@ -108,5 +147,5 @@ export function createPinoLogger(
     ignore: 'correlationId',
     destination: destination === undefined ? 1 : asWritable(destination),
   });
-  return pino({ ...common, formatters: { log: flattenError } }, stream);
+  return pino({ ...common, formatters: { log: formatLog } }, stream);
 }
