@@ -2,7 +2,8 @@
 # Imprime una parte de una URL de conexión (esquema://usuario:contraseña@host:puerto/ruta?parámetros), con los
 # %XX ya decodificados. Lo usan los contenedores de desarrollo para crear sus credenciales a partir de las mismas
 # DATABASE_URL, RABBITMQ_URL y REDIS_URL que lee la API, sin repetirlas en otras variables.
-#   connection-url.sh user|password|path URL
+#   connection-url.sh user|password|host|port|path|query URL
+# host, port y query no se decodifican: la query sale tal cual (sin el ?) para reconstruir la URL JDBC de Flyway.
 # Solo POSIX sh y awk: corre igual en las imágenes de PostgreSQL y RabbitMQ (Debian, Ubuntu) y de Redis (Alpine).
 set -eu
 part="$1"
@@ -15,6 +16,16 @@ case "$part" in
   user) value="${userinfo%%:*}" ;;
   password) case "$userinfo" in *:*) value="${userinfo#*:}" ;; *) value="" ;; esac ;;
   path) case "$hostpart" in */*) value="${hostpart#*/}"; value="${value%%\?*}" ;; *) value="" ;; esac ;;
+  host|port)
+    hostport="${hostpart%%[/?]*}"
+    case "$hostport" in
+      \[*\]*) h="${hostport%%\]*}]"; p="${hostport#"$h"}"; p="${p#:}" ;;
+      *:*) h="${hostport%:*}"; p="${hostport##*:}" ;;
+      *) h="$hostport"; p="" ;;
+    esac
+    if [ "$part" = host ]; then printf '%s' "$h"; else printf '%s' "$p"; fi
+    exit 0 ;;
+  query) case "$hostpart" in *\?*) printf '%s' "${hostpart#*\?}" ;; esac; exit 0 ;;
   *) echo "connection-url.sh: parte desconocida: $part" >&2; exit 2 ;;
 esac
 printf '%s' "$value" | LC_ALL=C awk '
