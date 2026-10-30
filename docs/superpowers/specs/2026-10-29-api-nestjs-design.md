@@ -74,7 +74,7 @@ Uno por módulo Java, con las mismas fronteras y responsabilidades: `tenancy`, `
 
 ### Stack
 
-- La LTS activa de Node, TypeScript en modo estricto, la última versión estable de NestJS y npm. Las versiones exactas se fijan en el plan de E0, tras comprobar soporte vigente.
+- Node 24 LTS (soportado hasta abril de 2028; es el del CI actual de la e2e), TypeScript 6 en modo estricto, NestJS 12 y npm. NestJS 12 se publica como ESM, así que el proyecto es ESM (`"type": "module"`) y las pruebas usan **Vitest**, como la plantilla oficial de Nest 12 para ESM. Donde este documento dice "Jest", léase Vitest.
 - Dinero y cantidades: `decimal.js` en todo el código fiscal; `number` está prohibido para importes (regla P1 de `AGENTS.md`). Una regla de lint lo vigila en los módulos `billing`, `notes`, `xml`, `catalog`.
 - Fechas: Luxon; la fecha fiscal se calcula en `America/Guayaquil`, como `FiscalClock`.
 
@@ -211,7 +211,7 @@ Casos:
 - Firma XAdES-BES completa (RSA PKCS#1 v1.5 es determinista: mismo `SignedInfo` → misma firma).
 - AES-GCM: NestJS descifra blobs cifrados por Java y, con la misma clave de datos e IV fijos, cifra produciendo los mismos bytes (lo que prueba que Java leería lo que escribe NestJS).
 - Argon2id: NestJS verifica hashes generados por Java y, con la misma sal, produce el mismo hash.
-- JWT: NestJS valida tokens emitidos por Java y, con los mismos claims, emite el mismo token (HS256 es determinista).
+- JWT: NestJS valida tokens emitidos por Java, y un token emitido por NestJS con los mismos datos tiene la misma cabecera y los mismos claims (el orden de las propiedades JSON no se exige: no afecta a la verificación).
 - JSON de `content` de los tres tipos.
 - Cuerpos SOAP y parseo de respuestas del SRI.
 - Firma de webhooks.
@@ -244,7 +244,7 @@ Cada etapa deja software que funciona y se prueba solo; su plan detallado se esc
 
 | Etapa | Alcance | Endpoints | Hecha cuando |
 | --- | --- | --- | --- |
-| **E0 Fundación** | Repo y CI, esqueleto Nest, configuración con los mismos nombres, Kysely + `kysely-codegen`, Flyway CLI, `infra/docker-compose.yml`, `/actuator/health`, filtro de errores, `correlationId`, logs JSON, límite de peticiones en Redis, generador golden, inventario de rutas (controladores Java vs. `openapi.yaml`) | — | Health con PostgreSQL, RabbitMQ y Redis; Flyway sobre base vacía y sobre dump de Java; errores idénticos a Spring; CI verde |
+| **E0 Fundación** | Repo y CI, esqueleto Nest, configuración con los mismos nombres, Kysely + `kysely-codegen`, Flyway CLI, `infra/docker-compose.yml`, `/actuator/health`, filtro de errores, `correlationId`, logs JSON, límite de peticiones en Redis, generador golden, inventario de rutas (controladores Java vs. `openapi.yaml`) | — | Health con PostgreSQL, RabbitMQ y Redis; Flyway (12.4.0, la misma versión que Java) migra una base vacía y valida sus checksums; errores idénticos a Spring; casos golden de clave de acceso, AES-GCM, Argon2, JWT y firma XAdES generados; CI verde. El dump con datos de Java se genera en E1, la primera etapa que lo usa |
 | **E1 Identidad y multiempresa** | Registro, ingreso, renovación, cierre, verificación, recuperación y cambio de contraseña, `/auth/me`, empresas, membresías y roles, equipo e invitaciones, API keys, guards | `/auth/*`, `/tenants*`, `/api-keys*` | Golden Argon2 y JWT; `AuthApiIT`, `AuthRateLimitIT`, `TenantIsolationIT`, `ApiKeyAuthenticationIT`, `SecurityIT` de esas rutas; ingreso con usuario creado por Java |
 | **E2 Emisores y catálogos** | Emisores, establecimientos, puntos de emisión, catálogos, clientes, productos, certificados, secuencial | `/taxpayers*` (sin producción), `/emission-points*`, `/catalogs/*`, `/customers*`, `/products*`, `/certificates` | Golden AES-GCM; `CertificateApiIT`, `TaxpayerApiIT`, `CatalogIT`, `CustomerApiIT`, `ProductApiIT`, `SequenceApiIT` |
 | **E3 Comprobantes** | Cálculo, clave de acceso, secuenciales, XML y XSD de los tres tipos, idempotencia, outbox, consulta, reemisión | `/invoices`, `/credit-notes`, `/debit-notes`, `/documents`, `/documents/{id}` | Golden de clave, impuestos, XML y `content`; `SequenceConcurrencyIT`, `InvoiceIdempotencyIT`, `CreditNoteApiIT`, `DebitNoteApiIT`, `InvoiceReissueIT` |
