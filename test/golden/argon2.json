@@ -1,0 +1,32 @@
+{
+  "cases": [
+    {
+      "password": "Abcdef123456",
+      "hash": "$argon2id$v=19$m=16384,t=2,p=1$dezz8b6WafM/2Mb0Xf8tBw$+36ph1JoLUtslkkq1bXt/tAUH3pONPeDcXhuEy4Rd6k"
+    },
+    {
+      "password": "clave-segura-de-prueba",
+      "hash": "$argon2id$v=19$m=16384,t=2,p=1$9DMuOK0PpY/IPE5VeES8WA$eVdmzXbrPel1sqSkyBKNWjiiKMY/ZWkrlEpQ9HinLaA"
+    },
+    {
+      "password": "contraseña-áéíóú-ÁÉÍÓÚ-ñandú",
+      "hash": "$argon2id$v=19$m=16384,t=2,p=1$AydxS87XP/O+XZUAtaJi2Q$Gosz/TDKu9zUsP9MdhSy8Pv8MMwknskQsTD3G5OkxcI"
+    },
+    {
+      "password": "Año-nuevo-Ñoño-2026",
+      "hash": "$argon2id$v=19$m=16384,t=2,p=1$ISG7oIUw59UE9VcEU2jcFA$Qa5GjVLiuBsa5CfjqFaWCeYwgR0eBSZXwlzBnlUrCr4"
+    },
+    {
+      "password": "clave-con-emoji-🔐-ok",
+      "hash": "$argon2id$v=19$m=16384,t=2,p=1$J4ahmk93FBGOKQ1sFcuUKg$uWmhhteHKPh9j3n7mYkCLLqcNnkOehPY9mqM2olzCLk"
+    },
+    {
+      "password": "con espacios y símbolos !@#$%^&*()",
+      "hash": "$argon2id$v=19$m=16384,t=2,p=1$qB4yZ9Ng94pezBFodVDEDg$U64Hw6IPo7ITvM1N9p/Hp/y+llM1zdxuu3ZrUmm4qG0"
+    },
+    {
+      "password": "ahovCJQX4_gnuBIPW3-fmtAHOV29elszGNU18dkryFMT07cjqxELSZ6bipwDKRY5ahovCJQX4_gnuBIPW3-fmtAHOV29elszGNU18dkryFMT07cjqxELSZ6bipwDKRY5",
+      "hash": "$argon2id$v=19$m=16384,t=2,p=1$5Qj1+NVbHRtfUxKzvejM1w$RH1iS2+JAaTJM5xcJV3pW/2mTx1pLgdCnLHKy3QXznI"
+    }
+  ]
+}
