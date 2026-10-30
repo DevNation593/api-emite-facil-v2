@@ -1,5 +1,7 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import { ApiException } from './api-exception.js';
+import { CORRELATION_ID_HEADER } from './correlation-id.middleware.js';
+import { runWithContext } from './request-context.js';
 
 export const JSON_BODY_LIMIT = '10mb';
 
@@ -19,7 +21,13 @@ export function jsonBodyMiddleware(
   next: NextFunction,
 ): void {
   parseJson(req, res, (err?: unknown) => {
-    next(err === undefined ? undefined : toApiException(err));
+    // El contexto abierto por el middleware de correlación se pierde al leer el
+    // cuerpo, así que se reabre desde el id que dejó en la respuesta para que
+    // guards, pipes, handlers y logs de error lo vean.
+    const correlationId = res.getHeader(CORRELATION_ID_HEADER);
+    const forward = () => next(err === undefined ? undefined : toApiException(err));
+    if (typeof correlationId === 'string') runWithContext({ correlationId }, forward);
+    else forward();
   });
 }
 
