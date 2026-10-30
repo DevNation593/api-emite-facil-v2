@@ -1,3 +1,5 @@
 * text=auto eol=lf
 *.p12 binary
 *.pdf binary
+# XSD y XML de ejemplo byte a byte: su SHA-256 está en docs/xsd-source-registry.csv.
+resources/xsd/** -text
