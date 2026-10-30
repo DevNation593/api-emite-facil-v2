@@ -1,0 +1,68 @@
+import { runWithContext } from '../../../src/common/request-context.js';
+import { createPinoLogger, severityOf } from '../../../src/observability/logging.js';
+import { testConfig } from '../../support/test-env.js';
+
+it.each([
+  ['fatal', 'ERROR'],
+  ['error', 'ERROR'],
+  ['warn', 'WARNING'],
+  ['info', 'INFO'],
+  ['debug', 'DEBUG'],
+  ['trace', 'DEBUG'],
+])('%s → %s', (level, severity) => {
+  expect(severityOf(level)).toBe(severity);
+});
+
+function jsonLogger() {
+  const lines: string[] = [];
+  const logger = createPinoLogger(
+    { ...testConfig, logFormat: 'json' },
+    { write: (l: string) => void lines.push(l) },
+  );
+  return { logger, lines };
+}
+
+it('cada línea JSON lleva severity, message y correlationId, y censura secretos', () => {
+  const { logger, lines } = jsonLogger();
+  runWithContext({ correlationId: 'c-1' }, () =>
+    logger.warn({ password: 'secreta', token: 't0k3n' }, 'hola'),
+  );
+  const entry = JSON.parse(lines[0]!);
+  expect(entry).toMatchObject({ severity: 'WARNING', message: 'hola', correlationId: 'c-1' });
+  expect(entry['@timestamp']).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  expect(lines[0]).not.toMatch(/secreta|t0k3n/);
+});
+
+it('no emite level, pid ni hostname y omite correlationId fuera de una petición', () => {
+  const { logger, lines } = jsonLogger();
+  logger.info('arranque');
+  const entry = JSON.parse(lines[0]!);
+  expect(entry).not.toHaveProperty('level');
+  expect(entry).not.toHaveProperty('pid');
+  expect(entry).not.toHaveProperty('hostname');
+  expect(entry).not.toHaveProperty('correlationId');
+});
+
+it('censura cabeceras sensibles', () => {
+  const { logger, lines } = jsonLogger();
+  logger.info(
+    { req: { headers: { authorization: 'Bearer abc', 'x-api-key': 'k3y', cookie: 'sid=1' } } },
+    'x',
+  );
+  expect(lines[0]).not.toMatch(/Bearer abc|k3y|sid=1/);
+});
+
+it('modo texto: una línea sin colores con el correlationId entre corchetes', () => {
+  const lines: string[] = [];
+  const logger = createPinoLogger(
+    { ...testConfig, logFormat: 'text' },
+    { write: (l: string) => void lines.push(l) },
+  );
+  runWithContext({ correlationId: 'c-9' }, () => logger.info('hola'));
+  expect(lines).toHaveLength(1);
+  expect(lines[0]).toContain('[c-9]');
+  expect(lines[0]).toContain('hola');
+  // eslint-disable-next-line no-control-regex
+  expect(lines[0]).not.toMatch(/\u001b\[/);
+  expect(lines[0]!.trimEnd().split('\n')).toHaveLength(1);
+});

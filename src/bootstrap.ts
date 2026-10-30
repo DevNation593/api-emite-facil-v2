@@ -1,9 +1,12 @@
 import { type ModuleMetadata, Module } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { Logger, LoggerModule } from 'nestjs-pino';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module.js';
 import { correlationIdMiddleware } from './common/correlation-id.middleware.js';
 import { jsonBodyMiddleware } from './common/json-body.js';
+import { loadConfig } from './config/app-config.js';
+import { createPinoLogger } from './observability/logging.js';
 
 export interface CreateAppOptions {
   /** Módulos extra (p. ej. controladores de prueba) que se suman a AppModule. */
@@ -17,15 +20,31 @@ export interface CreateAppOptions {
 export async function createApp(
   options: CreateAppOptions = {},
 ): Promise<NestExpressApplication> {
-  @Module({ imports: [AppModule, ...(options.imports ?? [])] })
+  const logger = createPinoLogger(loadConfig(process.env));
+
+  @Module({
+    imports: [
+      // Como en Java, no se registra cada petición: sin autoLogging y sin el
+      // middleware de pino-http (forRoutes vacío), que además registraría una
+      // ruta comodín que falsearía la detección de 405 del filtro de errores.
+      LoggerModule.forRoot({
+        pinoHttp: { logger, autoLogging: false },
+        forRoutes: [],
+        renameContext: 'logger_name',
+      }),
+      AppModule,
+      ...(options.imports ?? []),
+    ],
+  })
   class RootModule {}
 
   const app = await NestFactory.create<NestExpressApplication>(RootModule, {
     // El parser JSON propio (límite 10mb, errores traducidos) sustituye al de Nest.
     bodyParser: false,
-    // Vitest fija NODE_ENV=test; sin esto cada prueba imprime el arranque de Nest.
-    logger: process.env.NODE_ENV === 'test' ? false : ['error', 'warn', 'log'],
+    // Los logs de arranque se retienen hasta conectar pino (app.useLogger).
+    bufferLogs: true,
   });
+  app.useLogger(app.get(Logger));
   // Orden: el id de correlación debe existir antes de que el cuerpo pueda fallar.
   app.use(correlationIdMiddleware);
   app.use(jsonBodyMiddleware);
