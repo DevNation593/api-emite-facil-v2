@@ -183,8 +183,7 @@ export async function startStack(): Promise<StackHandle> {
   try {
     const result = await runFlyway(pg.internalUrl, pg.network, 'migrate');
     if (result.exitCode !== 0)
-      throw new Error(`Flyway falló:
-${result.output}`);
+      throw new Error(`Flyway falló:\n${result.output}`);
   } catch (error) {
     await stop();
     throw error;
