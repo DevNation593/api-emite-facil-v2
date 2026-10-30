@@ -11,7 +11,11 @@ export default defineConfig({
       {
         extends: true,
         resolve: { tsconfigPaths: true },
-        test: { name: 'unit', include: ['test/unit/**/*.spec.ts'] },
+        test: {
+          name: 'unit',
+          include: ['test/unit/**/*.spec.ts'],
+          setupFiles: ['test/support/setup-env.ts'],
+        },
       },
       {
         extends: true,
@@ -24,6 +28,7 @@ export default defineConfig({
         test: {
           name: 'integration',
           include: ['test/integration/**/*.int.spec.ts'],
+          setupFiles: ['test/support/setup-env.ts'],
           testTimeout: 120_000,
           fileParallelism: false,
         },
