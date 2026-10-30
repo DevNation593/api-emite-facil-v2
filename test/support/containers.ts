@@ -1,10 +1,14 @@
 import path from 'node:path';
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { RabbitMQContainer, type StartedRabbitMQContainer } from '@testcontainers/rabbitmq';
+import { RedisContainer, type StartedRedisContainer } from '@testcontainers/redis';
 import { GenericContainer, Network, type StartedNetwork, Wait } from 'testcontainers';
 
 // Mismas versiones que infra/docker-compose.yml y que la API Java.
 const POSTGRES_IMAGE = 'postgres:16';
 const FLYWAY_IMAGE = 'flyway/flyway:12.4.0';
+const RABBIT_IMAGE = 'rabbitmq:4-management';
+const REDIS_IMAGE = 'redis:7-alpine';
 const ALIAS = 'postgres';
 const USER = 'test';
 const PASSWORD = 'test';
@@ -93,4 +97,63 @@ export async function migratedDatabase(): Promise<{ databaseUrl: string; stop():
     throw error;
   }
   return { databaseUrl: pg.databaseUrl, stop };
+}
+
+export interface RabbitHandle {
+  container: StartedRabbitMQContainer;
+  /** amqp://usuario:contraseña@host:puerto, para conectarse desde el host. */
+  rabbitUrl: string;
+  stop(): Promise<void>;
+}
+
+export async function startRabbit(): Promise<RabbitHandle> {
+  const container = await new RabbitMQContainer(RABBIT_IMAGE).start();
+  return { container, rabbitUrl: container.getAmqpUrl(), stop: () => container.stop().then(() => undefined) };
+}
+
+export interface RedisHandle {
+  container: StartedRedisContainer;
+  redisUrl: string;
+  stop(): Promise<void>;
+}
+
+export async function startRedis(): Promise<RedisHandle> {
+  const container = await new RedisContainer(REDIS_IMAGE).start();
+  return { container, redisUrl: container.getConnectionUrl(), stop: () => container.stop().then(() => undefined) };
+}
+
+export interface StackHandle {
+  databaseUrl: string;
+  rabbitUrl: string;
+  redisUrl: string;
+  containers: {
+    postgres: StartedPostgreSqlContainer;
+    rabbit: StartedRabbitMQContainer;
+    redis: StartedRedisContainer;
+  };
+  /** Detiene lo que siga en marcha; es seguro llamarla tras parar un contenedor a mano. */
+  stop(): Promise<void>;
+}
+
+/** PostgreSQL migrado + RabbitMQ + Redis, como infra/docker-compose.yml. */
+export async function startStack(): Promise<StackHandle> {
+  const [pg, rabbit, redis] = await Promise.all([startPostgres(), startRabbit(), startRedis()]);
+  const stop = async () => {
+    await Promise.allSettled([pg.stop(), rabbit.stop(), redis.stop()]);
+  };
+  try {
+    const result = await runFlyway(pg.internalUrl, pg.network, 'migrate');
+    if (result.exitCode !== 0) throw new Error(`Flyway falló:
+${result.output}`);
+  } catch (error) {
+    await stop();
+    throw error;
+  }
+  return {
+    databaseUrl: pg.databaseUrl,
+    rabbitUrl: rabbit.rabbitUrl,
+    redisUrl: redis.redisUrl,
+    containers: { postgres: pg.container, rabbit: rabbit.container, redis: redis.container },
+    stop,
+  };
 }

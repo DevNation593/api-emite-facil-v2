@@ -6,6 +6,7 @@ import { AppModule } from './app.module.js';
 import { correlationIdMiddleware } from './common/correlation-id.middleware.js';
 import { jsonBodyMiddleware } from './common/json-body.js';
 import { loadConfig } from './config/app-config.js';
+import { inFlightMiddleware } from './observability/lifecycle.js';
 import { createPinoLogger } from './observability/logging.js';
 
 export interface CreateAppOptions {
@@ -46,6 +47,7 @@ export async function createApp(
   });
   app.useLogger(app.get(Logger));
   // Orden: el id de correlación debe existir antes de que el cuerpo pueda fallar.
+  app.use(inFlightMiddleware);
   app.use(correlationIdMiddleware);
   app.use(jsonBodyMiddleware);
   app.setGlobalPrefix('api/v1', { exclude: ['actuator/{*path}'] });
