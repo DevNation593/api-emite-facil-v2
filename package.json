@@ -1,0 +1,44 @@
+{
+  "name": "api-emite-facil",
+  "version": "0.0.1",
+  "description": "API de facturación electrónica para Ecuador (SRI), port 1:1 de la API Java",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=24.14 <25"
+  },
+  "scripts": {
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "oxlint --type-aware src/ test/",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --project golden",
+    "test:unit": "vitest run --project unit",
+    "test:golden": "vitest run --project golden",
+    "test:integration": "vitest run --project integration"
+  },
+  "dependencies": {
+    "@nestjs/common": "^12.3.2",
+    "@nestjs/core": "^12.3.2",
+    "@nestjs/platform-express": "^12.3.2",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^12.0.11",
+    "@nestjs/schematics": "^12.0.12",
+    "@nestjs/testing": "^12.3.2",
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "@types/supertest": "^7.0.0",
+    "oxlint": "^1.58.0",
+    "oxlint-tsgolint": "^7.0.2001",
+    "prettier": "^3.4.2",
+    "supertest": "^7.0.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.0",
+    "vitest": "^4.0.0"
+  }
+}
