@@ -1,0 +1,25 @@
+import type { Application } from 'express';
+
+interface RouteLayer {
+  route?: { methods: Record<string, boolean> };
+  match(path: string): boolean;
+}
+
+/**
+ * Métodos con los que alguna ruta registrada atiende `pathname`. Se consulta
+ * solo en el camino del "no encontrado" para distinguir 404 de 405: Express 5
+ * no tiene noción de 405 y recorrer el router aquí evita mantener una tabla
+ * aparte que se desincronice de las rutas que Nest registra.
+ */
+export function allowedMethods(app: Application, pathname: string): string[] {
+  const stack = (app.router as unknown as { stack: RouteLayer[] }).stack;
+  const methods = new Set<string>();
+  for (const layer of stack) {
+    if (layer.route === undefined || !layer.match(pathname)) continue;
+    for (const [method, enabled] of Object.entries(layer.route.methods)) {
+      if (enabled && method !== '_all') methods.add(method.toUpperCase());
+    }
+  }
+  if (methods.has('GET')) methods.add('HEAD');
+  return [...methods];
+}
