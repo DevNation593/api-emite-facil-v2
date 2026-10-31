@@ -10,15 +10,8 @@ import type { Kysely } from 'kysely';
 import { ApiException } from '../common/api-exception.js';
 import { DATABASE } from '../database/database.module.js';
 import type { DB } from '../database/schema.js';
-import {
-  cachedUser,
-  cacheUser,
-  identityOf,
-  unauthenticated,
-  type UserIdentity,
-} from './request-identity.js';
-
-const UUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+import { cachedUser, identityOf, unauthenticated, type UserIdentity } from './request-identity.js';
+import { resolveUser } from './user-resolution.js';
 
 /**
  * Los endpoints de una persona (cuenta, empresas propias): una API key no es una persona (403), y
@@ -41,21 +34,7 @@ export class CurrentUserGuard implements CanActivate {
         'Esta operación solo la hace una persona, no una API key',
       );
     }
-    if (!UUID.test(identity.userId) || !UUID.test(identity.sessionId)) {
-      throw unauthenticated();
-    }
-    const row = await this.db
-      .selectFrom('users')
-      .select(['id', 'email', 'email_verified_at'])
-      .where('id', '=', identity.userId)
-      .executeTakeFirst();
-    if (row === undefined) throw unauthenticated();
-    cacheUser(req, {
-      userId: row.id,
-      sessionId: identity.sessionId,
-      email: row.email,
-      emailVerified: row.email_verified_at !== null,
-    });
+    await resolveUser(this.db, req, identity);
     return true;
   }
 }
