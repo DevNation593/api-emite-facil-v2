@@ -14,6 +14,12 @@ function messageOf(fn: () => unknown): string {
 }
 
 describe('parseDatabaseUrl', () => {
+  it('quita los corchetes de un servidor IPv6: el socket de Node no los admite', () => {
+    const connection = parseDatabaseUrl('postgresql://u:p@[::1]:5433/einvoice');
+    expect(connection.host).toBe('::1');
+    expect(connection.port).toBe(5433);
+  });
+
   it('reparte la URL en servidor, base, credenciales decodificadas, esquema y parámetros', () => {
     expect(
       parseDatabaseUrl(
@@ -106,6 +112,10 @@ describe('parseDatabaseUrl', () => {
 });
 
 describe('parseRabbitUrl', () => {
+  it('quita los corchetes de un servidor IPv6', () => {
+    expect(parseRabbitUrl('amqp://u:p@[2001:db8::1]:5673').host).toBe('2001:db8::1');
+  });
+
   it('decodifica credenciales y vhost, y activa TLS con amqps', () => {
     expect(parseRabbitUrl('amqps://u:p@mq/v%2Fh')).toEqual({
       host: 'mq',

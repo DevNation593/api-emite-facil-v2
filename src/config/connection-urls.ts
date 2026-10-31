@@ -84,6 +84,11 @@ function credentials(
   return result;
 }
 
+/** URL.hostname deja los corchetes de una IPv6, y el socket de Node espera la dirección sola. */
+function hostOf(url: URL): string {
+  return url.hostname.replace(/^\[(.*)\]$/, '$1');
+}
+
 export function parseDatabaseUrl(value: string): DatabaseConnection {
   const url = parse(
     DATABASE_URL,
@@ -127,7 +132,7 @@ export function parseDatabaseUrl(value: string): DatabaseConnection {
   }
 
   return {
-    host: url.hostname,
+    host: hostOf(url),
     port: url.port === '' ? 5432 : Number(url.port),
     database: decode(DATABASE_URL, url.pathname.slice(1)),
     ...credentials(DATABASE_URL, url),
@@ -140,7 +145,7 @@ export function parseRabbitUrl(value: string): RabbitConnection {
   const url = parse(RABBITMQ_URL, value.trim(), ['amqp', 'amqps'], RABBIT_FORM);
   const tls = url.protocol === 'amqps:';
   return {
-    host: url.hostname,
+    host: hostOf(url),
     port: url.port === '' ? (tls ? 5671 : 5672) : Number(url.port),
     ...credentials(RABBITMQ_URL, url),
     vhost: url.pathname.length > 1 ? decode(RABBITMQ_URL, url.pathname.slice(1)) : '/',
