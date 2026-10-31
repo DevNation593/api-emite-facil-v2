@@ -172,7 +172,7 @@ El mismo `ProblemDetail` (RFC 9457) que produce Spring, con `Content-Type: appli
 ```json
 {
   "type": "about:blank",
-  "title": "Unprocessable Entity",
+  "title": "Unprocessable Content",
   "status": 422,
   "detail": "…",
   "instance": "/api/v1/…",

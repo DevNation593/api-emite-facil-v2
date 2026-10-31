@@ -1,4 +1,9 @@
-import { type ModuleMetadata, Module } from '@nestjs/common';
+import {
+  type ModuleMetadata,
+  Module,
+  NotFoundException,
+} from '@nestjs/common';
+import type { NextFunction, Request, Response } from 'express';
 import { NestFactory } from '@nestjs/core';
 import { Logger, LoggerModule } from 'nestjs-pino';
 import type { NestExpressApplication } from '@nestjs/platform-express';
@@ -50,6 +55,18 @@ export async function createApp(
   app.use(inFlightMiddleware);
   app.use(correlationIdMiddleware);
   app.use(jsonBodyMiddleware);
+  // Nest solo monta su manejador de "no encontrado" bajo el prefijo y las rutas
+  // excluidas; fuera de ellas Express respondería con HTML.
+  app.use((req: Request, _res: Response, next: NextFunction) => {
+    const path = req.path;
+    const known =
+      path === '/api/v1' ||
+      path.startsWith('/api/v1/') ||
+      path.startsWith('/actuator/');
+    next(known ? undefined : new NotFoundException());
+  });
+  app.disable('etag');
+  app.disable('x-powered-by');
   app.setGlobalPrefix('api/v1', { exclude: ['actuator/{*path}'] });
   return app;
 }

@@ -21,7 +21,9 @@ afterAll(async () => {
 it('ruta inexistente', async () => {
   const res = await http.get('/api/v1/no-existe?x=1').set('X-Correlation-ID', 'abc-123');
   expect(res.status).toBe(404);
-  expect(res.headers['content-type']).toMatch(/^application\/problem\+json/);
+  expect(res.headers['content-type']).toBe('application/problem+json');
+  expect(res.headers['etag']).toBeUndefined();
+  expect(res.headers['x-powered-by']).toBeUndefined();
   expect(res.body).toEqual({
     type: 'about:blank',
     title: 'Not Found',
@@ -31,6 +33,29 @@ it('ruta inexistente', async () => {
     errorCode: 'NOT_FOUND',
     correlationId: 'abc-123',
   });
+});
+
+it.each(['/nada', '/', '/api', '/api/v2/x', '/actuatorx'])(
+  'ruta fuera de /api/v1 y /actuator (%s) da 404 problem+json',
+  async (path) => {
+    const res = await http.get(path).set('X-Correlation-ID', 'fuera-1');
+    expect(res.status).toBe(404);
+    expect(res.headers['content-type']).toBe('application/problem+json');
+    expect(res.body).toEqual(
+      problem(404, {
+        errorCode: 'NOT_FOUND',
+        instance: path,
+        correlationId: 'fuera-1',
+      }),
+    );
+  },
+);
+
+it('POST /actuator/health da 405 con Allow', async () => {
+  const res = await http.post('/actuator/health');
+  expect(res.status).toBe(405);
+  expect(res.headers.allow).toContain('GET');
+  expect(res.body).toEqual(problem(405, { errorCode: 'METHOD_NOT_ALLOWED' }));
 });
 
 it('método no permitido', async () => {
@@ -98,7 +123,7 @@ it('ApiException con errores y Retry-After', async () => {
   expect(res.headers['retry-after']).toBe('30');
   expect(res.body).toEqual(
     problem(422, {
-      title: 'Unprocessable Entity',
+      title: 'Unprocessable Content',
       errorCode: 'WEAK_PASSWORD',
       detail: 'La contraseña no es válida',
       errors: [{ field: 'password', message: 'x' }],

@@ -1,4 +1,3 @@
-import { STATUS_CODES } from 'node:http';
 import {
   type ArgumentsHost,
   Catch,
@@ -11,6 +10,7 @@ import type { Application, Request, Response } from 'express';
 import { ApiException, type FieldError } from './api-exception.js';
 import { CORRELATION_ID_HEADER } from './correlation-id.middleware.js';
 import type { ErrorCode } from './error-codes.js';
+import { reasonPhrase } from './http-reason.js';
 import { currentCorrelationId } from './request-context.js';
 import { allowedMethods } from './route-methods.js';
 
@@ -83,7 +83,7 @@ export class ProblemDetailsFilter implements ExceptionFilter {
 
     const body = {
       type: 'about:blank',
-      title: STATUS_CODES[resolved.status] ?? 'Error',
+      title: reasonPhrase(resolved.status),
       status: resolved.status,
       detail: resolved.detail,
       instance: req.originalUrl.split('?')[0],
@@ -96,8 +96,9 @@ export class ProblemDetailsFilter implements ExceptionFilter {
     for (const [name, value] of Object.entries(resolved.headers)) {
       res.setHeader(name, value);
     }
+    // res.end y no res.send: send añade `; charset=utf-8` y un ETag que Spring no emite.
     res.setHeader('Content-Type', 'application/problem+json');
-    res.send(JSON.stringify(body));
+    res.end(JSON.stringify(body));
   }
 
   private resolve(exception: unknown, req: Request): Resolved {
