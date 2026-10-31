@@ -11,6 +11,7 @@ import { APP_CONFIG, type AppConfig } from '../config/app-config.js';
 export const REDIS = Symbol('REDIS');
 
 const QUIT_GRACE_MS = 1_000;
+const FALLBACK_TIMEOUT_MS = 2_000;
 
 /**
  * Cliente perezoso: no conecta hasta la primera comprobación (ensureRedisReady), así que crear
@@ -55,6 +56,23 @@ export async function ensureRedisReady(redis: Redis): Promise<void> {
     const onClose = () => done(new Error('Redis: conexión cerrada'));
     redis.once('ready', onReady);
     redis.once('close', onClose);
+  });
+}
+
+/**
+ * Acota la conexión y los comandos con el mismo plazo que el cliente (REDIS_TIMEOUT): la
+ * conexión a un Redis que acepta el socket pero no responde no tiene plazo propio en ioredis.
+ */
+export function withRedisTimeout<T>(
+  redis: Redis,
+  operation: () => Promise<T>,
+): Promise<T> {
+  const ms = redis.options.commandTimeout ?? FALLBACK_TIMEOUT_MS;
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Timeout')), ms);
+    operation()
+      .then(resolve, reject)
+      .finally(() => clearTimeout(timer));
   });
 }
 
