@@ -23,6 +23,7 @@ describe('src/database/schema.ts', () => {
         '--url', db.databaseUrl,
         '--out-file', out,
         '--exclude-pattern', 'flyway_schema_history',
+        '--date-parser', 'string',
       ]);
       const generated = await readFile(out, 'utf8');
       const committed = await readFile(path.join(root, 'src', 'database', 'schema.ts'), 'utf8');

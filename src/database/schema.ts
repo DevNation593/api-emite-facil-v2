@@ -138,7 +138,7 @@ export interface DocumentSequences {
   document_type: string;
   emission_point_id: string;
   environment: string;
-  last_issue_date: Timestamp | null;
+  last_issue_date: string | null;
   next_value: Generated<Int8>;
   tenant_id: string;
 }
@@ -212,7 +212,7 @@ export interface FiscalDocuments {
   establishment_address: string;
   establishment_code: string;
   id: Generated<string>;
-  issue_date: Timestamp;
+  issue_date: string;
   issuer_accounting_required: boolean;
   issuer_head_office_address: string;
   issuer_legal_name: string;
@@ -223,7 +223,7 @@ export interface FiscalDocuments {
   issuer_trade_name: string | null;
   issuer_withholding_agent_code: string | null;
   modified_doc_code: string | null;
-  modified_doc_date: Timestamp | null;
+  modified_doc_date: string | null;
   modified_doc_number: string | null;
   modified_document_id: string | null;
   next_attempt_at: Timestamp | null;
@@ -289,8 +289,8 @@ export interface OutboxEvents {
 export interface PaymentMethods {
   code: string;
   name: string;
-  valid_from: Timestamp;
-  valid_to: Timestamp | null;
+  valid_from: string;
+  valid_to: string | null;
 }
 
 export interface Products {
@@ -311,8 +311,8 @@ export interface SchemaRegistry {
   resource_path: string;
   schema_version: string;
   sha256: string;
-  valid_from: Timestamp | null;
-  valid_to: Timestamp | null;
+  valid_from: string | null;
+  valid_to: string | null;
 }
 
 export interface SriAttempts {
