@@ -7,11 +7,17 @@ import type { DB } from './schema.js';
 /** Token de inyección del cliente Kysely. */
 export const DATABASE = Symbol('DATABASE');
 
-/** sslmode de la URL (formato JDBC/libpq) a la opción ssl de pg. Otros valores dejan el predeterminado de pg. */
-function sslOption(mode: string | undefined): pg.PoolConfig['ssl'] {
+/**
+ * sslmode de la URL (formato JDBC/libpq) a la opción ssl de pg. parseDatabaseUrl solo deja pasar
+ * estos cuatro valores; sin sslmode la conexión va sin TLS.
+ */
+export function sslOption(mode: string | undefined): pg.PoolConfig['ssl'] {
   switch (mode) {
     case 'require':
       return { rejectUnauthorized: false };
+    case 'verify-ca':
+      // Verifica la cadena de confianza pero no el nombre del servidor, como libpq.
+      return { rejectUnauthorized: true, checkServerIdentity: () => undefined };
     case 'verify-full':
       return true;
     case 'disable':
@@ -20,6 +26,20 @@ function sslOption(mode: string | undefined): pg.PoolConfig['ssl'] {
       return undefined;
   }
 }
+
+const DATE_OID = 1082;
+
+/**
+ * Las columnas `date` (LocalDate en Java) llegan como el texto 'YYYY-MM-DD': el parser por
+ * defecto de pg las convierte en Date a medianoche local y, en un proceso en UTC, la fecha
+ * fiscal que alimenta la clave de acceso puede salir un día antes.
+ */
+const dateAsText: pg.CustomTypesConfig = {
+  getTypeParser: ((oid: number, format?: 'text' | 'binary') =>
+    oid === DATE_OID
+      ? (value: string) => value
+      : pg.types.getTypeParser(oid, format as 'text')) as pg.CustomTypesConfig['getTypeParser'],
+};
 
 function quoteIdentifier(name: string): string {
   return `"${name.replaceAll('"', '""')}"`;
@@ -43,6 +63,7 @@ export function createDatabase(config: AppConfig['database']): Kysely<DB> {
     // llevan sus propios plazos.
     connectionTimeoutMillis: 30_000,
     ssl: sslOption(config.params['sslmode']),
+    types: dateAsText,
   });
   if (config.schema !== null) {
     const setSearchPath = `SET search_path TO ${quoteIdentifier(config.schema)}`;

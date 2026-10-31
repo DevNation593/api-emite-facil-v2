@@ -143,3 +143,30 @@ describe('parseRabbitUrl', () => {
     expect(message).not.toContain('secreto');
   });
 });
+
+describe('sslmode de DATABASE_URL', () => {
+  const url = (query: string) => `postgresql://app:secreto-xyz@db:5432/einvoice?${query}`;
+
+  it.each(['disable', 'require', 'verify-ca', 'verify-full'])('admite %s', (mode) => {
+    expect(parseDatabaseUrl(url(`sslmode=${mode}`)).params).toEqual({ sslmode: mode });
+  });
+
+  it('sin sslmode no hay parámetro', () => {
+    expect(parseDatabaseUrl('postgresql://app@db/einvoice').params).toEqual({});
+  });
+
+  it.each(['prefer', 'allow', 'otro', ''])('rechaza sslmode=%j sin repetir la URL', (mode) => {
+    const message = messageOf(() => parseDatabaseUrl(url(`sslmode=${mode}`)));
+    expect(message).toContain('DATABASE_URL');
+    expect(message).not.toContain('secreto-xyz');
+  });
+
+  it('rechaza sslrootcert sin repetir la URL', () => {
+    const message = messageOf(() =>
+      parseDatabaseUrl(url('sslmode=verify-full&sslrootcert=%2Fetc%2Fca.pem')),
+    );
+    expect(message).toContain('DATABASE_URL');
+    expect(message).not.toContain('secreto-xyz');
+    expect(message).not.toContain('ca.pem');
+  });
+});

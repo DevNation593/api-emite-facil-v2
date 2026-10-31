@@ -23,6 +23,7 @@ export interface RabbitConnection {
   tls: boolean;
 }
 
+const SSL_MODES = ['disable', 'require', 'verify-ca', 'verify-full'];
 const DATABASE_URL = 'DATABASE_URL';
 const RABBITMQ_URL = 'RABBITMQ_URL';
 const DATABASE_FORM = 'postgresql://usuario:contraseña@host:puerto/base';
@@ -110,6 +111,17 @@ export function parseDatabaseUrl(value: string): DatabaseConnection {
       }
       schema = trimmed;
     } else {
+      if (key === 'sslrootcert') {
+        throw new Error(
+          `${DATABASE_URL} no admite sslrootcert: el certificado raíz del servidor no se configura por la URL`,
+        );
+      }
+      if (key === 'sslmode' && !SSL_MODES.includes(val)) {
+        // prefer y allow degradan a texto plano sin avisar: se rechazan al arrancar.
+        throw new Error(
+          `${DATABASE_URL} tiene un sslmode no admitido (admitidos: ${SSL_MODES.join(', ')})`,
+        );
+      }
       params[key] = val;
     }
   }
