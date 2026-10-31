@@ -175,3 +175,41 @@ it('cuerpo mayor de 10 MB responde 413 problem+json', async () => {
   );
   expect(res.body.correlationId).toBeTruthy();
 });
+
+it.each([undefined, '[]', '"x"', '5'])('cuerpo %j que no es un objeto', async (body) => {
+  const res = await http
+    .post('/api/v1/test/echo')
+    .set('Content-Type', 'application/json')
+    .send(body);
+  expect(res.body).toMatchObject({ status: 400, errorCode: 'MALFORMED_REQUEST' });
+});
+
+it('objeto donde va un texto es JSON no legible, como Jackson', async () => {
+  const res = await http.post('/api/v1/test/echo').send({ name: { a: 1 }, lines: [] });
+  expect(res.body).toMatchObject({
+    status: 400,
+    errorCode: 'MALFORMED_REQUEST',
+    detail: 'El cuerpo de la petición no es JSON válido',
+  });
+});
+
+it('array donde va un texto anidado es JSON no legible', async () => {
+  const res = await http
+    .post('/api/v1/test/echo')
+    .send({ name: 'x', lines: [{ quantity: 1, description: ['a'] }] });
+  expect(res.body).toMatchObject({ status: 400, errorCode: 'MALFORMED_REQUEST' });
+});
+
+it('número donde va un texto se convierte, como Jackson', async () => {
+  const res = await http.post('/api/v1/test/echo').send({ name: 5, lines: [] }).expect(201);
+  expect(res.body.name).toBe('5');
+});
+
+it('@NotBlank con el recorte de Java: NBSP no cuenta como blanco', async () => {
+  await http.post('/api/v1/test/echo').send({ name: String.fromCharCode(0xa0), lines: [] }).expect(201);
+  const res = await http
+    .post('/api/v1/test/echo')
+    .send({ name: String.fromCharCode(0x3000), lines: [] })
+    .expect(400);
+  expect(res.body.errors).toEqual([{ field: 'name', message: 'must not be blank' }]);
+});

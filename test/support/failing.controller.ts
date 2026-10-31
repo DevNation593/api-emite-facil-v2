@@ -1,25 +1,21 @@
 import { Body, Controller, Get, Module, Post } from '@nestjs/common';
 import { Type } from 'class-transformer';
-import {
-  IsNotEmpty,
-  IsOptional,
-  IsPositive,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsPositive, ValidateNested } from 'class-validator';
+import { JsonString, NotBlank, Size } from '../../src/common/bean-validation.js';
 import { ApiException } from '../../src/common/api-exception.js';
 
 class LineDto {
   @IsPositive()
   quantity!: number;
 
-  @IsOptional()
-  @IsString()
+  @JsonString()
+  @Size({ max: 1000 })
   description?: string;
 }
 
 class EchoDto {
-  @IsNotEmpty()
+  @JsonString()
+  @NotBlank()
   name!: string;
 
   @ValidateNested({ each: true })

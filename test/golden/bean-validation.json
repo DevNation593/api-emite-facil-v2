@@ -1,0 +1,634 @@
+{
+  "cases": [
+    {
+      "constraint": "NotBlank",
+      "value": "",
+      "valid": false,
+      "message": "must not be blank"
+    },
+    {
+      "constraint": "NotBlank",
+      "value": " ",
+      "valid": false,
+      "message": "must not be blank"
+    },
+    {
+      "constraint": "NotBlank",
+      "value": "\t",
+      "valid": false,
+      "message": "must not be blank"
+    },
+    {
+      "constraint": "NotBlank",
+      "value": "　",
+      "valid": false,
+      "message": "must not be blank"
+    },
+    {
+      "constraint": "NotBlank",
+      "value": " ",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NotBlank",
+      "value": "a",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NotBlank",
+      "value": " ",
+      "valid": false,
+      "message": "must not be blank"
+    },
+    {
+      "constraint": "NotBlank",
+      "value": "\u001f",
+      "valid": false,
+      "message": "must not be blank"
+    },
+    {
+      "constraint": "NotBlank",
+      "value": "\u0000",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NotBlank",
+      "value": " a ",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NotBlank",
+      "value": null,
+      "valid": false,
+      "message": "must not be blank"
+    },
+    {
+      "constraint": "NotNull",
+      "value": null,
+      "valid": false,
+      "message": "must not be null"
+    },
+    {
+      "constraint": "NotNull",
+      "value": "",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NotNull",
+      "value": " ",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NotNull",
+      "value": "x",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Size",
+      "value": null,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Size",
+      "value": "",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Size",
+      "value": "a",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Size",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Size",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "valid": false,
+      "message": "size must be between 0 and 254"
+    },
+    {
+      "constraint": "Size",
+      "value": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Size",
+      "value": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+      "valid": false,
+      "message": "size must be between 0 and 254"
+    },
+    {
+      "constraint": "Size",
+      "value": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b.c",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a.b@c.d",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a..b@c.d",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": ".a@b.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a.@b.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@-b.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b-.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a b@c.d",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "\"a b\"@c.d",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "ñ@ejemplo.ec",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@[192.168.0.1]",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@ejemplo.ec.",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "sin-arroba",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": null,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@b.c",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@b.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.a",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aa",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaa",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaa",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaa",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.c",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b..c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "@b.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b@c.d",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a+tag@b.c",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@ñ.ec",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b_c.d",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b.c ",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": " a@b.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@[IPv6:::1]",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@[300.1.1.1]",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "\"a@b\"@c.d",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a\\@b@c.d",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b.123",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@[::1]",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@[IPv6:::1",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "@b.c",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@ .c",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@😀.ec",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "😀@b.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@Über.de",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b.中文",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@ñññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññññ.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@ññññññññññññññññññññññññññññññ.c",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "A@B.C",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@[1.2.3]",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@[1.2.3.4.5]",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@-.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "\"\"@b.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "\"a\"@b.c",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a\"b@c.d",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "\"a\\\"b\"@c.d",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "\"a\\\\b\"@c.d",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b.c.",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@.c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@b.-c",
+      "valid": false,
+      "message": "must be a well-formed email address"
+    },
+    {
+      "constraint": "Email",
+      "value": "a@1.2.3.4",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": null,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a b",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "ñ",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "😀",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a\u0000",
+      "valid": false,
+      "message": "must match \"[^\\p{Cntrl}]*\""
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a\n",
+      "valid": false,
+      "message": "must match \"[^\\p{Cntrl}]*\""
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a\r",
+      "valid": false,
+      "message": "must match \"[^\\p{Cntrl}]*\""
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a\t",
+      "valid": false,
+      "message": "must match \"[^\\p{Cntrl}]*\""
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a\u001f",
+      "valid": false,
+      "message": "must match \"[^\\p{Cntrl}]*\""
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a",
+      "valid": false,
+      "message": "must match \"[^\\p{Cntrl}]*\""
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a ",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a ",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "a ",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "NoControlChars",
+      "value": "\u0000",
+      "valid": false,
+      "message": "must match \"[^\\p{Cntrl}]*\""
+    }
+  ]
+}
