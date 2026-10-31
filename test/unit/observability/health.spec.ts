@@ -10,6 +10,10 @@ const ok = (name: string): HealthCheck => ({
 });
 
 describe('checkHealth', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('UP si todas las comprobaciones pasan', async () => {
     await expect(checkHealth([ok('db'), ok('redis')])).resolves.toBe('UP');
   });
@@ -25,26 +29,37 @@ describe('checkHealth', () => {
     await expect(checkHealth([ok('db'), failing])).resolves.toBe('DOWN');
   });
 
-  it('DOWN en menos de plazo + 100 ms si una tarda más que su plazo', async () => {
+  it('DOWN en cuanto vence el plazo de la que no contesta', async () => {
+    vi.useFakeTimers();
     const slow: HealthCheck = {
       name: 'rabbit',
       timeoutMs: 300,
       run: () => new Promise(() => undefined),
     };
-    const started = Date.now();
-    await expect(checkHealth([ok('db'), slow])).resolves.toBe('DOWN');
-    expect(Date.now() - started).toBeLessThan(400);
+    let result: string | undefined;
+    void checkHealth([ok('db'), slow]).then((status) => {
+      result = status;
+    });
+    await vi.advanceTimersByTimeAsync(299);
+    expect(result).toBeUndefined();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(result).toBe('DOWN');
   });
 
   it('las comprobaciones corren en paralelo', async () => {
+    vi.useFakeTimers();
     const wait = (name: string): HealthCheck => ({
       name,
       timeoutMs: 1_000,
       run: () => new Promise((resolve) => setTimeout(resolve, 200)),
     });
-    const started = Date.now();
-    await checkHealth([wait('a'), wait('b'), wait('c')]);
-    expect(Date.now() - started).toBeLessThan(450);
+    let result: string | undefined;
+    void checkHealth([wait('a'), wait('b'), wait('c')]).then((status) => {
+      result = status;
+    });
+    // En serie harían falta 600 ms.
+    await vi.advanceTimersByTimeAsync(200);
+    expect(result).toBe('UP');
   });
 
   it('un rechazo tardío de una comprobación vencida no queda sin atender', async () => {
@@ -56,7 +71,13 @@ describe('checkHealth', () => {
           setTimeout(() => reject(new Error('tarde')), 150),
         ),
     };
-    await expect(checkHealth([late])).resolves.toBe('DOWN');
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    vi.useFakeTimers();
+    let result: string | undefined;
+    void checkHealth([late]).then((status) => {
+      result = status;
+    });
+    await vi.advanceTimersByTimeAsync(50);
+    expect(result).toBe('DOWN');
+    await vi.advanceTimersByTimeAsync(150);
   });
 });

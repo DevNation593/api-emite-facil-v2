@@ -12,6 +12,9 @@ const MIN_BACKOFF_MS = 1_000;
 const MAX_BACKOFF_MS = 30_000;
 const HEARTBEAT_SECONDS = 30;
 const CLOSE_GRACE_MS = 2_000;
+// Plazo del socket y del handshake AMQP, como la comprobación de health: sin él, un broker que
+// acepta y no contesta deja `connecting` sin resolver y la conexión no se reintenta.
+const CONNECT_TIMEOUT_MS = 2_000;
 
 /**
  * Conexión a RabbitMQ bajo demanda. No conecta al crearse: la primera llamada a channel() o
@@ -56,15 +59,18 @@ export class RabbitConnection implements OnApplicationShutdown {
 
   private async connectOnce(): Promise<ChannelModel> {
     const { host, port, user, password, vhost, tls } = this.config.rabbit;
-    const connection = await connect({
-      protocol: tls ? 'amqps' : 'amqp',
-      hostname: host,
-      port,
-      username: user,
-      password,
-      vhost,
-      heartbeat: HEARTBEAT_SECONDS,
-    });
+    const connection = await connect(
+      {
+        protocol: tls ? 'amqps' : 'amqp',
+        hostname: host,
+        port,
+        username: user,
+        password,
+        vhost,
+        heartbeat: HEARTBEAT_SECONDS,
+      },
+      { timeout: CONNECT_TIMEOUT_MS },
+    );
     if (this.closed) {
       // Se apagó mientras conectaba: no queda nadie para usar esta conexión.
       await this.closeQuietly(connection);

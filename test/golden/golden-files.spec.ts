@@ -62,12 +62,15 @@ describe('golden files', () => {
     const contexts: string[] = cases.map((c: { context: string }) => c.context);
     expect(
       contexts.some(
-        (c) =>
-          /^certificate|[^|]+|[^|]+|[^|]+|p12$/.test(c) &&
-          c
-            .split('|')
-            .slice(1, 4)
-            .every((p) => uuid.test(p)),
+        (c) => {
+          const segments = c.split('|');
+          return (
+            segments.length === 5 &&
+            segments[0] === 'certificate' &&
+            segments[4] === 'p12' &&
+            segments.slice(1, 4).every((p) => uuid.test(p))
+          );
+        },
       ),
     ).toBe(true);
     expect(
