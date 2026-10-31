@@ -61,7 +61,7 @@ Uno por módulo Java, con las mismas fronteras y responsabilidades: `tenancy`, `
 | Java (Spring) | NestJS |
 | --- | --- |
 | `@RestController`, prefijo `/api/v1` | `@Controller` con `setGlobalPrefix('api/v1')` |
-| Spring Security, `UserIdentityResolver`, `TenantAccessResolver` | Guards encadenados: autenticación (JWT o API key) → empresa activa → rol |
+| Spring Security, `UserIdentityResolver`, `TenantAccessResolver` | Un middleware entre el de correlación y el del cuerpo hace la autenticación (JWT o API key) y el límite de peticiones: reproduce el orden "401 primero" de Java y no parsea cuerpos sin autenticar. Empresa activa y rol, en guards. El 415 pasa a un interceptor en E1 |
 | `ApiExceptionHandler` | Filtro de excepciones global (sección 5) |
 | Bean Validation | `ValidationPipe` + DTO con `class-validator`, mismos mensajes y mismos nombres de campo |
 | `@Transactional` | Transacción Kysely explícita; los servicios que en Java exigen `Propagation.MANDATORY` reciben la transacción como parámetro obligatorio |
