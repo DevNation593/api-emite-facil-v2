@@ -84,6 +84,24 @@ describe('migraciones con Flyway', () => {
     expect(run.output).not.toContain('SPRING_FLYWAY_PASSWORD');
   });
 
+  it.each(['a,b', '', '%20', 'a%2Cb'])(
+    'migrate.sh rechaza currentSchema=%j sin migrar ni imprimir la URL',
+    async (schema) => {
+      const pgc = await startPostgres();
+      cleanups.push(() => pgc.stop());
+      const url = `${pgc.internalUrl}?currentSchema=${schema}&sslmode=disable`;
+      const run = await runFlyway(url, pgc.network, 'migrate');
+      expect(run.exitCode).not.toBe(0);
+      expect(run.output).toContain('currentSchema');
+      expect(run.output).not.toContain(pgc.internalUrl);
+      const tables = await query(
+        pgc.databaseUrl,
+        "SELECT 1 FROM information_schema.tables WHERE table_name = 'tenants'",
+      );
+      expect(tables).toEqual([]);
+    },
+  );
+
   it('DatabaseModule ejecuta SELECT 1 y cierra el pool al cerrar la app', async () => {
     const db0 = await migratedDatabase();
     cleanups.push(() => db0.stop());

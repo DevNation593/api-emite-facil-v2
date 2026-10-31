@@ -28,7 +28,9 @@ Reemplazo 1:1 de la API Java/Spring Boot de facturación electrónica del SRI de
    # o, con las mismas variables del entorno: npm run migrate
    ```
 
-   Flyway corre dentro de la red de compose, donde `localhost` es el propio contenedor y la base se llama `postgres`. Por eso, si `DATABASE_URL` apunta a `localhost`, hay que definir `MIGRATE_DATABASE_URL` con la misma URL pero con el host `postgres` (por ejemplo `postgresql://app:change-me@postgres:5432/einvoice`). Sin ella se usa `DATABASE_URL` y la migración no llega a la base.
+   `npm run migrate` lee el `.env` de la raíz. Flyway corre dentro de la red de compose, donde `localhost` es el propio contenedor y la base se llama `postgres`. Por eso, si `DATABASE_URL` apunta a `localhost`, hay que definir `MIGRATE_DATABASE_URL` con la misma URL pero con el host `postgres` (por ejemplo `postgresql://app:change-me@postgres:5432/einvoice`). Sin ella se usa `DATABASE_URL` y la migración no llega a la base.
+
+   `sslmode` en `DATABASE_URL`: sin él la conexión va sin TLS; en una base remota usar `sslmode=require` o superior. Se admiten `disable`, `require`, `verify-ca` (verifica la cadena, no el nombre) y `verify-full`; `prefer`, `allow` y `sslrootcert` se rechazan al arrancar.
 
 4. Compilar y arrancar:
 

@@ -18,8 +18,8 @@
     "test:unit": "vitest run --project unit",
     "test:golden": "vitest run --project golden",
     "test:integration": "vitest run --project integration",
-    "migrate": "docker compose -f infra/docker-compose.yml --profile migrate run --rm migrate",
-    "db:codegen": "kysely-codegen --dialect postgres --out-file src/database/schema.ts --exclude-pattern flyway_schema_history"
+    "migrate": "docker compose --env-file .env -f infra/docker-compose.yml --profile migrate run --rm migrate",
+    "db:codegen": "kysely-codegen --dialect postgres --out-file src/database/schema.ts --exclude-pattern flyway_schema_history --date-parser string"
   },
   "dependencies": {
     "@nestjs/common": "^12.3.2",
