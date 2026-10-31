@@ -141,7 +141,8 @@ export class AuthMailer {
     const task: Promise<void> = transport
       .sendMail({
         from: { name: PRODUCT, address: from },
-        to: mail.to,
+        // Como objeto, nunca como texto: un texto se interpreta como lista de direcciones.
+        to: { address: mail.to },
         subject: mail.subject,
         text: mail.text,
       })

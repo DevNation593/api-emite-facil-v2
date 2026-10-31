@@ -6,6 +6,8 @@
  * No porta las tablas completas de nameprep.
  */
 
+import { codePointLength } from './java-text.js';
+
 const LABEL_SEPARATORS = new RegExp('[.\\u3002\\uff0e\\uff61]');
 // Tabla B.1: se eliminan antes de normalizar.
 const MAPPED_TO_NOTHING = new RegExp('\\u034f|\\ufe0[0-9a-f]|[\\u00ad\\u180b-\\u180d\\u200b-\\u200d\\u2060\\ufeff]', 'g');
@@ -63,7 +65,9 @@ function punycode(input: string): string {
   let delta = 0;
   let bias = 72;
   while (handled < codePoints.length) {
-    const next = Math.min(...codePoints.filter((c) => c >= n));
+    // Sin `Math.min(...)`: con decenas de miles de puntos de código desbordaría la pila.
+    let next = Infinity;
+    for (const c of codePoints) if (c >= n && c < next) next = c;
     delta += (next - n) * (handled + 1);
     n = next;
     for (const c of codePoints) {
@@ -97,6 +101,9 @@ export function idnToAscii(domain: string): string | null {
     if (/[^\u0000-\u007f]/.test(label)) {
       label = label.replace(MAPPED_TO_NOTHING, '').normalize('NFKC').toLowerCase();
       if (PROHIBITED.test(label) || hasUnassignedAstral(label)) return null;
+      // El punycode mide al menos un carácter por punto de código y `xn--` suma cuatro: con más de
+      // 59 ya pasa de 63 y se rechaza, sin gastar tiempo en codificar un dominio absurdo.
+      if (codePointLength(label) > 59) return null;
       // eslint-disable-next-line no-control-regex
       if (/[^\u0000-\u007f]/.test(label)) label = `xn--${punycode(label)}`;
     }

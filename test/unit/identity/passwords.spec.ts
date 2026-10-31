@@ -56,3 +56,37 @@ describe('Passwords', () => {
     );
   });
 });
+
+describe('Passwords: hash de relleno', () => {
+  it('se calcula al construir, no en el primer correo desconocido', () => {
+    let hashed = 0;
+    class Counting extends Passwords {
+      override hash(password: string, salt?: Buffer): Promise<string> {
+        hashed++;
+        return super.hash(password, salt);
+      }
+    }
+    new Counting();
+    expect(hashed).toBe(1);
+  });
+
+  it('si el cálculo inicial falla, no queda guardado y se reintenta', async () => {
+    let calls = 0;
+    class Flaky extends Passwords {
+      override hash(password: string, salt?: Buffer): Promise<string> {
+        calls++;
+        if (calls === 1) return Promise.reject(new Error('fallo transitorio'));
+        return super.hash(password, salt);
+      }
+    }
+    const flaky = new Flaky();
+    // El intento del constructor falló sin lanzar y no quedó guardado.
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    expect(calls).toBe(1);
+    // El siguiente uso lo repite, y desde entonces se reutiliza.
+    await expect(flaky.matches('x', null)).resolves.toBe(false);
+    expect(calls).toBe(2);
+    await expect(flaky.matches('x', null)).resolves.toBe(false);
+    expect(calls).toBe(2);
+  });
+});

@@ -23,6 +23,12 @@ export class Passwords {
   /** Hash de una contraseña que nadie tiene: un correo inexistente cuesta lo mismo que uno real. */
   private decoy: Promise<string> | undefined;
 
+  constructor() {
+    // Se calcula ya, no con el primer correo desconocido: ese primer ingreso tardaría el doble y
+    // delataría que la cuenta no existe. Si falla, se reintenta en el siguiente uso.
+    this.decoyHash().catch(() => undefined);
+  }
+
   /**
    * node-argon2 escribe los parámetros como m,p,t; Spring los lee por posición (m,t,p), así que un
    * hash en el otro orden se leería con iteraciones y paralelismo cambiados si hubiera que volver a Java.
@@ -67,7 +73,14 @@ export class Passwords {
   }
 
   private decoyHash(): Promise<string> {
-    this.decoy ??= this.hash(`contraseña-de-relleno-${process.hrtime.bigint()}`);
+    if (this.decoy === undefined) {
+      const attempt = this.hash(`contraseña-de-relleno-${process.hrtime.bigint()}`);
+      this.decoy = attempt;
+      attempt.catch(() => {
+        // Un fallo no se guarda: el próximo uso lo vuelve a intentar.
+        if (this.decoy === attempt) this.decoy = undefined;
+      });
+    }
     return this.decoy;
   }
 }
