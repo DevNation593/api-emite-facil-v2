@@ -74,7 +74,7 @@ function censor(value: unknown, path: Set<object> = new Set()): unknown {
     const stack = value.stack === undefined ? undefined : scrubString(value.stack);
     if (copy === undefined && message === value.message && stack === value.stack) return value;
     // Un Error censurado pasa a objeto plano conservando lo que el formato necesita.
-    return { ...((copy ?? { ...value }) as Record<string, unknown>), type: value.constructor.name, message, stack };
+    return { ...((copy ?? Object.assign({}, value)) as Record<string, unknown>), type: value.constructor.name, message, stack };
   }
   if (copy === undefined) return value;
   return copy;
