@@ -127,3 +127,73 @@ describe('censura por clave a cualquier profundidad', () => {
     expect(lines[0]).toContain('[Truncado]');
   });
 });
+
+describe('censura por subcadena de la clave', () => {
+  const names = [
+    'accessToken',
+    'refreshToken',
+    'newPassword',
+    'currentPassword',
+    'apiKey',
+    'api_key',
+    'webhookSecret',
+    'set-cookie',
+    'proxy-authorization',
+    'jwtSecret',
+    'metricsToken',
+    'privateKey',
+    'private-key',
+    'X-API-KEY',
+    'certificateP12',
+    'EINVOICE_MASTER_KEY_masterKey',
+  ];
+
+  it.each(names)('%s', (name) => {
+    const { logger, lines } = jsonLogger();
+    logger.info({ [name]: 'valor-secreto-123', nested: { [name]: 'valor-secreto-123' } }, 'x');
+    expect(lines[0]).not.toContain('valor-secreto-123');
+    expect(JSON.parse(lines[0]!)[name]).toBe('[Redacted]');
+  });
+
+  it('no censura claves sin relación', () => {
+    const { logger, lines } = jsonLogger();
+    logger.info({ tenantId: 't-1', status: 'ok' }, 'x');
+    expect(JSON.parse(lines[0]!)).toMatchObject({ tenantId: 't-1', status: 'ok' });
+  });
+});
+
+describe('URL con credenciales en cualquier propiedad', () => {
+  it('redis: { url } enmascara la clave y conserva el resto', () => {
+    const { logger, lines } = jsonLogger();
+    logger.info({ redis: { url: 'redis://:clave-xyz@cache:6379/0' } }, 'x');
+    expect(lines[0]).not.toContain('clave-xyz');
+    expect(JSON.parse(lines[0]!).redis.url).toBe('redis://:[Redacted]@cache:6379/0');
+  });
+
+  it.each(['target', 'origin', 'dsn'])('bajo el nombre %s y con usuario', (name) => {
+    const { logger, lines } = jsonLogger();
+    logger.info({ [name]: 'postgresql://app:clave-xyz@db:5432/einvoice?sslmode=require' }, 'x');
+    expect(lines[0]).not.toContain('clave-xyz');
+    expect(JSON.parse(lines[0]!)[name]).toBe(
+      'postgresql://app:[Redacted]@db:5432/einvoice?sslmode=require',
+    );
+  });
+
+  it('clave con arroba sin codificar y valores dentro de arrays', () => {
+    const { logger, lines } = jsonLogger();
+    logger.info({ urls: ['amqp://u:cl@ve-xyz@mq:5672'] }, 'x');
+    expect(lines[0]).not.toMatch(/cl@ve|ve-xyz/);
+  });
+
+  it('el mensaje de un Error con la URL no la filtra', () => {
+    const { logger, lines } = jsonLogger();
+    logger.error({ err: new Error('fallo en redis://:clave-xyz@cache:6379') }, 'x');
+    expect(lines[0]).not.toContain('clave-xyz');
+  });
+
+  it('una URL sin credenciales queda igual', () => {
+    const { logger, lines } = jsonLogger();
+    logger.info({ url: 'https://example.com/a?b=c@d' }, 'x');
+    expect(JSON.parse(lines[0]!).url).toBe('https://example.com/a?b=c@d');
+  });
+});

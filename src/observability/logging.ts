@@ -22,9 +22,19 @@ export function severityOf(level: string): Severity {
 }
 
 const CENSORED = '[Redacted]';
-const SENSITIVE_KEYS = new Set(
-  ['password', 'p12', 'secret', 'token', 'masterkey', 'authorization', 'cookie', 'x-api-key'],
-);
+// Coincidencia por subcadena y sin distinguir mayúsculas: cubre nombres reales como accessToken,
+// newPassword, webhookSecret, set-cookie, proxy-authorization, jwtSecret o privateKey.
+const SENSITIVE_KEY =
+  /password|secret|token|api[-_]?key|authorization|cookie|p12|masterkey|private[-_]?key/i;
+
+// esquema://usuario:clave@host: la clave se enmascara en cualquier valor de texto, sea cual sea la
+// propiedad (redis://:clave@host, postgresql://app:clave@db…). Codicioso hasta el último @ de la
+// autoridad por si la clave trae uno sin codificar.
+const URL_CREDENTIALS = /([a-z][a-z0-9+.-]*:\/\/[^\s:/?#@]*:)[^\s/?#]*@/gi;
+
+function scrubString(value: string): string {
+  return value.replace(URL_CREDENTIALS, `$1${CENSORED}@`);
+}
 
 const MAX_DEPTH = 20;
 const TRUNCATED = '[Truncado]';
@@ -37,6 +47,7 @@ const TRUNCATED = '[Truncado]';
  * cortan y la profundidad se acota para no desbordar la pila dentro del log.
  */
 function censor(value: unknown, path: Set<object> = new Set()): unknown {
+  if (typeof value === 'string') return scrubString(value);
   if (typeof value !== 'object' || value === null) return value;
   if (ArrayBuffer.isView(value) || value instanceof Date) return value;
   if (path.has(value)) return '[Circular]';
@@ -48,7 +59,7 @@ function censor(value: unknown, path: Set<object> = new Set()): unknown {
     : Object.entries(value);
   for (const [key, original] of entries) {
     const next =
-      typeof key === 'string' && SENSITIVE_KEYS.has(key.toLowerCase())
+      typeof key === 'string' && SENSITIVE_KEY.test(key)
         ? CENSORED
         : censor(original, path);
     if (next !== original) {
@@ -57,11 +68,15 @@ function censor(value: unknown, path: Set<object> = new Set()): unknown {
     }
   }
   path.delete(value);
-  if (copy === undefined) return value;
   if (value instanceof Error) {
+    // message y stack no son enumerables: se limpian aparte (p. ej. un ECONNREFUSED con la URL).
+    const message = scrubString(value.message);
+    const stack = value.stack === undefined ? undefined : scrubString(value.stack);
+    if (copy === undefined && message === value.message && stack === value.stack) return value;
     // Un Error censurado pasa a objeto plano conservando lo que el formato necesita.
-    return { ...(copy as Record<string, unknown>), type: value.constructor.name, message: value.message, stack: value.stack };
+    return { ...((copy ?? { ...value }) as Record<string, unknown>), type: value.constructor.name, message, stack };
   }
+  if (copy === undefined) return value;
   return copy;
 }
 
