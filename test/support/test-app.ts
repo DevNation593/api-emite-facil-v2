@@ -1,7 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import request from 'supertest';
-import { createApp } from '../../src/bootstrap.js';
+import { createApp, type CreateAppOptions } from '../../src/bootstrap.js';
+import { AccessTokens } from '../../src/identity/access-tokens.js';
+import { testConfig } from './test-env.js';
 import type { StackHandle } from './containers.js';
 import { startSmtpStub, type SmtpStub } from './smtp-stub.js';
 
@@ -23,6 +25,7 @@ export interface TestApp {
 export async function startTestApp(
   stack: Pick<StackHandle, 'databaseUrl' | 'rabbitUrl' | 'redisUrl'>,
   env: Record<string, string> = {},
+  options: CreateAppOptions = {},
 ): Promise<TestApp> {
   const smtp = await startSmtpStub();
   const values: Record<string, string> = {
@@ -43,7 +46,7 @@ export async function startTestApp(
   }
   let app: NestExpressApplication;
   try {
-    app = await createApp();
+    app = await createApp(options);
     await app.init();
   } catch (error) {
     await smtp.stop();
@@ -63,6 +66,20 @@ export async function startTestApp(
       await smtp.stop();
     },
   };
+}
+
+/**
+ * Cabecera Authorization con un token válido, firmado con `testConfig`: para las pruebas sin base de
+ * datos que solo necesitan pasar la autenticación. El usuario no existe: sirve donde no se lee la cuenta.
+ */
+export async function testAuthHeader(): Promise<string> {
+  const { value } = await new AccessTokens(testConfig.auth).issue(
+    randomUUID(),
+    randomUUID(),
+    'prueba@example.test',
+    true,
+  );
+  return `Bearer ${value}`;
 }
 
 /** Una IP distinta por petición: el límite por IP de /auth es de 20 por minuto y las pruebas hacen más. */

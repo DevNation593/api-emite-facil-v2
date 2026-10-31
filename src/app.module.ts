@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CommonModule } from './common/common.module.js';
 import { ConfigModule } from './config/config.module.js';
+import { RateLimiterModule } from './common/rate-limiter.js';
 import { DatabaseModule } from './database/database.module.js';
 import { IdentityModule } from './identity/identity.module.js';
 import { HealthModule } from './observability/health.controller.js';
@@ -12,5 +13,6 @@ import { HealthModule } from './observability/health.controller.js';
     DatabaseModule,
     HealthModule,
     IdentityModule,
+    RateLimiterModule,
   ] })
 export class AppModule {}

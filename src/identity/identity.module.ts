@@ -7,11 +7,13 @@ import { DATABASE, DatabaseModule } from '../database/database.module.js';
 import type { DB } from '../database/schema.js';
 import { REDIS, RedisModule } from '../infrastructure/redis.module.js';
 import { METRICS_REGISTRY, MetricsModule } from '../observability/metrics.js';
+import { ApiKeyService } from '../apikey/api-key.service.js';
 import { AccessTokens } from './access-tokens.js';
 import { AuthAttemptLimiter } from './auth-attempt-limiter.js';
 import { AuthMailer } from './auth-mailer.js';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
+import { CurrentUserGuard } from './current-user.guard.js';
 import { Passwords } from './passwords.js';
 
 /**
@@ -22,6 +24,13 @@ import { Passwords } from './passwords.js';
   imports: [DatabaseModule, RedisModule, MetricsModule],
   controllers: [AuthController],
   providers: [
+    CurrentUserGuard,
+    // Provisional: la Task 7 lo traslada a su módulo junto con crear, listar y revocar.
+    {
+      provide: ApiKeyService,
+      useFactory: (db: Kysely<DB>) => new ApiKeyService(db),
+      inject: [DATABASE],
+    },
     { provide: Passwords, useFactory: () => new Passwords() },
     {
       provide: AccessTokens,
@@ -62,7 +71,7 @@ import { Passwords } from './passwords.js';
       ],
     },
   ],
-  exports: [AuthService, AccessTokens, Passwords],
+  exports: [AuthService, AccessTokens, Passwords, ApiKeyService, CurrentUserGuard],
 })
 export class IdentityModule implements OnApplicationShutdown {
   constructor(@Inject(AuthMailer) private readonly mailer: AuthMailer) {}

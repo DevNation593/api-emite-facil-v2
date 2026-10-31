@@ -1,14 +1,17 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Inject,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import type { Request } from 'express';
 import { APP_CONFIG, type AppConfig } from '../config/app-config.js';
 import {
+  ChangePasswordRequestDto,
   CredentialsDto,
   EmailRequestDto,
   LinkRequestDto,
@@ -17,6 +20,8 @@ import {
 } from './auth.dto.js';
 import { AuthService, type Tokens } from './auth.service.js';
 import { clientAddress } from './client-address.js';
+import { CurrentUser, CurrentUserGuard } from './current-user.guard.js';
+import type { UserIdentity } from './request-identity.js';
 
 /**
  * Cuentas y sesiones. Todo es público salvo /me, /email-verification/resend y /password (que
@@ -76,6 +81,38 @@ export class AuthController {
   @HttpCode(204)
   async resetPassword(@Body() request: ResetRequestDto): Promise<void> {
     await this.service.resetPassword(request.token, request.newPassword);
+  }
+
+  @Post('email-verification/resend')
+  @HttpCode(202)
+  @UseGuards(CurrentUserGuard)
+  async resendVerification(@CurrentUser() user: UserIdentity): Promise<void> {
+    await this.service.resendVerification(user.userId);
+  }
+
+  @Post('password')
+  @HttpCode(204)
+  @UseGuards(CurrentUserGuard)
+  async changePassword(
+    @CurrentUser() user: UserIdentity,
+    @Body() request: ChangePasswordRequestDto,
+  ): Promise<void> {
+    await this.service.changePassword(
+      user.userId,
+      user.sessionId,
+      request.currentPassword,
+      request.newPassword,
+    );
+  }
+
+  @Get('me')
+  @UseGuards(CurrentUserGuard)
+  me(@CurrentUser() user: UserIdentity): {
+    id: string;
+    email: string | null;
+    emailVerified: boolean;
+  } {
+    return { id: user.userId, email: user.email, emailVerified: user.emailVerified };
   }
 
   private clientIp(http: Request): string {
