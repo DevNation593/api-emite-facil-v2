@@ -34,6 +34,8 @@ export default defineConfig({
           include: ['test/integration/**/*.int.spec.ts'],
           setupFiles: ['test/support/setup-env.ts'],
           testTimeout: 120_000,
+          // Los hooks levantan contenedores y migran; con Docker en frío superan el de 10 s por defecto.
+          hookTimeout: 300_000,
           fileParallelism: false,
         },
       },

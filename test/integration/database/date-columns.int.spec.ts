@@ -16,7 +16,7 @@ describe('columnas date', () => {
   afterAll(async () => {
     if (originalTz === undefined) delete process.env['TZ'];
     else process.env['TZ'] = originalTz;
-    await db.stop();
+    await db?.stop();
   });
 
   it.each(['America/Guayaquil', 'UTC', 'Pacific/Kiritimati'])(
