@@ -430,3 +430,134 @@ describe('límite de peticiones', () => {
     }
   });
 });
+
+/** Petición en bruto: la ruta llega tal cual, sin que el cliente la normalice. */
+async function raw(
+  method: string,
+  path: string,
+  headers: Record<string, string | string[]> = {},
+  body?: string,
+): Promise<{ status: number; body: string }> {
+  const server = testApp.app.getHttpServer();
+  if (!server.listening) await testApp.app.listen(0);
+  const { port } = server.address() as AddressInfo;
+  return new Promise((resolve, reject) => {
+    const req = httpRequest({ port, method, path, headers }, (response) => {
+      let text = '';
+      response.on('data', (chunk: Buffer) => (text += chunk.toString()));
+      response.on('end', () => resolve({ status: response.statusCode ?? 0, body: text }));
+    });
+    req.on('error', reject);
+    req.end(body);
+  });
+}
+
+describe('regresiones de rutas: ninguna variante se salta la autenticación', () => {
+  const login = () => JSON.stringify(validLogin());
+  const json = { 'content-type': 'application/json' };
+
+  it.each([
+    ['mayúsculas en una ruta protegida', 'GET', '/API/V1/TENANTS'],
+    ['mayúsculas en una ruta pública', 'POST', '/api/v1/AUTH/LOGIN'],
+    ['doble barra al inicio', 'GET', '//api/v1/tenants'],
+    ['doble barra en medio', 'GET', '/api/v1//tenants'],
+    ['doble barra antes de una ruta pública', 'POST', '/api/v1//auth/login'],
+    ['%2e%2e codificado', 'GET', '/api/v1/auth/%2e%2e/tenants'],
+    ['%2e%2e hacia una ruta pública', 'POST', '/api/v1/tenants/%2e%2e/auth/login'],
+    ['.. dentro de una ruta pública', 'POST', '/api/v1/auth/login/../../tenants'],
+  ])('%s da 401', async (_name, method, path) => {
+    const res = await raw(method, path, json, method === 'POST' ? login() : undefined);
+    expect(res.status).toBe(401);
+    expect(JSON.parse(res.body)).toMatchObject({ errorCode: 'UNAUTHENTICATED' });
+  });
+
+  it.each([
+    '/actuator/health/../../api/v1/tenants',
+    '/actuator/health/%2e%2e/%2e%2e/api/v1/tenants',
+    '/actuator/health/..%2f..%2fapi/v1/tenants',
+  ])('%s, pública por el prefijo, no llega a la API', async (path) => {
+    const res = await raw('GET', path);
+    // Express no resuelve los "..": la ruta no es ninguna de la API y no hay datos que dar.
+    expect(res.status).toBeGreaterThanOrEqual(400);
+    expect(res.status).toBeLessThan(500);
+    expect(res.body).not.toContain('"role"');
+  });
+
+  it('la ruta pública exacta sigue abierta', async () => {
+    const res = await raw(
+      'POST',
+      '/api/v1/auth/login',
+      { ...json, 'x-forwarded-for': freshIp() },
+      login(),
+    );
+    expect(res.status).toBe(401);
+    // 401 de credenciales inválidas, no de falta de token: la ruta pasó la autenticación.
+    expect(JSON.parse(res.body)).toMatchObject({ errorCode: 'INVALID_CREDENTIALS' });
+  });
+});
+
+describe('cuerpos con credenciales', () => {
+  it('un handler sin @Body no da 415 aunque llegue texto, como Spring', async () => {
+    const { accessToken } = await registerAndLogin(http());
+    await http()
+      .post('/api/v1/auth/email-verification/resend')
+      .set('Authorization', bearer(accessToken))
+      .set('Content-Type', 'text/plain')
+      .send('x')
+      .expect(202);
+  });
+
+  it('@AcceptsMultipart deja pasar multipart; un handler normal lo rechaza con 415', async () => {
+    const { accessToken } = await registerAndLogin(http());
+    const multipart = (path: string) =>
+      http()
+        .post(path)
+        .set('Authorization', bearer(accessToken))
+        .attach('p12', Buffer.from('contenido'), 'certificado.p12');
+    await multipart('/api/v1/test/multipart').expect(200);
+    const rejected = await multipart('/api/v1/test/echo').expect(415);
+    expect(rejected.body).toMatchObject({ errorCode: 'UNSUPPORTED_MEDIA_TYPE' });
+  });
+
+  it('el 403 de una ruta de persona gana al 415', async () => {
+    const owner = await registerAndLogin(http());
+    await http()
+      .post('/api/v1/tenants')
+      .set('Authorization', bearer(owner.accessToken))
+      .send({ name: 'Empresa' })
+      .expect(201);
+    const created = await http()
+      .post('/api/v1/api-keys')
+      .set('Authorization', bearer(owner.accessToken))
+      .send({ name: 'ERP' })
+      .expect(201);
+    const res = await http()
+      .post('/api/v1/auth/password')
+      .set('X-Api-Key', (created.body as { key: string }).key)
+      .set('Content-Type', 'text/plain')
+      .send('x')
+      .expect(403);
+    expect(res.body).toMatchObject({ errorCode: 'API_KEY_NOT_ALLOWED' });
+  });
+
+  it('con X-Api-Key repetida vale la primera, como getHeader de Java', async () => {
+    const owner = await registerAndLogin(http());
+    const tenant = await http()
+      .post('/api/v1/tenants')
+      .set('Authorization', bearer(owner.accessToken))
+      .send({ name: 'Empresa' })
+      .expect(201);
+    const created = await http()
+      .post('/api/v1/api-keys')
+      .set('Authorization', bearer(owner.accessToken))
+      .send({ name: 'ERP' })
+      .expect(201);
+    const key = (created.body as { key: string }).key;
+    // Un array en node:http envía la cabecera dos veces.
+    const first = await raw('GET', '/api/v1/tenants/current', { 'x-api-key': [key, 'efk_otra'] });
+    expect(first.status).toBe(200);
+    expect(JSON.parse(first.body).id).toBe((tenant.body as { id: string }).id);
+    const second = await raw('GET', '/api/v1/tenants/current', { 'x-api-key': ['efk_otra', key] });
+    expect(second.status).toBe(401);
+  });
+});

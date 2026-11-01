@@ -3,7 +3,7 @@ import {
   Module,
   NotFoundException,
 } from '@nestjs/common';
-import type { NextFunction, Request, Response } from 'express';
+import type { Application, NextFunction, Request, Response } from 'express';
 import { NestFactory } from '@nestjs/core';
 import { Logger, LoggerModule } from 'nestjs-pino';
 import type { NestExpressApplication } from '@nestjs/platform-express';
@@ -12,6 +12,7 @@ import { ApiKeyService } from './apikey/api-key.service.js';
 import { RateLimiter } from './common/rate-limiter.js';
 import { correlationIdMiddleware } from './common/correlation-id.middleware.js';
 import { jsonBodyMiddleware } from './common/json-body.js';
+import { allowedMethods } from './common/route-methods.js';
 import { loadConfig } from './config/app-config.js';
 import { AccessTokens } from './identity/access-tokens.js';
 import { authenticationMiddleware } from './identity/authentication.middleware.js';
@@ -81,6 +82,17 @@ export async function createApp(
       path.startsWith('/api/v1/') ||
       path.startsWith('/actuator/');
     next(known ? undefined : new NotFoundException());
+  });
+  // OPTIONS sobre una ruta existente: 200 con Allow y sin cuerpo, como Spring MVC
+  // (dispatchOptionsRequest). Llega ya autenticado: Java no tiene CORS y lo protege igual. Sobre
+  // una ruta inexistente sigue al 404.
+  const express = app.getHttpAdapter().getInstance() as Application;
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.method !== 'OPTIONS') return next();
+    const allowed = allowedMethods(express, req.originalUrl.split('?')[0]!);
+    if (allowed.length === 0) return next();
+    res.setHeader('Allow', [...allowed, 'OPTIONS'].join(','));
+    res.status(200).end();
   });
   app.disable('etag');
   app.disable('x-powered-by');

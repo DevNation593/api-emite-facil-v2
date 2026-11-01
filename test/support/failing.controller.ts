@@ -1,7 +1,16 @@
-import { Body, Controller, Get, Module, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  InternalServerErrorException,
+  Module,
+  Post,
+} from '@nestjs/common';
 import { Type } from 'class-transformer';
 import { IsPositive, ValidateNested } from 'class-validator';
 import { JsonString, NotBlank, Size } from '../../src/common/bean-validation.js';
+import { AcceptsMultipart } from '../../src/common/validation.js';
 import { ApiException } from '../../src/common/api-exception.js';
 
 class LineDto {
@@ -31,6 +40,11 @@ class FailingController {
     throw new Error('fallo provocado por la prueba: secreto-interno');
   }
 
+  @Get('http-500')
+  http500(): never {
+    throw new InternalServerErrorException('fallo de Nest: secreto-interno');
+  }
+
   @Get('api-exception')
   apiException(): never {
     throw new ApiException(
@@ -40,6 +54,14 @@ class FailingController {
       [{ field: 'password', message: 'x' }],
       30,
     );
+  }
+
+  /** Como las subidas de certificados de E3: el cuerpo multipart no da 415. */
+  @Post('multipart')
+  @HttpCode(200)
+  @AcceptsMultipart()
+  multipart(@Body() _body: unknown): { ok: boolean } {
+    return { ok: true };
   }
 
   @Post('echo')

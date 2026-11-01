@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import request from 'supertest';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { createApp } from '../../../src/bootstrap.js';
@@ -243,4 +244,60 @@ it('@NotBlank con el recorte de Java: NBSP no cuenta como blanco', async () => {
     .send({ name: String.fromCharCode(0x3000), lines: [] })
     .expect(400);
   expect(res.body.errors).toEqual([{ field: 'name', message: 'must not be blank' }]);
+});
+
+describe('OPTIONS, como Spring MVC', () => {
+  it('sobre una ruta existente da 200 con Allow y sin cuerpo', async () => {
+    const res = await http.options('/api/v1/test/boom').set('Authorization', await testAuthHeader());
+    expect(res.status).toBe(200);
+    expect(res.headers.allow).toBe('GET,HEAD,OPTIONS');
+    expect(res.text).toBe('');
+    expect(res.headers['x-correlation-id']).toBeTruthy();
+  });
+
+  it('lista todos los métodos de la ruta', async () => {
+    const res = await http.options('/api/v1/test/echo').set('Authorization', await testAuthHeader());
+    expect(res.status).toBe(200);
+    expect(res.headers.allow).toBe('POST,OPTIONS');
+  });
+
+  it('sobre una ruta inexistente sigue siendo 404', async () => {
+    const res = await http
+      .options('/api/v1/no-existe')
+      .set('Authorization', await testAuthHeader());
+    expect(res.status).toBe(404);
+    expect(res.body).toEqual(problem(404, { errorCode: 'NOT_FOUND' }));
+  });
+
+  it('sin credenciales da 401: Java no tiene CORS que lo deje pasar', async () => {
+    const res = await http.options('/api/v1/test/boom');
+    expect(res.status).toBe(401);
+  });
+});
+
+it('un 405 lleva Allow separado por comas, como HttpHeaders.setAllow', async () => {
+  const res = await authed.delete('/api/v1/test/boom');
+  expect(res.status).toBe(405);
+  expect(res.headers.allow).toBe('GET,HEAD');
+});
+
+it('una HttpException 5xx de Nest se registra y no filtra la causa', async () => {
+  const lines: string[] = [];
+  const spy = vi.spyOn(Logger.prototype, 'error').mockImplementation((...args: unknown[]) => {
+    lines.push(args.map(String).join(' '));
+  });
+  try {
+    const res = await authed.get('/api/v1/test/http-500');
+    expect(res.status).toBe(500);
+    expect(res.body).toEqual(
+      problem(500, {
+        errorCode: 'INTERNAL_ERROR',
+        detail: 'Error interno; use el correlationId para reportarlo',
+      }),
+    );
+    expect(JSON.stringify(res.body)).not.toContain('secreto-interno');
+    expect(lines.some((line) => line.includes('Error no controlado'))).toBe(true);
+  } finally {
+    spy.mockRestore();
+  }
 });

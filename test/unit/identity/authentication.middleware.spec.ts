@@ -40,7 +40,11 @@ function fakeRequest(
   path: string,
   headers: Record<string, string> = {},
 ): Request {
-  return { method, path, headers } as unknown as Request;
+  // Como node:http: headersDistinct guarda cada cabecera como lista.
+  const headersDistinct = Object.fromEntries(
+    Object.entries(headers).map(([name, value]) => [name, [value]]),
+  );
+  return { method, path, headers, headersDistinct } as unknown as Request;
 }
 
 /** Ejecuta el middleware y devuelve lo que pasó a next(). */

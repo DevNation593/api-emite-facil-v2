@@ -80,7 +80,8 @@ export function authenticationMiddleware(deps: AuthenticationDeps): RequestHandl
   }
 
   async function identify(req: Request): Promise<RequestIdentity | null> {
-    const apiKey = req.headers['x-api-key'];
+    // Repetida, vale la primera, como getHeader de Java (req.headers las juntaría con ", ").
+    const apiKey = req.headersDistinct['x-api-key']?.[0];
     const authorization = req.headers.authorization;
     if (apiKey !== undefined) {
       // Dos credenciales a la vez: no se elige una por el cliente (aunque la key venga vacía).
@@ -91,8 +92,7 @@ export function authenticationMiddleware(deps: AuthenticationDeps): RequestHandl
           'Envíe X-Api-Key o Authorization, no las dos',
         );
       }
-      // Node junta las cabeceras repetidas con ", ": la key resultante no tendrá el formato.
-      return identifyApiKey(Array.isArray(apiKey) ? (apiKey[0] ?? '') : apiKey);
+      return identifyApiKey(apiKey);
     }
     if (authorization === undefined) return null;
     // Otro esquema (Basic...) no es una credencial para esta API.

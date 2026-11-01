@@ -24,9 +24,9 @@ import { CurrentUser, CurrentUserGuard } from './current-user.guard.js';
 import type { UserIdentity } from './request-identity.js';
 
 /**
- * Cuentas y sesiones. Todo es público salvo /me, /email-verification/resend y /password (que
- * llegan con la autenticación). La API no está expuesta al navegador: la IP del usuario la pasa
- * la web en X-Forwarded-For, y se lee como explica `clientAddress`.
+ * Cuentas y sesiones. Todo es público salvo /me, /email-verification/resend y /password, que
+ * exigen la sesión de una persona (CurrentUserGuard). La API no está expuesta al navegador: la
+ * IP del usuario la pasa la web en X-Forwarded-For, y se lee como explica `clientAddress`.
  */
 @Controller('auth')
 export class AuthController {

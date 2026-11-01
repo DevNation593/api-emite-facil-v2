@@ -116,18 +116,25 @@ export class ProblemDetailsFilter implements ExceptionFilter {
     }
 
     if (exception instanceof HttpException) {
-      return this.fromStatus(exception.getStatus(), req);
+      const status = exception.getStatus();
+      // Un 5xx de Nest es un fallo del servidor: se registra como el error no controlado.
+      if (status >= 500) this.logUnhandled(exception);
+      return this.fromStatus(status, req);
     }
     const status = clientStatus(exception);
     if (status !== undefined) {
       return this.fromStatus(status, req);
     }
 
+    this.logUnhandled(exception);
+    return this.fromStatus(500, req);
+  }
+
+  private logUnhandled(exception: unknown): void {
     this.logger.error(
       'Error no controlado',
       exception instanceof Error ? exception.stack : String(exception),
     );
-    return this.fromStatus(500, req);
   }
 
   private fromStatus(status: number, req: Request): Resolved {
@@ -141,7 +148,8 @@ export class ProblemDetailsFilter implements ExceptionFilter {
         req.method !== 'OPTIONS'
       ) {
         status = 405;
-        headers = { Allow: allowed.join(', ') };
+        // Como HttpHeaders.setAllow de Spring: separados por comas, sin espacios.
+        headers = { Allow: allowed.join(',') };
       }
     }
     return {
