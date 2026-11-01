@@ -9,9 +9,9 @@ import {
 } from '../../support/test-app.js';
 
 /**
- * Un sistema externo llama con X-Api-Key. Hasta que la Task 7 cree las keys por la API, las de
- * prueba se insertan por SQL. Sin controladores de empresa todavía, la ruta que una key puede
- * recorrer es la pública /actuator/health (la key se comprueba igual) y las de persona, que la
+ * Un sistema externo llama con X-Api-Key. Aquí las keys se insertan por SQL para probar solo la
+ * comprobación; las creadas por la API se prueban en api-key-api.int.spec.ts. La ruta que recorre
+ * la key es la pública /actuator/health (la key se comprueba igual) y las de persona, que la
  * rechazan con 403.
  */
 const KEY_HEADER = 'X-Api-Key';

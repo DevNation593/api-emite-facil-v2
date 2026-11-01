@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ApiKeyModule } from './apikey/apikey.module.js';
 import { CommonModule } from './common/common.module.js';
 import { ConfigModule } from './config/config.module.js';
 import { RateLimiterModule } from './common/rate-limiter.js';
@@ -10,6 +11,7 @@ import { HealthModule } from './observability/health.controller.js';
 
 // Raíz de la aplicación. Los módulos de dominio se irán importando aquí.
 @Module({ imports: [
+    ApiKeyModule,
     CommonModule,
     ComplianceModule,
     ConfigModule,

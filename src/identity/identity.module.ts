@@ -7,7 +7,7 @@ import { DATABASE, DatabaseModule } from '../database/database.module.js';
 import type { DB } from '../database/schema.js';
 import { REDIS, RedisModule } from '../infrastructure/redis.module.js';
 import { METRICS_REGISTRY, MetricsModule } from '../observability/metrics.js';
-import { ApiKeyService } from '../apikey/api-key.service.js';
+import { ApiKeyModule } from '../apikey/apikey.module.js';
 import { AccessTokens } from './access-tokens.js';
 import { AuthAttemptLimiter } from './auth-attempt-limiter.js';
 import { AuthMailer } from './auth-mailer.js';
@@ -21,16 +21,11 @@ import { Passwords } from './passwords.js';
  * conecta con la base, Redis ni SMTP al crearse (la aplicación arranca sin infraestructura).
  */
 @Module({
-  imports: [DatabaseModule, RedisModule, MetricsModule],
+  // ApiKeyModule: el middleware de autenticación comprueba también las API keys.
+  imports: [ApiKeyModule, DatabaseModule, RedisModule, MetricsModule],
   controllers: [AuthController],
   providers: [
     CurrentUserGuard,
-    // Provisional: la Task 7 lo traslada a su módulo junto con crear, listar y revocar.
-    {
-      provide: ApiKeyService,
-      useFactory: (db: Kysely<DB>) => new ApiKeyService(db),
-      inject: [DATABASE],
-    },
     { provide: Passwords, useFactory: () => new Passwords() },
     {
       provide: AccessTokens,
@@ -71,7 +66,7 @@ import { Passwords } from './passwords.js';
       ],
     },
   ],
-  exports: [AuthService, AccessTokens, Passwords, ApiKeyService, CurrentUserGuard],
+  exports: [ApiKeyModule, AuthService, AccessTokens, Passwords, CurrentUserGuard],
 })
 export class IdentityModule implements OnApplicationShutdown {
   constructor(@Inject(AuthMailer) private readonly mailer: AuthMailer) {}
