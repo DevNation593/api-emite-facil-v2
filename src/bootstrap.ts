@@ -17,6 +17,7 @@ import { AccessTokens } from './identity/access-tokens.js';
 import { authenticationMiddleware } from './identity/authentication.middleware.js';
 import { inFlightMiddleware } from './observability/lifecycle.js';
 import { createPinoLogger } from './observability/logging.js';
+import { WorkerModule } from './orchestration/worker.module.js';
 
 export interface CreateAppOptions {
   /** Módulos extra (p. ej. controladores de prueba) que se suman a AppModule. */
@@ -30,7 +31,8 @@ export interface CreateAppOptions {
 export async function createApp(
   options: CreateAppOptions = {},
 ): Promise<NestExpressApplication> {
-  const logger = createPinoLogger(loadConfig(process.env));
+  const config = loadConfig(process.env);
+  const logger = createPinoLogger(config);
 
   @Module({
     imports: [
@@ -43,6 +45,8 @@ export async function createApp(
         renameContext: 'logger_name',
       }),
       AppModule,
+      // Aquí y no en AppModule, que es estático: la decisión necesita la configuración.
+      WorkerModule.register(config.workerEnabled),
       ...(options.imports ?? []),
     ],
   })
