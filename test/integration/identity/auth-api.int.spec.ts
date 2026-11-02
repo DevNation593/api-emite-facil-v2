@@ -4,6 +4,7 @@ import pg from 'pg';
 import type { Registry } from 'prom-client';
 import { AuthMailer } from '../../../src/identity/auth-mailer.js';
 import { MAX_EMAILS_PER_HOUR } from '../../../src/identity/auth.service.js';
+import { Passwords } from '../../../src/identity/passwords.js';
 import { METRICS_REGISTRY } from '../../../src/observability/metrics.js';
 import { startStack, type StackHandle } from '../../support/containers.js';
 import {
@@ -362,4 +363,47 @@ it('los textos de los campos no pueden ser objetos ni faltar', async () => {
     .expect(400);
   const missing = await http().post('/api/v1/auth/refresh').send({}).expect(400);
   expect(missing.body.errorCode).toBe('VALIDATION_FAILED');
+});
+
+it('pedidas a la vez, las recuperaciones de una cuenta no pasan el cupo de la hora', async () => {
+  const email = newEmail();
+  await register(email).expect(202);
+  const statuses = await Promise.all(
+    Array.from({ length: MAX_EMAILS_PER_HOUR * 3 }, () =>
+      send('/password-reset/request', { email }).then((res) => res.status),
+    ),
+  );
+  expect(statuses.every((status) => status === 202)).toBe(true);
+  const [row] = await query<{ n: string }>(
+    `SELECT count(*) AS n FROM user_tokens t JOIN users u ON u.id = t.user_id
+      WHERE u.email = $1 AND t.purpose = 'RESET_PASSWORD'`,
+    [email],
+  );
+  expect(Number(row!.n)).toBe(MAX_EMAILS_PER_HOUR);
+});
+
+it('un ingreso validado con la contraseña que se cambia entre medias no abre sesión', async () => {
+  const email = newEmail();
+  await register(email).expect(202);
+  // Argon2 corre fuera de la transacción: el cambio se confirma justo después de validar.
+  const original = Object.getOwnPropertyDescriptor(Passwords.prototype, 'matches')!
+    .value as Passwords['matches'];
+  const spy = vi
+    .spyOn(Passwords.prototype, 'matches')
+    .mockImplementation(async function (this: Passwords, password, hash) {
+      const ok = await Reflect.apply(original, this, [password, hash]);
+      await query("UPDATE users SET password_hash = 'cambiada' WHERE email = $1", [email]);
+      return ok;
+    });
+  try {
+    const res = await login(email).expect(401);
+    expect(res.body.errorCode).toBe('INVALID_CREDENTIALS');
+  } finally {
+    spy.mockRestore();
+  }
+  const [row] = await query<{ n: string }>(
+    'SELECT count(*) AS n FROM auth_sessions s JOIN users u ON u.id = s.user_id WHERE u.email = $1',
+    [email],
+  );
+  expect(Number(row!.n)).toBe(0);
 });

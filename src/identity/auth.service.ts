@@ -164,6 +164,23 @@ export class AuthService {
     const { sessionId, opened } = await this.db
       .transaction()
       .execute(async (trx) => {
+        // Argon2 corrió fuera de la transacción: un cambio o una recuperación de la contraseña pudo
+        // confirmarse entre medias y cerrar ya las sesiones. Con la fila bloqueada se comprueba que
+        // el hash validado siga vigente; si no, esta sesión nacería tras el cierre y sobreviviría.
+        // Java tiene esta carrera; aquí se cierra sin cambiar ninguna respuesta sin concurrencia.
+        const current = await trx
+          .selectFrom('users')
+          .select('password_hash')
+          .where('id', '=', user.id)
+          .forUpdate()
+          .executeTakeFirst();
+        if (current?.password_hash !== user.passwordHash) {
+          throw new ApiException(
+            401,
+            'INVALID_CREDENTIALS',
+            'Correo o contraseña incorrectos',
+          );
+        }
         const session = await trx
           .insertInto('auth_sessions')
           .values({
@@ -467,6 +484,10 @@ export class AuthService {
     mails: AuthMail[],
   ): Promise<void> {
     const purpose = kind === VERIFY_EMAIL ? VERIFY_EMAIL : RESET_PASSWORD;
+    // El count(*) no bloquea las altas de otras transacciones: sin ordenar por usuario, varias
+    // peticiones simultáneas leerían el mismo contador y pasarían todas el cupo. Java tiene esta
+    // carrera; el bloqueo solo la cierra.
+    await trx.selectFrom('users').select('id').where('id', '=', userId).forUpdate().execute();
     const recent = await trx
       .selectFrom('user_tokens')
       .select(sql<string>`count(*)`.as('n'))
