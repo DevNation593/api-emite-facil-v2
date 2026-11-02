@@ -1,5 +1,5 @@
 import { decodeJavaBase64 } from '../../../src/common/java-base64.js';
-import { offsetDateTimeJson, offsetDateTimeToString } from '../../../src/common/java-time.js';
+import { isoInstant, offsetDateTimeJson, offsetDateTimeToString } from '../../../src/common/java-time.js';
 
 describe('decodeJavaBase64, como Base64.getDecoder()', () => {
   it.each([
@@ -31,5 +31,24 @@ describe('fechas de Java', () => {
     expect(offsetDateTimeToString(new Date('2027-11-01T01:16:00.000Z'))).toBe('2027-11-01T01:16Z');
     expect(offsetDateTimeToString(new Date('2027-11-01T01:16:02.000Z'))).toBe('2027-11-01T01:16:02Z');
     expect(offsetDateTimeToString(new Date('2027-11-01T01:16:02.120Z'))).toBe('2027-11-01T01:16:02.120Z');
+  });
+});
+
+describe('isoInstant, el ISO_INSTANT de Jackson', () => {
+  it('escribe la fracción con 0, 3 o 6 dígitos según haga falta', () => {
+    expect(isoInstant('2026-11-02T15:15:30.123456')).toBe('2026-11-02T15:15:30.123456Z');
+    expect(isoInstant('2026-11-02T15:15:30.120000')).toBe('2026-11-02T15:15:30.120Z');
+    expect(isoInstant('2026-11-02T15:15:30.000000')).toBe('2026-11-02T15:15:30Z');
+    expect(isoInstant('2026-11-02T15:15:30.000001')).toBe('2026-11-02T15:15:30.000001Z');
+    expect(isoInstant('2026-11-02T15:15:30.001000')).toBe('2026-11-02T15:15:30.001Z');
+    expect(isoInstant('2026-11-02T15:15:30.100000')).toBe('2026-11-02T15:15:30.100Z');
+  });
+
+  it('siempre lleva los segundos', () => {
+    expect(isoInstant('2026-11-02T15:15:00.000000')).toBe('2026-11-02T15:15:00Z');
+  });
+
+  it.each(['2026-11-02 15:15:30.123456', '2026-11-02T15:15:30.123456Z', '2026-11-02T15:15', 'x'])('rechaza %j', (text) => {
+    expect(() => isoInstant(text)).toThrow(Error);
   });
 });

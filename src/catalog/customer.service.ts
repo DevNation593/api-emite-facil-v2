@@ -145,8 +145,9 @@ export class CustomerService {
    * devuelve todos. Ordena por nombre e id.
    */
   async search(access: TenantAccess, term: string, page: number, size: number): Promise<PageResponse<CustomerView>> {
-    const escaped = escapeLike(term);
+    // Como Java: la página se valida antes que el término.
     const request = pageRequest(page, size);
+    const escaped = escapeLike(term);
     let filtered = this.db
       .selectFrom('customers')
       .where('tenant_id', '=', access.tenantId)

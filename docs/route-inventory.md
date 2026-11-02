@@ -82,3 +82,9 @@ Ninguna.
 Java devuelve `CATALOG_CHANGED` (409, al editar o borrar un cliente o un producto que otra petición
 cambió entre medias) y el enum `errorCode` de `openapi.yaml` no lo declara. NestJS lo devuelve igual;
 `JAVA_ONLY_ERROR_CODES` en `src/common/error-codes.ts` lo deja anotado.
+
+Lo mismo ocurre con los códigos de las emisiones de E3, que `openapi.yaml` nombra en las descripciones
+pero no en el enum: `DOCUMENT_XML_INVALID`, `REPLACED_DOCUMENT_OTHER_TYPE`, `MODIFIED_DOCUMENT_REQUIRED`,
+`MODIFIED_DOCUMENT_NOT_INVOICE`, `MODIFIED_INVOICE_OTHER_ISSUER`, `MODIFIED_INVOICE_NOT_AUTHORIZED`,
+`INVALID_MODIFIED_DOCUMENT_DATE`, `CREDIT_LINE_UNKNOWN`, `CREDIT_LINE_EXCEEDS_INVOICE` y
+`CREDIT_EXCEEDS_INVOICE`. También están en `JAVA_ONLY_ERROR_CODES`.

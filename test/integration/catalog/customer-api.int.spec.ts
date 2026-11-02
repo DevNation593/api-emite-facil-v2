@@ -186,6 +186,14 @@ it.each([
   });
 });
 
+it('con la página y el término inválidos gana el error de la página, como en Java', async () => {
+  const res = await get(owner, CUSTOMERS, { page: '-1', q: 'x'.repeat(101) }).expect(400);
+  expect(res.body).toMatchObject({
+    errorCode: 'MALFORMED_REQUEST',
+    detail: 'page debe estar entre 0 y 100000 y size entre 1 y 100',
+  });
+});
+
 it('el cliente de otra empresa no existe', async () => {
   const customer = await createCustomer(http(), owner, '05', '1712345678');
   const other = (await newOwner(http())).token;

@@ -4,7 +4,19 @@
  * Códigos que la API Java devuelve y que el enum del contrato no declara. Se conservan para que las
  * respuestas sean las mismas; la diferencia está anotada en docs/route-inventory.md.
  */
-export const JAVA_ONLY_ERROR_CODES = ['CATALOG_CHANGED'] as const;
+export const JAVA_ONLY_ERROR_CODES = [
+  'CATALOG_CHANGED',
+  'DOCUMENT_XML_INVALID',
+  'REPLACED_DOCUMENT_OTHER_TYPE',
+  'MODIFIED_DOCUMENT_REQUIRED',
+  'MODIFIED_DOCUMENT_NOT_INVOICE',
+  'MODIFIED_INVOICE_OTHER_ISSUER',
+  'MODIFIED_INVOICE_NOT_AUTHORIZED',
+  'INVALID_MODIFIED_DOCUMENT_DATE',
+  'CREDIT_LINE_UNKNOWN',
+  'CREDIT_LINE_EXCEEDS_INVOICE',
+  'CREDIT_EXCEEDS_INVOICE',
+] as const;
 
 export const ERROR_CODES = [
   'UNAUTHENTICATED',

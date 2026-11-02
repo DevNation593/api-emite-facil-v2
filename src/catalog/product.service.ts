@@ -135,8 +135,9 @@ export class ProductService {
 
   /** Busca por nombre o código (contiene, sin distinguir mayúsculas). Ordena por nombre y código. */
   async search(access: TenantAccess, term: string, page: number, size: number): Promise<PageResponse<ProductView>> {
-    const escaped = escapeLike(term);
+    // Como Java: la página se valida antes que el término.
     const request = pageRequest(page, size);
+    const escaped = escapeLike(term);
     let filtered = this.db
       .selectFrom('products')
       .where('tenant_id', '=', access.tenantId)

@@ -5,11 +5,22 @@ import {
   JsonBoolean,
   JsonEnum,
   JsonInteger,
+  JsonList,
+  JsonLocalDate,
+  JsonObject,
+  JsonString,
   JsonUuid,
   Max,
   Min,
+  NoControlChars,
+  NotBlank,
   NotNull,
+  NotNullElements,
+  Pattern,
+  Size,
+  Valid,
 } from '../../../src/common/bean-validation.js';
+import { AMOUNT, QUANTITY_OR_PRICE } from '../../../src/common/decimals.js';
 import { recordNumberSource } from '../../../src/common/json-source.js';
 import { validationPipe } from '../../../src/common/validation.js';
 
@@ -120,5 +131,200 @@ describe('establishmentId, UUID de Jackson', () => {
       if (r.status === 201) expect(dto.establishmentId).toBe(ID);
       else expect(dto.establishmentId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
     });
+  });
+});
+
+/*
+ * E3: cada caso de cuerpo de test/golden/http/e3.json se pasa por el pipe con DTOs que copian los
+ * records de InvoiceController, CreditNoteController y DebitNoteController de Java. Lo que decide la
+ * deserialización o Bean Validation (400 MALFORMED_REQUEST, y VALIDATION_FAILED con mensajes de
+ * Hibernate) debe salir igual; el resto (reglas de negocio: 202, 401, 404, 409, 422 o un
+ * VALIDATION_FAILED propio de Java) debe pasar el pipe, y ahí se comprueba el valor convertido.
+ */
+const e3 = (
+  JSON.parse(readFileSync(new URL('../../golden/http/e3.json', import.meta.url), 'utf8')) as {
+    results: Array<Result & { request: { method: string; path: string } }>;
+  }
+).results;
+
+class LineRequest {
+  @JsonUuid() @NotNull() productId?: string | null;
+  @JsonString() @NotNull() @Pattern(QUANTITY_OR_PRICE) quantity?: string | null;
+  @JsonString() @Pattern(QUANTITY_OR_PRICE) unitPrice?: string | null;
+  @JsonString() @Pattern(AMOUNT) discount?: string | null;
+}
+
+class PaymentRequest {
+  @JsonString() @NotNull() @Pattern('[0-9]{2}') methodCode?: string | null;
+  @JsonString() @NotNull() @Pattern(AMOUNT) amount?: string | null;
+  @JsonString() @Pattern(AMOUNT) term?: string | null;
+  @JsonString() @Size({ max: 10 }) @NoControlChars() timeUnit?: string | null;
+}
+
+class IssueInvoiceRequest {
+  @JsonUuid() @NotNull() taxpayerId?: string | null;
+  @JsonString() @NotNull() @Pattern('[0-9]{3}') establishmentCode?: string | null;
+  @JsonString() @NotNull() @Pattern('[0-9]{3}') emissionPointCode?: string | null;
+  @JsonUuid() @NotNull() customerId?: string | null;
+  @JsonLocalDate() issueDate?: string | null;
+  @JsonString() @Pattern('[A-Z]{3}') currency?: string | null;
+  @JsonList(() => LineRequest) @NotNull() @Size({ min: 1, max: 500 }) @NotNullElements() @Valid()
+  lines?: Array<LineRequest | null> | null;
+  @JsonList(() => PaymentRequest) @NotNull() @Size({ min: 1, max: 20 }) @NotNullElements() @Valid()
+  payments?: Array<PaymentRequest | null> | null;
+  @JsonUuid() replacesDocumentId?: string | null;
+}
+
+class ModifiedDocumentRequest {
+  @JsonString() @NotNull() @Pattern('01') code?: string | null;
+  @JsonString() @NotNull() @Pattern('[0-9]{3}-[0-9]{3}-[0-9]{9}') number?: string | null;
+  @JsonLocalDate() @NotNull() issueDate?: string | null;
+}
+
+class CreditLineRequest {
+  @JsonInteger() invoiceLineNo?: number | null;
+  @JsonUuid() productId?: string | null;
+  @JsonString() @NotNull() @Pattern(QUANTITY_OR_PRICE) quantity?: string | null;
+  @JsonString() @Pattern(QUANTITY_OR_PRICE) unitPrice?: string | null;
+  @JsonString() @Pattern(AMOUNT) discount?: string | null;
+}
+
+class IssueCreditNoteRequest {
+  @JsonUuid() @NotNull() taxpayerId?: string | null;
+  @JsonString() @NotNull() @Pattern('[0-9]{3}') establishmentCode?: string | null;
+  @JsonString() @NotNull() @Pattern('[0-9]{3}') emissionPointCode?: string | null;
+  @JsonLocalDate() issueDate?: string | null;
+  @JsonString() @NotBlank() @Size({ max: 300 }) @NoControlChars() reason?: string | null;
+  @JsonUuid() invoiceId?: string | null;
+  @JsonObject(() => ModifiedDocumentRequest) @Valid() modifiedDocument?: ModifiedDocumentRequest | null;
+  @JsonUuid() customerId?: string | null;
+  @JsonList(() => CreditLineRequest) @NotNull() @Size({ min: 1, max: 200 }) @NotNullElements() @Valid()
+  lines?: Array<CreditLineRequest | null> | null;
+}
+
+class ReasonRequest {
+  @JsonString() @NotBlank() @Size({ max: 300 }) @NoControlChars() reason?: string | null;
+  @JsonString() @NotNull() @Pattern(AMOUNT) value?: string | null;
+  @JsonString() @NotNull() @Pattern('[0-9]{1,4}') ivaRateCode?: string | null;
+}
+
+class IssueDebitNoteRequest {
+  @JsonUuid() @NotNull() taxpayerId?: string | null;
+  @JsonString() @NotNull() @Pattern('[0-9]{3}') establishmentCode?: string | null;
+  @JsonString() @NotNull() @Pattern('[0-9]{3}') emissionPointCode?: string | null;
+  @JsonLocalDate() issueDate?: string | null;
+  @JsonUuid() invoiceId?: string | null;
+  @JsonObject(() => ModifiedDocumentRequest) @Valid() modifiedDocument?: ModifiedDocumentRequest | null;
+  @JsonUuid() customerId?: string | null;
+  @JsonList(() => ReasonRequest) @NotNull() @Size({ min: 1, max: 20 }) @NotNullElements() @Valid()
+  reasons?: Array<ReasonRequest | null> | null;
+  @JsonList(() => PaymentRequest) @NotNull() @Size({ min: 1, max: 1 }) @NotNullElements() @Valid()
+  payments?: Array<PaymentRequest | null> | null;
+}
+
+const DTO: Record<string, ArgumentMetadata['metatype']> = {
+  '/api/v1/invoices': IssueInvoiceRequest,
+  '/api/v1/credit-notes': IssueCreditNoteRequest,
+  '/api/v1/debit-notes': IssueDebitNoteRequest,
+};
+
+// El día de los marcadores {today…}: cualquiera sirve, el golden los conserva sin resolver.
+const TODAY = '2026-11-02';
+const IDS: Record<string, string> = {
+  taxpayerId: '11111111-1111-4111-8111-111111111111',
+  customerId: '22222222-2222-4222-8222-222222222222',
+  productId: '33333333-3333-4333-8333-333333333333',
+  invoiceId: '44444444-4444-4444-8444-444444444444',
+};
+
+function e3Body(r: Result): unknown {
+  const text = r.request.rawBody ?? JSON.stringify(r.request.body);
+  if (text === '' || text === undefined) return undefined;
+  const resolved = text
+    .replaceAll('{todayYear}', '2026')
+    .replaceAll('{todayMonth}', '11')
+    .replaceAll('{todayDay}', '2')
+    .replaceAll('{todayMinus1}', '2026-11-01')
+    .replaceAll('{todayPlus1}', '2026-11-03')
+    .replaceAll('{today}', TODAY)
+    .replaceAll(/\{(\w+?)(Upper|NoDash)?\}/g, (_m, name: string, variant?: string) => {
+      const id = IDS[name] ?? '55555555-5555-4555-8555-555555555555';
+      if (variant === 'Upper') return id.toUpperCase();
+      if (variant === 'NoDash') return id.replaceAll('-', '');
+      return id;
+    });
+  return JSON.parse(resolved, recordNumberSource) as unknown;
+}
+
+type FieldError = { field: string; message: string };
+const BEAN_MESSAGE = /^(must |size must )/;
+const key = (e: FieldError) => `${e.field}\u0000${e.message}`;
+const sorted = (errors: FieldError[]) => [...errors].sort((a, b) => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0));
+
+const bodyCases = e3
+  .filter((r) => r.request.method === 'POST' && DTO[r.request.path] !== undefined)
+  // Un 415 (otro Content-Type) y un JSON ilegible no llegan al pipe: los resuelve json-body.ts.
+  .filter((r) => r.status !== 415 && !['{', '{"taxpayerId":'].includes(r.request.rawBody ?? ''))
+  .map((r) => [r.name, r] as const);
+
+/** Lo que el pipe deja en el DTO cuando Java aceptó el valor (se deduce del nombre del caso). */
+function expectConverted(name: string, dto: Record<string, any>): void {
+  const date = /issueDate (\w+)$/.exec(name)?.[1];
+  if (date !== undefined) {
+    const modified = name.includes('modifiedDocument issueDate');
+    const expected: Record<string, string | null> = modified
+      ? { numero: '2024-10-04', arreglo: '2026-10-01', futura: '2099-01-01' }
+      : {
+          conHora: TODAY,
+          vacia: null,
+          nula: null,
+          arreglo: TODAY,
+          numero: '2024-10-04',
+          anterior: '2026-11-01',
+          futura: '2026-11-03',
+          muyFutura: '2099-01-01',
+        };
+    expect(date in expected).toBe(true);
+    expect(modified ? dto.modifiedDocument.issueDate : dto.issueDate).toBe(expected[date]);
+  }
+  const lineNo = /invoiceLineNo (\w+)$/.exec(name)?.[1];
+  if (lineNo !== undefined) {
+    const expected: Record<string, number | null> = { cero: 0, negativo: -1, inexistente: 99, nulo: null };
+    expect(dto.lines[0].invoiceLineNo).toBe(lineNo in expected ? expected[lineNo] : 1);
+  }
+  const number = /(lines|payments|reasons) (\w+) (?:número (\w+)|cadena con ceros)$/.exec(name);
+  if (number !== null) {
+    const [, list, field, kind] = number;
+    const expected: Record<string, string> = { dos: '2', dosCincuenta: '2.50', dieciochoDigitos: '123456789012.123456' };
+    expect(dto[list!][0][field!]).toBe(kind === undefined ? '007' : expected[kind]);
+  }
+}
+
+describe('cuerpos de E3, como Jackson y Bean Validation', () => {
+  it('el golden trae los casos de cuerpo de las tres emisiones', () => {
+    expect(bodyCases.length).toBeGreaterThan(300);
+  });
+
+  it.each(bodyCases)('%s', async (name, r) => {
+    const metatype = DTO[r.request.path];
+    const input = e3Body(r);
+    if (r.status === 400 && r.body.errorCode === 'MALFORMED_REQUEST') {
+      expect(r.body.detail).toBe(NOT_JSON);
+      await expect(run(metatype, input)).rejects.toMatchObject({
+        status: 400,
+        errorCode: 'MALFORMED_REQUEST',
+        detail: NOT_JSON,
+      });
+      return;
+    }
+    const errors = (r.body.errors ?? []) as FieldError[];
+    if (r.status === 400 && r.body.errorCode === 'VALIDATION_FAILED' && errors.every((e) => BEAN_MESSAGE.test(e.message))) {
+      const error = (await run(metatype, input).catch((e: unknown) => e)) as ApiException;
+      expect(error).toBeInstanceOf(ApiException);
+      expect(error.errorCode).toBe('VALIDATION_FAILED');
+      expect(sorted(error.errors)).toEqual(sorted(errors));
+      return;
+    }
+    expectConverted(name, (await run(metatype, input)) as Record<string, any>);
   });
 });
