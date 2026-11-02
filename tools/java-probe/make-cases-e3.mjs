@@ -190,20 +190,27 @@ post('debit-notes a mano sin customerId', DEBITS, without(debitManual(), 'custom
 const dates = {
   sinCero: '2026-11-2',
   barras: '02/11/2026',
-  conHora: '2026-11-02T10:00:00',
+  conHora: '{today}T10:00:00',
   vacia: '',
   numero: 20000,
-  arreglo: [2026, 11, 2],
+  arreglo: '@@today-array',
   nula: null,
-  anterior: '2026-10-01',
-  futura: '2099-01-01',
+  anterior: '{todayMinus1}',
+  futura: '{todayPlus1}',
+  muyFutura: '2099-01-01',
   inexistente: '2026-02-30',
   anio5: '12026-01-01',
 };
+// Las fechas de hoy llevan marcadores ({today}, {todayYear}...) que se resuelven al ejecutar: así
+// el resultado no depende del día en que se genera ni se repite el golden.
+const dated = (name, path, make, value) =>
+  value === '@@today-array'
+    ? post(name, path, undefined, { rawBody: JSON.stringify(make('@@')).replace('"@@"', '[{todayYear},{todayMonth},{todayDay}]') })
+    : post(name, path, make(value));
 for (const [kind, value] of Object.entries(dates)) {
-  post(`invoices issueDate ${kind}`, INVOICES, invoice({ issueDate: value }));
-  post(`credit-notes issueDate ${kind}`, CREDITS, credit({ issueDate: value }));
-  post(`debit-notes issueDate ${kind}`, DEBITS, debit({ issueDate: value }));
+  dated(`invoices issueDate ${kind}`, INVOICES, (v) => invoice({ issueDate: v }), value);
+  dated(`credit-notes issueDate ${kind}`, CREDITS, (v) => credit({ issueDate: v }), value);
+  dated(`debit-notes issueDate ${kind}`, DEBITS, (v) => debit({ issueDate: v }), value);
 }
 const modifiedDates = { sinCero: '2026-10-1', barras: '01/10/2026', numero: 20000, arreglo: [2026, 10, 1], nula: null, ausente: undefined, futura: '2099-01-01' };
 for (const [kind, value] of Object.entries(modifiedDates)) {

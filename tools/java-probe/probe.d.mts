@@ -21,6 +21,8 @@ export interface Scenario {
     string
   > &
     Record<string, string>;
+  /** El día fiscal (YYYY-MM-DD, America/Guayaquil) fijado al crear el escenario. */
+  today: string;
 }
 
 export interface ProbeCase {

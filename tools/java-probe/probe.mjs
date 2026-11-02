@@ -66,6 +66,8 @@ function jsonRequest(method, path, body, headers = {}) {
  * valores ganan `invoiceId`.
  */
 export async function runScenario(send, hooks) {
+  // El día fiscal se fija una vez: con él se rellenan los casos y se normalizan las respuestas.
+  const today = fiscalToday();
   const email = `sondeo-${randomUUID()}@example.test`;
   const ip = { 'x-forwarded-for': '198.51.100.7' };
   await expectJson(send, 'registro', jsonRequest('POST', '/api/v1/auth/register', { email, password: PASSWORD }, ip), 202);
@@ -165,10 +167,10 @@ export async function runScenario(send, hooks) {
     await hooks.authorize(issued.id);
     values.invoiceId = issued.id;
   }
-  return { headers: owner, values };
+  return { headers: owner, values, today };
 }
 
-const PLACEHOLDER = /\{([A-Za-z]+)\}/g;
+const PLACEHOLDER = /\{([A-Za-z0-9]+)\}/g;
 const UUID_ONLY = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
@@ -196,7 +198,7 @@ function fill(value, values) {
 
 /** La petición de un caso, con los valores del escenario en la ruta, la consulta y el cuerpo. */
 export function caseRequest(probe, scenario) {
-  const values = placeholders(scenario.values);
+  const values = { ...placeholders(scenario.values), ...dateValues(scenario.today ?? fiscalToday()) };
   const path = fill(probe.path, values) + (probe.query === undefined ? '' : `?${fill(probe.query, values)}`);
   const headers = { ...(probe.auth === 'owner' ? scenario.headers : {}), ...(probe.headers ?? {}) };
   let body;
@@ -219,6 +221,29 @@ function fiscalToday() {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Guayaquil' }).format(new Date());
 }
 
+/** `today` más `days` días, como YYYY-MM-DD. */
+function shiftDay(today, days) {
+  const date = new Date(`${today}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+/**
+ * Marcadores de fecha, fijados con el día de la ejecución: `{today}`, `{todayYear}`, `{todayMonth}` y
+ * `{todayDay}` (sin ceros, para escribir [año, mes, día]), `{todayMinus1}` y `{todayPlus1}`.
+ */
+function dateValues(today) {
+  const [year, month, day] = today.split('-').map(Number);
+  return {
+    today,
+    todayYear: String(year),
+    todayMonth: String(month),
+    todayDay: String(day),
+    todayMinus1: shiftDay(today, -1),
+    todayPlus1: shiftDay(today, 1),
+  };
+}
+
 /**
  * Quita lo que cambia en cada ejecución: `correlationId`, los valores del escenario (por su
  * marcador), cualquier otro UUID y las fechas ISO. Conserva el orden de las propiedades.
@@ -235,7 +260,7 @@ export function normalize(value, scenario) {
       .replace(UUID, '{uuid}')
       .replace(TIMESTAMP, '{timestamp}')
       .replace(ACCESS_KEY, '{accessKey}')
-      .replaceAll(fiscalToday(), '{today}');
+      .replaceAll(scenario.today ?? fiscalToday(), '{today}');
   }
   if (Array.isArray(value)) return value.map((item) => normalize(item, scenario));
   if (value !== null && typeof value === 'object') {

@@ -3,7 +3,7 @@
     "javaCommit": "ca53bcae19a468c1164465425a59db6c5e68b809",
     "javaDirty": false,
     "javaVersion": "java version \"25.0.5.0.2\" 2026-10-21 LTS",
-    "generatedAt": "2026-11-02T17:59:59.193Z"
+    "generatedAt": "2026-11-02T18:04:49.552Z"
   },
   "results": [
     {
@@ -6891,7 +6891,7 @@
               "amount": "12.08"
             }
           ],
-          "issueDate": "2026-11-02T10:00:00"
+          "issueDate": "{today}T10:00:00"
         }
       },
       "status": 202,
@@ -6924,7 +6924,7 @@
               "quantity": "0.1"
             }
           ],
-          "issueDate": "2026-11-02T10:00:00"
+          "issueDate": "{today}T10:00:00"
         }
       },
       "status": 202,
@@ -6963,7 +6963,7 @@
               "amount": "5.75"
             }
           ],
-          "issueDate": "2026-11-02T10:00:00"
+          "issueDate": "{today}T10:00:00"
         }
       },
       "status": 202,
@@ -7212,29 +7212,7 @@
         "headers": {
           "idempotency-key": "sondeo-124-invoices-issuedate-arreglo"
         },
-        "body": {
-          "taxpayerId": "{taxpayerId}",
-          "establishmentCode": "001",
-          "emissionPointCode": "001",
-          "customerId": "{customerId}",
-          "lines": [
-            {
-              "productId": "{productId}",
-              "quantity": "1"
-            }
-          ],
-          "payments": [
-            {
-              "methodCode": "01",
-              "amount": "12.08"
-            }
-          ],
-          "issueDate": [
-            2026,
-            11,
-            2
-          ]
-        }
+        "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}],\"issueDate\":[{todayYear},{todayMonth},{todayDay}]}"
       },
       "status": 202,
       "contentType": "application/json",
@@ -7254,24 +7232,7 @@
         "headers": {
           "idempotency-key": "sondeo-125-credit-notes-issuedate-arreglo"
         },
-        "body": {
-          "taxpayerId": "{taxpayerId}",
-          "establishmentCode": "001",
-          "emissionPointCode": "001",
-          "reason": "Devolución parcial",
-          "invoiceId": "{invoiceId}",
-          "lines": [
-            {
-              "invoiceLineNo": 1,
-              "quantity": "0.1"
-            }
-          ],
-          "issueDate": [
-            2026,
-            11,
-            2
-          ]
-        }
+        "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":\"0.1\"}],\"issueDate\":[{todayYear},{todayMonth},{todayDay}]}"
       },
       "status": 422,
       "contentType": "application/problem+json",
@@ -7293,30 +7254,7 @@
         "headers": {
           "idempotency-key": "sondeo-126-debit-notes-issuedate-arreglo"
         },
-        "body": {
-          "taxpayerId": "{taxpayerId}",
-          "establishmentCode": "001",
-          "emissionPointCode": "001",
-          "invoiceId": "{invoiceId}",
-          "reasons": [
-            {
-              "reason": "Intereses de mora",
-              "value": "5.00",
-              "ivaRateCode": "4"
-            }
-          ],
-          "payments": [
-            {
-              "methodCode": "01",
-              "amount": "5.75"
-            }
-          ],
-          "issueDate": [
-            2026,
-            11,
-            2
-          ]
-        }
+        "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":\"5.00\",\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"5.75\"}],\"issueDate\":[{todayYear},{todayMonth},{todayDay}]}"
       },
       "status": 202,
       "contentType": "application/json",
@@ -7465,7 +7403,7 @@
               "amount": "12.08"
             }
           ],
-          "issueDate": "2026-10-01"
+          "issueDate": "{todayMinus1}"
         }
       },
       "status": 422,
@@ -7500,7 +7438,7 @@
               "quantity": "0.1"
             }
           ],
-          "issueDate": "2026-10-01"
+          "issueDate": "{todayMinus1}"
         }
       },
       "status": 422,
@@ -7541,7 +7479,7 @@
               "amount": "5.75"
             }
           ],
-          "issueDate": "2026-10-01"
+          "issueDate": "{todayMinus1}"
         }
       },
       "status": 422,
@@ -7581,7 +7519,7 @@
               "amount": "12.08"
             }
           ],
-          "issueDate": "2099-01-01"
+          "issueDate": "{todayPlus1}"
         }
       },
       "status": 422,
@@ -7616,7 +7554,7 @@
               "quantity": "0.1"
             }
           ],
-          "issueDate": "2099-01-01"
+          "issueDate": "{todayPlus1}"
         }
       },
       "status": 422,
@@ -7657,6 +7595,122 @@
               "amount": "5.75"
             }
           ],
+          "issueDate": "{todayPlus1}"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La fecha de emisión no puede ser futura",
+        "instance": "/api/v1/debit-notes",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "INVALID_ISSUE_DATE"
+      }
+    },
+    {
+      "name": "invoices issueDate muyFutura",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/invoices",
+        "auth": "owner",
+        "headers": {
+          "idempotency-key": "sondeo-136-invoices-issuedate-muyfutura"
+        },
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "establishmentCode": "001",
+          "emissionPointCode": "001",
+          "customerId": "{customerId}",
+          "lines": [
+            {
+              "productId": "{productId}",
+              "quantity": "1"
+            }
+          ],
+          "payments": [
+            {
+              "methodCode": "01",
+              "amount": "12.08"
+            }
+          ],
+          "issueDate": "2099-01-01"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La fecha de emisión no puede ser futura",
+        "instance": "/api/v1/invoices",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "INVALID_ISSUE_DATE"
+      }
+    },
+    {
+      "name": "credit-notes issueDate muyFutura",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/credit-notes",
+        "auth": "owner",
+        "headers": {
+          "idempotency-key": "sondeo-137-credit-notes-issuedate-muyfutura"
+        },
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "establishmentCode": "001",
+          "emissionPointCode": "001",
+          "reason": "Devolución parcial",
+          "invoiceId": "{invoiceId}",
+          "lines": [
+            {
+              "invoiceLineNo": 1,
+              "quantity": "0.1"
+            }
+          ],
+          "issueDate": "2099-01-01"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La fecha de emisión no puede ser futura",
+        "instance": "/api/v1/credit-notes",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "INVALID_ISSUE_DATE"
+      }
+    },
+    {
+      "name": "debit-notes issueDate muyFutura",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/debit-notes",
+        "auth": "owner",
+        "headers": {
+          "idempotency-key": "sondeo-138-debit-notes-issuedate-muyfutura"
+        },
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "establishmentCode": "001",
+          "emissionPointCode": "001",
+          "invoiceId": "{invoiceId}",
+          "reasons": [
+            {
+              "reason": "Intereses de mora",
+              "value": "5.00",
+              "ivaRateCode": "4"
+            }
+          ],
+          "payments": [
+            {
+              "methodCode": "01",
+              "amount": "5.75"
+            }
+          ],
           "issueDate": "2099-01-01"
         }
       },
@@ -7678,7 +7732,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-136-invoices-issuedate-inexistente"
+          "idempotency-key": "sondeo-139-invoices-issuedate-inexistente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -7718,7 +7772,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-137-credit-notes-issuedate-inexistente"
+          "idempotency-key": "sondeo-140-credit-notes-issuedate-inexistente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -7753,7 +7807,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-138-debit-notes-issuedate-inexistente"
+          "idempotency-key": "sondeo-141-debit-notes-issuedate-inexistente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -7794,7 +7848,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-139-invoices-issuedate-anio5"
+          "idempotency-key": "sondeo-142-invoices-issuedate-anio5"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -7834,7 +7888,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-140-credit-notes-issuedate-anio5"
+          "idempotency-key": "sondeo-143-credit-notes-issuedate-anio5"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -7869,7 +7923,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-141-debit-notes-issuedate-anio5"
+          "idempotency-key": "sondeo-144-debit-notes-issuedate-anio5"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -7910,7 +7964,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-142-credit-notes-modifieddocument-issuedate-sincero"
+          "idempotency-key": "sondeo-145-credit-notes-modifieddocument-issuedate-sincero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -7949,7 +8003,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-143-debit-notes-modifieddocument-issuedate-sincero"
+          "idempotency-key": "sondeo-146-debit-notes-modifieddocument-issuedate-sincero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -7994,7 +8048,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-144-credit-notes-modifieddocument-issuedate-barras"
+          "idempotency-key": "sondeo-147-credit-notes-modifieddocument-issuedate-barras"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8033,7 +8087,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-145-debit-notes-modifieddocument-issuedate-barras"
+          "idempotency-key": "sondeo-148-debit-notes-modifieddocument-issuedate-barras"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8078,7 +8132,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-146-credit-notes-modifieddocument-issuedate-numero"
+          "idempotency-key": "sondeo-149-credit-notes-modifieddocument-issuedate-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8115,7 +8169,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-147-debit-notes-modifieddocument-issuedate-numero"
+          "idempotency-key": "sondeo-150-debit-notes-modifieddocument-issuedate-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8158,7 +8212,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-148-credit-notes-modifieddocument-issuedate-arreglo"
+          "idempotency-key": "sondeo-151-credit-notes-modifieddocument-issuedate-arreglo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8199,7 +8253,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-149-debit-notes-modifieddocument-issuedate-arreglo"
+          "idempotency-key": "sondeo-152-debit-notes-modifieddocument-issuedate-arreglo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8246,7 +8300,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-150-credit-notes-modifieddocument-issuedate-nula"
+          "idempotency-key": "sondeo-153-credit-notes-modifieddocument-issuedate-nula"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8291,7 +8345,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-151-debit-notes-modifieddocument-issuedate-nula"
+          "idempotency-key": "sondeo-154-debit-notes-modifieddocument-issuedate-nula"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8342,7 +8396,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-152-credit-notes-modifieddocument-issuedate-ausente"
+          "idempotency-key": "sondeo-155-credit-notes-modifieddocument-issuedate-ausente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8386,7 +8440,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-153-debit-notes-modifieddocument-issuedate-ausente"
+          "idempotency-key": "sondeo-156-debit-notes-modifieddocument-issuedate-ausente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8436,7 +8490,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-154-credit-notes-modifieddocument-issuedate-futura"
+          "idempotency-key": "sondeo-157-credit-notes-modifieddocument-issuedate-futura"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8475,7 +8529,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-155-debit-notes-modifieddocument-issuedate-futura"
+          "idempotency-key": "sondeo-158-debit-notes-modifieddocument-issuedate-futura"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8520,7 +8574,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-156-credit-notes-invoicelineno-numero"
+          "idempotency-key": "sondeo-159-credit-notes-invoicelineno-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8554,7 +8608,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-157-credit-notes-invoicelineno-texto"
+          "idempotency-key": "sondeo-160-credit-notes-invoicelineno-texto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8588,7 +8642,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-158-credit-notes-invoicelineno-decimal"
+          "idempotency-key": "sondeo-161-credit-notes-invoicelineno-decimal"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8622,7 +8676,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-159-credit-notes-invoicelineno-booleano"
+          "idempotency-key": "sondeo-162-credit-notes-invoicelineno-booleano"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8656,7 +8710,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-160-credit-notes-invoicelineno-letras"
+          "idempotency-key": "sondeo-163-credit-notes-invoicelineno-letras"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8690,7 +8744,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-161-credit-notes-invoicelineno-cero"
+          "idempotency-key": "sondeo-164-credit-notes-invoicelineno-cero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8724,7 +8778,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-162-credit-notes-invoicelineno-negativo"
+          "idempotency-key": "sondeo-165-credit-notes-invoicelineno-negativo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8758,7 +8812,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-163-credit-notes-invoicelineno-grande"
+          "idempotency-key": "sondeo-166-credit-notes-invoicelineno-grande"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8792,7 +8846,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-164-credit-notes-invoicelineno-nulo"
+          "idempotency-key": "sondeo-167-credit-notes-invoicelineno-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8832,7 +8886,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-165-credit-notes-invoicelineno-inexistente"
+          "idempotency-key": "sondeo-168-credit-notes-invoicelineno-inexistente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8866,7 +8920,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-166-credit-notes-invoicelineno-unocero"
+          "idempotency-key": "sondeo-169-credit-notes-invoicelineno-unocero"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1.0,\"quantity\":\"0.1\"}]}"
       },
@@ -8888,7 +8942,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-167-credit-notes-invoicelineno-unoexponente"
+          "idempotency-key": "sondeo-170-credit-notes-invoicelineno-unoexponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1e0,\"quantity\":\"0.1\"}]}"
       },
@@ -8910,7 +8964,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-168-credit-notes-invoicelineno-textoconcero"
+          "idempotency-key": "sondeo-171-credit-notes-invoicelineno-textoconcero"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":\"01\",\"quantity\":\"0.1\"}]}"
       },
@@ -8932,7 +8986,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-169-credit-notes-invoicelineno-repetido"
+          "idempotency-key": "sondeo-172-credit-notes-invoicelineno-repetido"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -8976,7 +9030,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-170-credit-notes-li-nea-con-productid-e-invoicelineno"
+          "idempotency-key": "sondeo-173-credit-notes-li-nea-con-productid-e-invoicelineno"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -9017,7 +9071,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-171-credit-notes-a-mano-con-invoicelineno"
+          "idempotency-key": "sondeo-174-credit-notes-a-mano-con-invoicelineno"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -9063,7 +9117,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-172-credit-notes-li-nea-vaci-a"
+          "idempotency-key": "sondeo-175-credit-notes-li-nea-vaci-a"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -9100,7 +9154,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-173-invoices-lines-quantity-nu-mero-dos"
+          "idempotency-key": "sondeo-176-invoices-lines-quantity-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":2}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9122,7 +9176,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-174-invoices-lines-quantity-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-177-invoices-lines-quantity-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":2.50}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9144,7 +9198,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-175-invoices-lines-quantity-nu-mero-exponente"
+          "idempotency-key": "sondeo-178-invoices-lines-quantity-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":1e2}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9172,7 +9226,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-176-invoices-lines-quantity-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-179-invoices-lines-quantity-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":123456789012.123456}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9194,7 +9248,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-177-invoices-lines-quantity-cadena-con-ceros"
+          "idempotency-key": "sondeo-180-invoices-lines-quantity-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -9233,7 +9287,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-178-invoices-lines-unitprice-nu-mero-dos"
+          "idempotency-key": "sondeo-181-invoices-lines-unitprice-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\",\"unitPrice\":2}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9255,7 +9309,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-179-invoices-lines-unitprice-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-182-invoices-lines-unitprice-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\",\"unitPrice\":2.50}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9277,7 +9331,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-180-invoices-lines-unitprice-nu-mero-exponente"
+          "idempotency-key": "sondeo-183-invoices-lines-unitprice-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\",\"unitPrice\":1e2}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9305,7 +9359,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-181-invoices-lines-unitprice-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-184-invoices-lines-unitprice-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\",\"unitPrice\":123456789012.123456}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9327,7 +9381,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-182-invoices-lines-unitprice-cadena-con-ceros"
+          "idempotency-key": "sondeo-185-invoices-lines-unitprice-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -9367,7 +9421,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-183-invoices-lines-discount-nu-mero-dos"
+          "idempotency-key": "sondeo-186-invoices-lines-discount-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\",\"discount\":2}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9389,7 +9443,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-184-invoices-lines-discount-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-187-invoices-lines-discount-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\",\"discount\":2.50}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9411,7 +9465,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-185-invoices-lines-discount-nu-mero-exponente"
+          "idempotency-key": "sondeo-188-invoices-lines-discount-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\",\"discount\":1e2}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9439,7 +9493,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-186-invoices-lines-discount-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-189-invoices-lines-discount-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\",\"discount\":123456789012.123456}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\"}]}"
       },
@@ -9467,7 +9521,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-187-invoices-lines-discount-cadena-con-ceros"
+          "idempotency-key": "sondeo-190-invoices-lines-discount-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -9507,7 +9561,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-188-invoices-payments-amount-nu-mero-dos"
+          "idempotency-key": "sondeo-191-invoices-payments-amount-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":2}]}"
       },
@@ -9529,7 +9583,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-189-invoices-payments-amount-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-192-invoices-payments-amount-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":2.50}]}"
       },
@@ -9551,7 +9605,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-190-invoices-payments-amount-nu-mero-exponente"
+          "idempotency-key": "sondeo-193-invoices-payments-amount-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":1e2}]}"
       },
@@ -9579,7 +9633,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-191-invoices-payments-amount-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-194-invoices-payments-amount-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":123456789012.123456}]}"
       },
@@ -9607,7 +9661,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-192-invoices-payments-amount-cadena-con-ceros"
+          "idempotency-key": "sondeo-195-invoices-payments-amount-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -9646,7 +9700,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-193-invoices-payments-term-nu-mero-dos"
+          "idempotency-key": "sondeo-196-invoices-payments-term-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\",\"term\":2,\"timeUnit\":\"dias\"}]}"
       },
@@ -9666,7 +9720,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-194-invoices-payments-term-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-197-invoices-payments-term-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\",\"term\":2.50,\"timeUnit\":\"dias\"}]}"
       },
@@ -9686,7 +9740,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-195-invoices-payments-term-nu-mero-exponente"
+          "idempotency-key": "sondeo-198-invoices-payments-term-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\",\"term\":1e2,\"timeUnit\":\"dias\"}]}"
       },
@@ -9714,7 +9768,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-196-invoices-payments-term-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-199-invoices-payments-term-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"{customerId}\",\"lines\":[{\"productId\":\"{productId}\",\"quantity\":\"1\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"12.08\",\"term\":123456789012.123456,\"timeUnit\":\"dias\"}]}"
       },
@@ -9742,7 +9796,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-197-invoices-payments-term-cadena-con-ceros"
+          "idempotency-key": "sondeo-200-invoices-payments-term-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -9781,7 +9835,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-198-credit-notes-lines-quantity-nu-mero-dos"
+          "idempotency-key": "sondeo-201-credit-notes-lines-quantity-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":2}]}"
       },
@@ -9803,7 +9857,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-199-credit-notes-lines-quantity-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-202-credit-notes-lines-quantity-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":2.50}]}"
       },
@@ -9825,7 +9879,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-200-credit-notes-lines-quantity-nu-mero-exponente"
+          "idempotency-key": "sondeo-203-credit-notes-lines-quantity-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":1e2}]}"
       },
@@ -9853,7 +9907,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-201-credit-notes-lines-quantity-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-204-credit-notes-lines-quantity-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":123456789012.123456}]}"
       },
@@ -9875,7 +9929,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-202-credit-notes-lines-quantity-cadena-con-ceros"
+          "idempotency-key": "sondeo-205-credit-notes-lines-quantity-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -9909,7 +9963,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-203-credit-notes-lines-unitprice-nu-mero-dos"
+          "idempotency-key": "sondeo-206-credit-notes-lines-unitprice-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":\"0.1\",\"unitPrice\":2}]}"
       },
@@ -9929,7 +9983,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-204-credit-notes-lines-unitprice-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-207-credit-notes-lines-unitprice-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":\"0.1\",\"unitPrice\":2.50}]}"
       },
@@ -9949,7 +10003,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-205-credit-notes-lines-unitprice-nu-mero-exponente"
+          "idempotency-key": "sondeo-208-credit-notes-lines-unitprice-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":\"0.1\",\"unitPrice\":1e2}]}"
       },
@@ -9977,7 +10031,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-206-credit-notes-lines-unitprice-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-209-credit-notes-lines-unitprice-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":\"0.1\",\"unitPrice\":123456789012.123456}]}"
       },
@@ -9999,7 +10053,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-207-credit-notes-lines-unitprice-cadena-con-ceros"
+          "idempotency-key": "sondeo-210-credit-notes-lines-unitprice-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10034,7 +10088,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-208-credit-notes-lines-discount-nu-mero-dos"
+          "idempotency-key": "sondeo-211-credit-notes-lines-discount-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":\"0.1\",\"discount\":2}]}"
       },
@@ -10056,7 +10110,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-209-credit-notes-lines-discount-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-212-credit-notes-lines-discount-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":\"0.1\",\"discount\":2.50}]}"
       },
@@ -10078,7 +10132,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-210-credit-notes-lines-discount-nu-mero-exponente"
+          "idempotency-key": "sondeo-213-credit-notes-lines-discount-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":\"0.1\",\"discount\":1e2}]}"
       },
@@ -10106,7 +10160,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-211-credit-notes-lines-discount-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-214-credit-notes-lines-discount-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"{invoiceId}\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":\"0.1\",\"discount\":123456789012.123456}]}"
       },
@@ -10134,7 +10188,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-212-credit-notes-lines-discount-cadena-con-ceros"
+          "idempotency-key": "sondeo-215-credit-notes-lines-discount-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10169,7 +10223,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-213-debit-notes-reasons-value-nu-mero-dos"
+          "idempotency-key": "sondeo-216-debit-notes-reasons-value-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":2,\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"5.75\"}]}"
       },
@@ -10191,7 +10245,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-214-debit-notes-reasons-value-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-217-debit-notes-reasons-value-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":2.50,\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"5.75\"}]}"
       },
@@ -10213,7 +10267,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-215-debit-notes-reasons-value-nu-mero-exponente"
+          "idempotency-key": "sondeo-218-debit-notes-reasons-value-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":1e2,\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"5.75\"}]}"
       },
@@ -10241,7 +10295,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-216-debit-notes-reasons-value-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-219-debit-notes-reasons-value-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":123456789012.123456,\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"5.75\"}]}"
       },
@@ -10269,7 +10323,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-217-debit-notes-reasons-value-cadena-con-ceros"
+          "idempotency-key": "sondeo-220-debit-notes-reasons-value-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10309,7 +10363,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-218-debit-notes-payments-amount-nu-mero-dos"
+          "idempotency-key": "sondeo-221-debit-notes-payments-amount-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":\"5.00\",\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":2}]}"
       },
@@ -10331,7 +10385,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-219-debit-notes-payments-amount-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-222-debit-notes-payments-amount-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":\"5.00\",\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":2.50}]}"
       },
@@ -10353,7 +10407,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-220-debit-notes-payments-amount-nu-mero-exponente"
+          "idempotency-key": "sondeo-223-debit-notes-payments-amount-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":\"5.00\",\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":1e2}]}"
       },
@@ -10381,7 +10435,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-221-debit-notes-payments-amount-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-224-debit-notes-payments-amount-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":\"5.00\",\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":123456789012.123456}]}"
       },
@@ -10409,7 +10463,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-222-debit-notes-payments-amount-cadena-con-ceros"
+          "idempotency-key": "sondeo-225-debit-notes-payments-amount-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10449,7 +10503,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-223-debit-notes-payments-term-nu-mero-dos"
+          "idempotency-key": "sondeo-226-debit-notes-payments-term-nu-mero-dos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":\"5.00\",\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"5.75\",\"term\":2,\"timeUnit\":\"dias\"}]}"
       },
@@ -10469,7 +10523,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-224-debit-notes-payments-term-nu-mero-doscincuenta"
+          "idempotency-key": "sondeo-227-debit-notes-payments-term-nu-mero-doscincuenta"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":\"5.00\",\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"5.75\",\"term\":2.50,\"timeUnit\":\"dias\"}]}"
       },
@@ -10489,7 +10543,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-225-debit-notes-payments-term-nu-mero-exponente"
+          "idempotency-key": "sondeo-228-debit-notes-payments-term-nu-mero-exponente"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":\"5.00\",\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"5.75\",\"term\":1e2,\"timeUnit\":\"dias\"}]}"
       },
@@ -10517,7 +10571,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-226-debit-notes-payments-term-nu-mero-dieciochodigitos"
+          "idempotency-key": "sondeo-229-debit-notes-payments-term-nu-mero-dieciochodigitos"
         },
         "rawBody": "{\"taxpayerId\":\"{taxpayerId}\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"{invoiceId}\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":\"5.00\",\"ivaRateCode\":\"4\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"5.75\",\"term\":123456789012.123456,\"timeUnit\":\"dias\"}]}"
       },
@@ -10545,7 +10599,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-227-debit-notes-payments-term-cadena-con-ceros"
+          "idempotency-key": "sondeo-230-debit-notes-payments-term-cadena-con-ceros"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10585,7 +10639,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-228-invoices-lines-objeto"
+          "idempotency-key": "sondeo-231-invoices-lines-objeto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10619,7 +10673,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-229-invoices-lines-texto"
+          "idempotency-key": "sondeo-232-invoices-lines-texto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10653,7 +10707,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-230-invoices-lines-nulo"
+          "idempotency-key": "sondeo-233-invoices-lines-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10693,7 +10747,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-231-invoices-lines-vacia"
+          "idempotency-key": "sondeo-234-invoices-lines-vacia"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10733,7 +10787,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-232-invoices-lines-connulo"
+          "idempotency-key": "sondeo-235-invoices-lines-connulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10775,7 +10829,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-233-invoices-lines-connumero"
+          "idempotency-key": "sondeo-236-invoices-lines-connumero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10811,7 +10865,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-234-invoices-lines-contexto"
+          "idempotency-key": "sondeo-237-invoices-lines-contexto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -10847,7 +10901,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-235-invoices-lines-enelmaximo"
+          "idempotency-key": "sondeo-238-invoices-lines-enelmaximo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -12882,7 +12936,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-236-invoices-lines-sobreelmaximo"
+          "idempotency-key": "sondeo-239-invoices-lines-sobreelmaximo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -14927,7 +14981,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-237-invoices-payments-objeto"
+          "idempotency-key": "sondeo-240-invoices-payments-objeto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -14961,7 +15015,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-238-invoices-payments-texto"
+          "idempotency-key": "sondeo-241-invoices-payments-texto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -14995,7 +15049,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-239-invoices-payments-nulo"
+          "idempotency-key": "sondeo-242-invoices-payments-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15035,7 +15089,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-240-invoices-payments-vacia"
+          "idempotency-key": "sondeo-243-invoices-payments-vacia"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15075,7 +15129,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-241-invoices-payments-connulo"
+          "idempotency-key": "sondeo-244-invoices-payments-connulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15117,7 +15171,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-242-invoices-payments-connumero"
+          "idempotency-key": "sondeo-245-invoices-payments-connumero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15153,7 +15207,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-243-invoices-payments-contexto"
+          "idempotency-key": "sondeo-246-invoices-payments-contexto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15189,7 +15243,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-244-invoices-payments-enelmaximo"
+          "idempotency-key": "sondeo-247-invoices-payments-enelmaximo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15304,7 +15358,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-245-invoices-payments-sobreelmaximo"
+          "idempotency-key": "sondeo-248-invoices-payments-sobreelmaximo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15429,7 +15483,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-246-credit-notes-lines-objeto"
+          "idempotency-key": "sondeo-249-credit-notes-lines-objeto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15458,7 +15512,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-247-credit-notes-lines-texto"
+          "idempotency-key": "sondeo-250-credit-notes-lines-texto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15487,7 +15541,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-248-credit-notes-lines-nulo"
+          "idempotency-key": "sondeo-251-credit-notes-lines-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15522,7 +15576,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-249-credit-notes-lines-vacia"
+          "idempotency-key": "sondeo-252-credit-notes-lines-vacia"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15557,7 +15611,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-250-credit-notes-lines-connulo"
+          "idempotency-key": "sondeo-253-credit-notes-lines-connulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15594,7 +15648,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-251-credit-notes-lines-connumero"
+          "idempotency-key": "sondeo-254-credit-notes-lines-connumero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15625,7 +15679,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-252-credit-notes-lines-contexto"
+          "idempotency-key": "sondeo-255-credit-notes-lines-contexto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -15656,7 +15710,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-253-credit-notes-lines-enelmaximo"
+          "idempotency-key": "sondeo-256-credit-notes-lines-enelmaximo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -17284,7 +17338,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-254-credit-notes-lines-sobreelmaximo"
+          "idempotency-key": "sondeo-257-credit-notes-lines-sobreelmaximo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18124,7 +18178,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-255-debit-notes-reasons-objeto"
+          "idempotency-key": "sondeo-258-debit-notes-reasons-objeto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18158,7 +18212,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-256-debit-notes-reasons-texto"
+          "idempotency-key": "sondeo-259-debit-notes-reasons-texto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18192,7 +18246,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-257-debit-notes-reasons-nulo"
+          "idempotency-key": "sondeo-260-debit-notes-reasons-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18232,7 +18286,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-258-debit-notes-reasons-vacia"
+          "idempotency-key": "sondeo-261-debit-notes-reasons-vacia"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18272,7 +18326,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-259-debit-notes-reasons-connulo"
+          "idempotency-key": "sondeo-262-debit-notes-reasons-connulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18314,7 +18368,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-260-debit-notes-reasons-connumero"
+          "idempotency-key": "sondeo-263-debit-notes-reasons-connumero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18350,7 +18404,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-261-debit-notes-reasons-contexto"
+          "idempotency-key": "sondeo-264-debit-notes-reasons-contexto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18386,7 +18440,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-262-debit-notes-reasons-enelmaximo"
+          "idempotency-key": "sondeo-265-debit-notes-reasons-enelmaximo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18521,7 +18575,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-263-debit-notes-reasons-sobreelmaximo"
+          "idempotency-key": "sondeo-266-debit-notes-reasons-sobreelmaximo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18667,7 +18721,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-264-debit-notes-payments-objeto"
+          "idempotency-key": "sondeo-267-debit-notes-payments-objeto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18702,7 +18756,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-265-debit-notes-payments-texto"
+          "idempotency-key": "sondeo-268-debit-notes-payments-texto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18737,7 +18791,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-266-debit-notes-payments-nulo"
+          "idempotency-key": "sondeo-269-debit-notes-payments-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18778,7 +18832,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-267-debit-notes-payments-vacia"
+          "idempotency-key": "sondeo-270-debit-notes-payments-vacia"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18819,7 +18873,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-268-debit-notes-payments-connulo"
+          "idempotency-key": "sondeo-271-debit-notes-payments-connulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18862,7 +18916,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-269-debit-notes-payments-connumero"
+          "idempotency-key": "sondeo-272-debit-notes-payments-connumero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18899,7 +18953,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-270-debit-notes-payments-contexto"
+          "idempotency-key": "sondeo-273-debit-notes-payments-contexto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18936,7 +18990,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-271-debit-notes-payments-enelmaximo"
+          "idempotency-key": "sondeo-274-debit-notes-payments-enelmaximo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -18974,7 +19028,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-272-debit-notes-payments-sobreelmaximo"
+          "idempotency-key": "sondeo-275-debit-notes-payments-sobreelmaximo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19024,7 +19078,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-273-debit-notes-payments-2-pagos"
+          "idempotency-key": "sondeo-276-debit-notes-payments-2-pagos"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19074,7 +19128,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-274-invoices-lines-con-productos-repetidos"
+          "idempotency-key": "sondeo-277-invoices-lines-con-productos-repetidos"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19115,7 +19169,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-275-credit-notes-modifieddocument-texto"
+          "idempotency-key": "sondeo-278-credit-notes-modifieddocument-texto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19150,7 +19204,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-276-credit-notes-modifieddocument-nulo"
+          "idempotency-key": "sondeo-279-credit-notes-modifieddocument-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19185,7 +19239,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-277-credit-notes-modifieddocument-objetovacio"
+          "idempotency-key": "sondeo-280-credit-notes-modifieddocument-objetovacio"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19234,7 +19288,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-278-credit-notes-modifieddocument-arreglo"
+          "idempotency-key": "sondeo-281-credit-notes-modifieddocument-arreglo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19269,7 +19323,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-279-credit-notes-modifieddocument-codigo04"
+          "idempotency-key": "sondeo-282-credit-notes-modifieddocument-codigo04"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19314,7 +19368,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-280-credit-notes-modifieddocument-codigonumerico"
+          "idempotency-key": "sondeo-283-credit-notes-modifieddocument-codigonumerico"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19359,7 +19413,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-281-credit-notes-modifieddocument-sincodigo"
+          "idempotency-key": "sondeo-284-credit-notes-modifieddocument-sincodigo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19403,7 +19457,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-282-credit-notes-modifieddocument-sinnumero"
+          "idempotency-key": "sondeo-285-credit-notes-modifieddocument-sinnumero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19447,7 +19501,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-283-credit-notes-modifieddocument-sinfecha"
+          "idempotency-key": "sondeo-286-credit-notes-modifieddocument-sinfecha"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19491,7 +19545,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-284-credit-notes-modifieddocument-numeromalformado"
+          "idempotency-key": "sondeo-287-credit-notes-modifieddocument-numeromalformado"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19536,7 +19590,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-285-credit-notes-modifieddocument-numeroconletras"
+          "idempotency-key": "sondeo-288-credit-notes-modifieddocument-numeroconletras"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19581,7 +19635,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-286-credit-notes-modifieddocument-propiedaddesconocida"
+          "idempotency-key": "sondeo-289-credit-notes-modifieddocument-propiedaddesconocida"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19619,7 +19673,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-287-debit-notes-modifieddocument-texto"
+          "idempotency-key": "sondeo-290-debit-notes-modifieddocument-texto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19660,7 +19714,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-288-debit-notes-modifieddocument-nulo"
+          "idempotency-key": "sondeo-291-debit-notes-modifieddocument-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19701,7 +19755,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-289-debit-notes-modifieddocument-objetovacio"
+          "idempotency-key": "sondeo-292-debit-notes-modifieddocument-objetovacio"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19756,7 +19810,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-290-debit-notes-modifieddocument-arreglo"
+          "idempotency-key": "sondeo-293-debit-notes-modifieddocument-arreglo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19797,7 +19851,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-291-debit-notes-modifieddocument-codigo04"
+          "idempotency-key": "sondeo-294-debit-notes-modifieddocument-codigo04"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19848,7 +19902,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-292-debit-notes-modifieddocument-codigonumerico"
+          "idempotency-key": "sondeo-295-debit-notes-modifieddocument-codigonumerico"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19899,7 +19953,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-293-debit-notes-modifieddocument-sincodigo"
+          "idempotency-key": "sondeo-296-debit-notes-modifieddocument-sincodigo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19949,7 +20003,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-294-debit-notes-modifieddocument-sinnumero"
+          "idempotency-key": "sondeo-297-debit-notes-modifieddocument-sinnumero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -19999,7 +20053,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-295-debit-notes-modifieddocument-sinfecha"
+          "idempotency-key": "sondeo-298-debit-notes-modifieddocument-sinfecha"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20049,7 +20103,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-296-debit-notes-modifieddocument-numeromalformado"
+          "idempotency-key": "sondeo-299-debit-notes-modifieddocument-numeromalformado"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20100,7 +20154,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-297-debit-notes-modifieddocument-numeroconletras"
+          "idempotency-key": "sondeo-300-debit-notes-modifieddocument-numeroconletras"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20151,7 +20205,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-298-debit-notes-modifieddocument-propiedaddesconocida"
+          "idempotency-key": "sondeo-301-debit-notes-modifieddocument-propiedaddesconocida"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20195,7 +20249,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-299-invoices-propiedad-desconocida"
+          "idempotency-key": "sondeo-302-invoices-propiedad-desconocida"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20233,7 +20287,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-300-invoices-propiedad-desconocida-en-li-nea"
+          "idempotency-key": "sondeo-303-invoices-propiedad-desconocida-en-li-nea"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20271,7 +20325,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-301-invoices-propiedad-desconocida-en-pago"
+          "idempotency-key": "sondeo-304-invoices-propiedad-desconocida-en-pago"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20309,7 +20363,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-302-invoices-tenantid-en-el-cuerpo"
+          "idempotency-key": "sondeo-305-invoices-tenantid-en-el-cuerpo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20347,7 +20401,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-303-credit-notes-propiedad-desconocida"
+          "idempotency-key": "sondeo-306-credit-notes-propiedad-desconocida"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20382,7 +20436,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-304-credit-notes-propiedad-desconocida-en-li-nea"
+          "idempotency-key": "sondeo-307-credit-notes-propiedad-desconocida-en-li-nea"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20417,7 +20471,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-305-debit-notes-propiedad-desconocida"
+          "idempotency-key": "sondeo-308-debit-notes-propiedad-desconocida"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20456,7 +20510,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-306-debit-notes-propiedad-desconocida-en-motivo"
+          "idempotency-key": "sondeo-309-debit-notes-propiedad-desconocida-en-motivo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20495,7 +20549,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-307-debit-notes-propiedad-desconocida-en-pago"
+          "idempotency-key": "sondeo-310-debit-notes-propiedad-desconocida-en-pago"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20534,7 +20588,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-308-invoices-establishmentcode-numero"
+          "idempotency-key": "sondeo-311-invoices-establishmentcode-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20579,7 +20633,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-309-credit-notes-emissionpointcode-numero"
+          "idempotency-key": "sondeo-312-credit-notes-emissionpointcode-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20619,7 +20673,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-310-debit-notes-establishmentcode-numero"
+          "idempotency-key": "sondeo-313-debit-notes-establishmentcode-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20665,7 +20719,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-311-invoices-establishmentcode-vacio"
+          "idempotency-key": "sondeo-314-invoices-establishmentcode-vacio"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20710,7 +20764,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-312-credit-notes-emissionpointcode-vacio"
+          "idempotency-key": "sondeo-315-credit-notes-emissionpointcode-vacio"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20750,7 +20804,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-313-debit-notes-establishmentcode-vacio"
+          "idempotency-key": "sondeo-316-debit-notes-establishmentcode-vacio"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20796,7 +20850,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-314-invoices-establishmentcode-espacios"
+          "idempotency-key": "sondeo-317-invoices-establishmentcode-espacios"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20841,7 +20895,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-315-credit-notes-emissionpointcode-espacios"
+          "idempotency-key": "sondeo-318-credit-notes-emissionpointcode-espacios"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20881,7 +20935,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-316-debit-notes-establishmentcode-espacios"
+          "idempotency-key": "sondeo-319-debit-notes-establishmentcode-espacios"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20927,7 +20981,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-317-invoices-establishmentcode-corto"
+          "idempotency-key": "sondeo-320-invoices-establishmentcode-corto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -20972,7 +21026,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-318-credit-notes-emissionpointcode-corto"
+          "idempotency-key": "sondeo-321-credit-notes-emissionpointcode-corto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21012,7 +21066,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-319-debit-notes-establishmentcode-corto"
+          "idempotency-key": "sondeo-322-debit-notes-establishmentcode-corto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21058,7 +21112,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-320-invoices-establishmentcode-largo"
+          "idempotency-key": "sondeo-323-invoices-establishmentcode-largo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21103,7 +21157,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-321-credit-notes-emissionpointcode-largo"
+          "idempotency-key": "sondeo-324-credit-notes-emissionpointcode-largo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21143,7 +21197,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-322-debit-notes-establishmentcode-largo"
+          "idempotency-key": "sondeo-325-debit-notes-establishmentcode-largo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21189,7 +21243,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-323-invoices-establishmentcode-letras"
+          "idempotency-key": "sondeo-326-invoices-establishmentcode-letras"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21234,7 +21288,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-324-credit-notes-emissionpointcode-letras"
+          "idempotency-key": "sondeo-327-credit-notes-emissionpointcode-letras"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21274,7 +21328,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-325-debit-notes-establishmentcode-letras"
+          "idempotency-key": "sondeo-328-debit-notes-establishmentcode-letras"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21320,7 +21374,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-326-invoices-establishmentcode-nulo"
+          "idempotency-key": "sondeo-329-invoices-establishmentcode-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21365,7 +21419,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-327-credit-notes-emissionpointcode-nulo"
+          "idempotency-key": "sondeo-330-credit-notes-emissionpointcode-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21405,7 +21459,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-328-debit-notes-establishmentcode-nulo"
+          "idempotency-key": "sondeo-331-debit-notes-establishmentcode-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21451,7 +21505,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-329-invoices-establishmentcode-objeto"
+          "idempotency-key": "sondeo-332-invoices-establishmentcode-objeto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21490,7 +21544,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-330-credit-notes-emissionpointcode-objeto"
+          "idempotency-key": "sondeo-333-credit-notes-emissionpointcode-objeto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21524,7 +21578,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-331-debit-notes-establishmentcode-objeto"
+          "idempotency-key": "sondeo-334-debit-notes-establishmentcode-objeto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21564,7 +21618,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-332-invoices-establecimiento-inexistente"
+          "idempotency-key": "sondeo-335-invoices-establecimiento-inexistente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21603,7 +21657,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-333-invoices-punto-de-emisio-n-inexistente"
+          "idempotency-key": "sondeo-336-invoices-punto-de-emisio-n-inexistente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21642,7 +21696,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-334-invoices-currency-minusculas"
+          "idempotency-key": "sondeo-337-invoices-currency-minusculas"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21688,7 +21742,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-335-invoices-currency-otra"
+          "idempotency-key": "sondeo-338-invoices-currency-otra"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21728,7 +21782,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-336-invoices-currency-numero"
+          "idempotency-key": "sondeo-339-invoices-currency-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21774,7 +21828,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-337-invoices-currency-vacia"
+          "idempotency-key": "sondeo-340-invoices-currency-vacia"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21820,7 +21874,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-338-invoices-currency-larga"
+          "idempotency-key": "sondeo-341-invoices-currency-larga"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21866,7 +21920,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-339-invoices-currency-nula"
+          "idempotency-key": "sondeo-342-invoices-currency-nula"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21904,7 +21958,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-340-credit-notes-reason-vacio"
+          "idempotency-key": "sondeo-343-credit-notes-reason-vacio"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21944,7 +21998,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-341-debit-notes-reasons-reason-vacio"
+          "idempotency-key": "sondeo-344-debit-notes-reasons-reason-vacio"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -21990,7 +22044,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-342-credit-notes-reason-espacios"
+          "idempotency-key": "sondeo-345-credit-notes-reason-espacios"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22030,7 +22084,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-343-debit-notes-reasons-reason-espacios"
+          "idempotency-key": "sondeo-346-debit-notes-reasons-reason-espacios"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22076,7 +22130,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-344-credit-notes-reason-nulo"
+          "idempotency-key": "sondeo-347-credit-notes-reason-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22116,7 +22170,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-345-debit-notes-reasons-reason-nulo"
+          "idempotency-key": "sondeo-348-debit-notes-reasons-reason-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22162,7 +22216,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-346-credit-notes-reason-numero"
+          "idempotency-key": "sondeo-349-credit-notes-reason-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22196,7 +22250,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-347-debit-notes-reasons-reason-numero"
+          "idempotency-key": "sondeo-350-debit-notes-reasons-reason-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22234,7 +22288,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-348-credit-notes-reason-control"
+          "idempotency-key": "sondeo-351-credit-notes-reason-control"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22274,7 +22328,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-349-debit-notes-reasons-reason-control"
+          "idempotency-key": "sondeo-352-debit-notes-reasons-reason-control"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22320,7 +22374,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-350-credit-notes-reason-saltodelinea"
+          "idempotency-key": "sondeo-353-credit-notes-reason-saltodelinea"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22360,7 +22414,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-351-debit-notes-reasons-reason-saltodelinea"
+          "idempotency-key": "sondeo-354-debit-notes-reasons-reason-saltodelinea"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22406,7 +22460,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-352-credit-notes-reason-de300"
+          "idempotency-key": "sondeo-355-credit-notes-reason-de300"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22440,7 +22494,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-353-debit-notes-reasons-reason-de300"
+          "idempotency-key": "sondeo-356-debit-notes-reasons-reason-de300"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22478,7 +22532,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-354-credit-notes-reason-de301"
+          "idempotency-key": "sondeo-357-credit-notes-reason-de301"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22518,7 +22572,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-355-debit-notes-reasons-reason-de301"
+          "idempotency-key": "sondeo-358-debit-notes-reasons-reason-de301"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22564,7 +22618,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-356-credit-notes-reason-conespacios"
+          "idempotency-key": "sondeo-359-credit-notes-reason-conespacios"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22598,7 +22652,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-357-debit-notes-reasons-reason-conespacios"
+          "idempotency-key": "sondeo-360-debit-notes-reasons-reason-conespacios"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22636,7 +22690,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-358-credit-notes-reason-sustituto"
+          "idempotency-key": "sondeo-361-credit-notes-reason-sustituto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22670,7 +22724,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-359-debit-notes-reasons-reason-sustituto"
+          "idempotency-key": "sondeo-362-debit-notes-reasons-reason-sustituto"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22710,7 +22764,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-360-debit-notes-ivaratecode-vacio"
+          "idempotency-key": "sondeo-363-debit-notes-ivaratecode-vacio"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22756,7 +22810,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-361-debit-notes-ivaratecode-cinco"
+          "idempotency-key": "sondeo-364-debit-notes-ivaratecode-cinco"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22796,7 +22850,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-362-debit-notes-ivaratecode-letras"
+          "idempotency-key": "sondeo-365-debit-notes-ivaratecode-letras"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22842,7 +22896,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-363-debit-notes-ivaratecode-cuatro"
+          "idempotency-key": "sondeo-366-debit-notes-ivaratecode-cuatro"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22880,7 +22934,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-364-debit-notes-ivaratecode-cero"
+          "idempotency-key": "sondeo-367-debit-notes-ivaratecode-cero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22920,7 +22974,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-365-debit-notes-ivaratecode-noexiste"
+          "idempotency-key": "sondeo-368-debit-notes-ivaratecode-noexiste"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -22960,7 +23014,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-366-debit-notes-ivaratecode-cincodigitos"
+          "idempotency-key": "sondeo-369-debit-notes-ivaratecode-cincodigitos"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23006,7 +23060,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-367-debit-notes-ivaratecode-nulo"
+          "idempotency-key": "sondeo-370-debit-notes-ivaratecode-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23052,7 +23106,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-368-debit-notes-ivaratecode-numero"
+          "idempotency-key": "sondeo-371-debit-notes-ivaratecode-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23090,7 +23144,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-369-invoices-payments-methodcode-ausente"
+          "idempotency-key": "sondeo-372-invoices-payments-methodcode-ausente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23134,7 +23188,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-370-invoices-payments-methodcode-letras"
+          "idempotency-key": "sondeo-373-invoices-payments-methodcode-letras"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23179,7 +23233,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-371-invoices-payments-methodcode-tres"
+          "idempotency-key": "sondeo-374-invoices-payments-methodcode-tres"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23224,7 +23278,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-372-invoices-payments-methodcode-desconocida"
+          "idempotency-key": "sondeo-375-invoices-payments-methodcode-desconocida"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23263,7 +23317,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-373-invoices-payments-methodcode-numero"
+          "idempotency-key": "sondeo-376-invoices-payments-methodcode-numero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23308,7 +23362,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-374-invoices-payments-methodcode-nula"
+          "idempotency-key": "sondeo-377-invoices-payments-methodcode-nula"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23353,7 +23407,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-375-invoices-payments-methodcode-vacia"
+          "idempotency-key": "sondeo-378-invoices-payments-methodcode-vacia"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23398,7 +23452,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-376-invoices-pago-en-cero"
+          "idempotency-key": "sondeo-379-invoices-pago-en-cero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23437,7 +23491,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-377-invoices-pagos-que-no-suman"
+          "idempotency-key": "sondeo-380-invoices-pagos-que-no-suman"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23476,7 +23530,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-378-invoices-plazo-sin-unidad"
+          "idempotency-key": "sondeo-381-invoices-plazo-sin-unidad"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23516,7 +23570,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-379-invoices-unidad-sin-plazo"
+          "idempotency-key": "sondeo-382-invoices-unidad-sin-plazo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23556,7 +23610,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-380-invoices-plazo-y-unidad"
+          "idempotency-key": "sondeo-383-invoices-plazo-y-unidad"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23595,7 +23649,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-381-invoices-unidad-de-11-caracteres"
+          "idempotency-key": "sondeo-384-invoices-unidad-de-11-caracteres"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23642,7 +23696,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-382-invoices-unidad-con-control"
+          "idempotency-key": "sondeo-385-invoices-unidad-con-control"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23689,7 +23743,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-383-invoices-lines-unitprice-y-discount-propios"
+          "idempotency-key": "sondeo-386-invoices-lines-unitprice-y-discount-propios"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23728,7 +23782,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-384-invoices-lines-con-unitprice-cero"
+          "idempotency-key": "sondeo-387-invoices-lines-con-unitprice-cero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23766,7 +23820,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-385-invoices-lines-descuento-mayor-que-el-subtotal"
+          "idempotency-key": "sondeo-388-invoices-lines-descuento-mayor-que-el-subtotal"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23806,7 +23860,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-386-invoices-lines-quantity-texto-cero"
+          "idempotency-key": "sondeo-389-invoices-lines-quantity-texto-cero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23845,7 +23899,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-387-invoices-lines-quantity-texto-negativo"
+          "idempotency-key": "sondeo-390-invoices-lines-quantity-texto-negativo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23890,7 +23944,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-388-invoices-lines-quantity-texto-siete"
+          "idempotency-key": "sondeo-391-invoices-lines-quantity-texto-siete"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23935,7 +23989,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-389-invoices-lines-quantity-texto-tres"
+          "idempotency-key": "sondeo-392-invoices-lines-quantity-texto-tres"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -23974,7 +24028,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-390-invoices-lines-quantity-texto-coma"
+          "idempotency-key": "sondeo-393-invoices-lines-quantity-texto-coma"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24019,7 +24073,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-391-invoices-lines-quantity-texto-exponente"
+          "idempotency-key": "sondeo-394-invoices-lines-quantity-texto-exponente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24064,7 +24118,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-392-invoices-lines-quantity-texto-espacio"
+          "idempotency-key": "sondeo-395-invoices-lines-quantity-texto-espacio"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24109,7 +24163,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-393-invoices-lines-quantity-texto-mas"
+          "idempotency-key": "sondeo-396-invoices-lines-quantity-texto-mas"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24154,7 +24208,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-394-invoices-lines-quantity-texto-trece"
+          "idempotency-key": "sondeo-397-invoices-lines-quantity-texto-trece"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24199,7 +24253,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-395-invoices-lines-quantity-texto-nulo"
+          "idempotency-key": "sondeo-398-invoices-lines-quantity-texto-nulo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24244,7 +24298,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-396-invoices-lines-quantity-texto-vacio"
+          "idempotency-key": "sondeo-399-invoices-lines-quantity-texto-vacio"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24289,7 +24343,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-397-credit-notes-lines-quantity-texto-cero"
+          "idempotency-key": "sondeo-400-credit-notes-lines-quantity-texto-cero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24323,7 +24377,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-398-credit-notes-lines-quantity-texto-mayorquelafactura"
+          "idempotency-key": "sondeo-401-credit-notes-lines-quantity-texto-mayorquelafactura"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24357,7 +24411,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-399-credit-notes-lines-quantity-texto-negativo"
+          "idempotency-key": "sondeo-402-credit-notes-lines-quantity-texto-negativo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24397,7 +24451,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-400-credit-notes-lines-quantity-texto-siete"
+          "idempotency-key": "sondeo-403-credit-notes-lines-quantity-texto-siete"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24437,7 +24491,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-401-credit-notes-unitprice-mayor-que-el-de-la-factura"
+          "idempotency-key": "sondeo-404-credit-notes-unitprice-mayor-que-el-de-la-factura"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24472,7 +24526,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-402-credit-notes-discount-menor-que-el-proporcional"
+          "idempotency-key": "sondeo-405-credit-notes-discount-menor-que-el-proporcional"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24507,7 +24561,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-403-credit-notes-supera-el-saldo"
+          "idempotency-key": "sondeo-406-credit-notes-supera-el-saldo"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24541,7 +24595,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-404-credit-notes-factura-inexistente"
+          "idempotency-key": "sondeo-407-credit-notes-factura-inexistente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24575,7 +24629,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-405-credit-notes-factura-reserved"
+          "idempotency-key": "sondeo-408-credit-notes-factura-reserved"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24609,7 +24663,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-406-credit-notes-de-una-nota"
+          "idempotency-key": "sondeo-409-credit-notes-de-una-nota"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24643,7 +24697,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-407-credit-notes-issuedate-anterior-a-la-factura"
+          "idempotency-key": "sondeo-410-credit-notes-issuedate-anterior-a-la-factura"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24678,7 +24732,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-408-debit-notes-factura-reserved"
+          "idempotency-key": "sondeo-411-debit-notes-factura-reserved"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24718,7 +24772,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-409-debit-notes-factura-inexistente"
+          "idempotency-key": "sondeo-412-debit-notes-factura-inexistente"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24758,7 +24812,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-410-debit-notes-pago-que-no-suma"
+          "idempotency-key": "sondeo-413-debit-notes-pago-que-no-suma"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24798,7 +24852,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-411-debit-notes-plazo-sin-unidad"
+          "idempotency-key": "sondeo-414-debit-notes-plazo-sin-unidad"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24839,7 +24893,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-412-debit-notes-con-dos-motivos"
+          "idempotency-key": "sondeo-415-debit-notes-con-dos-motivos"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24882,7 +24936,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-413-credit-notes-con-dos-li-neas-del-mismo-producto-a-mano"
+          "idempotency-key": "sondeo-416-credit-notes-con-dos-li-neas-del-mismo-producto-a-mano"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24923,7 +24977,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-414-debit-notes-valor-cero"
+          "idempotency-key": "sondeo-417-debit-notes-valor-cero"
         },
         "body": {
           "taxpayerId": "{taxpayerId}",
@@ -24963,7 +25017,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-415-cuerpo-arreglo-invoices"
+          "idempotency-key": "sondeo-418-cuerpo-arreglo-invoices"
         },
         "body": [
           1
@@ -24987,7 +25041,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-416-cuerpo-nulo-invoices"
+          "idempotency-key": "sondeo-419-cuerpo-nulo-invoices"
         },
         "body": null
       },
@@ -25009,7 +25063,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-417-cuerpo-texto-invoices"
+          "idempotency-key": "sondeo-420-cuerpo-texto-invoices"
         },
         "body": "x"
       },
@@ -25031,7 +25085,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-418-cuerpo-vaci-o-invoices"
+          "idempotency-key": "sondeo-421-cuerpo-vaci-o-invoices"
         },
         "body": {}
       },
@@ -25079,7 +25133,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-419-cuerpo-vaci-o-credit-notes"
+          "idempotency-key": "sondeo-422-cuerpo-vaci-o-credit-notes"
         },
         "body": {}
       },
@@ -25123,7 +25177,7 @@
         "path": "/api/v1/debit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-420-cuerpo-vaci-o-debit-notes"
+          "idempotency-key": "sondeo-423-cuerpo-vaci-o-debit-notes"
         },
         "body": {}
       },
@@ -25167,7 +25221,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-421-json-malformado-invoices"
+          "idempotency-key": "sondeo-424-json-malformado-invoices"
         },
         "rawBody": "{\"taxpayerId\":"
       },
@@ -25189,7 +25243,7 @@
         "path": "/api/v1/credit-notes",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-422-sin-cuerpo-credit-notes"
+          "idempotency-key": "sondeo-425-sin-cuerpo-credit-notes"
         },
         "rawBody": ""
       },
@@ -25211,7 +25265,7 @@
         "path": "/api/v1/invoices",
         "auth": "owner",
         "headers": {
-          "idempotency-key": "sondeo-423-content-type-texto-invoices",
+          "idempotency-key": "sondeo-426-content-type-texto-invoices",
           "content-type": "text/plain"
         },
         "rawBody": "{}"
