@@ -13,9 +13,17 @@ const nextRuc = () => `09900${String(++ruc).padStart(5, '0')}001`;
 const taxpayer = (over) => ({ ruc: nextRuc(), legalName: 'Emisor', headOfficeAddress: 'Calle 1', defaultEnvironment: '1', ...over });
 
 // Cuerpos: tipos equivocados donde Java no espera texto.
-const odd = { texto: 'si', textoTrue: 'true', textoTRUE: 'TRUE', uno: 1, cero: 0, decimal: 1.5, objeto: { a: 1 }, array: [1], nulo: null };
+const odd = {
+  texto: 'si', textoTrue: 'true', textoTRUE: 'TRUE', uno: 1, cero: 0, decimal: 1.5, objeto: { a: 1 }, array: [1], nulo: null,
+  vacio: '', textoFalse: 'false', textoFALSE: 'FALSE', dos: 2, negativo: -1, textoUno: '1', textoCero: '0', espacios: ' true ',
+};
 for (const [k, v] of Object.entries(odd)) add(`taxpayer accountingRequired ${k}`, 'POST', '/api/v1/taxpayers', { body: taxpayer({ accountingRequired: v }) });
-for (const [k, v] of Object.entries({ minusculas: 'emprendedor', mayusculas: 'EMPRENDEDOR', desconocido: 'OTRO', vacio: '', numero: 1, nulo: null, negocioPopular: 'NEGOCIO_POPULAR', objeto: {} }))
+const rimpe = {
+  minusculas: 'emprendedor', mayusculas: 'EMPRENDEDOR', desconocido: 'OTRO', vacio: '', numero: 1, nulo: null,
+  negocioPopular: 'NEGOCIO_POPULAR', objeto: {}, cero: 0, indiceFuera: 3, negativo: -1, textoNumero: '1', mixto: 'Emprendedor',
+  espacios: ' EMPRENDEDOR ', booleano: true, decimal: 1.5,
+};
+for (const [k, v] of Object.entries(rimpe))
   add(`taxpayer rimpeRegime ${k}`, 'POST', '/api/v1/taxpayers', { body: taxpayer({ rimpeRegime: v }) });
 add('taxpayer ruc numérico', 'POST', '/api/v1/taxpayers', { body: taxpayer({ ruc: 990099999001 }) });
 add('taxpayer defaultEnvironment numérico', 'POST', '/api/v1/taxpayers', { body: taxpayer({ defaultEnvironment: 1 }) });
@@ -28,6 +36,7 @@ add('taxpayer tenantId en el cuerpo', 'POST', '/api/v1/taxpayers', { body: taxpa
 const uuidOdd = {
   malformado: 'x', numero: 123, booleano: true, objeto: { a: 1 }, array: [], nulo: null, vacio: '',
   mayusculas: '{establishmentIdUpper}', sinGuiones: '{establishmentIdNoDash}', desconocido: UNKNOWN,
+  llaves: '{{establishmentId}}', espacios: ' {establishmentId} ', corto: '1-2-3-4-5',
 };
 for (const [k, v] of Object.entries(uuidOdd)) add(`emission point establishmentId ${k}`, 'POST', '/api/v1/emission-points', { body: { establishmentId: v, code: '009' } });
 add('emission point code numérico', 'POST', '/api/v1/emission-points', { body: { establishmentId: '{establishmentId}', code: 2 } });
@@ -39,6 +48,8 @@ add('establishment repetido', 'POST', '/api/v1/taxpayers/{taxpayerId}/establishm
 const ints = {
   texto: '5', decimal: 5.7, decimalCero: 6.0, booleano: true, letras: 'abc', grande: 2147483648, hex: '0x10',
   cero: 0, maximo: 999999999, tope: 1000000000, negativo: -1, nulo: null, array: [], objeto: {}, textoEspacios: ' 7 ',
+  vacio: '', textoMas: '+8', textoDecimal: '9.5', textoExponente: '1e2', textoGrande: '2147483648', textoNegativo: '-3',
+  decimalNegativo: -0.5, decimalGrande: 2147483648.5, textoInterno: '1 0',
 };
 for (const [k, v] of Object.entries(ints)) add(`sequence nextValue ${k}`, 'PUT', '/api/v1/emission-points/{emissionPointId}/sequence', { body: { environment: '1', documentType: '01', nextValue: v } });
 add('sequence nextValue exponente', 'PUT', '/api/v1/emission-points/{emissionPointId}/sequence', { rawBody: '{"environment":"1","documentType":"01","nextValue":1e3}' });
@@ -77,6 +88,8 @@ const pages = {
   letras: 'page=abc', negativo: 'page=-1', decimal: 'page=1.5', espacio: 'page=%202', mas: 'page=%2B2', hex: 'page=0x10',
   almohadilla: 'page=%2310', vacio: 'page=', repetido: 'page=1&page=2', tope: 'page=100000', fuera: 'page=100001',
   enorme: 'page=99999999999', sizeCero: 'size=0', sizeTope: 'size=100', sizeFuera: 'size=101', sizeVacio: 'size=',
+  espacioInterno: 'page=1%200', ceroIzquierda: 'page=010', hexMayusculas: 'page=0X1', hexNegativo: 'page=-0x1', soloHex: 'page=0x',
+  tabulador: 'page=%092', espacioFinal: 'page=2%20', masMenos: 'page=%2B-1', nbsp: 'page=%C2%A02',
 };
 for (const [k, q] of Object.entries(pages)) add(`customers ${k}`, 'GET', '/api/v1/customers', { query: q });
 const terms = {
@@ -89,6 +102,7 @@ for (const [k, q] of Object.entries({ letras: 'page=abc', sizeFuera: 'size=101',
   add(`products ${k}`, 'GET', '/api/v1/products', { query: q });
 const ids = {
   ausente: undefined, vacio: 'establishmentId=', malformado: 'establishmentId=x', mayusculas: 'establishmentId={establishmentIdUpper}',
+  espacios: 'establishmentId=%20{establishmentId}%20', corto: 'establishmentId=1-2-3-4-5',
   repetido: 'establishmentId={establishmentId}&establishmentId=x', desconocido: `establishmentId=${UNKNOWN}`, valido: 'establishmentId={establishmentId}',
 };
 for (const [k, q] of Object.entries(ids)) add(`emission points ${k}`, 'GET', '/api/v1/emission-points', q === undefined ? {} : { query: q });
@@ -98,6 +112,8 @@ for (const [k, q] of Object.entries({ ausente: undefined, malformado: 'taxpayerI
 // Rutas.
 for (const path of ['/api/v1/taxpayers/x', '/api/v1/customers/x', '/api/v1/products/x', '/api/v1/taxpayers/x/establishments', `/api/v1/taxpayers/${UNKNOWN}`, `/api/v1/customers/${UNKNOWN}`, `/api/v1/taxpayers/${UNKNOWN}/establishments`])
   add(`GET ${path}`, 'GET', path);
+for (const [k, id] of Object.entries({ corto: '1-2-3-4-5', espacios: '%20{customerId}%20', signo: '+1-2-3-4-5', largo: '1-2-3-4-1234567890abcd', base64: 'AAAAAAAAAAAAAAAAAAAAAA==' }))
+  add(`GET /customers/id ${k}`, 'GET', `/api/v1/customers/${id}`);
 add('PUT /customers/x', 'PUT', '/api/v1/customers/x', { body: { idType: '05', idNumber: '1712345678', name: 'X' } });
 add('DELETE /products/x', 'DELETE', '/api/v1/products/x');
 add('PUT /emission-points/x/sequence', 'PUT', '/api/v1/emission-points/x/sequence', { body: { environment: '1', documentType: '01', nextValue: 3 } });

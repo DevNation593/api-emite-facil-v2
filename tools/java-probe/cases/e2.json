@@ -121,12 +121,116 @@
     }
   },
   {
-    "name": "taxpayer rimpeRegime minusculas",
+    "name": "taxpayer accountingRequired vacio",
     "method": "POST",
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
       "ruc": "0990000010001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": ""
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired textoFalse",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000011001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": "false"
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired textoFALSE",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000012001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": "FALSE"
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired dos",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000013001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": 2
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired negativo",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000014001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": -1
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired textoUno",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000015001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": "1"
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired textoCero",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000016001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": "0"
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired espacios",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000017001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": " true "
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime minusculas",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000018001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
@@ -139,7 +243,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000011001",
+      "ruc": "0990000019001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
@@ -152,7 +256,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000012001",
+      "ruc": "0990000020001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
@@ -165,7 +269,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000013001",
+      "ruc": "0990000021001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
@@ -178,7 +282,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000014001",
+      "ruc": "0990000022001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
@@ -191,7 +295,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000015001",
+      "ruc": "0990000023001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
@@ -204,7 +308,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000016001",
+      "ruc": "0990000024001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
@@ -217,11 +321,115 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000017001",
+      "ruc": "0990000025001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
       "rimpeRegime": {}
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime cero",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000026001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": 0
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime indiceFuera",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000027001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": 3
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime negativo",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000028001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": -1
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime textoNumero",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000029001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": "1"
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime mixto",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000030001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": "Emprendedor"
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime espacios",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000031001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": " EMPRENDEDOR "
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime booleano",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000032001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": true
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime decimal",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000033001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": 1.5
     }
   },
   {
@@ -242,7 +450,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000019001",
+      "ruc": "0990000035001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": 1
@@ -254,7 +462,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000020001",
+      "ruc": "0990000036001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "2"
@@ -285,7 +493,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000022001",
+      "ruc": "0990000038001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
@@ -299,7 +507,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000023001",
+      "ruc": "0990000039001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
@@ -405,6 +613,36 @@
     "auth": "owner",
     "body": {
       "establishmentId": "00000000-0000-4000-8000-000000000000",
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId llaves",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": "{{establishmentId}}",
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId espacios",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": " {establishmentId} ",
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId corto",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": "1-2-3-4-5",
       "code": "009"
     }
   },
@@ -611,6 +849,105 @@
       "environment": "1",
       "documentType": "01",
       "nextValue": " 7 "
+    }
+  },
+  {
+    "name": "sequence nextValue vacio",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": ""
+    }
+  },
+  {
+    "name": "sequence nextValue textoMas",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": "+8"
+    }
+  },
+  {
+    "name": "sequence nextValue textoDecimal",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": "9.5"
+    }
+  },
+  {
+    "name": "sequence nextValue textoExponente",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": "1e2"
+    }
+  },
+  {
+    "name": "sequence nextValue textoGrande",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": "2147483648"
+    }
+  },
+  {
+    "name": "sequence nextValue textoNegativo",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": "-3"
+    }
+  },
+  {
+    "name": "sequence nextValue decimalNegativo",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": -0.5
+    }
+  },
+  {
+    "name": "sequence nextValue decimalGrande",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": 2147483648.5
+    }
+  },
+  {
+    "name": "sequence nextValue textoInterno",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": "1 0"
     }
   },
   {
@@ -1159,6 +1496,69 @@
     "query": "size="
   },
   {
+    "name": "customers espacioInterno",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=1%200"
+  },
+  {
+    "name": "customers ceroIzquierda",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=010"
+  },
+  {
+    "name": "customers hexMayusculas",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=0X1"
+  },
+  {
+    "name": "customers hexNegativo",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=-0x1"
+  },
+  {
+    "name": "customers soloHex",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=0x"
+  },
+  {
+    "name": "customers tabulador",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=%092"
+  },
+  {
+    "name": "customers espacioFinal",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=2%20"
+  },
+  {
+    "name": "customers masMenos",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=%2B-1"
+  },
+  {
+    "name": "customers nbsp",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=%C2%A02"
+  },
+  {
     "name": "customers q porcentaje",
     "method": "GET",
     "path": "/api/v1/customers",
@@ -1298,6 +1698,20 @@
     "query": "establishmentId={establishmentIdUpper}"
   },
   {
+    "name": "emission points espacios",
+    "method": "GET",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "query": "establishmentId=%20{establishmentId}%20"
+  },
+  {
+    "name": "emission points corto",
+    "method": "GET",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "query": "establishmentId=1-2-3-4-5"
+  },
+  {
     "name": "emission points repetido",
     "method": "GET",
     "path": "/api/v1/emission-points",
@@ -1385,6 +1799,36 @@
     "name": "GET /api/v1/taxpayers/00000000-0000-4000-8000-000000000000/establishments",
     "method": "GET",
     "path": "/api/v1/taxpayers/00000000-0000-4000-8000-000000000000/establishments",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /customers/id corto",
+    "method": "GET",
+    "path": "/api/v1/customers/1-2-3-4-5",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /customers/id espacios",
+    "method": "GET",
+    "path": "/api/v1/customers/%20{customerId}%20",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /customers/id signo",
+    "method": "GET",
+    "path": "/api/v1/customers/+1-2-3-4-5",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /customers/id largo",
+    "method": "GET",
+    "path": "/api/v1/customers/1-2-3-4-1234567890abcd",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /customers/id base64",
+    "method": "GET",
+    "path": "/api/v1/customers/AAAAAAAAAAAAAAAAAAAAAA==",
     "auth": "owner"
   },
   {
@@ -1583,7 +2027,7 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000024001",
+      "ruc": "0990000040001",
       "legalName": "Emisor",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",

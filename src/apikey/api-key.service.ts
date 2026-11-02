@@ -4,6 +4,7 @@ import { ApiException } from '../common/api-exception.js';
 import { codePointLength, strip } from '../common/java-text.js';
 import type { AuditLog } from '../compliance/audit-log.js';
 import type { DB } from '../database/schema.js';
+import { isUniqueViolation } from '../database/unique-violation.js';
 import type { TenantAccess } from '../tenancy/tenant-access.js';
 import { apiKeySecretMatches, generateApiKey, parseApiKey } from './api-key-credential.js';
 
@@ -43,13 +44,6 @@ export const MAX_ACTIVE_API_KEYS = 10;
 export const MAX_API_KEY_NAME_LENGTH = 80;
 
 const ACTIVE_NAME_INDEX = 'uq_api_keys_active_name';
-
-/** Violación de unicidad (23505) del índice de nombres activos. */
-function isActiveNameTaken(error: unknown): boolean {
-  if (typeof error !== 'object' || error === null) return false;
-  const { code, constraint } = error as { code?: unknown; constraint?: unknown };
-  return code === '23505' && constraint === ACTIVE_NAME_INDEX;
-}
 
 /**
  * El nombre se recorta, también de espacios Unicode que @NotBlank de Java no ve (un nombre hecho
@@ -127,7 +121,7 @@ export class ApiKeyService {
       });
     } catch (error) {
       // La transacción ya se deshizo: solo queda responder.
-      if (isActiveNameTaken(error)) {
+      if (isUniqueViolation(error, ACTIVE_NAME_INDEX)) {
         throw new ApiException(409, 'API_KEY_NAME_TAKEN', 'Ya hay una API key activa con ese nombre');
       }
       throw error;

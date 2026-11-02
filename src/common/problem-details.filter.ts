@@ -148,8 +148,9 @@ export class ProblemDetailsFilter implements ExceptionFilter {
         req.method !== 'OPTIONS'
       ) {
         status = 405;
-        // Como HttpHeaders.setAllow de Spring: separados por comas, sin espacios.
-        headers = { Allow: allowed.join(',') };
+        // Como el 405 de Spring: los métodos declarados (sin el HEAD que Express añade a cada GET),
+        // separados por ", ". El Allow de OPTIONS sí lleva HEAD y va sin espacios (bootstrap.ts).
+        headers = { Allow: allowed.filter((method) => method !== 'HEAD').join(', ') };
       }
     }
     return {

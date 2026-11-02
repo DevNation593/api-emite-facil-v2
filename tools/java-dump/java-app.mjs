@@ -156,7 +156,10 @@ export async function startJavaApp({ javaRepo, skipBuild, env: extraEnv = {}, st
     const logStream = createWriteStream(javaLog);
     // En Windows los selectores de Java abren un socket Unix en TEMP, cuya ruta no puede pasar de
     // 108 bytes; un TEMP largo impide arrancar. target/ del repo Java es corto y ya es de Maven.
-    const java = spawn('java', [`-Djdk.net.unixdomain.tmpdir=${join(javaRepo, 'target')}`, '-jar', JAR], {
+    // Inglés, como la imagen de producción (sin LANG): sin Accept-Language, Spring usa el idioma de
+  // la JVM para los mensajes de validación, y el de la máquina puede ser otro.
+  const jvmFlags = [`-Djdk.net.unixdomain.tmpdir=${join(javaRepo, 'target')}`, '-Duser.language=en', '-Duser.country=US'];
+  const java = spawn('java', [...jvmFlags, '-jar', JAR], {
       cwd: javaRepo,
       env,
       stdio: ['ignore', 'pipe', 'pipe'],

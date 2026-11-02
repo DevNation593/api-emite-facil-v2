@@ -629,6 +629,138 @@
       "value": "\u0000",
       "valid": false,
       "message": "must match \"[^\\p{Cntrl}]*\""
+    },
+    {
+      "constraint": "Pattern",
+      "value": null,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Pattern",
+      "value": "",
+      "valid": false,
+      "message": "must match \"[0-9]{3}\""
+    },
+    {
+      "constraint": "Pattern",
+      "value": "001",
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Pattern",
+      "value": "01",
+      "valid": false,
+      "message": "must match \"[0-9]{3}\""
+    },
+    {
+      "constraint": "Pattern",
+      "value": "0001",
+      "valid": false,
+      "message": "must match \"[0-9]{3}\""
+    },
+    {
+      "constraint": "Pattern",
+      "value": "a01",
+      "valid": false,
+      "message": "must match \"[0-9]{3}\""
+    },
+    {
+      "constraint": "Pattern",
+      "value": "001\n",
+      "valid": false,
+      "message": "must match \"[0-9]{3}\""
+    },
+    {
+      "constraint": "Pattern",
+      "value": "١٢٣",
+      "valid": false,
+      "message": "must match \"[0-9]{3}\""
+    },
+    {
+      "constraint": "Pattern",
+      "value": " 001",
+      "valid": false,
+      "message": "must match \"[0-9]{3}\""
+    },
+    {
+      "constraint": "Min",
+      "value": null,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Min",
+      "value": 0,
+      "valid": false,
+      "message": "must be greater than or equal to 1"
+    },
+    {
+      "constraint": "Min",
+      "value": 1,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Min",
+      "value": 2,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Min",
+      "value": -1,
+      "valid": false,
+      "message": "must be greater than or equal to 1"
+    },
+    {
+      "constraint": "Min",
+      "value": -2147483648,
+      "valid": false,
+      "message": "must be greater than or equal to 1"
+    },
+    {
+      "constraint": "Min",
+      "value": 2147483647,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Max",
+      "value": null,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Max",
+      "value": 0,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Max",
+      "value": 999999999,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Max",
+      "value": 1000000000,
+      "valid": false,
+      "message": "must be less than or equal to 999999999"
+    },
+    {
+      "constraint": "Max",
+      "value": -1,
+      "valid": true,
+      "message": null
+    },
+    {
+      "constraint": "Max",
+      "value": 2147483647,
+      "valid": false,
+      "message": "must be less than or equal to 999999999"
     }
   ]
 }

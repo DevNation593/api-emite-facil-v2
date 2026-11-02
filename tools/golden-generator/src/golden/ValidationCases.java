@@ -14,6 +14,8 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -43,6 +45,15 @@ final class ValidationCases {
 
 		@Pattern(regexp = NO_CONTROL_CHARS)
 		String noControlChars;
+
+		@Pattern(regexp = "[0-9]{3}")
+		String pattern;
+
+		@Min(1)
+		Integer min;
+
+		@Max(999_999_999)
+		Integer max;
 
 	}
 
@@ -91,6 +102,16 @@ final class ValidationCases {
 				add(cases, validator, "NoControlChars", "noControlChars", value);
 			}
 
+			for (String value : new String[] { null, "", "001", "01", "0001", "a01", "001\n", "١٢٣", " 001" }) {
+				add(cases, validator, "Pattern", "pattern", value);
+			}
+			for (Integer value : new Integer[] { null, 0, 1, 2, -1, Integer.MIN_VALUE, Integer.MAX_VALUE }) {
+				add(cases, validator, "Min", "min", value);
+			}
+			for (Integer value : new Integer[] { null, 0, 999_999_999, 1_000_000_000, -1, Integer.MAX_VALUE }) {
+				add(cases, validator, "Max", "max", value);
+			}
+
 			Map<String, Object> root = new LinkedHashMap<>();
 			root.put("cases", cases);
 			return root;
@@ -100,7 +121,7 @@ final class ValidationCases {
 		}
 	}
 
-	private static void add(List<Object> cases, Validator validator, String constraint, String property, String value) {
+	private static void add(List<Object> cases, Validator validator, String constraint, String property, Object value) {
 		Set<ConstraintViolation<Bean>> violations = validator.validateValue(Bean.class, property, value);
 		Map<String, Object> entry = new LinkedHashMap<>();
 		entry.put("constraint", constraint);

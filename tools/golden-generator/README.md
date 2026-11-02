@@ -17,7 +17,7 @@ node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil --only be
 ```
 
 Familias con `--only`: `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
-`@Pattern(NO_CONTROL_CHARS)` validados con Hibernate Validator y `Locale.ENGLISH`). Es determinista: no
+`@Pattern(NO_CONTROL_CHARS)`, más `@Pattern("[0-9]{3}")`, `@Min(1)` y `@Max(999_999_999)`, validados con Hibernate Validator y `Locale.ENGLISH`). Es determinista: no
 depende de aleatorios.
 
 Requisitos: Java 25 (`java`, `javac`) en el `PATH`, Node 24 y acceso a las dependencias de Maven del repo

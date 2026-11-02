@@ -1,5 +1,11 @@
 // Lista del enum errorCode del esquema Problem de contracts/openapi.yaml.
 // error-codes.spec.ts comprueba que sigue sincronizada con el contrato.
+/**
+ * Códigos que la API Java devuelve y que el enum del contrato no declara. Se conservan para que las
+ * respuestas sean las mismas; la diferencia está anotada en docs/route-inventory.md.
+ */
+export const JAVA_ONLY_ERROR_CODES = ['CATALOG_CHANGED'] as const;
+
 export const ERROR_CODES = [
   'UNAUTHENTICATED',
   'CREDENTIALS_AMBIGUOUS',
@@ -72,6 +78,7 @@ export const ERROR_CODES = [
   'FINAL_CONSUMER_LIMIT_EXCEEDED',
   'SEQUENCE_EXHAUSTED',
   'INTERNAL_ERROR',
+  ...JAVA_ONLY_ERROR_CODES,
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

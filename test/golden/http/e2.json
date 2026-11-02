@@ -3,7 +3,7 @@
     "javaCommit": "ca53bcae19a468c1164465425a59db6c5e68b809",
     "javaDirty": false,
     "javaVersion": "java version \"25.0.5.0.2\" 2026-10-21 LTS",
-    "generatedAt": "2026-11-02T00:38:10.420Z"
+    "generatedAt": "2026-11-02T00:43:41.543Z"
   },
   "results": [
     {
@@ -271,13 +271,255 @@
       }
     },
     {
-      "name": "taxpayer rimpeRegime minusculas",
+      "name": "taxpayer accountingRequired vacio",
       "request": {
         "method": "POST",
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
           "ruc": "0990000010001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": ""
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000010001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired textoFalse",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000011001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": "false"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000011001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired textoFALSE",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000012001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": "FALSE"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000012001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired dos",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000013001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": 2
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000013001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": true,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired negativo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000014001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": -1
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000014001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": true,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired textoUno",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000015001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": "1"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired textoCero",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000016001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": "0"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired espacios",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000017001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": " true "
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000017001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": true,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime minusculas",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000018001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
@@ -302,7 +544,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000011001",
+          "ruc": "0990000019001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
@@ -314,7 +556,7 @@
       "allow": null,
       "body": {
         "id": "{uuid}",
-        "ruc": "0990000011001",
+        "ruc": "0990000019001",
         "legalName": "Emisor",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
@@ -334,7 +576,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000012001",
+          "ruc": "0990000020001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
@@ -359,7 +601,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000013001",
+          "ruc": "0990000021001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
@@ -384,7 +626,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000014001",
+          "ruc": "0990000022001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
@@ -396,7 +638,7 @@
       "allow": null,
       "body": {
         "id": "{uuid}",
-        "ruc": "0990000014001",
+        "ruc": "0990000022001",
         "legalName": "Emisor",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
@@ -416,7 +658,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000015001",
+          "ruc": "0990000023001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
@@ -428,7 +670,7 @@
       "allow": null,
       "body": {
         "id": "{uuid}",
-        "ruc": "0990000015001",
+        "ruc": "0990000023001",
         "legalName": "Emisor",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
@@ -448,7 +690,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000016001",
+          "ruc": "0990000024001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
@@ -473,11 +715,232 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000017001",
+          "ruc": "0990000025001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": {}
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime cero",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000026001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": 0
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000026001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime indiceFuera",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000027001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": 3
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime negativo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000028001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": -1
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime textoNumero",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000029001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": "1"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000029001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "EMPRENDEDOR",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime mixto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000030001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": "Emprendedor"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime espacios",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000031001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": " EMPRENDEDOR "
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000031001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "EMPRENDEDOR",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime booleano",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000032001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": true
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime decimal",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000033001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": 1.5
         }
       },
       "status": 400,
@@ -515,8 +978,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "ruc",
-            "message": "debe coincidir con \"[0-9]{10}001\""
+            "message": "must match \"[0-9]{10}001\"",
+            "field": "ruc"
           }
         ]
       }
@@ -528,7 +991,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000019001",
+          "ruc": "0990000035001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": 1
@@ -539,7 +1002,7 @@
       "allow": null,
       "body": {
         "id": "{uuid}",
-        "ruc": "0990000019001",
+        "ruc": "0990000035001",
         "legalName": "Emisor",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
@@ -559,7 +1022,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000020001",
+          "ruc": "0990000036001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "2"
@@ -595,20 +1058,20 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "ruc",
-            "message": "no debe ser nulo"
+            "message": "must not be null",
+            "field": "defaultEnvironment"
           },
           {
-            "field": "headOfficeAddress",
-            "message": "no debe estar vacío"
+            "message": "must not be blank",
+            "field": "headOfficeAddress"
           },
           {
-            "field": "defaultEnvironment",
-            "message": "no debe ser nulo"
+            "message": "must not be null",
+            "field": "ruc"
           },
           {
-            "field": "legalName",
-            "message": "no debe estar vacío"
+            "message": "must not be blank",
+            "field": "legalName"
           }
         ]
       }
@@ -644,7 +1107,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000022001",
+          "ruc": "0990000038001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
@@ -663,12 +1126,12 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "specialTaxpayerCode",
-            "message": "debe coincidir con \"[A-Za-z0-9]{3,13}\""
+            "message": "must match \"[1-9][0-9]{0,7}\"",
+            "field": "withholdingAgentCode"
           },
           {
-            "field": "withholdingAgentCode",
-            "message": "debe coincidir con \"[1-9][0-9]{0,7}\""
+            "message": "must match \"[A-Za-z0-9]{3,13}\"",
+            "field": "specialTaxpayerCode"
           }
         ]
       }
@@ -680,7 +1143,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000023001",
+          "ruc": "0990000039001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
@@ -692,7 +1155,7 @@
       "allow": null,
       "body": {
         "id": "{uuid}",
-        "ruc": "0990000023001",
+        "ruc": "0990000039001",
         "legalName": "Emisor",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
@@ -839,8 +1302,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "establishmentId",
-            "message": "no debe ser nulo"
+            "message": "must not be null",
+            "field": "establishmentId"
           }
         ]
       }
@@ -867,8 +1330,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "establishmentId",
-            "message": "no debe ser nulo"
+            "message": "must not be null",
+            "field": "establishmentId"
           }
         ]
       }
@@ -939,6 +1402,72 @@
       }
     },
     {
+      "name": "emission point establishmentId llaves",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": "{{establishmentId}}",
+          "code": "009"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "emission point establishmentId espacios",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": " {establishmentId} ",
+          "code": "009"
+        }
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El establecimiento ya tiene un punto de emisión con ese código",
+        "instance": "/api/v1/emission-points",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "EMISSION_POINT_CODE_TAKEN"
+      }
+    },
+    {
+      "name": "emission point establishmentId corto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": "1-2-3-4-5",
+          "code": "009"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
       "name": "emission point code numérico",
       "request": {
         "method": "POST",
@@ -960,8 +1489,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "code",
-            "message": "debe coincidir con \"[0-9]{3}\""
+            "message": "must match \"[0-9]{3}\"",
+            "field": "code"
           }
         ]
       }
@@ -1010,8 +1539,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "code",
-            "message": "debe coincidir con \"[0-9]{3}\""
+            "message": "must match \"[0-9]{3}\"",
+            "field": "code"
           }
         ]
       }
@@ -1219,8 +1748,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "nextValue",
-            "message": "debe ser mayor que o igual a 1"
+            "message": "must be greater than or equal to 1",
+            "field": "nextValue"
           }
         ]
       }
@@ -1270,8 +1799,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "nextValue",
-            "message": "debe ser menor que o igual a 999999999"
+            "message": "must be less than or equal to 999999999",
+            "field": "nextValue"
           }
         ]
       }
@@ -1299,8 +1828,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "nextValue",
-            "message": "debe ser mayor que o igual a 1"
+            "message": "must be greater than or equal to 1",
+            "field": "nextValue"
           }
         ]
       }
@@ -1328,8 +1857,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "nextValue",
-            "message": "no debe ser nulo"
+            "message": "must not be null",
+            "field": "nextValue"
           }
         ]
       }
@@ -1400,6 +1929,230 @@
         "environment": "1",
         "documentType": "01",
         "nextValue": 7
+      }
+    },
+    {
+      "name": "sequence nextValue vacio",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": ""
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "message": "must not be null",
+            "field": "nextValue"
+          }
+        ]
+      }
+    },
+    {
+      "name": "sequence nextValue textoMas",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": "+8"
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "emissionPointId": "{emissionPointId}",
+        "environment": "1",
+        "documentType": "01",
+        "nextValue": 8
+      }
+    },
+    {
+      "name": "sequence nextValue textoDecimal",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": "9.5"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sequence nextValue textoExponente",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": "1e2"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sequence nextValue textoGrande",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": "2147483648"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sequence nextValue textoNegativo",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": "-3"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "message": "must be greater than or equal to 1",
+            "field": "nextValue"
+          }
+        ]
+      }
+    },
+    {
+      "name": "sequence nextValue decimalNegativo",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": -0.5
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "message": "must be greater than or equal to 1",
+            "field": "nextValue"
+          }
+        ]
+      }
+    },
+    {
+      "name": "sequence nextValue decimalGrande",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": 2147483648.5
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sequence nextValue textoInterno",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": "1 0"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
       }
     },
     {
@@ -1483,8 +2236,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "documentType",
-            "message": "debe coincidir con \"01\""
+            "message": "must match \"01\"",
+            "field": "documentType"
           }
         ]
       }
@@ -1650,8 +2403,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "p12",
-            "message": "no debe estar vacío"
+            "message": "must not be blank",
+            "field": "p12"
           }
         ]
       }
@@ -1882,16 +2635,16 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "p12",
-            "message": "no debe estar vacío"
+            "message": "must not be blank",
+            "field": "p12"
           },
           {
-            "field": "password",
-            "message": "no debe estar vacío"
+            "message": "must not be blank",
+            "field": "password"
           },
           {
-            "field": "taxpayerId",
-            "message": "no debe ser nulo"
+            "message": "must not be null",
+            "field": "taxpayerId"
           }
         ]
       }
@@ -1919,8 +2672,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "idType",
-            "message": "debe coincidir con \"[0-9]{2}\""
+            "message": "must match \"[0-9]{2}\"",
+            "field": "idType"
           }
         ]
       }
@@ -1995,8 +2748,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "email",
-            "message": "debe ser una dirección de correo electrónico con formato correcto"
+            "message": "must be a well-formed email address",
+            "field": "email"
           }
         ]
       }
@@ -2050,8 +2803,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "email",
-            "message": "debe ser una dirección de correo electrónico con formato correcto"
+            "message": "must be a well-formed email address",
+            "field": "email"
           }
         ]
       }
@@ -2104,8 +2857,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "unitPrice",
-            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
+            "field": "unitPrice"
           }
         ]
       }
@@ -2134,8 +2887,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "unitPrice",
-            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
+            "field": "unitPrice"
           }
         ]
       }
@@ -2164,8 +2917,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "unitPrice",
-            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
+            "field": "unitPrice"
           }
         ]
       }
@@ -2194,8 +2947,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "unitPrice",
-            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
+            "field": "unitPrice"
           }
         ]
       }
@@ -2224,8 +2977,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "unitPrice",
-            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
+            "field": "unitPrice"
           }
         ]
       }
@@ -2278,8 +3031,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "unitPrice",
-            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
+            "field": "unitPrice"
           }
         ]
       }
@@ -2356,8 +3109,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "field": "sku",
-            "message": "debe coincidir con \"[A-Za-z0-9._-]{1,25}\""
+            "message": "must match \"[A-Za-z0-9._-]{1,25}\"",
+            "field": "sku"
           }
         ]
       }
@@ -2709,6 +3462,172 @@
         "page": 0,
         "size": 20,
         "total": 1
+      }
+    },
+    {
+      "name": "customers espacioInterno",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=1%200"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 10,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers ceroIzquierda",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=010"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 10,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers hexMayusculas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=0X1"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 1,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers hexNegativo",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=-0x1"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "page debe estar entre 0 y 100000 y size entre 1 y 100",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers soloHex",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=0x"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers tabulador",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=%092"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 2,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers espacioFinal",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=2%20"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 2,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers masMenos",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=%2B-1"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers nbsp",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=%C2%A02"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
       }
     },
     {
@@ -3153,6 +4072,51 @@
       ]
     },
     {
+      "name": "emission points espacios",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "query": "establishmentId=%20{establishmentId}%20"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{emissionPointId}",
+          "establishmentId": "{establishmentId}",
+          "code": "001",
+          "enabled": true
+        },
+        {
+          "id": "{uuid}",
+          "establishmentId": "{establishmentId}",
+          "code": "009",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "emission points corto",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "query": "establishmentId=1-2-3-4-5"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/emission-points",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
       "name": "emission points repetido",
       "request": {
         "method": "GET",
@@ -3419,6 +4383,98 @@
       }
     },
     {
+      "name": "GET /customers/id corto",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers/1-2-3-4-5",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/customers/1-2-3-4-5",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "GET /customers/id espacios",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers/%20{customerId}%20",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{customerId}",
+        "idType": "05",
+        "idNumber": "1712345678",
+        "name": "Cliente de Sondeo",
+        "email": null,
+        "address": null,
+        "phone": null
+      }
+    },
+    {
+      "name": "GET /customers/id signo",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers/+1-2-3-4-5",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/customers/+1-2-3-4-5",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "GET /customers/id largo",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers/1-2-3-4-1234567890abcd",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/customers/1-2-3-4-1234567890abcd",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "GET /customers/id base64",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers/AAAAAAAAAAAAAAAAAAAAAA==",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/customers/AAAAAAAAAAAAAAAAAAAAAA==",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
       "name": "PUT /customers/x",
       "request": {
         "method": "PUT",
@@ -3624,7 +4680,7 @@
       },
       "status": 200,
       "contentType": null,
-      "allow": "GET,HEAD,POST,OPTIONS",
+      "allow": "POST,GET,HEAD,OPTIONS",
       "body": ""
     },
     {
@@ -3873,7 +4929,21 @@
       "body": [
         {
           "id": "{uuid}",
-          "ruc": "0990000003001",
+          "ruc": "0990000022001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "EMPRENDEDOR",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000017001",
           "legalName": "Emisor",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
@@ -3887,7 +4957,21 @@
         },
         {
           "id": "{uuid}",
-          "ruc": "0990000023001",
+          "ruc": "0990000013001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": true,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000035001",
           "legalName": "Emisor",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
@@ -3915,7 +4999,147 @@
         },
         {
           "id": "{uuid}",
+          "ruc": "0990000029001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "EMPRENDEDOR",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000004001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": true,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000012001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000011001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000023001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000031001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "EMPRENDEDOR",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000005001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
           "ruc": "0990000019001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "EMPRENDEDOR",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000010001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000026001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000039001",
           "legalName": "Emisor",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
@@ -3943,7 +5167,7 @@
         },
         {
           "id": "{uuid}",
-          "ruc": "0990000004001",
+          "ruc": "0990000003001",
           "legalName": "Emisor",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
@@ -3957,58 +5181,16 @@
         },
         {
           "id": "{uuid}",
-          "ruc": "0990000015001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000005001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000011001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "EMPRENDEDOR",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
           "ruc": "0990000014001",
           "legalName": "Emisor",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
           "phone": null,
           "defaultEnvironment": "1",
-          "accountingRequired": false,
+          "accountingRequired": true,
           "specialTaxpayerCode": null,
           "withholdingAgentCode": null,
-          "rimpeRegime": "EMPRENDEDOR",
+          "rimpeRegime": "NONE",
           "productionEnabledAt": null
         },
         {
@@ -4238,7 +5420,7 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000024001",
+          "ruc": "0990000040001",
           "legalName": "Emisor",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
@@ -4255,7 +5437,7 @@
       "allow": null,
       "body": {
         "id": "{uuid}",
-        "ruc": "0990000024001",
+        "ruc": "0990000040001",
         "legalName": "Emisor",
         "tradeName": "Comercial",
         "headOfficeAddress": "Calle 1",

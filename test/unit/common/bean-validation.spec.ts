@@ -2,16 +2,19 @@ import { readFileSync } from 'node:fs';
 import { validateSync } from 'class-validator';
 import {
   Email,
+  Max,
+  Min,
   NoControlChars,
   NotBlank,
   NotNull,
+  Pattern,
   Size,
 } from '../../../src/common/bean-validation.js';
 
 // Casos generados con Hibernate Validator (tools/golden-generator, familia bean-validation).
 interface Case {
-  constraint: 'NotBlank' | 'NotNull' | 'Size' | 'Email' | 'NoControlChars';
-  value: string | null;
+  constraint: 'NotBlank' | 'NotNull' | 'Size' | 'Email' | 'NoControlChars' | 'Pattern' | 'Min' | 'Max';
+  value: string | number | null;
   valid: boolean;
   message: string | null;
 }
@@ -25,6 +28,9 @@ class Bean {
   @Size({ max: 254 }) size?: string | null;
   @Email() email?: string | null;
   @NoControlChars() noControlChars?: string | null;
+  @Pattern('[0-9]{3}') pattern?: string | null;
+  @Min(1) min?: number | null;
+  @Max(999_999_999) max?: number | null;
 }
 
 const property: Record<Case['constraint'], keyof Bean> = {
@@ -33,18 +39,21 @@ const property: Record<Case['constraint'], keyof Bean> = {
   Size: 'size',
   Email: 'email',
   NoControlChars: 'noControlChars',
+  Pattern: 'pattern',
+  Min: 'min',
+  Max: 'max',
 };
 
-function messagesFor(constraint: Case['constraint'], value: string | null): string[] {
+function messagesFor(constraint: Case['constraint'], value: string | number | null): string[] {
   const bean = new Bean();
-  bean[property[constraint]] = value;
+  (bean as Record<string, unknown>)[property[constraint]] = value;
   return validateSync(bean)
     .filter((e) => e.property === property[constraint])
     .flatMap((e) => Object.values(e.constraints ?? {}));
 }
 
 describe('golden de Bean Validation', () => {
-  it('el golden cubre las cinco restricciones', () => {
+  it('el golden cubre las ocho restricciones', () => {
     expect(new Set(cases.map((c) => c.constraint))).toEqual(new Set(Object.keys(property)));
   });
 

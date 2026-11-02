@@ -2,7 +2,8 @@ import { Allow, registerDecorator, type ValidationOptions } from 'class-validato
 import { Transform } from 'class-transformer';
 import { ApiException } from './api-exception.js';
 import { idnToAscii } from './idn.js';
-import { strip } from './java-text.js';
+import { jacksonUuid } from './java-uuid.js';
+import { javaTrim, strip } from './java-text.js';
 
 /*
  * Decoradores con la semántica y los mensajes de Bean Validation (Hibernate Validator,
@@ -118,21 +119,137 @@ export const NoControlChars = (options?: ValidationOptions): PropertyDecorator =
   );
 
 /**
- * Propiedad de texto con la coerción de Jackson: número o booleano pasan a texto; un
- * objeto o un array son JSON no legible (400). Incluye `@Allow()` para que `whitelist`
- * no la descarte si no lleva otra restricción.
+ * `@Pattern(regexp = …)`: el texto entero debe coincidir, como `Matcher.matches()`. La expresión
+ * debe significar lo mismo en Java y en JS (clases ASCII como `[0-9]`).
  */
-export const JsonString = (): PropertyDecorator => {
+export const Pattern = (regexp: string, options?: ValidationOptions): PropertyDecorator => {
+  const whole = new RegExp(`^(?:${regexp})$`, 'u');
+  return constraint(
+    'pattern',
+    `must match "${regexp}"`,
+    (v) => v === null || v === undefined || (typeof v === 'string' && whole.test(v)),
+    options,
+  );
+};
+
+/** `@Min(value)`. */
+export const Min = (min: number, options?: ValidationOptions): PropertyDecorator =>
+  constraint(
+    'min',
+    `must be greater than or equal to ${min}`,
+    (v) => v === null || v === undefined || (typeof v === 'number' && v >= min),
+    options,
+  );
+
+/** `@Max(value)`. */
+export const Max = (max: number, options?: ValidationOptions): PropertyDecorator =>
+  constraint(
+    'max',
+    `must be less than or equal to ${max}`,
+    (v) => v === null || v === undefined || (typeof v === 'number' && v <= max),
+    options,
+  );
+
+/*
+ * Coerciones de Jackson para las propiedades que no son texto. Lo que cada una admite y convierte
+ * sale de las respuestas de la API Java (test/golden/http/e2.json). Lo que Jackson no sabe leer es
+ * JSON no legible: 400 MALFORMED_REQUEST. Cada una incluye `@Allow()` para que `whitelist` no
+ * descarte la propiedad si no lleva otra restricción.
+ */
+
+const notJson = () => new ApiException(400, 'MALFORMED_REQUEST', 'El cuerpo de la petición no es JSON válido');
+
+function jsonCoercion(convert: (value: unknown) => unknown): PropertyDecorator {
   const allow = Allow();
-  const transform = Transform(({ value }: { value: unknown }) => {
-    if (typeof value === 'number' || typeof value === 'boolean') return String(value);
-    if (typeof value === 'object' && value !== null) {
-      throw new ApiException(400, 'MALFORMED_REQUEST', 'El cuerpo de la petición no es JSON válido');
-    }
-    return value;
-  });
+  const transform = Transform(({ value }: { value: unknown }) =>
+    value === null || value === undefined ? value : convert(value),
+  );
   return (target, propertyName) => {
     allow(target, propertyName);
     transform(target, propertyName);
   };
-};
+}
+
+/** Texto: número o booleano pasan a texto; un objeto o un array son JSON no legible. */
+export const JsonString = (): PropertyDecorator =>
+  jsonCoercion((value) => {
+    if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+    if (typeof value === 'object') throw notJson();
+    return value;
+  });
+
+const INT_MIN = -(2 ** 31);
+const INT_MAX = 2 ** 31 - 1;
+
+/**
+ * `Integer`: un número decimal se trunca hacia cero (5.7 da 5); un texto se recorta y se lee en
+ * decimal con signo opcional ("" es null); fuera del rango de int, o cualquier otra cosa, no se lee.
+ */
+export const JsonInteger = (): PropertyDecorator =>
+  jsonCoercion((value) => {
+    let number: number;
+    if (typeof value === 'number') {
+      number = Math.trunc(value) || 0;
+    } else if (typeof value === 'string') {
+      const text = javaTrim(value);
+      if (text === '') return null;
+      if (!/^[+-]?[0-9]+$/.test(text)) throw notJson();
+      number = Number(text);
+    } else {
+      throw notJson();
+    }
+    if (number < INT_MIN || number > INT_MAX) throw notJson();
+    return number;
+  });
+
+const TRUE = new Set(['true', 'True', 'TRUE']);
+const FALSE = new Set(['false', 'False', 'FALSE']);
+
+/**
+ * `Boolean`: un entero es true salvo el 0; un texto recortado vale si es true o false (en
+ * minúsculas, capitalizado o en mayúsculas) y "" es null. "1", "si" o un decimal no se leen.
+ */
+export const JsonBoolean = (): PropertyDecorator =>
+  jsonCoercion((value) => {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'number') {
+      if (!Number.isInteger(value)) throw notJson();
+      return value !== 0;
+    }
+    if (typeof value === 'string') {
+      const text = javaTrim(value);
+      if (text === '') return null;
+      if (TRUE.has(text)) return true;
+      if (FALSE.has(text)) return false;
+    }
+    throw notJson();
+  });
+
+/**
+ * Enum: el nombre exacto (el texto se recorta), o su posición como entero o como texto de dígitos
+ * (1 o "1" es el segundo valor). "", otra caja, una posición fuera de rango o un decimal no se leen.
+ */
+export const JsonEnum = (values: readonly string[]): PropertyDecorator =>
+  jsonCoercion((value) => {
+    if (typeof value === 'number') {
+      if (Number.isInteger(value) && value >= 0 && value < values.length) return values[value];
+      throw notJson();
+    }
+    if (typeof value === 'string') {
+      const text = javaTrim(value);
+      if (values.includes(text)) return text;
+      if (/^[0-9]+$/.test(text) && Number(text) < values.length) return values[Number(text)];
+    }
+    throw notJson();
+  });
+
+/** `UUID`: el texto recortado, de 36 caracteres (cualquier caja) o 24 en Base64; "" es null. */
+export const JsonUuid = (): PropertyDecorator =>
+  jsonCoercion((value) => {
+    if (typeof value !== 'string') throw notJson();
+    const text = javaTrim(value);
+    if (text === '') return null;
+    const id = jacksonUuid(text);
+    if (id === null) throw notJson();
+    return id;
+  });

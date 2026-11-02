@@ -275,10 +275,10 @@ describe('OPTIONS, como Spring MVC', () => {
   });
 });
 
-it('un 405 lleva Allow separado por comas, como HttpHeaders.setAllow', async () => {
+it('un 405 lleva en Allow los métodos declarados, sin HEAD y separados por ", ", como Spring', async () => {
   const res = await authed.delete('/api/v1/test/boom');
   expect(res.status).toBe(405);
-  expect(res.headers.allow).toBe('GET,HEAD');
+  expect(res.headers.allow).toBe('GET');
 });
 
 it('una HttpException 5xx de Nest se registra y no filtra la causa', async () => {
