@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ApiKeyModule } from './apikey/apikey.module.js';
 import { CatalogModule } from './catalog/catalog.module.js';
+import { CertificateModule } from './certificate/certificate.module.js';
 import { CommonModule } from './common/common.module.js';
 import { ConfigModule } from './config/config.module.js';
 import { RateLimiterModule } from './common/rate-limiter.js';
@@ -16,6 +17,7 @@ import { HealthModule } from './observability/health.controller.js';
 @Module({ imports: [
     ApiKeyModule,
     CatalogModule,
+    CertificateModule,
     CommonModule,
     ComplianceModule,
     ConfigModule,

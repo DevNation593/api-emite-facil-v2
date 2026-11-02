@@ -10,10 +10,16 @@ import forge from 'node-forge';
 import type { ErrorCode } from '../common/error-codes.js';
 import { x500Name } from './x500-name.js';
 
+/**
+ * Por qué un certificado no sirve. CERTIFICATE_MISSING no llega a ninguna respuesta HTTP: lo
+ * registra el proceso de firma (E4) cuando el emisor no tiene certificado activo.
+ */
+export type CertificateErrorCode = Extract<ErrorCode, `CERTIFICATE_${string}`> | 'CERTIFICATE_MISSING';
+
 /** El certificado no sirve para firmar; errorCode dice por qué, sin datos del certificado ni de su clave. */
 export class CertificateRejectedException extends Error {
   constructor(
-    readonly errorCode: ErrorCode,
+    readonly errorCode: CertificateErrorCode,
     message: string,
   ) {
     super(message);
