@@ -188,7 +188,7 @@ it('dos altas simultáneas del mismo RUC: una gana', async () => {
   const a = await newOwner(http());
   const b = await newOwner(http());
   const statuses = await Promise.all([post(a.token, taxpayerJson(ruc)), post(b.token, taxpayerJson(ruc))]);
-  expect(statuses.map((r) => r.status).sort()).toEqual([201, 409]);
+  expect(statuses.map((r) => r.status).sort((x, y) => x - y)).toEqual([201, 409]);
   expect(await count('SELECT count(*) AS n FROM taxpayers WHERE ruc = $1', [ruc])).toBe(1);
 });
 

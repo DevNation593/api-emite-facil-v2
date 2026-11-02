@@ -3,8 +3,10 @@ import pg from 'pg';
 import { startStack, type StackHandle } from '../../support/containers.js';
 import {
   bearer,
+  createCustomer,
   createEmissionPoint,
   createEstablishment,
+  createProduct,
   createTaxpayer,
   newOwner,
   randomRuc,
@@ -103,4 +105,12 @@ it('no se listan los puntos de emisión de un establecimiento ajeno', async () =
   const foreign = await notFoundBody(tokenB, `/api/v1/emission-points?establishmentId=${establishmentA}`);
   const unknown = await notFoundBody(tokenB, `/api/v1/emission-points?establishmentId=${randomUUID()}`);
   sameProblem(foreign.body, unknown.body);
+});
+
+it('los clientes y productos de otra empresa no existen', async () => {
+  const customerA = await createCustomer(http(), tokenA, '05', '1712345678');
+  const productA = await createProduct(http(), tokenA, 'SRV-001', '10.00', '4');
+  const customer = await notFoundBody(tokenB, `/api/v1/customers/${customerA}`);
+  const product = await notFoundBody(tokenB, `/api/v1/products/${productA}`);
+  sameProblem(customer.body, product.body);
 });

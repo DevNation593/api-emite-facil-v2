@@ -85,3 +85,36 @@ export function sameProblem(first: Record<string, unknown>, second: Record<strin
   }
   if (first.errorCode !== 'NOT_FOUND') throw new Error(`errorCode ${String(first.errorCode)}`);
 }
+
+export function customerJson(idType: string, idNumber: string, name: string): Record<string, unknown> {
+  return {
+    idType,
+    idNumber,
+    name,
+    email: 'cliente@example.test',
+    address: 'Av. República, Quito',
+    phone: '022345678',
+  };
+}
+
+export function createCustomer(http: Http, token: string, idType: string, idNumber: string): Promise<string> {
+  return created(
+    http.post('/api/v1/customers').set('Authorization', bearer(token)).send(customerJson(idType, idNumber, 'María Pérez')),
+  );
+}
+
+export function productJson(sku: string, unitPrice: string, ivaRateCode: string): Record<string, unknown> {
+  return { sku, name: 'Servicio de consultoría', unitPrice, ivaRateCode };
+}
+
+export function createProduct(
+  http: Http,
+  token: string,
+  sku: string,
+  unitPrice: string,
+  ivaRateCode: string,
+): Promise<string> {
+  return created(
+    http.post('/api/v1/products').set('Authorization', bearer(token)).send(productJson(sku, unitPrice, ivaRateCode)),
+  );
+}
