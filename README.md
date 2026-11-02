@@ -2,10 +2,11 @@
 
 Reemplazo 1:1 de la API Java/Spring Boot de facturación electrónica del SRI de Ecuador, reescrita en NestJS 12 (Express 5) con TypeScript estricto. Mantiene el mismo contrato HTTP (`contracts/openapi.yaml`), el mismo esquema de base de datos (`db/migration`, V1–V19 copiadas de Java), las mismas variables de entorno y el mismo comportamiento: manda el código Java.
 
-> **Estado: etapa E0 (fundación) del plan.** Hay configuración por entorno, base de datos (Kysely + PostgreSQL), conexiones a RabbitMQ y Redis, límite de peticiones, observabilidad (`/actuator/*`, métricas) y pruebas golden generadas con la API Java. Los módulos de negocio llegan en las etapas siguientes. **La API Java sigue siendo la que está en producción hasta el cambio definitivo (etapa E7).**
+> **Estado: etapa E1 (identidad y multiempresa) del plan.** Sobre la fundación de E0 (configuración por entorno, base de datos con Kysely + PostgreSQL, RabbitMQ, Redis, límite de peticiones, observabilidad y pruebas golden generadas con la API Java) ya están las cuentas y sesiones (`/api/v1/auth`), la autenticación de cada petición con token de acceso o API key, las empresas con su empresa activa y sus roles (`/api/v1/tenants`), las API keys (`/api/v1/api-keys`), la auditoría y el worker con la purga de sesiones vencidas: 16 de las 60 rutas (ver [docs/route-inventory.md](docs/route-inventory.md)). Una prueba carga datos escritos por la API Java ([tools/java-dump](tools/java-dump/README.md)) y comprueba que siguen funcionando. La emisión de comprobantes llega en las etapas siguientes. **La API Java sigue siendo la que está en producción hasta el cambio definitivo (etapa E7).**
 
 - Diseño: [docs/superpowers/specs/2026-10-29-api-nestjs-design.md](docs/superpowers/specs/2026-10-29-api-nestjs-design.md)
 - Plan de la etapa E0: [docs/superpowers/plans/2026-10-29-e0-fundacion.md](docs/superpowers/plans/2026-10-29-e0-fundacion.md)
+- Plan de la etapa E1: [docs/superpowers/plans/2026-10-30-e1-identidad-multiempresa.md](docs/superpowers/plans/2026-10-30-e1-identidad-multiempresa.md)
 
 ## Requisitos
 
