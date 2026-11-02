@@ -3,7 +3,7 @@
     "javaCommit": "ca53bcae19a468c1164465425a59db6c5e68b809",
     "javaDirty": false,
     "javaVersion": "java version \"25.0.5.0.2\" 2026-10-21 LTS",
-    "generatedAt": "2026-11-02T04:10:55.302Z"
+    "generatedAt": "2026-11-02T16:52:49.093Z"
   },
   "results": [
     {
@@ -3038,6 +3038,157 @@
       }
     },
     {
+      "name": "product unitPrice número exponente",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "rawBody": "{\"sku\":\"PN-exponente\",\"name\":\"Producto\",\"unitPrice\":1e2,\"ivaRateCode\":\"4\"}"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "unitPrice",
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "product unitPrice número cerosFinales",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "rawBody": "{\"sku\":\"PN-cerosFinales\",\"name\":\"Producto\",\"unitPrice\":1.0000000,\"ivaRateCode\":\"4\"}"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "unitPrice",
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "product unitPrice número dieciochoDigitos",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "rawBody": "{\"sku\":\"PN-dieciochoDigitos\",\"name\":\"Producto\",\"unitPrice\":123456789012.123456,\"ivaRateCode\":\"4\"}"
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "sku": "PN-dieciochoDigitos",
+        "name": "Producto",
+        "unitPrice": "123456789012.123456",
+        "ivaRateCode": "4"
+      }
+    },
+    {
+      "name": "product unitPrice número unoPuntoCinco",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "rawBody": "{\"sku\":\"PN-unoPuntoCinco\",\"name\":\"Producto\",\"unitPrice\":1.50,\"ivaRateCode\":\"4\"}"
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "sku": "PN-unoPuntoCinco",
+        "name": "Producto",
+        "unitPrice": "1.500000",
+        "ivaRateCode": "4"
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired uno punto cero",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "rawBody": "{\"ruc\":\"0990000040001\",\"legalName\":\"Emisor booleano\",\"headOfficeAddress\":\"Calle 1\",\"defaultEnvironment\":\"1\",\"accountingRequired\":1.0}"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime uno punto cero",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "rawBody": "{\"ruc\":\"0990000041001\",\"legalName\":\"Emisor enum\",\"headOfficeAddress\":\"Calle 1\",\"defaultEnvironment\":\"1\",\"rimpeRegime\":1.0}"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customer idType número con ceros",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "rawBody": "{\"idType\":5.0,\"idNumber\":\"1700000003\",\"name\":\"X\"}"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "idType",
+            "message": "must match \"[0-9]{2}\""
+          }
+        ]
+      }
+    },
+    {
       "name": "product ivaRateCode numérico",
       "request": {
         "method": "POST",
@@ -3971,9 +4122,23 @@
           },
           {
             "id": "{uuid}",
+            "sku": "PN-dieciochoDigitos",
+            "name": "Producto",
+            "unitPrice": "123456789012.123456",
+            "ivaRateCode": "4"
+          },
+          {
+            "id": "{uuid}",
             "sku": "P-numero",
             "name": "Producto",
             "unitPrice": "10.500000",
+            "ivaRateCode": "4"
+          },
+          {
+            "id": "{uuid}",
+            "sku": "PN-unoPuntoCinco",
+            "name": "Producto",
+            "unitPrice": "1.500000",
             "ivaRateCode": "4"
           },
           {
@@ -3986,7 +4151,7 @@
         ],
         "page": 0,
         "size": 20,
-        "total": 4
+        "total": 6
       }
     },
     {
@@ -5541,9 +5706,23 @@
           },
           {
             "id": "{uuid}",
+            "sku": "PN-dieciochoDigitos",
+            "name": "Producto",
+            "unitPrice": "123456789012.123456",
+            "ivaRateCode": "4"
+          },
+          {
+            "id": "{uuid}",
             "sku": "P-numero",
             "name": "Producto",
             "unitPrice": "10.500000",
+            "ivaRateCode": "4"
+          },
+          {
+            "id": "{uuid}",
+            "sku": "PN-unoPuntoCinco",
+            "name": "Producto",
+            "unitPrice": "1.500000",
             "ivaRateCode": "4"
           },
           {
@@ -5556,7 +5735,7 @@
         ],
         "page": 0,
         "size": 20,
-        "total": 4
+        "total": 6
       }
     },
     {
@@ -5633,8 +5812,8 @@
         "path": "/api/v1/taxpayers",
         "auth": "owner",
         "body": {
-          "ruc": "0990000040001",
-          "legalName": "Emisor 0990000040001",
+          "ruc": "0990000042001",
+          "legalName": "Emisor 0990000042001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "tradeName": " Comercial ",
@@ -5650,8 +5829,8 @@
       "allow": null,
       "body": {
         "id": "{uuid}",
-        "ruc": "0990000040001",
-        "legalName": "Emisor 0990000040001",
+        "ruc": "0990000042001",
+        "legalName": "Emisor 0990000042001",
         "tradeName": "Comercial",
         "headOfficeAddress": "Calle 1",
         "phone": null,

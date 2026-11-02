@@ -37,21 +37,17 @@ it('el golden cubre los casos de Pkcs12InspectorTest y los de certificados reale
   }
 });
 
-it.each(golden.cases.map((c) => [c.name, c] as const))('%s', (_name, c) => {
+it.each(golden.cases.map((c) => [c.name, c] as const))('%s', async (_name, c) => {
   if ('errorCode' in c.result) {
-    const error = (() => {
-      try {
-        inspectPkcs12(read(c.file), c.password, at);
-        return null;
-      } catch (e) {
-        return e;
-      }
-    })();
+    const error = await inspectPkcs12(read(c.file), c.password, at).then(
+      () => null,
+      (e: unknown) => e,
+    );
     expect(error).toBeInstanceOf(CertificateRejectedException);
     expect(error).toMatchObject({ errorCode: c.result.errorCode, message: c.result.message });
     return;
   }
-  const material = inspectPkcs12(read(c.file), c.password, at);
+  const material = await inspectPkcs12(read(c.file), c.password, at);
   expect({
     subject: material.certificate.subject,
     issuer: material.certificate.issuer,
@@ -64,12 +60,52 @@ it.each(golden.cases.map((c) => [c.name, c] as const))('%s', (_name, c) => {
   expect(material.certificate.publicKey.asymmetricKeyType).toBe('rsa');
 });
 
-it('la vigencia se juzga en el instante indicado (validityIsJudgedAtTheGivenInstant)', () => {
+it('la vigencia se juzga en el instante indicado (validityIsJudgedAtTheGivenInstant)', async () => {
   const valid = golden.cases.find((c) => c.name === 'valido')!;
   const later = new Date(at.getTime() + 550 * 24 * 3600 * 1000);
-  expect(() => inspectPkcs12(read(valid.file), valid.password, later)).toThrow(
-    expect.objectContaining({ errorCode: 'CERTIFICATE_EXPIRED' }),
-  );
+  await expect(inspectPkcs12(read(valid.file), valid.password, later)).rejects.toMatchObject({
+    errorCode: 'CERTIFICATE_EXPIRED',
+  });
+});
+
+describe('archivos costosos de leer', () => {
+  /** El .p12 válido con el contador de iteraciones de su MAC cambiado. */
+  function withMacIterations(iterations: number): Buffer {
+    const pfx = forge.asn1.fromDer(read('valido.p12').toString('binary'));
+    const mac = (pfx.value as forge.asn1.Asn1[])[2]!;
+    const count = (mac.value as forge.asn1.Asn1[])[2]!;
+    count.value = forge.util.hexToBytes(iterations.toString(16).padStart(8, '0'));
+    return Buffer.from(forge.asn1.toDer(pfx).getBytes(), 'binary');
+  }
+
+  it('más de 5 000 000 iteraciones se rechazan sin derivar la clave, como PKCS12KeyStore', async () => {
+    // Comprobado con KeyStore.load de Java 25: "MAC iteration count too large: 2147483647" en 191 ms.
+    const started = Date.now();
+    await expect(inspectPkcs12(withMacIterations(2 ** 31 - 1), 'clave-de-prueba-p12', at)).rejects.toMatchObject({
+      errorCode: 'CERTIFICATE_UNREADABLE',
+      message: 'El archivo no es un PKCS#12 válido o la contraseña es incorrecta',
+    });
+    expect(Date.now() - started).toBeLessThan(1_000);
+  });
+
+  it('leer un archivo válido pero costoso no detiene el resto del proceso', async () => {
+    const slow = golden.cases.find((c) => c.name === 'iteraciones-altas')!;
+    let last = Date.now();
+    let longestGap = 0;
+    const timer = setInterval(() => {
+      const now = Date.now();
+      longestGap = Math.max(longestGap, now - last);
+      last = now;
+    }, 10);
+    try {
+      await inspectPkcs12(read(slow.file), slow.password, at);
+    } finally {
+      // Si la lectura bloquea, el temporizador no llega a correr: el hueco final también cuenta.
+      longestGap = Math.max(longestGap, Date.now() - last);
+      clearInterval(timer);
+    }
+    expect(longestGap).toBeLessThan(200);
+  }, 120_000);
 });
 
 describe('x500Name, como X500Principal.getName()', () => {

@@ -22,7 +22,7 @@ depende de aleatorios.
 
 `certificates` (`certificates/*.p12` y `certificates.json`): archivos PKCS#12 creados con `keytool` (los de
 `TestCertificates` más clave EC, contraseña con eñe, formato heredado 3DES/RC2 y un DN con comas, tildes,
-`SERIALNUMBER` y correo) y el resultado de `Pkcs12Inspector.inspect` en el instante `inspectedAt`. No es
+`SERIALNUMBER` y correo, una firma RSA-PSS y un archivo con 200 000 iteraciones, que la prueba usa para comprobar que leerlo no detiene el proceso) y el resultado de `Pkcs12Inspector.inspect` en el instante `inspectedAt`. No es
 determinista: cada ejecución crea claves nuevas, y un certificado vigente deja de serlo con el tiempo, por
 eso la prueba de Node repite la lectura en `inspectedAt`.
 

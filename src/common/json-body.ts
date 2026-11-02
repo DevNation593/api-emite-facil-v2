@@ -1,6 +1,7 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import { ApiException } from './api-exception.js';
 import { CORRELATION_ID_HEADER } from './correlation-id.middleware.js';
+import { recordNumberSource } from './json-source.js';
 import { runWithContext } from './request-context.js';
 
 export const JSON_BODY_LIMIT = '10mb';
@@ -8,6 +9,8 @@ export const JSON_BODY_LIMIT = '10mb';
 const parseJson = express.json({
   limit: JSON_BODY_LIMIT,
   type: ['application/json', 'application/*+json'],
+  // Anota el texto de cada número: Jackson lo lee del texto, no del double (json-source.ts).
+  reviver: recordNumberSource,
 });
 
 /**

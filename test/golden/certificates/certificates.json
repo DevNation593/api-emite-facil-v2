@@ -1,5 +1,5 @@
 {
-  "inspectedAt": "2026-11-02T01:16:02Z",
+  "inspectedAt": "2026-11-02T04:37:08Z",
   "cases": [
     {
       "name": "valido",
@@ -8,10 +8,10 @@
       "result": {
         "subject": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
         "issuer": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
-        "serialNumber": "17270705375939692911",
-        "fingerprintSha256": "a87f4fb88ad238b9fe3391408254adda7ee33aab23d426464acc100d18b5e799",
-        "validFrom": "2026-11-01T01:16:02Z",
-        "validTo": "2027-11-01T01:16:02Z"
+        "serialNumber": "5338313101934345930",
+        "fingerprintSha256": "f90eed8c17d2b1f47cab64e440a0446ea107a133eba35ec743bfbd033c77ff4a",
+        "validFrom": "2026-11-01T04:37:09Z",
+        "validTo": "2027-11-01T04:37:09Z"
       }
     },
     {
@@ -21,10 +21,10 @@
       "result": {
         "subject": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
         "issuer": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
-        "serialNumber": "5024969167740481283",
-        "fingerprintSha256": "e559ac6f79e07d8087789402f9cf2e4ebae91030964dd5dd7f0cb4734a0c1225",
-        "validFrom": "2026-11-01T01:16:03Z",
-        "validTo": "2027-11-01T01:16:03Z"
+        "serialNumber": "1656275394532810853",
+        "fingerprintSha256": "edaf3917a6fc383ddd001c05e8b8ff90404d85e51e661e6c4f29a407d4394de4",
+        "validFrom": "2026-11-01T04:37:09Z",
+        "validTo": "2027-11-01T04:37:09Z"
       }
     },
     {
@@ -34,10 +34,10 @@
       "result": {
         "subject": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
         "issuer": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
-        "serialNumber": "2601427697055735205",
-        "fingerprintSha256": "ba443e5fea033d45098401a40117941618433f54121a38dd34bbdf8e34389360",
-        "validFrom": "2026-11-01T01:16:05Z",
-        "validTo": "2027-11-01T01:16:05Z"
+        "serialNumber": "17003108856823681340",
+        "fingerprintSha256": "bcea4850b8fef8a06ae8b6311b9e9d25a6a3123ebb18ab4f7cf0547966e43859",
+        "validFrom": "2026-11-01T04:37:10Z",
+        "validTo": "2027-11-01T04:37:10Z"
       }
     },
     {
@@ -119,10 +119,10 @@
       "result": {
         "subject": "CN=Emisor Eñe,O=Pruebas,C=EC",
         "issuer": "CN=Emisor Eñe,O=Pruebas,C=EC",
-        "serialNumber": "6257665142997641298",
-        "fingerprintSha256": "3be545b683d0f3efa3acd8ccbfbaeec06b5a2fef212c0f694b065b87441aa847",
-        "validFrom": "2026-11-01T01:16:11Z",
-        "validTo": "2027-11-01T01:16:11Z"
+        "serialNumber": "5858736497760763193",
+        "fingerprintSha256": "7c1072e28381dca452b22262c306bfe81c086f79f02ca60a56c91fd9f5fd48ce",
+        "validFrom": "2026-11-01T04:37:15Z",
+        "validTo": "2027-11-01T04:37:15Z"
       }
     },
     {
@@ -132,10 +132,10 @@
       "result": {
         "subject": "CN=Emisor Heredado,O=Pruebas,C=EC",
         "issuer": "CN=Emisor Heredado,O=Pruebas,C=EC",
-        "serialNumber": "1680439679140440260",
-        "fingerprintSha256": "89d9a4e511a2b1c4b1ff56c714bb532174eeb23fb90d282c5b0d5230ac59dac8",
-        "validFrom": "2026-11-01T01:16:11Z",
-        "validTo": "2027-11-01T01:16:11Z"
+        "serialNumber": "13121771972034329957",
+        "fingerprintSha256": "ccd9a73d50306cdc34f7544dfda68ef6dca4d15225304c99381ebf29f8b6a506",
+        "validFrom": "2026-11-01T04:37:16Z",
+        "validTo": "2027-11-01T04:37:16Z"
       }
     },
     {
@@ -145,10 +145,36 @@
       "result": {
         "subject": "CN=José Pérez\\, Ñandú,OU=Firma,O=Pruebas S.A.,L=Quito,ST=Pichincha,C=EC,2.5.4.5=#130a30393132333435363738,1.2.840.113549.1.9.1=#160f6a6f7365406578616d706c652e6563",
         "issuer": "CN=José Pérez\\, Ñandú,OU=Firma,O=Pruebas S.A.,L=Quito,ST=Pichincha,C=EC,2.5.4.5=#130a30393132333435363738,1.2.840.113549.1.9.1=#160f6a6f7365406578616d706c652e6563",
-        "serialNumber": "15148779750019476093",
-        "fingerprintSha256": "d1276eb43a8a67d21ad677fcc12978c4c338c19d8c5c01315335a427aad4d12e",
-        "validFrom": "2026-11-01T01:16:12Z",
-        "validTo": "2027-11-01T01:16:12Z"
+        "serialNumber": "6790607790241506619",
+        "fingerprintSha256": "734f77b98ee5a3e09e3fd4a4fb2a37c934ea39f2f9dac0f39dfd7735929e154b",
+        "validFrom": "2026-11-01T04:37:17Z",
+        "validTo": "2027-11-01T04:37:17Z"
+      }
+    },
+    {
+      "name": "firma-pss",
+      "file": "firma-pss.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "subject": "CN=Emisor PSS,O=Pruebas,C=EC",
+        "issuer": "CN=Emisor PSS,O=Pruebas,C=EC",
+        "serialNumber": "18007569404198950013",
+        "fingerprintSha256": "64dcbe8c63a6266d4974f33a57c758796bd71bbc3abf7c9becd390f85d821da1",
+        "validFrom": "2026-11-01T04:37:17Z",
+        "validTo": "2027-11-01T04:37:17Z"
+      }
+    },
+    {
+      "name": "iteraciones-altas",
+      "file": "iteraciones-altas.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "subject": "CN=Emisor Lento,O=Pruebas,C=EC",
+        "issuer": "CN=Emisor Lento,O=Pruebas,C=EC",
+        "serialNumber": "4916747586161238014",
+        "fingerprintSha256": "4762457076c7db30a91b1e192d36e1f361c4f6cfc2fee082280d2effaefdc0cf",
+        "validFrom": "2026-11-01T04:37:18Z",
+        "validTo": "2027-11-01T04:37:18Z"
       }
     },
     {

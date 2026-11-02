@@ -1336,6 +1336,55 @@
     }
   },
   {
+    "name": "product unitPrice número exponente",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "rawBody": "{\"sku\":\"PN-exponente\",\"name\":\"Producto\",\"unitPrice\":1e2,\"ivaRateCode\":\"4\"}"
+  },
+  {
+    "name": "product unitPrice número cerosFinales",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "rawBody": "{\"sku\":\"PN-cerosFinales\",\"name\":\"Producto\",\"unitPrice\":1.0000000,\"ivaRateCode\":\"4\"}"
+  },
+  {
+    "name": "product unitPrice número dieciochoDigitos",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "rawBody": "{\"sku\":\"PN-dieciochoDigitos\",\"name\":\"Producto\",\"unitPrice\":123456789012.123456,\"ivaRateCode\":\"4\"}"
+  },
+  {
+    "name": "product unitPrice número unoPuntoCinco",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "rawBody": "{\"sku\":\"PN-unoPuntoCinco\",\"name\":\"Producto\",\"unitPrice\":1.50,\"ivaRateCode\":\"4\"}"
+  },
+  {
+    "name": "taxpayer accountingRequired uno punto cero",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "rawBody": "{\"ruc\":\"0990000040001\",\"legalName\":\"Emisor booleano\",\"headOfficeAddress\":\"Calle 1\",\"defaultEnvironment\":\"1\",\"accountingRequired\":1.0}"
+  },
+  {
+    "name": "taxpayer rimpeRegime uno punto cero",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "rawBody": "{\"ruc\":\"0990000041001\",\"legalName\":\"Emisor enum\",\"headOfficeAddress\":\"Calle 1\",\"defaultEnvironment\":\"1\",\"rimpeRegime\":1.0}"
+  },
+  {
+    "name": "customer idType número con ceros",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "rawBody": "{\"idType\":5.0,\"idNumber\":\"1700000003\",\"name\":\"X\"}"
+  },
+  {
     "name": "product ivaRateCode numérico",
     "method": "POST",
     "path": "/api/v1/products",
@@ -2099,8 +2148,8 @@
     "path": "/api/v1/taxpayers",
     "auth": "owner",
     "body": {
-      "ruc": "0990000040001",
-      "legalName": "Emisor 0990000040001",
+      "ruc": "0990000042001",
+      "legalName": "Emisor 0990000042001",
       "headOfficeAddress": "Calle 1",
       "defaultEnvironment": "1",
       "tradeName": " Comercial ",

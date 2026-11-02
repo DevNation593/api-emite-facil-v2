@@ -6,8 +6,10 @@ import {
   verify,
   X509Certificate,
 } from 'node:crypto';
+import { Worker } from 'node:worker_threads';
 import forge from 'node-forge';
 import type { ErrorCode } from '../common/error-codes.js';
+import { MAX_ITERATION_COUNT, maxIterationCount } from './pkcs12-limits.js';
 import { x500Name } from './x500-name.js';
 
 /**
@@ -50,7 +52,6 @@ export interface SigningMaterial {
 
 /** La ficha técnica del SRI (6.8) pide RSA de 2048 bits. */
 const MIN_RSA_BITS = 2048;
-const OIDS = forge.pki.oids;
 const KEY_USAGE = '2.5.29.15';
 
 const unreadable = () =>
@@ -100,62 +101,44 @@ export function certificateInfo(der: Buffer): CertificateInfo {
   };
 }
 
+/** Una bolsa del archivo, tal como la devuelve el worker. */
 interface Bag {
-  attributes: { localKeyId?: string[]; friendlyName?: string[] };
-  key?: forge.pki.PrivateKey | null;
-  cert?: forge.pki.Certificate | null;
-  asn1?: forge.asn1.Asn1;
+  localKeyId: string | null;
+  friendlyName: string | null;
+  der: Uint8Array;
 }
+
+type WorkerResult = { ok: true; keys: Bag[]; certs: Bag[] } | { ok: false };
+
+const WORKER = new URL('./pkcs12-bags.worker.mjs', import.meta.url);
 
 /**
- * forge deriva la clave PBES2 (PBKDF2) con cada carácter de la contraseña como un byte; Java usa su
- * UTF-8, y así cifra keytool. Mientras dura la lectura, PBKDF2 recibe la contraseña en UTF-8; el MAC
- * y el PBE heredado usan la derivación de PKCS#12 (UTF-16), que forge ya hace como Java. La lectura
- * es síncrona, así que el cambio no alcanza a ningún otro uso de forge.
+ * Descifra el archivo en un hilo aparte (pkcs12-bags.worker.mjs): la derivación de claves puede
+ * costar segundos y no debe detener el resto de peticiones. Antes se rechaza, como Java, el archivo
+ * que pide más iteraciones de las que admite PKCS12KeyStore.
  */
-function withUtf8Pbkdf2<T>(read: () => T): T {
-  const pkcs5 = forge.pkcs5 as unknown as { pbkdf2: (password: string, ...rest: unknown[]) => unknown };
-  const original = pkcs5.pbkdf2;
-  pkcs5.pbkdf2 = (password, ...rest) => original(forge.util.encodeUtf8(password), ...rest);
-  try {
-    return read();
-  } finally {
-    pkcs5.pbkdf2 = original;
-  }
-}
-
-function load(p12: Buffer, password: string): forge.pkcs12.Pkcs12Pfx {
-  try {
-    const asn1 = forge.asn1.fromDer(forge.util.createBuffer(p12.toString('binary')));
-    return withUtf8Pbkdf2(() => forge.pkcs12.pkcs12FromAsn1(asn1, false, password));
-  } catch {
-    // Contraseña errónea y archivo corrupto no se distinguen: el mensaje no da pistas de cuál fue.
-    throw unreadable();
-  }
-}
-
-function bags(store: forge.pkcs12.Pkcs12Pfx, type: string): Bag[] {
-  return (store.getBags({ bagType: type })[type] ?? []) as unknown as Bag[];
-}
-
-function keyDer(bag: Bag): Buffer {
-  const asn1 = bag.key
-    ? forge.pki.wrapRsaPrivateKey(forge.pki.privateKeyToAsn1(bag.key as forge.pki.rsa.PrivateKey))
-    : bag.asn1!;
-  return Buffer.from(forge.asn1.toDer(asn1).getBytes(), 'binary');
-}
-
-function certDer(bag: Bag): Buffer {
-  const asn1 = bag.cert ? forge.pki.certificateToAsn1(bag.cert) : bag.asn1!;
-  return Buffer.from(forge.asn1.toDer(asn1).getBytes(), 'binary');
+async function load(p12: Buffer, password: string): Promise<{ keys: Bag[]; certs: Bag[] }> {
+  if (maxIterationCount(p12) > MAX_ITERATION_COUNT) throw unreadable();
+  const result = await new Promise<WorkerResult>((resolve, reject) => {
+    const worker = new Worker(WORKER, { workerData: { p12, password } });
+    worker.once('message', (message: WorkerResult) => {
+      resolve(message);
+      void worker.terminate();
+    });
+    worker.once('error', reject);
+    worker.once('exit', (code) => {
+      if (code !== 0) reject(new Error(`El lector de PKCS#12 terminó con el código ${code}`));
+    });
+  }).catch((): WorkerResult => ({ ok: false }));
+  // Contraseña errónea y archivo corrupto no se distinguen: el mensaje no da pistas de cuál fue.
+  if (!result.ok) throw unreadable();
+  return result;
 }
 
 /** El certificado de una clave: el que comparte su localKeyId (o, si no lo hay, su friendlyName). */
 function certificateOf(key: Bag, certs: Bag[]): Bag | undefined {
-  const id = key.attributes.localKeyId?.[0];
-  if (id !== undefined) return certs.find((c) => c.attributes.localKeyId?.[0] === id);
-  const name = key.attributes.friendlyName?.[0];
-  return name === undefined ? undefined : certs.find((c) => c.attributes.friendlyName?.[0] === name);
+  if (key.localKeyId !== null) return certs.find((c) => c.localKeyId === key.localKeyId);
+  return key.friendlyName === null ? undefined : certs.find((c) => c.friendlyName === key.friendlyName);
 }
 
 /** Firma unos bytes con la clave privada y los verifica con el certificado. */
@@ -184,17 +167,16 @@ function choose(withKey: SigningMaterial[]): SigningMaterial {
  * ecuatorianos suelen traer dos claves, una de firma y otra de cifrado: se usa la que declara el
  * uso digitalSignature. La vigencia se juzga en el instante `now`.
  */
-export function inspectPkcs12(p12: Buffer, password: string, now: Date): SigningMaterial {
-  const store = load(p12, password);
-  const certs = bags(store, OIDS.certBag!);
+export async function inspectPkcs12(p12: Buffer, password: string, now: Date): Promise<SigningMaterial> {
+  const { keys, certs } = await load(p12, password);
   const withKey: SigningMaterial[] = [];
   try {
-    for (const key of [...bags(store, OIDS.pkcs8ShroudedKeyBag!), ...bags(store, OIDS.keyBag!)]) {
+    for (const key of keys) {
       const cert = certificateOf(key, certs);
       if (cert === undefined) continue;
-      const certificateDer = certDer(cert);
+      const certificateDer = Buffer.from(cert.der);
       withKey.push({
-        privateKey: createPrivateKey({ key: keyDer(key), format: 'der', type: 'pkcs8' }),
+        privateKey: createPrivateKey({ key: Buffer.from(key.der), format: 'der', type: 'pkcs8' }),
         certificate: certificateInfo(certificateDer),
         certificateDer,
       });

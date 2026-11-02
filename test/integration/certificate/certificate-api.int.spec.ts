@@ -109,7 +109,7 @@ it('una segunda carga reemplaza a la primera', async () => {
   ]);
   expect(statuses.rows.map((r) => r.status)).toEqual(['REPLACED', 'ACTIVE']);
   const material = await certificates.signingMaterial(tenant, taxpayer, new Date());
-  const second = inspectPkcs12(testP12('anotherValid'), TEST_P12_PASSWORD, new Date());
+  const second = await inspectPkcs12(testP12('anotherValid'), TEST_P12_PASSWORD, new Date());
   expect(material.certificateDer.equals(second.certificateDer)).toBe(true);
 });
 

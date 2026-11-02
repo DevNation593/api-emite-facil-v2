@@ -2,6 +2,7 @@ import { Allow, registerDecorator, type ValidationOptions } from 'class-validato
 import { Transform } from 'class-transformer';
 import { ApiException } from './api-exception.js';
 import { idnToAscii } from './idn.js';
+import { isFloatToken, numberSource } from './json-source.js';
 import { jacksonUuid } from './java-uuid.js';
 import { javaTrim, strip } from './java-text.js';
 
@@ -159,10 +160,11 @@ export const Max = (max: number, options?: ValidationOptions): PropertyDecorator
 
 const notJson = () => new ApiException(400, 'MALFORMED_REQUEST', 'El cuerpo de la petición no es JSON válido');
 
-function jsonCoercion(convert: (value: unknown) => unknown): PropertyDecorator {
+/** `holder` y `key` ubican el valor en el cuerpo, para leer el texto original de un número. */
+function jsonCoercion(convert: (value: unknown, holder: unknown, key: string) => unknown): PropertyDecorator {
   const allow = Allow();
-  const transform = Transform(({ value }: { value: unknown }) =>
-    value === null || value === undefined ? value : convert(value),
+  const transform = Transform(({ value, obj, key }: { value: unknown; obj: unknown; key: string }) =>
+    value === null || value === undefined ? value : convert(value, obj, key),
   );
   return (target, propertyName) => {
     allow(target, propertyName);
@@ -170,10 +172,14 @@ function jsonCoercion(convert: (value: unknown) => unknown): PropertyDecorator {
   };
 }
 
-/** Texto: número o booleano pasan a texto; un objeto o un array son JSON no legible. */
+/**
+ * Texto: un booleano pasa a texto y un número, al texto con que se escribió (1.50 sigue siendo
+ * "1.50", no "1.5"); un objeto o un array son JSON no legible.
+ */
 export const JsonString = (): PropertyDecorator =>
-  jsonCoercion((value) => {
-    if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+  jsonCoercion((value, holder, key) => {
+    if (typeof value === 'number') return numberSource(holder, key) ?? String(value);
+    if (typeof value === 'boolean') return String(value);
     if (typeof value === 'object') throw notJson();
     return value;
   });
@@ -210,10 +216,11 @@ const FALSE = new Set(['false', 'False', 'FALSE']);
  * minúsculas, capitalizado o en mayúsculas) y "" es null. "1", "si" o un decimal no se leen.
  */
 export const JsonBoolean = (): PropertyDecorator =>
-  jsonCoercion((value) => {
+  jsonCoercion((value, holder, key) => {
     if (typeof value === 'boolean') return value;
     if (typeof value === 'number') {
-      if (!Number.isInteger(value)) throw notJson();
+      // 1.0 es un número decimal para Jackson, aunque su valor sea entero.
+      if (isFloatToken(holder, key, value)) throw notJson();
       return value !== 0;
     }
     if (typeof value === 'string') {
@@ -230,9 +237,9 @@ export const JsonBoolean = (): PropertyDecorator =>
  * (1 o "1" es el segundo valor). "", otra caja, una posición fuera de rango o un decimal no se leen.
  */
 export const JsonEnum = (values: readonly string[]): PropertyDecorator =>
-  jsonCoercion((value) => {
+  jsonCoercion((value, holder, key) => {
     if (typeof value === 'number') {
-      if (Number.isInteger(value) && value >= 0 && value < values.length) return values[value];
+      if (!isFloatToken(holder, key, value) && value >= 0 && value < values.length) return values[value];
       throw notJson();
     }
     if (typeof value === 'string') {

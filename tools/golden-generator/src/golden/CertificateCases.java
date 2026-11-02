@@ -70,6 +70,20 @@ final class CertificateCases {
 									+ " SERIALNUMBER=0912345678, EMAILADDRESS=jose@example.ec",
 							"-ext", "KeyUsage=digitalSignature,nonRepudiation"),
 					PASSWORD);
+			add(cases, dir, inspectedAt, "firma-pss",
+					keytool(work, "pss", PASSWORD, List.of(), "-keyalg", "RSA", "-keysize", "2048", "-sigalg",
+							"RSASSA-PSS", "-dname", "CN=Emisor PSS, O=Pruebas, C=EC", "-ext",
+							"KeyUsage=digitalSignature"),
+					PASSWORD);
+			// Válido pero costoso de leer: la prueba de Node comprueba que no bloquea el proceso.
+			add(cases, dir, inspectedAt, "iteraciones-altas",
+					keytool(work, "high", PASSWORD,
+							List.of("-J-Dkeystore.pkcs12.macIterationCount=200000",
+									"-J-Dkeystore.pkcs12.keyPbeIterationCount=200000",
+									"-J-Dkeystore.pkcs12.certPbeIterationCount=200000"),
+							"-keyalg", "RSA", "-keysize", "2048", "-dname", "CN=Emisor Lento, O=Pruebas, C=EC", "-ext",
+							"KeyUsage=digitalSignature"),
+					PASSWORD);
 		}
 		finally {
 			try (var files = Files.list(work)) {

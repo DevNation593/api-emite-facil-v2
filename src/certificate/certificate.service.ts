@@ -104,7 +104,7 @@ export class CertificateService {
       if (taxpayer === undefined) throw ApiException.notFound();
       let material: SigningMaterial;
       try {
-        material = inspectPkcs12(p12, password, new Date());
+        material = await inspectPkcs12(p12, password, new Date());
       } catch (error) {
         if (error instanceof CertificateRejectedException) {
           throw new ApiException(422, error.errorCode as ErrorCode, error.message);
@@ -194,7 +194,7 @@ export class CertificateService {
       secretContext(tenantId, taxpayerId, active.id, 'password'),
     );
     try {
-      return inspectPkcs12(p12, passwordBytes.toString('utf8'), now);
+      return await inspectPkcs12(p12, passwordBytes.toString('utf8'), now);
     } finally {
       p12.fill(0);
       passwordBytes.fill(0);

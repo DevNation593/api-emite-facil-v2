@@ -82,6 +82,17 @@ add('customer repetido', 'POST', '/api/v1/customers', { body: { idType: '05', id
 add('customer en blanco', 'POST', '/api/v1/customers', { body: { idType: '05', idNumber: '1700000002', name: '  Nombre  ', email: ' ', address: '', phone: '  ' } });
 const prices = { numero: 10.5, siete: '1.1234567', negativo: '-1', exponente: '1e3', coma: '1,5', trece: '1234567890123', cero: '0', espacios: ' 1 ' };
 for (const [k, v] of Object.entries(prices)) add(`product unitPrice ${k}`, 'POST', '/api/v1/products', { body: { sku: `P-${k}`, name: 'Producto', unitPrice: v, ivaRateCode: '4' } });
+// Números JSON que un double no conserva: Jackson lee el texto original del número.
+for (const [k, raw] of Object.entries({ exponente: '1e2', cerosFinales: '1.0000000', dieciochoDigitos: '123456789012.123456', unoPuntoCinco: '1.50' })) {
+  add(`product unitPrice número ${k}`, 'POST', '/api/v1/products', { rawBody: `{"sku":"PN-${k}","name":"Producto","unitPrice":${raw},"ivaRateCode":"4"}` });
+}
+add('taxpayer accountingRequired uno punto cero', 'POST', '/api/v1/taxpayers', {
+  rawBody: `{"ruc":"${nextRuc()}","legalName":"Emisor booleano","headOfficeAddress":"Calle 1","defaultEnvironment":"1","accountingRequired":1.0}`,
+});
+add('taxpayer rimpeRegime uno punto cero', 'POST', '/api/v1/taxpayers', {
+  rawBody: `{"ruc":"${nextRuc()}","legalName":"Emisor enum","headOfficeAddress":"Calle 1","defaultEnvironment":"1","rimpeRegime":1.0}`,
+});
+add('customer idType número con ceros', 'POST', '/api/v1/customers', { rawBody: '{"idType":5.0,"idNumber":"1700000003","name":"X"}' });
 add('product ivaRateCode numérico', 'POST', '/api/v1/products', { body: { sku: 'P-iva', name: 'Producto', unitPrice: '1', ivaRateCode: 4 } });
 add('product tarifa desconocida', 'POST', '/api/v1/products', { body: { sku: 'P-iva9', name: 'Producto', unitPrice: '1', ivaRateCode: '9' } });
 add('product sku inválido', 'POST', '/api/v1/products', { body: { sku: 'con espacio', name: 'Producto', unitPrice: '1', ivaRateCode: '4' } });

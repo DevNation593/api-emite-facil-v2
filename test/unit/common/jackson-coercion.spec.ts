@@ -10,6 +10,7 @@ import {
   Min,
   NotNull,
 } from '../../../src/common/bean-validation.js';
+import { recordNumberSource } from '../../../src/common/json-source.js';
 import { validationPipe } from '../../../src/common/validation.js';
 
 // Cada caso de cuerpo de test/golden/http/e2.json se pasa por el pipe de validación con un DTO que
@@ -44,15 +45,17 @@ async function run(metatype: ArgumentMetadata['metatype'], body: unknown): Promi
   return validationPipe.transform(body, { type: 'body', metatype });
 }
 
+/** El cuerpo leído como lo lee el parser de la API, con el texto original de cada número. */
 function sent(r: Result): Record<string, unknown> {
-  const body = r.request.rawBody !== undefined ? JSON.parse(r.request.rawBody) : r.request.body;
+  const text = r.request.rawBody ?? JSON.stringify(r.request.body);
   // El escenario sustituye los marcadores; aquí basta un UUID cualquiera.
   return JSON.parse(
-    JSON.stringify(body)
+    text
       .replaceAll('{{establishmentId}}', `{${ID}}`)
       .replaceAll('{establishmentIdUpper}', ID.toUpperCase())
       .replaceAll('{establishmentIdNoDash}', ID.replaceAll('-', ''))
       .replaceAll('{establishmentId}', ID),
+    recordNumberSource,
   ) as Record<string, unknown>;
 }
 
@@ -62,7 +65,8 @@ async function expectLikeJava(
   field: string,
   expected: (dto: Record<string, unknown>) => void,
 ): Promise<void> {
-  const input = { [field]: sent(r)[field] };
+  // El cuerpo entero, no una copia del campo: el texto de los números va ligado a su objeto.
+  const input = sent(r);
   if (r.status === 400 && r.body.detail === NOT_JSON) {
     await expect(run(metatype, input)).rejects.toMatchObject({
       status: 400,
