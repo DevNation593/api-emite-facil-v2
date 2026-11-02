@@ -4,6 +4,7 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import { createApp } from '../../../src/bootstrap.js';
 import { readiness } from '../../../src/observability/lifecycle.js';
 import { startStack, type StackHandle } from '../../support/containers.js';
+import { testAuthHeader } from '../../support/test-app.js';
 
 const UP = { status: 'UP', groups: ['liveness', 'readiness'] };
 const DOWN = { status: 'DOWN', groups: ['liveness', 'readiness'] };
@@ -102,5 +103,9 @@ it('readiness refleja el estado de ciclo de vida', async () => {
 
 it('las rutas de actuator no llevan el prefijo /api/v1', async () => {
   const app = await appWith({});
-  await request(app.getHttpServer()).get('/api/v1/actuator/health').expect(404);
+  // Con credenciales: sin ellas la autenticación (que va antes del enrutado) respondería 401.
+  await request(app.getHttpServer())
+    .get('/api/v1/actuator/health')
+    .set('Authorization', await testAuthHeader())
+    .expect(404);
 });

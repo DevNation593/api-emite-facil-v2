@@ -3,16 +3,22 @@ import {
   Module,
   NotFoundException,
 } from '@nestjs/common';
-import type { NextFunction, Request, Response } from 'express';
+import type { Application, NextFunction, Request, Response } from 'express';
 import { NestFactory } from '@nestjs/core';
 import { Logger, LoggerModule } from 'nestjs-pino';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module.js';
+import { ApiKeyService } from './apikey/api-key.service.js';
+import { RateLimiter } from './common/rate-limiter.js';
 import { correlationIdMiddleware } from './common/correlation-id.middleware.js';
 import { jsonBodyMiddleware } from './common/json-body.js';
+import { allowedMethods } from './common/route-methods.js';
 import { loadConfig } from './config/app-config.js';
+import { AccessTokens } from './identity/access-tokens.js';
+import { authenticationMiddleware } from './identity/authentication.middleware.js';
 import { inFlightMiddleware } from './observability/lifecycle.js';
 import { createPinoLogger } from './observability/logging.js';
+import { WorkerModule } from './orchestration/worker.module.js';
 
 export interface CreateAppOptions {
   /** Módulos extra (p. ej. controladores de prueba) que se suman a AppModule. */
@@ -26,7 +32,8 @@ export interface CreateAppOptions {
 export async function createApp(
   options: CreateAppOptions = {},
 ): Promise<NestExpressApplication> {
-  const logger = createPinoLogger(loadConfig(process.env));
+  const config = loadConfig(process.env);
+  const logger = createPinoLogger(config);
 
   @Module({
     imports: [
@@ -39,6 +46,8 @@ export async function createApp(
         renameContext: 'logger_name',
       }),
       AppModule,
+      // Aquí y no en AppModule, que es estático: la decisión necesita la configuración.
+      WorkerModule.register(config.workerEnabled),
       ...(options.imports ?? []),
     ],
   })
@@ -54,6 +63,15 @@ export async function createApp(
   // Orden: el id de correlación debe existir antes de que el cuerpo pueda fallar.
   app.use(inFlightMiddleware);
   app.use(correlationIdMiddleware);
+  // La autenticación va antes del cuerpo: sin credenciales no se lee ni se parsea nada. Se
+  // construye con los providers ya creados porque corre fuera del ciclo de rutas de Nest.
+  app.use(
+    authenticationMiddleware({
+      accessTokens: app.get(AccessTokens),
+      apiKeys: app.get(ApiKeyService),
+      limiter: app.get(RateLimiter),
+    }),
+  );
   app.use(jsonBodyMiddleware);
   // Nest solo monta su manejador de "no encontrado" bajo el prefijo y las rutas
   // excluidas; fuera de ellas Express respondería con HTML.
@@ -64,6 +82,17 @@ export async function createApp(
       path.startsWith('/api/v1/') ||
       path.startsWith('/actuator/');
     next(known ? undefined : new NotFoundException());
+  });
+  // OPTIONS sobre una ruta existente: 200 con Allow y sin cuerpo, como Spring MVC
+  // (dispatchOptionsRequest). Llega ya autenticado: Java no tiene CORS y lo protege igual. Sobre
+  // una ruta inexistente sigue al 404.
+  const express = app.getHttpAdapter().getInstance() as Application;
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.method !== 'OPTIONS') return next();
+    const allowed = allowedMethods(express, req.originalUrl.split('?')[0]!);
+    if (allowed.length === 0) return next();
+    res.setHeader('Allow', [...allowed, 'OPTIONS'].join(','));
+    res.status(200).end();
   });
   app.disable('etag');
   app.disable('x-powered-by');

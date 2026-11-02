@@ -1,4 +1,9 @@
-import { SetMetadata, ValidationPipe, type ValidationError } from '@nestjs/common';
+import {
+  SetMetadata,
+  ValidationPipe,
+  type ArgumentMetadata,
+  type ValidationError,
+} from '@nestjs/common';
 import { ApiException, type FieldError } from './api-exception.js';
 
 export const ACCEPTS_MULTIPART_KEY = 'common:acceptsMultipart';
@@ -34,7 +39,27 @@ function flatten(
   });
 }
 
-export const validationPipe = new ValidationPipe({
+const MALFORMED_BODY = 'El cuerpo de la petición no es JSON válido';
+
+/**
+ * ValidationPipe con las reglas de Spring + Jackson: un cuerpo ausente o que no es un
+ * objeto es JSON no legible (400 MALFORMED_REQUEST), y eso se comprueba antes de validar.
+ * Los parámetros que no son el cuerpo, y los cuerpos sin DTO, siguen el camino normal.
+ */
+class SpringValidationPipe extends ValidationPipe {
+  override async transform(value: unknown, metadata: ArgumentMetadata): Promise<unknown> {
+    if (metadata.type === 'body' && this.toValidate(metadata) && !isPlainObject(value)) {
+      throw new ApiException(400, 'MALFORMED_REQUEST', MALFORMED_BODY);
+    }
+    return super.transform(value, metadata);
+  }
+}
+
+function isPlainObject(value: unknown): boolean {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+export const validationPipe = new SpringValidationPipe({
   transform: true,
   whitelist: true,
   // Spring/Jackson ignora las propiedades desconocidas en lugar de rechazarlas.

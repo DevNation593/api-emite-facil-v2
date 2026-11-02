@@ -9,12 +9,18 @@ import {
   readiness,
 } from '../../../src/observability/lifecycle.js';
 import { startStack, type StackHandle } from '../../support/containers.js';
+import { testAuthHeader } from '../../support/test-app.js';
 import { SlowModule } from '../../support/slow.module.js';
 
-function get(port: number, path: string, agent?: http.Agent) {
+function get(
+  port: number,
+  path: string,
+  agent?: http.Agent,
+  headers?: http.OutgoingHttpHeaders,
+) {
   return new Promise<{ status: number; body: string }>((resolve, reject) => {
     http
-      .get({ host: '127.0.0.1', port, path, agent }, (res) => {
+      .get({ host: '127.0.0.1', port, path, agent, headers }, (res) => {
         let body = '';
         res.on('data', (chunk) => (body += chunk));
         res.on('end', () => resolve({ status: res.statusCode ?? 0, body }));
@@ -43,7 +49,10 @@ it('gracefulShutdown deja terminar la petición en curso y pone readiness en OUT
     (await get(port, '/actuator/health/readiness', keepAlive)).status,
   ).toBe(200);
 
-  const slow = get(port, '/api/v1/test/slow');
+  // /api/v1 exige credenciales; el health, no.
+  const slow = get(port, '/api/v1/test/slow', undefined, {
+    authorization: await testAuthHeader(),
+  });
   await sleep(100);
   const started = Date.now();
   const shutdown = gracefulShutdown(app);

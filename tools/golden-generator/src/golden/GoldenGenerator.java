@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Genera los casos golden con el código real de la API Java. Uso: {@code GoldenGenerator <salida> <repo-java> <commit>}.
+ * Genera los casos golden con el código real de la API Java. Uso: {@code GoldenGenerator <salida> <repo-java> <commit> [familia]}.
  * Los valores de entrada salen de una semilla fija; los aleatorios por naturaleza (IV de AES, sal de Argon2,
  * jti del JWT, API keys, ids de la firma) cambian en cada ejecución, y las pruebas de Node los leen del resultado.
  */
@@ -22,17 +22,28 @@ public final class GoldenGenerator {
 	}
 
 	public static void main(String[] args) throws Exception {
-		if (args.length != 3) {
-			throw new IllegalArgumentException("Uso: GoldenGenerator <salida> <repo-java> <commit>");
+		if (args.length < 3 || args.length > 4) {
+			throw new IllegalArgumentException("Uso: GoldenGenerator <salida> <repo-java> <commit> [familia]");
 		}
 		Path out = Path.of(args[0]);
 		Files.createDirectories(out);
+
+		// Con familia solo se genera esa y no se toca el resto de fixtures ni SOURCE.json.
+		if (args.length == 4) {
+			if (!args[3].equals("bean-validation")) {
+				throw new IllegalArgumentException("Familia desconocida: " + args[3]);
+			}
+			write(out.resolve("bean-validation.json"), ValidationCases.generate());
+			System.out.println("Familia " + args[3] + " generada en " + out.toAbsolutePath());
+			return;
+		}
 
 		write(out.resolve("access-key.json"), AccessKeyCases.generate());
 		write(out.resolve("aes-gcm.json"), AesGcmCases.generate());
 		write(out.resolve("argon2.json"), Argon2Cases.generate());
 		write(out.resolve("jwt.json"), JwtCases.generate());
 		write(out.resolve("api-key.json"), ApiKeyCases.generate());
+		write(out.resolve("bean-validation.json"), ValidationCases.generate());
 		XadesCases.generate(out.resolve("xades"));
 
 		Map<String, Object> source = new LinkedHashMap<>();

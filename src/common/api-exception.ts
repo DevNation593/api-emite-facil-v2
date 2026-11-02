@@ -23,4 +23,13 @@ export class ApiException extends Error {
   static notFound(): ApiException {
     return new ApiException(404, 'NOT_FOUND', 'Recurso no encontrado');
   }
+
+  /** 429 con Retry-After en segundos. */
+  static tooManyRequests(
+    errorCode: ErrorCode,
+    detail: string,
+    retryAfterSeconds: number,
+  ): ApiException {
+    return new ApiException(429, errorCode, detail, [], retryAfterSeconds);
+  }
 }

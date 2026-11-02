@@ -77,3 +77,27 @@ it('con Redis colgado resuelve allowed: true en menos de 1 s', async () => {
     await new Promise((resolve) => server.close(resolve));
   }
 });
+
+/** Un puerto de esta máquina en el que nadie escucha. */
+async function closedPort(): Promise<number> {
+  const server = net.createServer();
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const { port } = server.address() as net.AddressInfo;
+  await new Promise((resolve) => server.close(resolve));
+  return port;
+}
+
+it('con Redis inalcanzable toda petición pasa y se cuenta (RateLimiterTest)', async () => {
+  const registry = new Registry();
+  const limiter = new RateLimiter(
+    client(`redis://127.0.0.1:${await closedPort()}`, 2_000),
+    { requestsPerMinute: 1, writesPerMinute: 1 },
+    registry,
+  );
+  // Con el límite en 1, la segunda petición se rechazaría si Redis respondiera.
+  for (let i = 0; i < 3; i++) {
+    expect((await limiter.check('usuario', true)).allowed).toBe(true);
+  }
+  const metric = await registry.getSingleMetric('einvoice_ratelimit_unavailable_total')!.get();
+  expect(metric.values[0]!.value).toBe(3);
+});

@@ -13,6 +13,7 @@ import {
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { createApp } from '../../../src/bootstrap.js';
 import { currentCorrelationId } from '../../../src/common/request-context.js';
+import { testAuthHeader } from '../../support/test-app.js';
 
 const seen: Array<string | undefined> = [];
 
@@ -37,9 +38,11 @@ class CtxController {
 class CtxModule {}
 
 let app: NestExpressApplication;
+let auth: string;
 beforeAll(async () => {
   app = await createApp({ imports: [CtxModule] });
   await app.init();
+  auth = await testAuthHeader();
 });
 afterAll(async () => {
   await app.close();
@@ -49,6 +52,7 @@ it('el correlationId llega a los guards de una petición con cuerpo JSON', async
   seen.length = 0;
   const res = await request(app.getHttpServer())
     .post('/api/v1/ctx')
+    .set('Authorization', auth)
     .set('X-Correlation-ID', 'guard-77')
     .send({ a: 1 })
     .expect(201);
@@ -66,7 +70,11 @@ it('también cuando el cuerpo llega troceado y con retraso', async () => {
         port,
         method: 'POST',
         path: '/api/v1/ctx',
-        headers: { 'content-type': 'application/json', 'x-correlation-id': 'slow-1' },
+        headers: {
+          'content-type': 'application/json',
+          'x-correlation-id': 'slow-1',
+          authorization: auth,
+        },
       },
       (res) => {
         res.resume();

@@ -1,25 +1,40 @@
+import { Logger } from '@nestjs/common';
 import request from 'supertest';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { createApp } from '../../../src/bootstrap.js';
 import { FailingModule } from '../../support/failing.controller.js';
+import { testAuthHeader } from '../../support/test-app.js';
 
 const problem = (status: number, extra: object) =>
   expect.objectContaining({ type: 'about:blank', status, ...extra });
 
 let app: NestExpressApplication;
 let http: ReturnType<typeof request>;
+// La autenticación va antes que el enrutado: salvo la salud, toda ruta pide credenciales.
+// `authed` envía un token válido; `http` sin credenciales.
+let authed: {
+  get: (url: string) => request.Test;
+  post: (url: string) => request.Test;
+  delete: (url: string) => request.Test;
+};
 
 beforeAll(async () => {
   app = await createApp({ imports: [FailingModule] });
   await app.init();
   http = request(app.getHttpServer());
+  const auth = await testAuthHeader();
+  authed = {
+    get: (url) => http.get(url).set('Authorization', auth),
+    post: (url) => http.post(url).set('Authorization', auth),
+    delete: (url) => http.delete(url).set('Authorization', auth),
+  };
 });
 afterAll(async () => {
   await app.close();
 });
 
 it('ruta inexistente', async () => {
-  const res = await http.get('/api/v1/no-existe?x=1').set('X-Correlation-ID', 'abc-123');
+  const res = await authed.get('/api/v1/no-existe?x=1').set('X-Correlation-ID', 'abc-123');
   expect(res.status).toBe(404);
   expect(res.headers['content-type']).toBe('application/problem+json');
   expect(res.headers['etag']).toBeUndefined();
@@ -38,7 +53,7 @@ it('ruta inexistente', async () => {
 it.each(['/nada', '/', '/api', '/api/v2/x', '/actuatorx'])(
   'ruta fuera de /api/v1 y /actuator (%s) da 404 problem+json',
   async (path) => {
-    const res = await http.get(path).set('X-Correlation-ID', 'fuera-1');
+    const res = await authed.get(path).set('X-Correlation-ID', 'fuera-1');
     expect(res.status).toBe(404);
     expect(res.headers['content-type']).toBe('application/problem+json');
     expect(res.body).toEqual(
@@ -51,15 +66,32 @@ it.each(['/nada', '/', '/api', '/api/v2/x', '/actuatorx'])(
   },
 );
 
+it.each(['/nada', '/', '/api', '/api/v2/x', '/actuatorx', '/api/v1/no-existe'])(
+  'sin credenciales, %s da 401 (la autenticación va antes que el 404)',
+  async (path) => {
+    const res = await http.get(path).set('X-Correlation-ID', 'sin-token-1');
+    expect(res.status).toBe(401);
+    expect(res.headers['content-type']).toBe('application/problem+json');
+    expect(res.body).toEqual(
+      problem(401, {
+        errorCode: 'UNAUTHENTICATED',
+        detail: 'Se requiere un token de acceso válido',
+        instance: path,
+        correlationId: 'sin-token-1',
+      }),
+    );
+  },
+);
+
 it('POST /actuator/health da 405 con Allow', async () => {
-  const res = await http.post('/actuator/health');
+  const res = await http.post('/actuator/health'); // pública: pasa sin credenciales
   expect(res.status).toBe(405);
   expect(res.headers.allow).toContain('GET');
   expect(res.body).toEqual(problem(405, { errorCode: 'METHOD_NOT_ALLOWED' }));
 });
 
 it('método no permitido', async () => {
-  const res = await http.delete('/api/v1/test/boom');
+  const res = await authed.delete('/api/v1/test/boom');
   expect(res.status).toBe(405);
   expect(res.headers.allow).toContain('GET');
   expect(res.body).toEqual(
@@ -71,7 +103,7 @@ it('método no permitido', async () => {
 });
 
 it('JSON ilegible', async () => {
-  const res = await http
+  const res = await authed
     .post('/api/v1/test/echo')
     .set('Content-Type', 'application/json')
     .send('{"name":');
@@ -87,7 +119,7 @@ it('JSON ilegible', async () => {
 });
 
 it('Content-Type no JSON', async () => {
-  const res = await http
+  const res = await authed
     .post('/api/v1/test/echo')
     .set('Content-Type', 'text/plain')
     .send('hola');
@@ -96,12 +128,12 @@ it('Content-Type no JSON', async () => {
 });
 
 it('POST sin cuerpo no es 415', async () => {
-  const res = await http.post('/api/v1/test/echo');
+  const res = await authed.post('/api/v1/test/echo');
   expect(res.status).not.toBe(415);
 });
 
 it('validación con rutas de campo de Spring', async () => {
-  const res = await http
+  const res = await authed
     .post('/api/v1/test/echo')
     .send({ name: '', lines: [{ quantity: 1 }, { quantity: -1 }] });
   expect(res.status).toBe(400);
@@ -118,7 +150,7 @@ it('validación con rutas de campo de Spring', async () => {
 });
 
 it('ApiException con errores y Retry-After', async () => {
-  const res = await http.get('/api/v1/test/api-exception');
+  const res = await authed.get('/api/v1/test/api-exception');
   expect(res.status).toBe(422);
   expect(res.headers['retry-after']).toBe('30');
   expect(res.body).toEqual(
@@ -132,7 +164,7 @@ it('ApiException con errores y Retry-After', async () => {
 });
 
 it('error inesperado no filtra la causa', async () => {
-  const res = await http.get('/api/v1/test/boom');
+  const res = await authed.get('/api/v1/test/boom');
   expect(res.status).toBe(500);
   expect(res.body).toEqual(
     problem(500, {
@@ -146,7 +178,7 @@ it('error inesperado no filtra la causa', async () => {
 it.each(['a b', 'x'.repeat(65), '', 'a	b', 'a/b'])(
   'X-Correlation-ID inválido %j se reemplaza',
   async (value) => {
-    const res = await http.get('/api/v1/no-existe').set('X-Correlation-ID', value);
+    const res = await authed.get('/api/v1/no-existe').set('X-Correlation-ID', value);
     expect(res.headers['x-correlation-id']).toMatch(/^[0-9a-f-]{36}$/);
     expect(res.body.correlationId).toBe(res.headers['x-correlation-id']);
   },
@@ -157,11 +189,11 @@ it('acepta una factura de 1 000 líneas', async () => {
     quantity: 1,
     description: 'x'.repeat(300),
   }));
-  await http.post('/api/v1/test/echo').send({ name: 'grande', lines }).expect(201);
+  await authed.post('/api/v1/test/echo').send({ name: 'grande', lines }).expect(201);
 });
 
 it('cuerpo mayor de 10 MB responde 413 problem+json', async () => {
-  const res = await http
+  const res = await authed
     .post('/api/v1/test/echo')
     .set('Content-Type', 'application/json')
     .send(JSON.stringify({ name: 'x'.repeat(11 * 1024 * 1024) }));
@@ -174,4 +206,98 @@ it('cuerpo mayor de 10 MB responde 413 problem+json', async () => {
     }),
   );
   expect(res.body.correlationId).toBeTruthy();
+});
+
+it.each([undefined, '[]', '"x"', '5'])('cuerpo %j que no es un objeto', async (body) => {
+  const res = await authed
+    .post('/api/v1/test/echo')
+    .set('Content-Type', 'application/json')
+    .send(body);
+  expect(res.body).toMatchObject({ status: 400, errorCode: 'MALFORMED_REQUEST' });
+});
+
+it('objeto donde va un texto es JSON no legible, como Jackson', async () => {
+  const res = await authed.post('/api/v1/test/echo').send({ name: { a: 1 }, lines: [] });
+  expect(res.body).toMatchObject({
+    status: 400,
+    errorCode: 'MALFORMED_REQUEST',
+    detail: 'El cuerpo de la petición no es JSON válido',
+  });
+});
+
+it('array donde va un texto anidado es JSON no legible', async () => {
+  const res = await authed
+    .post('/api/v1/test/echo')
+    .send({ name: 'x', lines: [{ quantity: 1, description: ['a'] }] });
+  expect(res.body).toMatchObject({ status: 400, errorCode: 'MALFORMED_REQUEST' });
+});
+
+it('número donde va un texto se convierte, como Jackson', async () => {
+  const res = await authed.post('/api/v1/test/echo').send({ name: 5, lines: [] }).expect(201);
+  expect(res.body.name).toBe('5');
+});
+
+it('@NotBlank con el recorte de Java: NBSP no cuenta como blanco', async () => {
+  await authed.post('/api/v1/test/echo').send({ name: String.fromCharCode(0xa0), lines: [] }).expect(201);
+  const res = await authed
+    .post('/api/v1/test/echo')
+    .send({ name: String.fromCharCode(0x3000), lines: [] })
+    .expect(400);
+  expect(res.body.errors).toEqual([{ field: 'name', message: 'must not be blank' }]);
+});
+
+describe('OPTIONS, como Spring MVC', () => {
+  it('sobre una ruta existente da 200 con Allow y sin cuerpo', async () => {
+    const res = await http.options('/api/v1/test/boom').set('Authorization', await testAuthHeader());
+    expect(res.status).toBe(200);
+    expect(res.headers.allow).toBe('GET,HEAD,OPTIONS');
+    expect(res.text).toBe('');
+    expect(res.headers['x-correlation-id']).toBeTruthy();
+  });
+
+  it('lista todos los métodos de la ruta', async () => {
+    const res = await http.options('/api/v1/test/echo').set('Authorization', await testAuthHeader());
+    expect(res.status).toBe(200);
+    expect(res.headers.allow).toBe('POST,OPTIONS');
+  });
+
+  it('sobre una ruta inexistente sigue siendo 404', async () => {
+    const res = await http
+      .options('/api/v1/no-existe')
+      .set('Authorization', await testAuthHeader());
+    expect(res.status).toBe(404);
+    expect(res.body).toEqual(problem(404, { errorCode: 'NOT_FOUND' }));
+  });
+
+  it('sin credenciales da 401: Java no tiene CORS que lo deje pasar', async () => {
+    const res = await http.options('/api/v1/test/boom');
+    expect(res.status).toBe(401);
+  });
+});
+
+it('un 405 lleva Allow separado por comas, como HttpHeaders.setAllow', async () => {
+  const res = await authed.delete('/api/v1/test/boom');
+  expect(res.status).toBe(405);
+  expect(res.headers.allow).toBe('GET,HEAD');
+});
+
+it('una HttpException 5xx de Nest se registra y no filtra la causa', async () => {
+  const lines: string[] = [];
+  const spy = vi.spyOn(Logger.prototype, 'error').mockImplementation((...args: unknown[]) => {
+    lines.push(args.map(String).join(' '));
+  });
+  try {
+    const res = await authed.get('/api/v1/test/http-500');
+    expect(res.status).toBe(500);
+    expect(res.body).toEqual(
+      problem(500, {
+        errorCode: 'INTERNAL_ERROR',
+        detail: 'Error interno; use el correlationId para reportarlo',
+      }),
+    );
+    expect(JSON.stringify(res.body)).not.toContain('secreto-interno');
+    expect(lines.some((line) => line.includes('Error no controlado'))).toBe(true);
+  } finally {
+    spy.mockRestore();
+  }
 });

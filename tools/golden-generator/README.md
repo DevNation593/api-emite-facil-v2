@@ -10,6 +10,16 @@ firma XAdES del port a NestJS.
 node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil
 ```
 
+Para regenerar una sola familia sin tocar el resto de fixtures ni `SOURCE.json`:
+
+```bash
+node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil --only bean-validation
+```
+
+Familias con `--only`: `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
+`@Pattern(NO_CONTROL_CHARS)` validados con Hibernate Validator y `Locale.ENGLISH`). Es determinista: no
+depende de aleatorios.
+
 Requisitos: Java 25 (`java`, `javac`) en el `PATH`, Node 24 y acceso a las dependencias de Maven del repo
 Java (el repo debe poder ejecutar su `mvnw`).
 

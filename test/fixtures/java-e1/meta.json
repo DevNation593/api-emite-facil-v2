@@ -1,0 +1,23 @@
+{
+  "source": {
+    "javaCommit": "ca53bcae19a468c1164465425a59db6c5e68b809",
+    "javaDirty": false,
+    "javaVersion": "java version \"25.0.5.0.2\" 2026-10-21 LTS",
+    "generatedAt": "2026-11-02T00:07:18.479Z"
+  },
+  "email": "java-ae790de3@example.test",
+  "password": "java LeN4XyqeI50Y",
+  "userId": "da0028a7-ab1f-4d5d-a3fd-0acffb8a3aa3",
+  "tenantId": "1fd6b2c3-9aa0-48d6-ad0e-6a33b71033ec",
+  "tenantName": "Empresa creada por Java",
+  "refreshToken": "KlJT5SJJKlMQNRe5Gwj0WL6-SK8e_aeaQh0NtVm9oQs",
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkYTAwMjhhNy1hYjFmLTRkNWQtYTNmZC0wYWNmZmI4YTNhYTMiLCJhdWQiOiJlaW52b2ljZS1hcGkiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6ImVpbnZvaWNlLWFwaSIsImV4cCI6MTc5MzU3ODkzNywiaWF0IjoxNzkzNTc4MDM3LCJqdGkiOiIyOGY5MTE4Yi0xYTE5LTQ4MDUtYTIzYS0wMzRkNDZmM2UyZTIiLCJlbWFpbCI6ImphdmEtYWU3OTBkZTNAZXhhbXBsZS50ZXN0Iiwic2lkIjoiMjQ1MTU0ZmItMmI4YS00OGM5LTk3ZDctNWQ4MDY5YzJmYjg5In0.FnJgxzLTvllXD3o1HQr7A7dchZXamAIa3wFMZ8URsFs",
+  "accessTokenIat": 1793578037,
+  "accessTokenExp": 1793578937,
+  "apiKey": "efk_ewsBQkThpJRO_X_Qbzhtv-w1fFtnIlqqBL-zIecXJjz97-vBRMITAB18",
+  "apiKeyId": "114b0718-2e85-4e4b-b054-eca62d935c2b",
+  "env": {
+    "EINVOICE_JWT_SECRET": "a6p5kPuq+YUibLar/CZ8LwQ9nK4uv7zqQw66UJ+os24rD1oqmCZjqqs+WOEr4DkG",
+    "EINVOICE_MASTER_KEY": "iEQsoUO7rSqSLbiY+r6npn/nSouPwGj3O5+1XeCL2qs="
+  }
+}

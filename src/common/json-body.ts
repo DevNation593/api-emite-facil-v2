@@ -25,10 +25,19 @@ export function jsonBodyMiddleware(
     // cuerpo, así que se reabre desde el id que dejó en la respuesta para que
     // guards, pipes, handlers y logs de error lo vean.
     const correlationId = res.getHeader(CORRELATION_ID_HEADER);
+    // body-parser deja {} cuando el cuerpo viene vacío; Spring lo trata como cuerpo ausente.
+    if (err === undefined && !hasBody(req)) req.body = undefined;
     const forward = () => next(err === undefined ? undefined : toApiException(err));
     if (typeof correlationId === 'string') runWithContext({ correlationId }, forward);
     else forward();
   });
+}
+
+function hasBody(req: Request): boolean {
+  return (
+    req.headers['transfer-encoding'] !== undefined ||
+    (req.headers['content-length'] !== undefined && req.headers['content-length'] !== '0')
+  );
 }
 
 function toApiException(err: unknown): unknown {
