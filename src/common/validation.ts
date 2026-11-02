@@ -48,6 +48,9 @@ const MALFORMED_BODY = 'El cuerpo de la petición no es JSON válido';
  */
 class SpringValidationPipe extends ValidationPipe {
   override async transform(value: unknown, metadata: ArgumentMetadata): Promise<unknown> {
+    // La consulta y la ruta las convierten sus pipes (query-params.ts, UuidPipe) con las reglas de
+    // Spring; si este pipe los tocara antes, un parámetro repetido llegaría ya unido con comas.
+    if (metadata.type === 'query' || metadata.type === 'param') return value;
     if (metadata.type === 'body' && this.toValidate(metadata) && !isPlainObject(value)) {
       throw new ApiException(400, 'MALFORMED_REQUEST', MALFORMED_BODY);
     }

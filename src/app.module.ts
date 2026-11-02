@@ -7,6 +7,7 @@ import { RateLimiterModule } from './common/rate-limiter.js';
 import { ComplianceModule } from './compliance/compliance.module.js';
 import { DatabaseModule } from './database/database.module.js';
 import { IdentityModule } from './identity/identity.module.js';
+import { TaxpayerModule } from './taxpayer/taxpayer.module.js';
 import { TenancyModule } from './tenancy/tenancy.module.js';
 import { HealthModule } from './observability/health.controller.js';
 
@@ -21,6 +22,7 @@ import { HealthModule } from './observability/health.controller.js';
     HealthModule,
     IdentityModule,
     RateLimiterModule,
+    TaxpayerModule,
     TenancyModule,
   ] })
 export class AppModule {}
