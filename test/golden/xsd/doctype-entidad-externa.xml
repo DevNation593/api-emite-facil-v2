@@ -1,0 +1,1 @@
+<?xml version="1.0"?><!DOCTYPE factura [<!ENTITY x SYSTEM "file:///etc/passwd">]><factura id="comprobante" version="1.1.0">&x;</factura>

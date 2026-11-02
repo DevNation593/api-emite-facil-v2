@@ -16,7 +16,7 @@ Para regenerar una sola familia sin tocar el resto de fixtures ni `SOURCE.json`:
 node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil --only bean-validation
 ```
 
-Familias con `--only`: `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
+Familias con `--only` (`bean-validation`, `certificates` y `xsd`): `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
 `@Pattern(NO_CONTROL_CHARS)`, más `@Pattern("[0-9]{3}")`, `@Min(1)` y `@Max(999_999_999)`, validados con Hibernate Validator y `Locale.ENGLISH`). Es determinista: no
 depende de aleatorios.
 
@@ -25,6 +25,13 @@ depende de aleatorios.
 `SERIALNUMBER` y correo, una firma RSA-PSS y un archivo con 200 000 iteraciones, que la prueba usa para comprobar que leerlo no detiene el proceso) y el resultado de `Pkcs12Inspector.inspect` en el instante `inspectedAt`. No es
 determinista: cada ejecución crea claves nuevas, y un certificado vigente deja de serlo con el tiempo, por
 eso la prueba de Node repite la lectura en `inspectedAt`.
+
+`xsd` (`xsd.json` y `xsd/*.xml`): para cada XML de ejemplo del SRI de `resources/xsd` y para variantes de
+`InvoiceXmlFixtures.standard()` (razón social de 301 caracteres, salto de línea en el comprador, fecha ISO,
+sin `totalConImpuestos`, `codDoc` `04`, versión `2.0.0` validada como 1.1.0, `xsi:schemaLocation` en un hijo,
+clave con dígito verificador incorrecto, clave de otro secuencial, `DOCTYPE` con entidad externa, archivo vacío
+y `<factura` sin cerrar) anota si `XsdValidator` lo da por válido y, si lo es, las violaciones de
+`EnvelopeRules` (o `unreadable`). `file` es la ruta desde la raíz de este repo. Es determinista.
 
 Requisitos: Java 25 (`java`, `javac`) en el `PATH`, Node 24 y acceso a las dependencias de Maven del repo
 Java (el repo debe poder ejecutar su `mvnw`).

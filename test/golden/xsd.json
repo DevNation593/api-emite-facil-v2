@@ -1,0 +1,257 @@
+{
+  "cases": [
+    {
+      "name": "muestra-INVOICE_1_0_0",
+      "file": "resources/xsd/invoice/1.0.0/factura_V1.0.0.xml",
+      "schema": "INVOICE_1_0_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-INVOICE_1_1_0",
+      "file": "resources/xsd/invoice/1.1.0/factura_V1.1.0.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-INVOICE_2_0_0",
+      "file": "resources/xsd/invoice/2.0.0/factura_V2.0.0.xml",
+      "schema": "INVOICE_2_0_0",
+      "valid": false,
+      "violations": null
+    },
+    {
+      "name": "muestra-INVOICE_2_1_0",
+      "file": "resources/xsd/invoice/2.1.0/factura_V2.1.0.xml",
+      "schema": "INVOICE_2_1_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-PURCHASE_LIQUIDATION_1_0_0",
+      "file": "resources/xsd/liquidation/1.0.0/LiquidacionCompra_V1.0.0.xml",
+      "schema": "PURCHASE_LIQUIDATION_1_0_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-PURCHASE_LIQUIDATION_1_1_0",
+      "file": "resources/xsd/liquidation/1.1.0/LiquidacionCompra_V1.1.0.xml",
+      "schema": "PURCHASE_LIQUIDATION_1_1_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-CREDIT_NOTE_1_0_0",
+      "file": "resources/xsd/credit-note/1.0.0/NotaCredito_V1.0.0.xml",
+      "schema": "CREDIT_NOTE_1_0_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-CREDIT_NOTE_1_1_0",
+      "file": "resources/xsd/credit-note/1.1.0/NotaCredito_V1.1.0.xml",
+      "schema": "CREDIT_NOTE_1_1_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-DEBIT_NOTE_1_0_0",
+      "file": "resources/xsd/debit-note/1.0.0/NotaDebito_V1.0.0.xml",
+      "schema": "DEBIT_NOTE_1_0_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-REMISSION_GUIDE_1_0_0",
+      "file": "resources/xsd/remission-guide/1.0.0/GuiaRemision_V1.0.0.xml",
+      "schema": "REMISSION_GUIDE_1_0_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-REMISSION_GUIDE_1_1_0",
+      "file": "resources/xsd/remission-guide/1.1.0/GuiaRemision_V1.1.0.xml",
+      "schema": "REMISSION_GUIDE_1_1_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-RETENTION_RECEIPT_1_0_0",
+      "file": "resources/xsd/retention-receipt/1.0.0/ComprobanteRetencion_V1.0.0.xml",
+      "schema": "RETENTION_RECEIPT_1_0_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "muestra-RETENTION_RECEIPT_2_0_0",
+      "file": "resources/xsd/retention-receipt/2.0.0/ComprobanteRetencion_V2.0.0.xml",
+      "schema": "RETENTION_RECEIPT_2_0_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH",
+        "SCHEMA_LOCATION_PRESENT",
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "factura-estandar",
+      "file": "test/golden/xsd/factura-estandar.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": true,
+      "violations": []
+    },
+    {
+      "name": "razon-social-301",
+      "file": "test/golden/xsd/razon-social-301.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": false,
+      "violations": null
+    },
+    {
+      "name": "salto-de-linea-comprador",
+      "file": "test/golden/xsd/salto-de-linea-comprador.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": false,
+      "violations": null
+    },
+    {
+      "name": "fecha-iso",
+      "file": "test/golden/xsd/fecha-iso.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": false,
+      "violations": null
+    },
+    {
+      "name": "sin-total-con-impuestos",
+      "file": "test/golden/xsd/sin-total-con-impuestos.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": false,
+      "violations": null
+    },
+    {
+      "name": "cod-doc-04",
+      "file": "test/golden/xsd/cod-doc-04.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH",
+        "COD_DOC_MISMATCH"
+      ]
+    },
+    {
+      "name": "version-2-0-0",
+      "file": "test/golden/xsd/version-2-0-0.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": true,
+      "violations": [
+        "VERSION_MISMATCH"
+      ]
+    },
+    {
+      "name": "schema-location-en-hijo",
+      "file": "test/golden/xsd/schema-location-en-hijo.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": true,
+      "violations": [
+        "SCHEMA_LOCATION_PRESENT"
+      ]
+    },
+    {
+      "name": "clave-digito-incorrecto",
+      "file": "test/golden/xsd/clave-digito-incorrecto.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_INVALID"
+      ]
+    },
+    {
+      "name": "clave-otro-secuencial",
+      "file": "test/golden/xsd/clave-otro-secuencial.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": true,
+      "violations": [
+        "ACCESS_KEY_MISMATCH"
+      ]
+    },
+    {
+      "name": "doctype-entidad-externa",
+      "file": "test/golden/xsd/doctype-entidad-externa.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": false,
+      "violations": null
+    },
+    {
+      "name": "vacio",
+      "file": "test/golden/xsd/vacio.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": false,
+      "violations": null
+    },
+    {
+      "name": "sin-cerrar",
+      "file": "test/golden/xsd/sin-cerrar.xml",
+      "schema": "INVOICE_1_1_0",
+      "valid": false,
+      "violations": null
+    }
+  ]
+}
