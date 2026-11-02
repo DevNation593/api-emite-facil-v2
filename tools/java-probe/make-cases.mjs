@@ -10,7 +10,11 @@ const add = (name, method, path, extra = {}) => cases.push({ name, method, path,
 const UNKNOWN = '00000000-0000-4000-8000-000000000000';
 let ruc = 0;
 const nextRuc = () => `09900${String(++ruc).padStart(5, '0')}001`;
-const taxpayer = (over) => ({ ruc: nextRuc(), legalName: 'Emisor', headOfficeAddress: 'Calle 1', defaultEnvironment: '1', ...over });
+// Cada emisor con su nombre: el listado se ordena por legal_name y entre iguales el orden no está definido.
+const taxpayer = (over) => {
+  const ruc = nextRuc();
+  return { ruc, legalName: `Emisor ${ruc}`, headOfficeAddress: 'Calle 1', defaultEnvironment: '1', ...over };
+};
 
 // Cuerpos: tipos equivocados donde Java no espera texto.
 const odd = {
@@ -128,6 +132,11 @@ add('OPTIONS /taxpayers/{id}', 'OPTIONS', '/api/v1/taxpayers/{taxpayerId}');
 add('OPTIONS /catalogs/tax-rates', 'OPTIONS', '/api/v1/catalogs/tax-rates');
 add('DELETE /catalogs/tax-rates', 'DELETE', '/api/v1/catalogs/tax-rates');
 add('HEAD /catalogs/tax-rates', 'HEAD', '/api/v1/catalogs/tax-rates');
+// Negociación: la web reenvía Accept. Spring escribe ProblemDetail según lo que se acepte.
+for (const [k, accept] of Object.entries({ json: 'application/json', todo: '*/*', problem: 'application/problem+json', xml: 'application/xml' })) {
+  add(`accept ${k} en un error`, 'GET', '/api/v1/taxpayers/x', { headers: { accept } });
+  add(`accept ${k} en un 2xx`, 'GET', '/api/v1/catalogs/identification-types', { headers: { accept } });
+}
 add('catalogs sin credenciales', 'GET', '/api/v1/catalogs/tax-rates', { auth: 'none' });
 
 // Respuestas 2xx: forma, orden de propiedades y nulos.

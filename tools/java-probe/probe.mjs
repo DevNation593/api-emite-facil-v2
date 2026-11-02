@@ -196,10 +196,20 @@ export function normalize(value, scenario) {
     return Object.fromEntries(
       Object.entries(value)
         .filter(([key]) => key !== 'correlationId')
-        .map(([key, item]) => [key, normalize(item, scenario)]),
+        .map(([key, item]) => [key, key === 'errors' && Array.isArray(item) ? fieldErrors(item) : normalize(item, scenario)]),
     );
   }
   return value;
+}
+
+/**
+ * Los errores de campo de Java salen de un conjunto de Hibernate y de un Map.of, cuyo orden cambia
+ * entre arranques de la JVM: se comparan ordenados y con las claves en un orden fijo.
+ */
+function fieldErrors(errors) {
+  return errors
+    .map((error) => ({ field: error.field, message: error.message }))
+    .sort((a, b) => (a.field + a.message < b.field + b.message ? -1 : a.field + a.message > b.field + b.message ? 1 : 0));
 }
 
 /** Ejecuta los casos en orden y devuelve su resultado normalizado. */
@@ -215,10 +225,11 @@ export async function runProbes(send, cases, scenario) {
     }
     const { name, ...request } = probe;
     let allow = res.headers.allow ?? null;
-    // En un 405 Spring lista los métodos de un HashSet: el orden cambia entre arranques. Se compara
-    // ordenado. El de OPTIONS sí es estable y se deja como llega.
-    if (res.status === 405 && typeof allow === 'string') {
-      allow = allow.split(', ').sort().join(', ');
+    // Spring lista los métodos permitidos de un conjunto cuyo orden cambia entre arranques, en el
+    // 405 y en OPTIONS: se comparan ordenados, conservando el separador (", " o ",").
+    if (typeof allow === 'string') {
+      const separator = allow.includes(', ') ? ', ' : ',';
+      allow = allow.split(separator).sort().join(separator);
     }
     results.push({
       name,

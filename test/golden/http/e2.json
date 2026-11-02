@@ -3,7 +3,7 @@
     "javaCommit": "ca53bcae19a468c1164465425a59db6c5e68b809",
     "javaDirty": false,
     "javaVersion": "java version \"25.0.5.0.2\" 2026-10-21 LTS",
-    "generatedAt": "2026-11-02T00:43:41.543Z"
+    "generatedAt": "2026-11-02T04:10:55.302Z"
   },
   "results": [
     {
@@ -14,7 +14,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000001001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000001001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": "si"
@@ -39,7 +39,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000002001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000002001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": "true"
@@ -51,7 +51,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000002001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000002001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -71,7 +71,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000003001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000003001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": "TRUE"
@@ -83,7 +83,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000003001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000003001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -103,7 +103,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000004001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000004001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": 1
@@ -115,7 +115,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000004001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000004001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -135,7 +135,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000005001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000005001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": 0
@@ -147,7 +147,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000005001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000005001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -167,7 +167,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000006001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000006001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": 1.5
@@ -192,7 +192,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000007001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000007001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": {
@@ -219,7 +219,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000008001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000008001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": [
@@ -246,7 +246,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000009001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000009001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": null
@@ -258,7 +258,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000009001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000009001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -278,7 +278,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000010001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000010001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": ""
@@ -290,7 +290,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000010001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000010001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -310,7 +310,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000011001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000011001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": "false"
@@ -322,7 +322,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000011001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000011001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -342,7 +342,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000012001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000012001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": "FALSE"
@@ -354,7 +354,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000012001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000012001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -374,7 +374,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000013001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000013001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": 2
@@ -386,7 +386,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000013001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000013001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -406,7 +406,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000014001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000014001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": -1
@@ -418,7 +418,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000014001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000014001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -438,7 +438,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000015001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000015001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": "1"
@@ -463,7 +463,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000016001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000016001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": "0"
@@ -488,7 +488,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000017001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000017001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "accountingRequired": " true "
@@ -500,7 +500,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000017001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000017001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -520,7 +520,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000018001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000018001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": "emprendedor"
@@ -545,7 +545,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000019001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000019001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": "EMPRENDEDOR"
@@ -557,7 +557,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000019001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000019001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -577,7 +577,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000020001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000020001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": "OTRO"
@@ -602,7 +602,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000021001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000021001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": ""
@@ -627,7 +627,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000022001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000022001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": 1
@@ -639,7 +639,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000022001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000022001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -659,7 +659,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000023001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000023001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": null
@@ -671,7 +671,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000023001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000023001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -691,7 +691,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000024001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000024001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": "NEGOCIO_POPULAR"
@@ -716,7 +716,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000025001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000025001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": {}
@@ -741,7 +741,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000026001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000026001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": 0
@@ -753,7 +753,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000026001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000026001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -773,7 +773,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000027001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000027001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": 3
@@ -798,7 +798,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000028001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000028001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": -1
@@ -823,7 +823,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000029001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000029001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": "1"
@@ -835,7 +835,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000029001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000029001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -855,7 +855,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000030001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000030001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": "Emprendedor"
@@ -880,7 +880,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000031001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000031001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": " EMPRENDEDOR "
@@ -892,7 +892,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000031001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000031001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -912,7 +912,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000032001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000032001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": true
@@ -937,7 +937,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000033001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000033001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "rimpeRegime": 1.5
@@ -962,7 +962,7 @@
         "auth": "owner",
         "body": {
           "ruc": 990099999001,
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000034001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1"
         }
@@ -978,8 +978,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[0-9]{10}001\"",
-            "field": "ruc"
+            "field": "ruc",
+            "message": "must match \"[0-9]{10}001\""
           }
         ]
       }
@@ -992,7 +992,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000035001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000035001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": 1
         }
@@ -1003,7 +1003,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000035001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000035001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -1023,7 +1023,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000036001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000036001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "2"
         }
@@ -1058,20 +1058,20 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must not be null",
-            "field": "defaultEnvironment"
+            "field": "defaultEnvironment",
+            "message": "must not be null"
           },
           {
-            "message": "must not be blank",
-            "field": "headOfficeAddress"
+            "field": "headOfficeAddress",
+            "message": "must not be blank"
           },
           {
-            "message": "must not be null",
-            "field": "ruc"
+            "field": "legalName",
+            "message": "must not be blank"
           },
           {
-            "message": "must not be blank",
-            "field": "legalName"
+            "field": "ruc",
+            "message": "must not be null"
           }
         ]
       }
@@ -1084,7 +1084,7 @@
         "auth": "owner",
         "body": {
           "ruc": "1790012345001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000037001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1"
         }
@@ -1108,7 +1108,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000038001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000038001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "specialTaxpayerCode": "ab",
@@ -1126,12 +1126,12 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[1-9][0-9]{0,7}\"",
-            "field": "withholdingAgentCode"
+            "field": "specialTaxpayerCode",
+            "message": "must match \"[A-Za-z0-9]{3,13}\""
           },
           {
-            "message": "must match \"[A-Za-z0-9]{3,13}\"",
-            "field": "specialTaxpayerCode"
+            "field": "withholdingAgentCode",
+            "message": "must match \"[1-9][0-9]{0,7}\""
           }
         ]
       }
@@ -1144,7 +1144,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000039001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000039001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "tenantId": "00000000-0000-4000-8000-000000000000"
@@ -1156,7 +1156,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000039001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000039001",
         "tradeName": null,
         "headOfficeAddress": "Calle 1",
         "phone": null,
@@ -1302,8 +1302,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must not be null",
-            "field": "establishmentId"
+            "field": "establishmentId",
+            "message": "must not be null"
           }
         ]
       }
@@ -1330,8 +1330,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must not be null",
-            "field": "establishmentId"
+            "field": "establishmentId",
+            "message": "must not be null"
           }
         ]
       }
@@ -1489,8 +1489,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[0-9]{3}\"",
-            "field": "code"
+            "field": "code",
+            "message": "must match \"[0-9]{3}\""
           }
         ]
       }
@@ -1539,8 +1539,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[0-9]{3}\"",
-            "field": "code"
+            "field": "code",
+            "message": "must match \"[0-9]{3}\""
           }
         ]
       }
@@ -1748,8 +1748,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must be greater than or equal to 1",
-            "field": "nextValue"
+            "field": "nextValue",
+            "message": "must be greater than or equal to 1"
           }
         ]
       }
@@ -1799,8 +1799,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must be less than or equal to 999999999",
-            "field": "nextValue"
+            "field": "nextValue",
+            "message": "must be less than or equal to 999999999"
           }
         ]
       }
@@ -1828,8 +1828,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must be greater than or equal to 1",
-            "field": "nextValue"
+            "field": "nextValue",
+            "message": "must be greater than or equal to 1"
           }
         ]
       }
@@ -1857,8 +1857,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must not be null",
-            "field": "nextValue"
+            "field": "nextValue",
+            "message": "must not be null"
           }
         ]
       }
@@ -1954,8 +1954,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must not be null",
-            "field": "nextValue"
+            "field": "nextValue",
+            "message": "must not be null"
           }
         ]
       }
@@ -2074,8 +2074,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must be greater than or equal to 1",
-            "field": "nextValue"
+            "field": "nextValue",
+            "message": "must be greater than or equal to 1"
           }
         ]
       }
@@ -2103,8 +2103,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must be greater than or equal to 1",
-            "field": "nextValue"
+            "field": "nextValue",
+            "message": "must be greater than or equal to 1"
           }
         ]
       }
@@ -2236,8 +2236,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"01\"",
-            "field": "documentType"
+            "field": "documentType",
+            "message": "must match \"01\""
           }
         ]
       }
@@ -2403,8 +2403,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must not be blank",
-            "field": "p12"
+            "field": "p12",
+            "message": "must not be blank"
           }
         ]
       }
@@ -2635,16 +2635,16 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must not be blank",
-            "field": "p12"
+            "field": "p12",
+            "message": "must not be blank"
           },
           {
-            "message": "must not be blank",
-            "field": "password"
+            "field": "password",
+            "message": "must not be blank"
           },
           {
-            "message": "must not be null",
-            "field": "taxpayerId"
+            "field": "taxpayerId",
+            "message": "must not be null"
           }
         ]
       }
@@ -2672,8 +2672,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[0-9]{2}\"",
-            "field": "idType"
+            "field": "idType",
+            "message": "must match \"[0-9]{2}\""
           }
         ]
       }
@@ -2748,8 +2748,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must be a well-formed email address",
-            "field": "email"
+            "field": "email",
+            "message": "must be a well-formed email address"
           }
         ]
       }
@@ -2803,8 +2803,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must be a well-formed email address",
-            "field": "email"
+            "field": "email",
+            "message": "must be a well-formed email address"
           }
         ]
       }
@@ -2857,8 +2857,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
-            "field": "unitPrice"
+            "field": "unitPrice",
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
           }
         ]
       }
@@ -2887,8 +2887,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
-            "field": "unitPrice"
+            "field": "unitPrice",
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
           }
         ]
       }
@@ -2917,8 +2917,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
-            "field": "unitPrice"
+            "field": "unitPrice",
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
           }
         ]
       }
@@ -2947,8 +2947,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
-            "field": "unitPrice"
+            "field": "unitPrice",
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
           }
         ]
       }
@@ -2977,8 +2977,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
-            "field": "unitPrice"
+            "field": "unitPrice",
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
           }
         ]
       }
@@ -3031,8 +3031,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\"",
-            "field": "unitPrice"
+            "field": "unitPrice",
+            "message": "must match \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
           }
         ]
       }
@@ -3109,8 +3109,8 @@
         "errorCode": "VALIDATION_FAILED",
         "errors": [
           {
-            "message": "must match \"[A-Za-z0-9._-]{1,25}\"",
-            "field": "sku"
+            "field": "sku",
+            "message": "must match \"[A-Za-z0-9._-]{1,25}\""
           }
         ]
       }
@@ -4680,7 +4680,7 @@
       },
       "status": 200,
       "contentType": null,
-      "allow": "POST,GET,HEAD,OPTIONS",
+      "allow": "GET,HEAD,OPTIONS,POST",
       "body": ""
     },
     {
@@ -4692,7 +4692,7 @@
       },
       "status": 200,
       "contentType": null,
-      "allow": "PATCH,GET,HEAD,OPTIONS",
+      "allow": "GET,HEAD,OPTIONS,PATCH",
       "body": ""
     },
     {
@@ -4736,6 +4736,219 @@
       "contentType": "application/json",
       "allow": null,
       "body": ""
+    },
+    {
+      "name": "accept json en un error",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers/x",
+        "auth": "owner",
+        "headers": {
+          "accept": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/taxpayers/x",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "accept json en un 2xx",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/catalogs/identification-types",
+        "auth": "owner",
+        "headers": {
+          "accept": "application/json"
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "code": "04",
+          "name": "RUC"
+        },
+        {
+          "code": "05",
+          "name": "CÉDULA"
+        },
+        {
+          "code": "06",
+          "name": "PASAPORTE"
+        },
+        {
+          "code": "07",
+          "name": "VENTA A CONSUMIDOR FINAL"
+        },
+        {
+          "code": "08",
+          "name": "IDENTIFICACIÓN DEL EXTERIOR"
+        }
+      ]
+    },
+    {
+      "name": "accept todo en un error",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers/x",
+        "auth": "owner",
+        "headers": {
+          "accept": "*/*"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/taxpayers/x",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "accept todo en un 2xx",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/catalogs/identification-types",
+        "auth": "owner",
+        "headers": {
+          "accept": "*/*"
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "code": "04",
+          "name": "RUC"
+        },
+        {
+          "code": "05",
+          "name": "CÉDULA"
+        },
+        {
+          "code": "06",
+          "name": "PASAPORTE"
+        },
+        {
+          "code": "07",
+          "name": "VENTA A CONSUMIDOR FINAL"
+        },
+        {
+          "code": "08",
+          "name": "IDENTIFICACIÓN DEL EXTERIOR"
+        }
+      ]
+    },
+    {
+      "name": "accept problem en un error",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers/x",
+        "auth": "owner",
+        "headers": {
+          "accept": "application/problem+json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/taxpayers/x",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "accept problem en un 2xx",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/catalogs/identification-types",
+        "auth": "owner",
+        "headers": {
+          "accept": "application/problem+json"
+        }
+      },
+      "status": 200,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": [
+        {
+          "code": "04",
+          "name": "RUC"
+        },
+        {
+          "code": "05",
+          "name": "CÉDULA"
+        },
+        {
+          "code": "06",
+          "name": "PASAPORTE"
+        },
+        {
+          "code": "07",
+          "name": "VENTA A CONSUMIDOR FINAL"
+        },
+        {
+          "code": "08",
+          "name": "IDENTIFICACIÓN DEL EXTERIOR"
+        }
+      ]
+    },
+    {
+      "name": "accept xml en un error",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers/x",
+        "auth": "owner",
+        "headers": {
+          "accept": "application/xml"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/taxpayers/x",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "accept xml en un 2xx",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/catalogs/identification-types",
+        "auth": "owner",
+        "headers": {
+          "accept": "application/xml"
+        }
+      },
+      "status": 406,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/catalogs/identification-types",
+        "status": 406,
+        "title": "Not Acceptable",
+        "errorCode": "REQUEST_REJECTED"
+      }
     },
     {
       "name": "catalogs sin credenciales",
@@ -4929,64 +5142,8 @@
       "body": [
         {
           "id": "{uuid}",
-          "ruc": "0990000022001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "EMPRENDEDOR",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000017001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": true,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000013001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": true,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000035001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
           "ruc": "0990000002001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000002001",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
           "phone": null,
@@ -4999,22 +5156,22 @@
         },
         {
           "id": "{uuid}",
-          "ruc": "0990000029001",
-          "legalName": "Emisor",
+          "ruc": "0990000003001",
+          "legalName": "Emisor 0990000003001",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
           "phone": null,
           "defaultEnvironment": "1",
-          "accountingRequired": false,
+          "accountingRequired": true,
           "specialTaxpayerCode": null,
           "withholdingAgentCode": null,
-          "rimpeRegime": "EMPRENDEDOR",
+          "rimpeRegime": "NONE",
           "productionEnabledAt": null
         },
         {
           "id": "{uuid}",
           "ruc": "0990000004001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000004001",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
           "phone": null,
@@ -5027,120 +5184,8 @@
         },
         {
           "id": "{uuid}",
-          "ruc": "0990000012001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000011001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000023001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000031001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "EMPRENDEDOR",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
           "ruc": "0990000005001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000019001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "EMPRENDEDOR",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000010001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000026001",
-          "legalName": "Emisor",
-          "tradeName": null,
-          "headOfficeAddress": "Calle 1",
-          "phone": null,
-          "defaultEnvironment": "1",
-          "accountingRequired": false,
-          "specialTaxpayerCode": null,
-          "withholdingAgentCode": null,
-          "rimpeRegime": "NONE",
-          "productionEnabledAt": null
-        },
-        {
-          "id": "{uuid}",
-          "ruc": "0990000039001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000005001",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
           "phone": null,
@@ -5154,7 +5199,7 @@
         {
           "id": "{uuid}",
           "ruc": "0990000009001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000009001",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
           "phone": null,
@@ -5167,8 +5212,50 @@
         },
         {
           "id": "{uuid}",
-          "ruc": "0990000003001",
-          "legalName": "Emisor",
+          "ruc": "0990000010001",
+          "legalName": "Emisor 0990000010001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000011001",
+          "legalName": "Emisor 0990000011001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000012001",
+          "legalName": "Emisor 0990000012001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000013001",
+          "legalName": "Emisor 0990000013001",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
           "phone": null,
@@ -5182,12 +5269,138 @@
         {
           "id": "{uuid}",
           "ruc": "0990000014001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000014001",
           "tradeName": null,
           "headOfficeAddress": "Calle 1",
           "phone": null,
           "defaultEnvironment": "1",
           "accountingRequired": true,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000017001",
+          "legalName": "Emisor 0990000017001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": true,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000019001",
+          "legalName": "Emisor 0990000019001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "EMPRENDEDOR",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000022001",
+          "legalName": "Emisor 0990000022001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "EMPRENDEDOR",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000023001",
+          "legalName": "Emisor 0990000023001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000026001",
+          "legalName": "Emisor 0990000026001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000029001",
+          "legalName": "Emisor 0990000029001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "EMPRENDEDOR",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000031001",
+          "legalName": "Emisor 0990000031001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "EMPRENDEDOR",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000035001",
+          "legalName": "Emisor 0990000035001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000039001",
+          "legalName": "Emisor 0990000039001",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
           "specialTaxpayerCode": null,
           "withholdingAgentCode": null,
           "rimpeRegime": "NONE",
@@ -5421,7 +5634,7 @@
         "auth": "owner",
         "body": {
           "ruc": "0990000040001",
-          "legalName": "Emisor",
+          "legalName": "Emisor 0990000040001",
           "headOfficeAddress": "Calle 1",
           "defaultEnvironment": "1",
           "tradeName": " Comercial ",
@@ -5438,7 +5651,7 @@
       "body": {
         "id": "{uuid}",
         "ruc": "0990000040001",
-        "legalName": "Emisor",
+        "legalName": "Emisor 0990000040001",
         "tradeName": "Comercial",
         "headOfficeAddress": "Calle 1",
         "phone": null,

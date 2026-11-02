@@ -10,6 +10,8 @@ import {
   startRedis,
 } from '../../support/containers.js';
 import { freshIp, startTestApp, type TestApp } from '../../support/test-app.js';
+import { createHash } from 'node:crypto';
+import { CertificateService } from '../../../src/certificate/certificate.service.js';
 
 /**
  * Datos escritos por la API Java (tools/java-dump): una cuenta, su sesión, una empresa y una API key.
@@ -29,6 +31,12 @@ interface JavaMeta {
   accessTokenIat: number;
   accessTokenExp: number;
   apiKey: string;
+  taxpayerId: string;
+  certificateId: string;
+  certificateFingerprint: string;
+  customerId: string;
+  productId: string;
+  views: Record<'taxpayer' | 'establishment' | 'emissionPoint' | 'customer' | 'product' | 'certificate', Record<string, unknown>>;
   env: { EINVOICE_JWT_SECRET: string; EINVOICE_MASTER_KEY: string };
 }
 
@@ -150,5 +158,40 @@ describe('el access token de Java', () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime((meta.accessTokenExp + 61) * 1000);
     await http().get('/api/v1/auth/me').set('Authorization', bearer(meta.accessToken)).expect(401);
+  });
+});
+
+describe('datos de E2 escritos por Java', () => {
+  let token: string;
+
+  beforeAll(async () => {
+    const login = await http()
+      .post('/api/v1/auth/login')
+      .set('X-Forwarded-For', freshIp())
+      .send({ email: meta.email, password: meta.password })
+      .expect(200);
+    token = (login.body as { accessToken: string }).accessToken;
+  });
+
+  const read = async (path: string) =>
+    (await http().get(path).set('Authorization', bearer(token)).expect(200)).body as unknown;
+
+  it('el emisor, el cliente y el producto de Java se leen igual', async () => {
+    expect(await read(`/api/v1/taxpayers/${meta.taxpayerId}`)).toEqual(meta.views.taxpayer);
+    expect(await read(`/api/v1/taxpayers/${meta.taxpayerId}/establishments`)).toEqual([meta.views.establishment]);
+    expect(
+      await read(`/api/v1/emission-points?establishmentId=${meta.views.establishment.id as string}`),
+    ).toEqual([meta.views.emissionPoint]);
+    expect(await read(`/api/v1/customers/${meta.customerId}`)).toEqual(meta.views.customer);
+    expect(await read(`/api/v1/products/${meta.productId}`)).toEqual(meta.views.product);
+    expect(await read(`/api/v1/certificates?taxpayerId=${meta.taxpayerId}`)).toEqual([meta.views.certificate]);
+  });
+
+  it('el certificado que cargó Java se descifra y su clave corresponde al certificado', async () => {
+    const material = await testApp.app
+      .get(CertificateService)
+      .signingMaterial(meta.tenantId, meta.taxpayerId, new Date());
+    expect(createHash('sha256').update(material.certificateDer).digest('hex')).toBe(meta.certificateFingerprint);
+    expect(material.certificate.subject).toBe(meta.views.certificate.subject);
   });
 });
