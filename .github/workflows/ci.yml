@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:unit
+      # Sobre los casos de referencia versionados: no se regeneran aquí (hace falta el repo Java).
+      - run: npm run test:golden
+      # Compila antes: la prueba de SIGTERM arranca dist/main.js. Los contenedores (PostgreSQL,
+      # RabbitMQ, Redis) los levanta Testcontainers con el Docker del runner.
+      - run: npm run build
+      - run: npm run test:integration
+      - run: npm audit --omit=dev --audit-level=high
+
+  xsd-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: python3 scripts/verify_xsd_assets.py resources/xsd
+
+  # La imagen se construye para comprobar que sigue construyéndose y que no corre como root.
+  # No se publica: el registro de imágenes aún no está elegido.
+  # El recorrido e2e de la API Java llega con la etapa E7.
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker build -t einvoice-api:ci .
+      - name: No corre como root
+        run: test "$(docker run --rm --entrypoint id einvoice-api:ci -u)" != "0"

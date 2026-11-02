@@ -1,0 +1,26 @@
+# Solo entran en el contexto de construcción lo que usa el Dockerfile: package*.json, tsconfig*,
+# nest-cli.json, src, resources y contracts.
+node_modules
+dist
+coverage
+*.tsbuildinfo
+*.log
+Dockerfile
+.dockerignore
+.git
+.gitignore
+.gitattributes
+.github
+.idea
+.vscode
+.superpowers
+# Los .env tienen secretos: nunca deben llegar a la construcción ni a la imagen.
+.env*
+!.env.example
+*.md
+docs
+db
+infra
+scripts
+test
+tools
