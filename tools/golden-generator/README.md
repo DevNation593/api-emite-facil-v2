@@ -10,6 +10,22 @@ firma XAdES del port a NestJS.
 node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil
 ```
 
+Para regenerar una sola familia sin tocar el resto de fixtures ni `SOURCE.json`:
+
+```bash
+node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil --only bean-validation
+```
+
+Familias con `--only`: `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
+`@Pattern(NO_CONTROL_CHARS)`, más `@Pattern("[0-9]{3}")`, `@Min(1)` y `@Max(999_999_999)`, validados con Hibernate Validator y `Locale.ENGLISH`). Es determinista: no
+depende de aleatorios.
+
+`certificates` (`certificates/*.p12` y `certificates.json`): archivos PKCS#12 creados con `keytool` (los de
+`TestCertificates` más clave EC, contraseña con eñe, formato heredado 3DES/RC2 y un DN con comas, tildes,
+`SERIALNUMBER` y correo, una firma RSA-PSS y un archivo con 200 000 iteraciones, que la prueba usa para comprobar que leerlo no detiene el proceso) y el resultado de `Pkcs12Inspector.inspect` en el instante `inspectedAt`. No es
+determinista: cada ejecución crea claves nuevas, y un certificado vigente deja de serlo con el tiempo, por
+eso la prueba de Node repite la lectura en `inspectedAt`.
+
 Requisitos: Java 25 (`java`, `javac`) en el `PATH`, Node 24 y acceso a las dependencias de Maven del repo
 Java (el repo debe poder ejecutar su `mvnw`).
 

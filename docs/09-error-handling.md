@@ -27,7 +27,7 @@ Implementado: exchange `fiscal.events` (topic), cola `document.issue` y su cola 
 Si `validarComprobante` tarda en responder o la conexión cae **después** de transmitir, no hay certeza de si recibió. Consultar `autorizacionComprobante(clave)` y reconciliar antes de decidir reenvío. Evitar crear una segunda factura o segunda clave por error de red. Código de procesamiento (p.ej. código 70 donde aplique) se maneja consultando y esperando, no rehaciendo el comprobante.
 
 ## Respuestas API
-Usar `application/problem+json` con `type`, `title`, `status`, `detail` sanitizado, `instance`, `correlationId`, `errorCode`. `400` malformado, `401` sin sesión, `403` prohibido, `404` ocultar tenants ajenos, `409` conflicto idempotencia/secuencia, `422` regla fiscal, `429` rate limit, `503` falla dependencias. La API puede confirmar **aceptación para procesamiento**, no autorización fiscal hasta que el estado cambie.
+Usar `application/problem+json` con `detail` sanitizado, `instance`, `status`, `title`, `errorCode`, `errors` (si hay errores de campo) y `correlationId`, en ese orden y sin `type`, como lo escribe Spring (comprobado con `tools/java-probe`). `400` malformado, `401` sin sesión, `403` prohibido, `404` ocultar tenants ajenos, `409` conflicto idempotencia/secuencia, `422` regla fiscal, `429` rate limit, `503` falla dependencias. La API puede confirmar **aceptación para procesamiento**, no autorización fiscal hasta que el estado cambie.
 
 ## Observabilidad
 Métricas colas y DLQ, lag, edad de comprobantes pendientes, latencia SRI, ratio de documentos devueltos, agotamiento de secuenciales, certificado por expirar y correo no entregado. Alertar si documento supera umbral operacional de transmisión definido por normas vigentes.

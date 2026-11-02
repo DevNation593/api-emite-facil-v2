@@ -1,4 +1,4 @@
-import { loadConfig } from '../../../src/config/app-config.js';
+import { authLink, loadConfig } from '../../../src/config/app-config.js';
 
 const MASTER_KEY = Buffer.alloc(32, 7).toString('base64');
 const JWT_SECRET = 'x'.repeat(32);
@@ -162,5 +162,94 @@ describe('loadConfig', () => {
   it('los enteros inválidos nombran la variable', () => {
     expect(messageOf({ ...base(), DB_POOL_SIZE: '0' })).toContain('DB_POOL_SIZE');
     expect(messageOf({ ...base(), SERVER_PORT: 'abc' })).toContain('SERVER_PORT');
+  });
+});
+
+describe('configuración de autenticación y correo', () => {
+  it('los plazos y límites son los de application.yml', () => {
+    const { auth } = loadConfig(base());
+    expect(auth).toMatchObject({
+      accessTokenTtlMs: 15 * 60_000,
+      sessionTtlMs: 12 * 3_600_000,
+      verificationTtlMs: 24 * 3_600_000,
+      resetTtlMs: 3_600_000,
+      maxLoginFailures: 5,
+      lockoutMs: 15 * 60_000,
+      publicRequestsPerMinute: 20,
+      trustedProxyHops: 1,
+    });
+  });
+
+  it('EINVOICE_TRUSTED_PROXY_HOPS se lee y debe ser al menos 1', () => {
+    expect(loadConfig({ ...base(), EINVOICE_TRUSTED_PROXY_HOPS: '2' }).auth.trustedProxyHops).toBe(
+      2,
+    );
+    for (const bad of ['0', '-1', 'dos']) {
+      expect(messageOf({ ...base(), EINVOICE_TRUSTED_PROXY_HOPS: bad })).toContain(
+        'EINVOICE_TRUSTED_PROXY_HOPS debe ser al menos 1',
+      );
+    }
+  });
+
+  it('la clave de firma cuenta bytes, no caracteres', () => {
+    expect(() => loadConfig({ ...base(), EINVOICE_JWT_SECRET: 'ñ'.repeat(16) })).not.toThrow();
+    expect(messageOf({ ...base(), EINVOICE_JWT_SECRET: 'ñ'.repeat(15) })).toContain(
+      'EINVOICE_JWT_SECRET',
+    );
+  });
+
+  it('la dirección de la web debe ser http(s) absoluta y sin parámetros', () => {
+    for (const url of [
+      '/relativa',
+      'ftp://app.example.com',
+      'https://app.example.com/?a=1',
+      'https://app.example.com/#x',
+    ]) {
+      expect(messageOf({ ...base(), EINVOICE_WEB_URL: url })).toContain('EINVOICE_WEB_URL');
+    }
+  });
+
+  it('authLink pone el código en el fragmento y quita la barra final', () => {
+    const auth = loadConfig({
+      ...base(),
+      EINVOICE_WEB_URL: 'https://app.example.com/facturas/',
+    }).auth;
+    expect(authLink(auth.webUrl, '/verify-email', 'abc')).toBe(
+      'https://app.example.com/facturas/verify-email#token=abc',
+    );
+    expect(authLink(new URL('http://localhost:3000'), '/reset', 't')).toBe(
+      'http://localhost:3000/reset#token=t',
+    );
+  });
+
+  it('el correo sin configurar da nulos, puerto 25 y STARTTLS activo', () => {
+    expect(loadConfig(base()).mail).toEqual({
+      host: null,
+      port: 25,
+      user: null,
+      password: null,
+      startTls: true,
+      from: null,
+    });
+  });
+
+  it('el correo lee las variables de Spring', () => {
+    const mail = loadConfig({
+      ...base(),
+      SPRING_MAIL_HOST: 'smtp.example.com',
+      SPRING_MAIL_PORT: '587',
+      SPRING_MAIL_USERNAME: 'apikey',
+      SPRING_MAIL_PASSWORD: 'secreta',
+      SMTP_STARTTLS: 'false',
+      DELIVERY_EMAIL_FROM: 'no-responder@example.com',
+    }).mail;
+    expect(mail).toEqual({
+      host: 'smtp.example.com',
+      port: 587,
+      user: 'apikey',
+      password: 'secreta',
+      startTls: false,
+      from: 'no-responder@example.com',
+    });
   });
 });

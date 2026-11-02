@@ -16,7 +16,26 @@ export interface AppConfig {
   workerEnabled: boolean;
   logFormat: 'text' | 'json';
   masterKey: Buffer;
-  auth: { jwtSecret: string; webUrl: URL };
+  auth: {
+    jwtSecret: string;
+    webUrl: URL;
+    accessTokenTtlMs: number;
+    sessionTtlMs: number;
+    verificationTtlMs: number;
+    resetTtlMs: number;
+    maxLoginFailures: number;
+    lockoutMs: number;
+    publicRequestsPerMinute: number;
+    trustedProxyHops: number;
+  };
+  mail: {
+    host: string | null;
+    port: number;
+    user: string | null;
+    password: string | null;
+    startTls: boolean;
+    from: string | null;
+  };
   metricsToken: string | null;
   rateLimit: { requestsPerMinute: number; writesPerMinute: number };
   sri: { enabledEnvironments: Array<'1' | '2'> };
@@ -26,6 +45,28 @@ export interface AppConfig {
 const MASTER_KEY_BYTES = 32;
 const MIN_JWT_SECRET_BYTES = 32;
 const MIN_METRICS_TOKEN_LENGTH = 24;
+
+/** Emisor y audiencia de los tokens de acceso: los emite y los valida esta misma API. */
+export const TOKEN_ISSUER = 'einvoice-api';
+export const TOKEN_AUDIENCE = 'einvoice-api';
+
+// Plazos de application.yml (einvoice.auth.*); en Java no se leen del entorno.
+const ACCESS_TOKEN_TTL_MS = parseDuration('15m');
+const SESSION_TTL_MS = parseDuration('12h');
+const VERIFICATION_TTL_MS = parseDuration('24h');
+const RESET_TTL_MS = parseDuration('1h');
+const MAX_LOGIN_FAILURES = 5;
+const LOCKOUT_MS = parseDuration('15m');
+const PUBLIC_REQUESTS_PER_MINUTE = 20;
+
+/** Enlace de la web con un código de un solo uso: el código va en el fragmento, que no viaja al servidor. */
+export function authLink(webUrl: URL, path: string, token: string): string {
+  return `${webUrl.href.replace(/\/+$/, '')}${path}#token=${token}`;
+}
+
+function requirePositive(name: string, value: number): void {
+  if (!(value > 0)) throw new Error(`einvoice.auth.${name} debe ser positivo`);
+}
 
 /** Valor de una variable; una variable vacía cuenta como ausente (como `${X:}` en Spring). */
 function read(env: NodeJS.ProcessEnv, name: string): string | undefined {
@@ -71,6 +112,29 @@ function loadMasterKey(env: NodeJS.ProcessEnv): Buffer {
   return key;
 }
 
+function loadTrustedProxyHops(env: NodeJS.ProcessEnv): number {
+  const raw = read(env, 'EINVOICE_TRUSTED_PROXY_HOPS');
+  const hops = raw === undefined ? 1 : /^-?\d+$/.test(raw) ? Number(raw) : NaN;
+  if (!Number.isSafeInteger(hops) || hops < 1) {
+    throw new Error(
+      'EINVOICE_TRUSTED_PROXY_HOPS debe ser al menos 1: cuántos proxies de confianza añaden su entrada a X-Forwarded-For (2 en Cloud Run, contando la web)',
+    );
+  }
+  return hops;
+}
+
+function loadMail(env: NodeJS.ProcessEnv): AppConfig['mail'] {
+  const password = env.SPRING_MAIL_PASSWORD;
+  return {
+    host: read(env, 'SPRING_MAIL_HOST') ?? null,
+    port: integer(env, 'SPRING_MAIL_PORT', 25, 1, 65_535),
+    user: read(env, 'SPRING_MAIL_USERNAME') ?? null,
+    password: password === undefined || password === '' ? null : password,
+    startTls: read(env, 'SMTP_STARTTLS') !== 'false',
+    from: read(env, 'DELIVERY_EMAIL_FROM') ?? null,
+  };
+}
+
 function loadAuth(env: NodeJS.ProcessEnv): AppConfig['auth'] {
   const jwtSecret = env.EINVOICE_JWT_SECRET ?? '';
   if (Buffer.byteLength(jwtSecret, 'utf8') < MIN_JWT_SECRET_BYTES) {
@@ -97,7 +161,24 @@ function loadAuth(env: NodeJS.ProcessEnv): AppConfig['auth'] {
   if (raw.includes('?') || raw.includes('#')) {
     throw new Error('EINVOICE_WEB_URL no debe llevar parámetros ni fragmento');
   }
-  return { jwtSecret, webUrl };
+  const auth: AppConfig['auth'] = {
+    jwtSecret,
+    webUrl,
+    accessTokenTtlMs: ACCESS_TOKEN_TTL_MS,
+    sessionTtlMs: SESSION_TTL_MS,
+    verificationTtlMs: VERIFICATION_TTL_MS,
+    resetTtlMs: RESET_TTL_MS,
+    maxLoginFailures: MAX_LOGIN_FAILURES,
+    lockoutMs: LOCKOUT_MS,
+    publicRequestsPerMinute: PUBLIC_REQUESTS_PER_MINUTE,
+    trustedProxyHops: loadTrustedProxyHops(env),
+  };
+  requirePositive('access-token-ttl', auth.accessTokenTtlMs);
+  requirePositive('session-ttl', auth.sessionTtlMs);
+  requirePositive('verification-ttl', auth.verificationTtlMs);
+  requirePositive('reset-ttl', auth.resetTtlMs);
+  requirePositive('lockout', auth.lockoutMs);
+  return auth;
 }
 
 function loadMetricsToken(env: NodeJS.ProcessEnv): string | null {
@@ -177,6 +258,7 @@ export function loadConfig(env: NodeJS.ProcessEnv): AppConfig {
     logFormat: read(env, 'LOGGING_STRUCTURED_FORMAT_CONSOLE') ? 'json' : 'text',
     masterKey: loadMasterKey(env),
     auth: loadAuth(env),
+    mail: loadMail(env),
     metricsToken: loadMetricsToken(env),
     rateLimit: {
       requestsPerMinute: integer(env, 'EINVOICE_RATE_LIMIT_REQUESTS', 1200, 1),

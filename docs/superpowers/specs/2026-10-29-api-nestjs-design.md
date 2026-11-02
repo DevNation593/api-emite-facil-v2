@@ -171,16 +171,18 @@ El mismo `ProblemDetail` (RFC 9457) que produce Spring, con `Content-Type: appli
 
 ```json
 {
-  "type": "about:blank",
-  "title": "Unprocessable Content",
-  "status": 422,
   "detail": "…",
   "instance": "/api/v1/…",
+  "status": 422,
+  "title": "Unprocessable Content",
   "errorCode": "…",
-  "correlationId": "…",
-  "errors": [{ "field": "lines[0].quantity", "message": "…" }]
+  "errors": [{ "field": "lines[0].quantity", "message": "…" }],
+  "correlationId": "…"
 }
 ```
+
+Corrección de E2, comprobada contra la API Java con `tools/java-probe`: Spring no escribe `type` (`about:blank`
+no se serializa) y ordena los campos de ProblemDetail alfabéticamente antes de los propios.
 
 - `ApiException` en TypeScript: estado, `errorCode`, detalle, errores por campo y `Retry-After`.
 - Validación: `400 VALIDATION_FAILED`, con nombres de campo en la notación de Spring (`lines[0].quantity`).
@@ -245,7 +247,7 @@ Cada etapa deja software que funciona y se prueba solo; su plan detallado se esc
 | Etapa | Alcance | Endpoints | Hecha cuando |
 | --- | --- | --- | --- |
 | **E0 Fundación** | Repo y CI, esqueleto Nest, configuración con los mismos nombres, Kysely + `kysely-codegen`, Flyway CLI, `infra/docker-compose.yml`, `/actuator/health`, filtro de errores, `correlationId`, logs JSON, límite de peticiones en Redis, generador golden, inventario de rutas (controladores Java vs. `openapi.yaml`) | — | Health con PostgreSQL, RabbitMQ y Redis; Flyway (12.4.0, la misma versión que Java) migra una base vacía y valida sus checksums; errores idénticos a Spring; casos golden de clave de acceso, AES-GCM, Argon2, JWT y firma XAdES generados; CI verde. El dump con datos de Java se genera en E1, la primera etapa que lo usa |
-| **E1 Identidad y multiempresa** | Registro, ingreso, renovación, cierre, verificación, recuperación y cambio de contraseña, `/auth/me`, empresas, membresías y roles, equipo e invitaciones, API keys, guards | `/auth/*`, `/tenants*`, `/api-keys*` | Golden Argon2 y JWT; `AuthApiIT`, `AuthRateLimitIT`, `TenantIsolationIT`, `ApiKeyAuthenticationIT`, `SecurityIT` de esas rutas; ingreso con usuario creado por Java |
+| **E1 Identidad y multiempresa** | Registro, ingreso, renovación, cierre, verificación, recuperación y cambio de contraseña, `/auth/me`, empresas, membresías y roles, API keys, autenticación por middleware y guards de empresa y rol (las invitaciones se eliminaron en `V15`: no hay rutas de equipo) | `/auth/*`, `/tenants*`, `/api-keys*` | Golden Argon2 y JWT; `AuthApiIT`, `AuthRateLimitIT`, `TenantIsolationIT`, `ApiKeyAuthenticationIT`, `SecurityIT` de esas rutas; ingreso con usuario creado por Java |
 | **E2 Emisores y catálogos** | Emisores, establecimientos, puntos de emisión, catálogos, clientes, productos, certificados, secuencial | `/taxpayers*` (sin producción), `/emission-points*`, `/catalogs/*`, `/customers*`, `/products*`, `/certificates` | Golden AES-GCM; `CertificateApiIT`, `TaxpayerApiIT`, `CatalogIT`, `CustomerApiIT`, `ProductApiIT`, `SequenceApiIT` |
 | **E3 Comprobantes** | Cálculo, clave de acceso, secuenciales, XML y XSD de los tres tipos, idempotencia, outbox, consulta, reemisión | `/invoices`, `/credit-notes`, `/debit-notes`, `/documents`, `/documents/{id}` | Golden de clave, impuestos, XML y `content`; `SequenceConcurrencyIT`, `InvoiceIdempotencyIT`, `CreditNoteApiIT`, `DebitNoteApiIT`, `InvoiceReissueIT` |
 | **E4 Firma y SRI** | XAdES-BES y verificación, SOAP, relay del outbox, worker, reintentos, conciliación, recogida de atrasados, DLQ | `/documents/{id}/retry`, `/documents/{id}/sri-attempts` | Golden de firma byte a byte; `OutboxRelayIT`, `ReceptionPipelineIT`, `AuthorizationPipelineIT`, `RecoveryIT`, `NotesPipelineIT` |
@@ -281,5 +283,4 @@ Vuelta atrás: como el esquema es el mismo, detener NestJS y arrancar Java de nu
 
 Ninguna bloquea E0. Se resuelven antes de la etapa indicada:
 
-- E1: si existen rutas de equipo e invitaciones fuera de `openapi.yaml`, confirmar que se portan tal cual (por defecto, sí).
 - E7: fecha del corte y si se hace con datos de producción reales o aún solo con datos de prueba.

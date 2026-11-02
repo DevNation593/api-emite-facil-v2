@@ -1,6 +1,7 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import { ApiException } from './api-exception.js';
 import { CORRELATION_ID_HEADER } from './correlation-id.middleware.js';
+import { recordNumberSource } from './json-source.js';
 import { runWithContext } from './request-context.js';
 
 export const JSON_BODY_LIMIT = '10mb';
@@ -8,6 +9,8 @@ export const JSON_BODY_LIMIT = '10mb';
 const parseJson = express.json({
   limit: JSON_BODY_LIMIT,
   type: ['application/json', 'application/*+json'],
+  // Anota el texto de cada número: Jackson lo lee del texto, no del double (json-source.ts).
+  reviver: recordNumberSource,
 });
 
 /**
@@ -25,10 +28,19 @@ export function jsonBodyMiddleware(
     // cuerpo, así que se reabre desde el id que dejó en la respuesta para que
     // guards, pipes, handlers y logs de error lo vean.
     const correlationId = res.getHeader(CORRELATION_ID_HEADER);
+    // body-parser deja {} cuando el cuerpo viene vacío; Spring lo trata como cuerpo ausente.
+    if (err === undefined && !hasBody(req)) req.body = undefined;
     const forward = () => next(err === undefined ? undefined : toApiException(err));
     if (typeof correlationId === 'string') runWithContext({ correlationId }, forward);
     else forward();
   });
+}
+
+function hasBody(req: Request): boolean {
+  return (
+    req.headers['transfer-encoding'] !== undefined ||
+    (req.headers['content-length'] !== undefined && req.headers['content-length'] !== '0')
+  );
 }
 
 function toApiException(err: unknown): unknown {

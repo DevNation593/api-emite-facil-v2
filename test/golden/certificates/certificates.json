@@ -1,0 +1,190 @@
+{
+  "inspectedAt": "2026-11-02T04:37:08Z",
+  "cases": [
+    {
+      "name": "valido",
+      "file": "valido.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "subject": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
+        "issuer": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
+        "serialNumber": "5338313101934345930",
+        "fingerprintSha256": "f90eed8c17d2b1f47cab64e440a0446ea107a133eba35ec743bfbd033c77ff4a",
+        "validFrom": "2026-11-01T04:37:09Z",
+        "validTo": "2027-11-01T04:37:09Z"
+      }
+    },
+    {
+      "name": "sin-uso-de-clave",
+      "file": "sin-uso-de-clave.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "subject": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
+        "issuer": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
+        "serialNumber": "1656275394532810853",
+        "fingerprintSha256": "edaf3917a6fc383ddd001c05e8b8ff90404d85e51e661e6c4f29a407d4394de4",
+        "validFrom": "2026-11-01T04:37:09Z",
+        "validTo": "2027-11-01T04:37:09Z"
+      }
+    },
+    {
+      "name": "firma-y-cifrado",
+      "file": "firma-y-cifrado.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "subject": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
+        "issuer": "CN=Emisor de Pruebas firma,O=Pruebas,C=EC",
+        "serialNumber": "17003108856823681340",
+        "fingerprintSha256": "bcea4850b8fef8a06ae8b6311b9e9d25a6a3123ebb18ab4f7cf0547966e43859",
+        "validFrom": "2026-11-01T04:37:10Z",
+        "validTo": "2027-11-01T04:37:10Z"
+      }
+    },
+    {
+      "name": "caducado",
+      "file": "caducado.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "errorCode": "CERTIFICATE_EXPIRED",
+        "message": "El certificado está caducado"
+      }
+    },
+    {
+      "name": "futuro",
+      "file": "futuro.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "errorCode": "CERTIFICATE_NOT_YET_VALID",
+        "message": "El certificado aún no está vigente"
+      }
+    },
+    {
+      "name": "clave-corta",
+      "file": "clave-corta.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "errorCode": "CERTIFICATE_KEY_UNSUPPORTED",
+        "message": "La clave del certificado debe ser RSA de al menos 2048 bits"
+      }
+    },
+    {
+      "name": "dos-claves-de-firma",
+      "file": "dos-claves-de-firma.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "errorCode": "CERTIFICATE_AMBIGUOUS",
+        "message": "El archivo contiene más de una clave que podría ser la de firma"
+      }
+    },
+    {
+      "name": "sin-clave-privada",
+      "file": "sin-clave-privada.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "errorCode": "CERTIFICATE_NO_PRIVATE_KEY",
+        "message": "El archivo no contiene un certificado con clave privada"
+      }
+    },
+    {
+      "name": "clave-cambiada",
+      "file": "clave-cambiada.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "errorCode": "CERTIFICATE_KEY_MISMATCH",
+        "message": "La clave privada del archivo no corresponde a su certificado"
+      }
+    },
+    {
+      "name": "contrasena-equivocada",
+      "file": "contrasena-equivocada.p12",
+      "password": "otra-contrasena",
+      "result": {
+        "errorCode": "CERTIFICATE_UNREADABLE",
+        "message": "El archivo no es un PKCS#12 válido o la contraseña es incorrecta"
+      }
+    },
+    {
+      "name": "clave-ec",
+      "file": "clave-ec.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "errorCode": "CERTIFICATE_KEY_UNSUPPORTED",
+        "message": "La clave del certificado debe ser RSA de al menos 2048 bits"
+      }
+    },
+    {
+      "name": "contrasena-con-enie",
+      "file": "contrasena-con-enie.p12",
+      "password": "clave-con-ñ",
+      "result": {
+        "subject": "CN=Emisor Eñe,O=Pruebas,C=EC",
+        "issuer": "CN=Emisor Eñe,O=Pruebas,C=EC",
+        "serialNumber": "5858736497760763193",
+        "fingerprintSha256": "7c1072e28381dca452b22262c306bfe81c086f79f02ca60a56c91fd9f5fd48ce",
+        "validFrom": "2026-11-01T04:37:15Z",
+        "validTo": "2027-11-01T04:37:15Z"
+      }
+    },
+    {
+      "name": "heredado",
+      "file": "heredado.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "subject": "CN=Emisor Heredado,O=Pruebas,C=EC",
+        "issuer": "CN=Emisor Heredado,O=Pruebas,C=EC",
+        "serialNumber": "13121771972034329957",
+        "fingerprintSha256": "ccd9a73d50306cdc34f7544dfda68ef6dca4d15225304c99381ebf29f8b6a506",
+        "validFrom": "2026-11-01T04:37:16Z",
+        "validTo": "2027-11-01T04:37:16Z"
+      }
+    },
+    {
+      "name": "dn-especial",
+      "file": "dn-especial.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "subject": "CN=José Pérez\\, Ñandú,OU=Firma,O=Pruebas S.A.,L=Quito,ST=Pichincha,C=EC,2.5.4.5=#130a30393132333435363738,1.2.840.113549.1.9.1=#160f6a6f7365406578616d706c652e6563",
+        "issuer": "CN=José Pérez\\, Ñandú,OU=Firma,O=Pruebas S.A.,L=Quito,ST=Pichincha,C=EC,2.5.4.5=#130a30393132333435363738,1.2.840.113549.1.9.1=#160f6a6f7365406578616d706c652e6563",
+        "serialNumber": "6790607790241506619",
+        "fingerprintSha256": "734f77b98ee5a3e09e3fd4a4fb2a37c934ea39f2f9dac0f39dfd7735929e154b",
+        "validFrom": "2026-11-01T04:37:17Z",
+        "validTo": "2027-11-01T04:37:17Z"
+      }
+    },
+    {
+      "name": "firma-pss",
+      "file": "firma-pss.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "subject": "CN=Emisor PSS,O=Pruebas,C=EC",
+        "issuer": "CN=Emisor PSS,O=Pruebas,C=EC",
+        "serialNumber": "18007569404198950013",
+        "fingerprintSha256": "64dcbe8c63a6266d4974f33a57c758796bd71bbc3abf7c9becd390f85d821da1",
+        "validFrom": "2026-11-01T04:37:17Z",
+        "validTo": "2027-11-01T04:37:17Z"
+      }
+    },
+    {
+      "name": "iteraciones-altas",
+      "file": "iteraciones-altas.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "subject": "CN=Emisor Lento,O=Pruebas,C=EC",
+        "issuer": "CN=Emisor Lento,O=Pruebas,C=EC",
+        "serialNumber": "4916747586161238014",
+        "fingerprintSha256": "4762457076c7db30a91b1e192d36e1f361c4f6cfc2fee082280d2effaefdc0cf",
+        "validFrom": "2026-11-01T04:37:18Z",
+        "validTo": "2027-11-01T04:37:18Z"
+      }
+    },
+    {
+      "name": "basura",
+      "file": "basura.p12",
+      "password": "clave-de-prueba-p12",
+      "result": {
+        "errorCode": "CERTIFICATE_UNREADABLE",
+        "message": "El archivo no es un PKCS#12 válido o la contraseña es incorrecta"
+      }
+    }
+  ]
+}

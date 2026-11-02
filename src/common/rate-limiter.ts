@@ -7,6 +7,7 @@ import {
   ensureRedisReady,
   REDIS,
   RedisModule,
+  withRedisTimeout,
 } from '../infrastructure/redis.module.js';
 import { METRICS_REGISTRY, MetricsModule } from '../observability/metrics.js';
 
@@ -15,7 +16,6 @@ const WINDOW_SECONDS = 60;
 const KEY_LIFETIME_SECONDS = 2 * WINDOW_SECONDS;
 /** Tras un fallo de Redis no se le vuelve a preguntar durante este tiempo. */
 const REST_AFTER_FAILURE_MS = 10_000;
-const FALLBACK_TIMEOUT_MS = 2_000;
 
 export interface RateDecision {
   allowed: boolean;
@@ -62,7 +62,7 @@ export class RateLimiter {
       retryAfterSeconds: WINDOW_SECONDS - (now % WINDOW_SECONDS),
     };
     try {
-      return await this.withTimeout(async () => {
+      return await withRedisTimeout(this.redis, async () => {
         await ensureRedisReady(this.redis);
         // Una escritura rechazada no gasta además el cupo general.
         if (
@@ -96,20 +96,6 @@ export class RateLimiter {
     const value = await this.redis.incr(key);
     if (value === 1) await this.redis.expire(key, KEY_LIFETIME_SECONDS);
     return value;
-  }
-
-  /**
-   * Acota la conexión y los comandos con el mismo plazo que el cliente (REDIS_TIMEOUT): la
-   * conexión a un Redis que acepta el socket pero no responde no tiene plazo propio en ioredis.
-   */
-  private withTimeout<T>(operation: () => Promise<T>): Promise<T> {
-    const ms = this.redis.options.commandTimeout ?? FALLBACK_TIMEOUT_MS;
-    return new Promise<T>((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('Timeout')), ms);
-      operation()
-        .then(resolve, reject)
-        .finally(() => clearTimeout(timer));
-    });
   }
 }
 

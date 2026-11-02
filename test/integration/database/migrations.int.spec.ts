@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { Global, Module } from '@nestjs/common';
-import type { Kysely } from 'kysely';
+import { type Kysely, sql } from 'kysely';
 import pg from 'pg';
 import { afterEach, describe, expect, it } from 'vitest';
 import { APP_CONFIG, loadConfig } from '../../../src/config/app-config.js';
@@ -9,11 +9,14 @@ import type { DB } from '../../../src/database/schema.js';
 import { migratedDatabase, runFlyway, startPostgres } from '../../support/containers.js';
 import { testEnv } from '../../support/test-env.js';
 
-async function query(url: string, sql: string): Promise<Record<string, any>[]> {
+async function query<Row extends Record<string, unknown>>(
+  url: string,
+  text: string,
+): Promise<Row[]> {
   const client = new pg.Client({ connectionString: url });
   await client.connect();
   try {
-    return (await client.query(sql)).rows;
+    return (await client.query<Row>(text)).rows;
   } finally {
     await client.end();
   }
@@ -40,7 +43,7 @@ describe('migraciones con Flyway', () => {
     const pgc = await startPostgres();
     cleanups.push(() => pgc.stop());
     expect((await runFlyway(pgc.internalUrl, pgc.network, 'migrate')).exitCode).toBe(0);
-    const rows = await query(
+    const rows = await query<{ version: string; success: boolean }>(
       pgc.databaseUrl,
       'SELECT version, success FROM flyway_schema_history WHERE version IS NOT NULL ORDER BY installed_rank',
     );
@@ -56,7 +59,7 @@ describe('migraciones con Flyway', () => {
     const run = await runFlyway(withSchema(pgc.internalUrl), pgc.network, 'migrate');
     expect(run.exitCode, run.output).toBe(0);
 
-    const tables = await query(
+    const tables = await query<{ table_schema: string }>(
       pgc.databaseUrl,
       "SELECT table_schema FROM information_schema.tables WHERE table_name = 'tenants'",
     );
@@ -111,7 +114,7 @@ describe('migraciones con Flyway', () => {
     const app = moduleRef.createNestApplication();
     await app.init();
     const db = app.get<Kysely<DB>>(DATABASE);
-    const { rows } = await (await import('kysely')).sql<{ ok: number }>`SELECT 1 AS ok`.execute(db);
+    const { rows } = await sql<{ ok: number }>`SELECT 1 AS ok`.execute(db);
     expect(rows).toEqual([{ ok: 1 }]);
     await app.close();
     await expect(db.selectFrom('tenants').select('id').execute()).rejects.toThrow();

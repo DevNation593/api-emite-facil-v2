@@ -1,0 +1,83 @@
+{
+  "source": {
+    "javaCommit": "ca53bcae19a468c1164465425a59db6c5e68b809",
+    "javaDirty": false,
+    "javaVersion": "java version \"25.0.5.0.2\" 2026-10-21 LTS",
+    "generatedAt": "2026-11-02T04:12:22.550Z"
+  },
+  "email": "java-e3682c44@example.test",
+  "password": "java G368cKIV09L-",
+  "userId": "0281c65f-3a66-4801-8152-bf5ba0938106",
+  "tenantId": "9dccd405-e551-4b8d-adfc-d1c83427c75a",
+  "tenantName": "Empresa creada por Java",
+  "refreshToken": "c8PiSJ8IbnoYfnlEhoEUzzkUxPQnR_bHAAcGRmWusQs",
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMjgxYzY1Zi0zYTY2LTQ4MDEtODE1Mi1iZjViYTA5MzgxMDYiLCJhdWQiOiJlaW52b2ljZS1hcGkiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6ImVpbnZvaWNlLWFwaSIsImV4cCI6MTc5MzU5MzY0MCwiaWF0IjoxNzkzNTkyNzQwLCJqdGkiOiJmYWJiOWE1My05NzlmLTRjZWQtOTgyZS1kYThhNDBmMWNiN2EiLCJlbWFpbCI6ImphdmEtZTM2ODJjNDRAZXhhbXBsZS50ZXN0Iiwic2lkIjoiYzBkZDBiZjEtNTc2Ny00NTA4LWFlM2UtM2I2ZGFlNjIzNGEzIn0.te6JMH1qlLIygVOrcSw6ccmYGm0Z4RaChK2lRyndFnE",
+  "accessTokenIat": 1793592740,
+  "accessTokenExp": 1793593640,
+  "apiKey": "efk_8NXefKgTOAeG_wxF2SMOj8morCqizMuxRO8WVjTwBk95cUT0vNVVc2AU",
+  "apiKeyId": "94cc28ce-f4b5-48ab-98f0-c9ca4d8ca989",
+  "taxpayerId": "2cd353d5-c63e-4b62-a3b6-5af932225cc1",
+  "certificateId": "bd21c684-f2b0-4530-94e9-27b23c398547",
+  "certificateFingerprint": "4d785445781b609aae409f715fb28af92d589a084c6e0824c6e924751d48fe9e",
+  "customerId": "1fff4588-b7ee-41c6-a33e-191aa2edbf09",
+  "productId": "5f167274-6897-4854-9bf3-db1559566726",
+  "views": {
+    "taxpayer": {
+      "id": "2cd353d5-c63e-4b62-a3b6-5af932225cc1",
+      "ruc": "1799999999001",
+      "legalName": "Emisor de Java S.A.",
+      "tradeName": "Java",
+      "headOfficeAddress": "Av. Amazonas 100, Quito",
+      "phone": "022345678",
+      "defaultEnvironment": "1",
+      "accountingRequired": true,
+      "specialTaxpayerCode": "5368",
+      "withholdingAgentCode": null,
+      "rimpeRegime": "EMPRENDEDOR",
+      "productionEnabledAt": null
+    },
+    "establishment": {
+      "id": "cb52bc8b-3802-4b76-8cb0-27aec114d1bf",
+      "taxpayerId": "2cd353d5-c63e-4b62-a3b6-5af932225cc1",
+      "code": "001",
+      "address": "Av. Amazonas 100, Quito"
+    },
+    "emissionPoint": {
+      "id": "485d8b53-b25d-48dc-9144-7e364bd700a7",
+      "establishmentId": "cb52bc8b-3802-4b76-8cb0-27aec114d1bf",
+      "code": "001",
+      "enabled": true
+    },
+    "customer": {
+      "id": "1fff4588-b7ee-41c6-a33e-191aa2edbf09",
+      "idType": "05",
+      "idNumber": "1712345678",
+      "name": "María Pérez",
+      "email": "cliente@example.test",
+      "address": null,
+      "phone": null
+    },
+    "product": {
+      "id": "5f167274-6897-4854-9bf3-db1559566726",
+      "sku": "SRV-001",
+      "name": "Servicio de consultoría",
+      "unitPrice": "10.500000",
+      "ivaRateCode": "4"
+    },
+    "certificate": {
+      "id": "bd21c684-f2b0-4530-94e9-27b23c398547",
+      "taxpayerId": "2cd353d5-c63e-4b62-a3b6-5af932225cc1",
+      "subject": "CN=Emisor de Java,O=Pruebas,C=EC",
+      "issuer": "CN=Emisor de Java,O=Pruebas,C=EC",
+      "serialNumber": "15829630426256871817",
+      "fingerprintSha256": "4d785445781b609aae409f715fb28af92d589a084c6e0824c6e924751d48fe9e",
+      "validFrom": "2026-11-01T04:12:21Z",
+      "validTo": "2036-10-29T04:12:21Z",
+      "status": "ACTIVE"
+    }
+  },
+  "env": {
+    "EINVOICE_JWT_SECRET": "KXFFIA4C41hdELRQxqXol/XkSDU+Kq2nlPfIw4KB5XdThS7XZoffEljUEpF0SFXa",
+    "EINVOICE_MASTER_KEY": "GrVKnivfQWzhXrJQeoMFV5a5GiAOoKSK7M3EVkbi1+4="
+  }
+}

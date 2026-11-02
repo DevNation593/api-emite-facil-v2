@@ -2,10 +2,12 @@
 
 Reemplazo 1:1 de la API Java/Spring Boot de facturación electrónica del SRI de Ecuador, reescrita en NestJS 12 (Express 5) con TypeScript estricto. Mantiene el mismo contrato HTTP (`contracts/openapi.yaml`), el mismo esquema de base de datos (`db/migration`, V1–V19 copiadas de Java), las mismas variables de entorno y el mismo comportamiento: manda el código Java.
 
-> **Estado: etapa E0 (fundación) del plan.** Hay configuración por entorno, base de datos (Kysely + PostgreSQL), conexiones a RabbitMQ y Redis, límite de peticiones, observabilidad (`/actuator/*`, métricas) y pruebas golden generadas con la API Java. Los módulos de negocio llegan en las etapas siguientes. **La API Java sigue siendo la que está en producción hasta el cambio definitivo (etapa E7).**
+> **Estado: etapa E2 (emisores y catálogos) del plan.** Sobre la fundación de E0 y la identidad y multiempresa de E1 (cuentas, sesiones, autenticación por token o API key, empresas, roles, API keys, auditoría y worker) ya están los emisores con sus establecimientos y puntos de emisión, los catálogos del SRI, los clientes y productos, los secuenciales con la clave de acceso, y la carga y custodia cifrada de certificados de firma: 40 de las 60 rutas (ver [docs/route-inventory.md](docs/route-inventory.md)). Dos herramientas comparan con la API Java: [tools/java-dump](tools/java-dump/README.md) vuelca datos que escribió Java y una prueba comprueba que NestJS los lee igual (también descifra su certificado), y [tools/java-probe](tools/java-probe/README.md) guarda lo que Java responde a 229 peticiones para que NestJS responda lo mismo. La emisión de comprobantes llega en las etapas siguientes. **La API Java sigue siendo la que está en producción hasta el cambio definitivo (etapa E7).**
 
 - Diseño: [docs/superpowers/specs/2026-10-29-api-nestjs-design.md](docs/superpowers/specs/2026-10-29-api-nestjs-design.md)
 - Plan de la etapa E0: [docs/superpowers/plans/2026-10-29-e0-fundacion.md](docs/superpowers/plans/2026-10-29-e0-fundacion.md)
+- Plan de la etapa E1: [docs/superpowers/plans/2026-10-30-e1-identidad-multiempresa.md](docs/superpowers/plans/2026-10-30-e1-identidad-multiempresa.md)
+- Plan de la etapa E2: [docs/superpowers/plans/2026-11-01-e2-emisores-catalogos.md](docs/superpowers/plans/2026-11-01-e2-emisores-catalogos.md)
 
 ## Requisitos
 

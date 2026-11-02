@@ -81,15 +81,17 @@ export class ProblemDetailsFilter implements ExceptionFilter {
       currentCorrelationId() ??
       '';
 
+    // Como lo escribe Spring (sondeado en test/golden/http): sin "type" (about:blank no se
+    // serializa), los campos de ProblemDetail en orden alfabético y luego sus propiedades en el
+    // orden en que se añaden.
     const body = {
-      type: 'about:blank',
-      title: reasonPhrase(resolved.status),
-      status: resolved.status,
       detail: resolved.detail,
       instance: req.originalUrl.split('?')[0],
+      status: resolved.status,
+      title: reasonPhrase(resolved.status),
       errorCode: resolved.errorCode,
-      correlationId,
       ...(resolved.errors.length > 0 ? { errors: resolved.errors } : {}),
+      correlationId,
     };
 
     res.status(resolved.status);
@@ -116,18 +118,25 @@ export class ProblemDetailsFilter implements ExceptionFilter {
     }
 
     if (exception instanceof HttpException) {
-      return this.fromStatus(exception.getStatus(), req);
+      const status = exception.getStatus();
+      // Un 5xx de Nest es un fallo del servidor: se registra como el error no controlado.
+      if (status >= 500) this.logUnhandled(exception);
+      return this.fromStatus(status, req);
     }
     const status = clientStatus(exception);
     if (status !== undefined) {
       return this.fromStatus(status, req);
     }
 
+    this.logUnhandled(exception);
+    return this.fromStatus(500, req);
+  }
+
+  private logUnhandled(exception: unknown): void {
     this.logger.error(
       'Error no controlado',
       exception instanceof Error ? exception.stack : String(exception),
     );
-    return this.fromStatus(500, req);
   }
 
   private fromStatus(status: number, req: Request): Resolved {
@@ -141,7 +150,9 @@ export class ProblemDetailsFilter implements ExceptionFilter {
         req.method !== 'OPTIONS'
       ) {
         status = 405;
-        headers = { Allow: allowed.join(', ') };
+        // Como el 405 de Spring: los métodos declarados (sin el HEAD que Express añade a cada GET),
+        // separados por ", ". El Allow de OPTIONS sí lleva HEAD y va sin espacios (bootstrap.ts).
+        headers = { Allow: allowed.filter((method) => method !== 'HEAD').join(', ') };
       }
     }
     return {

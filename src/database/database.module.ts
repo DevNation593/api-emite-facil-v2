@@ -1,4 +1,4 @@
-import { Inject, Module, type OnApplicationShutdown } from '@nestjs/common';
+import { Inject, Logger, Module, type OnApplicationShutdown } from '@nestjs/common';
 import { Kysely, PostgresDialect } from 'kysely';
 import pg from 'pg';
 import { APP_CONFIG, type AppConfig } from '../config/app-config.js';
@@ -26,6 +26,8 @@ export function sslOption(mode: string | undefined): pg.PoolConfig['ssl'] {
       return undefined;
   }
 }
+
+const poolLogger = new Logger('DatabasePool');
 
 const DATE_OID = 1082;
 
@@ -74,8 +76,12 @@ export function createDatabase(config: AppConfig['database']): Kysely<DB> {
       });
     });
   }
-  // Un error en una conexión ociosa no debe tumbar el proceso; pg descarta ese cliente.
-  pool.on('error', () => undefined);
+  // Un error en una conexión ociosa no debe tumbar el proceso; pg descarta ese cliente. Se registra
+  // solo el código: el mensaje de pg puede citar el servidor o el usuario.
+  pool.on('error', (error: Error & { code?: unknown }) => {
+    const code = typeof error.code === 'string' ? error.code : error.name;
+    poolLogger.warn(`Se perdió una conexión ociosa con la base: ${code}`);
+  });
   return new Kysely<DB>({ dialect: new PostgresDialect({ pool }) });
 }
 
