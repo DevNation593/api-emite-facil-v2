@@ -1,0 +1,4406 @@
+{
+  "source": {
+    "javaCommit": "ca53bcae19a468c1164465425a59db6c5e68b809",
+    "javaDirty": false,
+    "javaVersion": "java version \"25.0.5.0.2\" 2026-10-21 LTS",
+    "generatedAt": "2026-11-02T00:38:10.420Z"
+  },
+  "results": [
+    {
+      "name": "taxpayer accountingRequired texto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000001001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": "si"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired textoTrue",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000002001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": "true"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000002001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": true,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired textoTRUE",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000003001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": "TRUE"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000003001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": true,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired uno",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000004001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": 1
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000004001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": true,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired cero",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000005001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": 0
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000005001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired decimal",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000006001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": 1.5
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired objeto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000007001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": {
+            "a": 1
+          }
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired array",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000008001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": [
+            1
+          ]
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer accountingRequired nulo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000009001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "accountingRequired": null
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000009001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime minusculas",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000010001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": "emprendedor"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime mayusculas",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000011001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": "EMPRENDEDOR"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000011001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "EMPRENDEDOR",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime desconocido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000012001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": "OTRO"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime vacio",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000013001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": ""
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime numero",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000014001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": 1
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000014001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "EMPRENDEDOR",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime nulo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000015001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": null
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000015001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime negocioPopular",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000016001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": "NEGOCIO_POPULAR"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Todavía no se pueden emitir comprobantes de contribuyentes RIMPE negocio popular",
+        "instance": "/api/v1/taxpayers",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "RIMPE_REGIME_UNSUPPORTED"
+      }
+    },
+    {
+      "name": "taxpayer rimpeRegime objeto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000017001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "rimpeRegime": {}
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "taxpayer ruc numérico",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": 990099999001,
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "ruc",
+            "message": "debe coincidir con \"[0-9]{10}001\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "taxpayer defaultEnvironment numérico",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000019001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": 1
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000019001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "taxpayer defaultEnvironment 2",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000020001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "2"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Un emisor se da de alta en el ambiente de pruebas; el paso a producción se activa después",
+        "instance": "/api/v1/taxpayers",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "PRODUCTION_NOT_ENABLED"
+      }
+    },
+    {
+      "name": "taxpayer sin campos",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {}
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "ruc",
+            "message": "no debe ser nulo"
+          },
+          {
+            "field": "headOfficeAddress",
+            "message": "no debe estar vacío"
+          },
+          {
+            "field": "defaultEnvironment",
+            "message": "no debe ser nulo"
+          },
+          {
+            "field": "legalName",
+            "message": "no debe estar vacío"
+          }
+        ]
+      }
+    },
+    {
+      "name": "taxpayer ruc repetido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "1790012345001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1"
+        }
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El RUC ya está registrado en la plataforma",
+        "instance": "/api/v1/taxpayers",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "RUC_ALREADY_REGISTERED"
+      }
+    },
+    {
+      "name": "taxpayer códigos inválidos",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000022001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "specialTaxpayerCode": "ab",
+          "withholdingAgentCode": "0123"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/taxpayers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "specialTaxpayerCode",
+            "message": "debe coincidir con \"[A-Za-z0-9]{3,13}\""
+          },
+          {
+            "field": "withholdingAgentCode",
+            "message": "debe coincidir con \"[1-9][0-9]{0,7}\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "taxpayer tenantId en el cuerpo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000023001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "tenantId": "00000000-0000-4000-8000-000000000000"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000023001",
+        "legalName": "Emisor",
+        "tradeName": null,
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "emission point establishmentId malformado",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": "x",
+          "code": "009"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "emission point establishmentId numero",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": 123,
+          "code": "009"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "emission point establishmentId booleano",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": true,
+          "code": "009"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "emission point establishmentId objeto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": {
+            "a": 1
+          },
+          "code": "009"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "emission point establishmentId array",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": [],
+          "code": "009"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "emission point establishmentId nulo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": null,
+          "code": "009"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "establishmentId",
+            "message": "no debe ser nulo"
+          }
+        ]
+      }
+    },
+    {
+      "name": "emission point establishmentId vacio",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": "",
+          "code": "009"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "establishmentId",
+            "message": "no debe ser nulo"
+          }
+        ]
+      }
+    },
+    {
+      "name": "emission point establishmentId mayusculas",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": "{establishmentIdUpper}",
+          "code": "009"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "establishmentId": "{establishmentId}",
+        "code": "009",
+        "enabled": true
+      }
+    },
+    {
+      "name": "emission point establishmentId sinGuiones",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": "{establishmentIdNoDash}",
+          "code": "009"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "emission point establishmentId desconocido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": "00000000-0000-4000-8000-000000000000",
+          "code": "009"
+        }
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/emission-points",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "emission point code numérico",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": "{establishmentId}",
+          "code": 2
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "code",
+            "message": "debe coincidir con \"[0-9]{3}\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "emission point repetido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "body": {
+          "establishmentId": "{establishmentId}",
+          "code": "001"
+        }
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El establecimiento ya tiene un punto de emisión con ese código",
+        "instance": "/api/v1/emission-points",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "EMISSION_POINT_CODE_TAKEN"
+      }
+    },
+    {
+      "name": "establishment code numérico",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers/{taxpayerId}/establishments",
+        "auth": "owner",
+        "body": {
+          "code": 2,
+          "address": "Calle"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/taxpayers/{taxpayerId}/establishments",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "code",
+            "message": "debe coincidir con \"[0-9]{3}\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "establishment repetido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers/{taxpayerId}/establishments",
+        "auth": "owner",
+        "body": {
+          "code": "001",
+          "address": "Calle"
+        }
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El emisor ya tiene un establecimiento con ese código",
+        "instance": "/api/v1/taxpayers/{taxpayerId}/establishments",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "ESTABLISHMENT_CODE_TAKEN"
+      }
+    },
+    {
+      "name": "sequence nextValue texto",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": "5"
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "emissionPointId": "{emissionPointId}",
+        "environment": "1",
+        "documentType": "01",
+        "nextValue": 5
+      }
+    },
+    {
+      "name": "sequence nextValue decimal",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": 5.7
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "emissionPointId": "{emissionPointId}",
+        "environment": "1",
+        "documentType": "01",
+        "nextValue": 5
+      }
+    },
+    {
+      "name": "sequence nextValue decimalCero",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": 6
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "emissionPointId": "{emissionPointId}",
+        "environment": "1",
+        "documentType": "01",
+        "nextValue": 6
+      }
+    },
+    {
+      "name": "sequence nextValue booleano",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": true
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sequence nextValue letras",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": "abc"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sequence nextValue grande",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": 2147483648
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sequence nextValue hex",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": "0x10"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sequence nextValue cero",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": 0
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "nextValue",
+            "message": "debe ser mayor que o igual a 1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "sequence nextValue maximo",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": 999999999
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "emissionPointId": "{emissionPointId}",
+        "environment": "1",
+        "documentType": "01",
+        "nextValue": 999999999
+      }
+    },
+    {
+      "name": "sequence nextValue tope",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": 1000000000
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "nextValue",
+            "message": "debe ser menor que o igual a 999999999"
+          }
+        ]
+      }
+    },
+    {
+      "name": "sequence nextValue negativo",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": -1
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "nextValue",
+            "message": "debe ser mayor que o igual a 1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "sequence nextValue nulo",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": null
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "nextValue",
+            "message": "no debe ser nulo"
+          }
+        ]
+      }
+    },
+    {
+      "name": "sequence nextValue array",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": []
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sequence nextValue objeto",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": {}
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sequence nextValue textoEspacios",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": " 7 "
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "emissionPointId": "{emissionPointId}",
+        "environment": "1",
+        "documentType": "01",
+        "nextValue": 7
+      }
+    },
+    {
+      "name": "sequence nextValue exponente",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "rawBody": "{\"environment\":\"1\",\"documentType\":\"01\",\"nextValue\":1e3}"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "emissionPointId": "{emissionPointId}",
+        "environment": "1",
+        "documentType": "01",
+        "nextValue": 1000
+      }
+    },
+    {
+      "name": "sequence nextValue decimal con cero escrito",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "rawBody": "{\"environment\":\"1\",\"documentType\":\"01\",\"nextValue\":6.0}"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "emissionPointId": "{emissionPointId}",
+        "environment": "1",
+        "documentType": "01",
+        "nextValue": 6
+      }
+    },
+    {
+      "name": "sequence environment numérico",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": 2,
+          "documentType": "01",
+          "nextValue": 3
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "emissionPointId": "{emissionPointId}",
+        "environment": "2",
+        "documentType": "01",
+        "nextValue": 3
+      }
+    },
+    {
+      "name": "sequence documentType 04",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "04",
+          "nextValue": 3
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "documentType",
+            "message": "debe coincidir con \"01\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "sequence punto desconocido",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/00000000-0000-4000-8000-000000000000/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": 3
+        }
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/emission-points/{uuid}/sequence",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "certificate p12 saltoDeLinea",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "QUJD\nREVG",
+          "password": "x"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El campo p12 debe venir en Base64",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificate p12 crlf",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "QUJD\r\n",
+          "password": "x"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El campo p12 debe venir en Base64",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificate p12 espacio",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": " QUJD",
+          "password": "x"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El campo p12 debe venir en Base64",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificate p12 sinRelleno",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "QUI",
+          "password": "x"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El archivo no es un PKCS#12 válido o la contraseña es incorrecta",
+        "instance": "/api/v1/certificates",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "CERTIFICATE_UNREADABLE"
+      }
+    },
+    {
+      "name": "certificate p12 urlSafe",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "Pz8-Pz8_",
+          "password": "x"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El campo p12 debe venir en Base64",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificate p12 vacio",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "",
+          "password": "x"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "p12",
+            "message": "no debe estar vacío"
+          }
+        ]
+      }
+    },
+    {
+      "name": "certificate p12 unCaracter",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "Q",
+          "password": "x"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El campo p12 debe venir en Base64",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificate p12 cincoCaracteres",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "QUJDR",
+          "password": "x"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El campo p12 debe venir en Base64",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificate p12 basura",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "QUJD",
+          "password": "x"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El archivo no es un PKCS#12 válido o la contraseña es incorrecta",
+        "instance": "/api/v1/certificates",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "CERTIFICATE_UNREADABLE"
+      }
+    },
+    {
+      "name": "certificate p12 relleno",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "QQ==",
+          "password": "x"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El archivo no es un PKCS#12 válido o la contraseña es incorrecta",
+        "instance": "/api/v1/certificates",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "CERTIFICATE_UNREADABLE"
+      }
+    },
+    {
+      "name": "certificate p12 rellenoDeMas",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "QQ===",
+          "password": "x"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El campo p12 debe venir en Base64",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificate p12 asterisco",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "QU*D",
+          "password": "x"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El campo p12 debe venir en Base64",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificate taxpayerId malformado",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "x",
+          "p12": "QUJD",
+          "password": "x"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificate taxpayerId desconocido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "00000000-0000-4000-8000-000000000000",
+          "p12": "QUJD",
+          "password": "x"
+        }
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/certificates",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "certificate password numérica",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {
+          "taxpayerId": "{taxpayerId}",
+          "p12": "QUJD",
+          "password": 123
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El archivo no es un PKCS#12 válido o la contraseña es incorrecta",
+        "instance": "/api/v1/certificates",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "CERTIFICATE_UNREADABLE"
+      }
+    },
+    {
+      "name": "certificate sin campos",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "body": {}
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "p12",
+            "message": "no debe estar vacío"
+          },
+          {
+            "field": "password",
+            "message": "no debe estar vacío"
+          },
+          {
+            "field": "taxpayerId",
+            "message": "no debe ser nulo"
+          }
+        ]
+      }
+    },
+    {
+      "name": "customer idType numérico",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "body": {
+          "idType": 5,
+          "idNumber": "1712345678",
+          "name": "X"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "idType",
+            "message": "debe coincidir con \"[0-9]{2}\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "customer tipo desconocido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "body": {
+          "idType": "99",
+          "idNumber": "1712345678",
+          "name": "X"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El tipo de identificación no existe en el catálogo",
+        "instance": "/api/v1/customers",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "IDENTIFICATION_TYPE_UNKNOWN"
+      }
+    },
+    {
+      "name": "customer consumidor final como RUC",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "body": {
+          "idType": "04",
+          "idNumber": "9999999999999",
+          "name": "X"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La identificación no tiene el formato de su tipo",
+        "instance": "/api/v1/customers",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "IDENTIFICATION_INVALID"
+      }
+    },
+    {
+      "name": "customer correo inválido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "body": {
+          "idType": "05",
+          "idNumber": "1700000001",
+          "name": "X",
+          "email": "no-es"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "email",
+            "message": "debe ser una dirección de correo electrónico con formato correcto"
+          }
+        ]
+      }
+    },
+    {
+      "name": "customer repetido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "body": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "X"
+        }
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Ya existe un cliente con esa identificación",
+        "instance": "/api/v1/customers",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "CUSTOMER_ALREADY_EXISTS"
+      }
+    },
+    {
+      "name": "customer en blanco",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "body": {
+          "idType": "05",
+          "idNumber": "1700000002",
+          "name": "  Nombre  ",
+          "email": " ",
+          "address": "",
+          "phone": "  "
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "email",
+            "message": "debe ser una dirección de correo electrónico con formato correcto"
+          }
+        ]
+      }
+    },
+    {
+      "name": "product unitPrice numero",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "P-numero",
+          "name": "Producto",
+          "unitPrice": 10.5,
+          "ivaRateCode": "4"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "sku": "P-numero",
+        "name": "Producto",
+        "unitPrice": "10.500000",
+        "ivaRateCode": "4"
+      }
+    },
+    {
+      "name": "product unitPrice siete",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "P-siete",
+          "name": "Producto",
+          "unitPrice": "1.1234567",
+          "ivaRateCode": "4"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "unitPrice",
+            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "product unitPrice negativo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "P-negativo",
+          "name": "Producto",
+          "unitPrice": "-1",
+          "ivaRateCode": "4"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "unitPrice",
+            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "product unitPrice exponente",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "P-exponente",
+          "name": "Producto",
+          "unitPrice": "1e3",
+          "ivaRateCode": "4"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "unitPrice",
+            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "product unitPrice coma",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "P-coma",
+          "name": "Producto",
+          "unitPrice": "1,5",
+          "ivaRateCode": "4"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "unitPrice",
+            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "product unitPrice trece",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "P-trece",
+          "name": "Producto",
+          "unitPrice": "1234567890123",
+          "ivaRateCode": "4"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "unitPrice",
+            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "product unitPrice cero",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "P-cero",
+          "name": "Producto",
+          "unitPrice": "0",
+          "ivaRateCode": "4"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "sku": "P-cero",
+        "name": "Producto",
+        "unitPrice": "0.000000",
+        "ivaRateCode": "4"
+      }
+    },
+    {
+      "name": "product unitPrice espacios",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "P-espacios",
+          "name": "Producto",
+          "unitPrice": " 1 ",
+          "ivaRateCode": "4"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "unitPrice",
+            "message": "debe coincidir con \"[0-9]{1,12}(\\.[0-9]{1,6})?\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "product ivaRateCode numérico",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "P-iva",
+          "name": "Producto",
+          "unitPrice": "1",
+          "ivaRateCode": 4
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "sku": "P-iva",
+        "name": "Producto",
+        "unitPrice": "1.000000",
+        "ivaRateCode": "4"
+      }
+    },
+    {
+      "name": "product tarifa desconocida",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "P-iva9",
+          "name": "Producto",
+          "unitPrice": "1",
+          "ivaRateCode": "9"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La tarifa de IVA no existe en el catálogo",
+        "instance": "/api/v1/products",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "TAX_RATE_UNKNOWN"
+      }
+    },
+    {
+      "name": "product sku inválido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "con espacio",
+          "name": "Producto",
+          "unitPrice": "1",
+          "ivaRateCode": "4"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no cumple las reglas de validación",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "VALIDATION_FAILED",
+        "errors": [
+          {
+            "field": "sku",
+            "message": "debe coincidir con \"[A-Za-z0-9._-]{1,25}\""
+          }
+        ]
+      }
+    },
+    {
+      "name": "product sku repetido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "body": {
+          "sku": "SKU-SONDEO",
+          "name": "Producto",
+          "unitPrice": "1",
+          "ivaRateCode": "4"
+        }
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Ya existe un producto con ese código",
+        "instance": "/api/v1/products",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "PRODUCT_SKU_TAKEN"
+      }
+    },
+    {
+      "name": "customers letras",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=abc"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers negativo",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=-1"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "page debe estar entre 0 y 100000 y size entre 1 y 100",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers decimal",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=1.5"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers espacio",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=%202"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 2,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers mas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=%2B2"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 2,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers hex",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=0x10"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 16,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers almohadilla",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=%2310"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 16,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers vacio",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page="
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{customerId}",
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "Cliente de Sondeo",
+            "email": null,
+            "address": null,
+            "phone": null
+          }
+        ],
+        "page": 0,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers repetido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=1&page=2"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 1,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers tope",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=100000"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 100000,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers fuera",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=100001"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "page debe estar entre 0 y 100000 y size entre 1 y 100",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers enorme",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "page=99999999999"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers sizeCero",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "size=0"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "page debe estar entre 0 y 100000 y size entre 1 y 100",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers sizeTope",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "size=100"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{customerId}",
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "Cliente de Sondeo",
+            "email": null,
+            "address": null,
+            "phone": null
+          }
+        ],
+        "page": 0,
+        "size": 100,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers sizeFuera",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "size=101"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "page debe estar entre 0 y 100000 y size entre 1 y 100",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers sizeVacio",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "size="
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{customerId}",
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "Cliente de Sondeo",
+            "email": null,
+            "address": null,
+            "phone": null
+          }
+        ],
+        "page": 0,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers q porcentaje",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=%25"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 0,
+        "size": 20,
+        "total": 0
+      }
+    },
+    {
+      "name": "customers q guion",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=_"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 0,
+        "size": 20,
+        "total": 0
+      }
+    },
+    {
+      "name": "customers q barra",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=%5C"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 0,
+        "size": 20,
+        "total": 0
+      }
+    },
+    {
+      "name": "customers q repetido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=Cliente&q=Sondeo"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 0,
+        "size": 20,
+        "total": 0
+      }
+    },
+    {
+      "name": "customers q cien",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 0,
+        "size": 20,
+        "total": 0
+      }
+    },
+    {
+      "name": "customers q cientoUno",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El término de búsqueda admite hasta 100 caracteres y ninguno de control",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers q control",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=a%01"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El término de búsqueda admite hasta 100 caracteres y ninguno de control",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "customers q espacios",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=%20%20"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{customerId}",
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "Cliente de Sondeo",
+            "email": null,
+            "address": null,
+            "phone": null
+          }
+        ],
+        "page": 0,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers q mayusculas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=CLIENTE"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{customerId}",
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "Cliente de Sondeo",
+            "email": null,
+            "address": null,
+            "phone": null
+          }
+        ],
+        "page": 0,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers q identificacion",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=1712"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{customerId}",
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "Cliente de Sondeo",
+            "email": null,
+            "address": null,
+            "phone": null
+          }
+        ],
+        "page": 0,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "customers q tilde",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "query": "q=%C3%B1"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 0,
+        "size": 20,
+        "total": 0
+      }
+    },
+    {
+      "name": "products letras",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "query": "page=abc"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "products sizeFuera",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "query": "size=101"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "page debe estar entre 0 y 100000 y size entre 1 y 100",
+        "instance": "/api/v1/products",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "products porcentaje",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "query": "q=%25"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 0,
+        "size": 20,
+        "total": 0
+      }
+    },
+    {
+      "name": "products sku",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "query": "q=sku-son"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{productId}",
+            "sku": "SKU-SONDEO",
+            "name": "Producto de Sondeo",
+            "unitPrice": "10.500000",
+            "ivaRateCode": "4"
+          }
+        ],
+        "page": 0,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "products repetido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/products",
+        "auth": "owner",
+        "query": "page=0&page=1"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{uuid}",
+            "sku": "P-cero",
+            "name": "Producto",
+            "unitPrice": "0.000000",
+            "ivaRateCode": "4"
+          },
+          {
+            "id": "{uuid}",
+            "sku": "P-iva",
+            "name": "Producto",
+            "unitPrice": "1.000000",
+            "ivaRateCode": "4"
+          },
+          {
+            "id": "{uuid}",
+            "sku": "P-numero",
+            "name": "Producto",
+            "unitPrice": "10.500000",
+            "ivaRateCode": "4"
+          },
+          {
+            "id": "{productId}",
+            "sku": "SKU-SONDEO",
+            "name": "Producto de Sondeo",
+            "unitPrice": "10.500000",
+            "ivaRateCode": "4"
+          }
+        ],
+        "page": 0,
+        "size": 20,
+        "total": 4
+      }
+    },
+    {
+      "name": "emission points ausente",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/emission-points",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "emission points vacio",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "query": "establishmentId="
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "emission points malformado",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "query": "establishmentId=x"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/emission-points",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "emission points mayusculas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "query": "establishmentId={establishmentIdUpper}"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{emissionPointId}",
+          "establishmentId": "{establishmentId}",
+          "code": "001",
+          "enabled": true
+        },
+        {
+          "id": "{uuid}",
+          "establishmentId": "{establishmentId}",
+          "code": "009",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "emission points repetido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "query": "establishmentId={establishmentId}&establishmentId=x"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{emissionPointId}",
+          "establishmentId": "{establishmentId}",
+          "code": "001",
+          "enabled": true
+        },
+        {
+          "id": "{uuid}",
+          "establishmentId": "{establishmentId}",
+          "code": "009",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "emission points desconocido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "query": "establishmentId=00000000-0000-4000-8000-000000000000"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/emission-points",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "emission points valido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/emission-points",
+        "auth": "owner",
+        "query": "establishmentId={establishmentId}"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{emissionPointId}",
+          "establishmentId": "{establishmentId}",
+          "code": "001",
+          "enabled": true
+        },
+        {
+          "id": "{uuid}",
+          "establishmentId": "{establishmentId}",
+          "code": "009",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "certificates ausente",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/certificates",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificates malformado",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "query": "taxpayerId=x"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/certificates",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "certificates desconocido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "query": "taxpayerId=00000000-0000-4000-8000-000000000000"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/certificates",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "certificates valido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/certificates",
+        "auth": "owner",
+        "query": "taxpayerId={taxpayerId}"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": []
+    },
+    {
+      "name": "GET /api/v1/taxpayers/x",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers/x",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/taxpayers/x",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "GET /api/v1/customers/x",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers/x",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/customers/x",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "GET /api/v1/products/x",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/products/x",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/products/x",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "GET /api/v1/taxpayers/x/establishments",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers/x/establishments",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/taxpayers/x/establishments",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "GET /api/v1/taxpayers/00000000-0000-4000-8000-000000000000",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers/00000000-0000-4000-8000-000000000000",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/taxpayers/{uuid}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "GET /api/v1/customers/00000000-0000-4000-8000-000000000000",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers/00000000-0000-4000-8000-000000000000",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/customers/{uuid}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "GET /api/v1/taxpayers/00000000-0000-4000-8000-000000000000/establishments",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers/00000000-0000-4000-8000-000000000000/establishments",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/taxpayers/{uuid}/establishments",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "PUT /customers/x",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/customers/x",
+        "auth": "owner",
+        "body": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "X"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/customers/x",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "DELETE /products/x",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/products/x",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/products/x",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "PUT /emission-points/x/sequence",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/x/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "1",
+          "documentType": "01",
+          "nextValue": 3
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/emission-points/x/sequence",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "PUT /customers sin id",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "body": {}
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET, POST",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/customers",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "DELETE /taxpayers/{id}",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/taxpayers/{taxpayerId}",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET, PATCH",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/taxpayers/{taxpayerId}",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "PATCH taxpayer sin cuerpo",
+      "request": {
+        "method": "PATCH",
+        "path": "/api/v1/taxpayers/{taxpayerId}",
+        "auth": "owner",
+        "rawBody": ""
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers/{taxpayerId}",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "PATCH taxpayer phone numérico",
+      "request": {
+        "method": "PATCH",
+        "path": "/api/v1/taxpayers/{taxpayerId}",
+        "auth": "owner",
+        "body": {
+          "phone": 22223333
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{taxpayerId}",
+        "ruc": "1790012345001",
+        "legalName": "Emisor de Sondeo S.A.",
+        "tradeName": null,
+        "headOfficeAddress": "Av. Amazonas 100",
+        "phone": "22223333",
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "PATCH taxpayer phone objeto",
+      "request": {
+        "method": "PATCH",
+        "path": "/api/v1/taxpayers/{taxpayerId}",
+        "auth": "owner",
+        "body": {
+          "phone": {}
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/taxpayers/{taxpayerId}",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "PATCH taxpayer phone en blanco",
+      "request": {
+        "method": "PATCH",
+        "path": "/api/v1/taxpayers/{taxpayerId}",
+        "auth": "owner",
+        "body": {
+          "phone": "  "
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{taxpayerId}",
+        "ruc": "1790012345001",
+        "legalName": "Emisor de Sondeo S.A.",
+        "tradeName": null,
+        "headOfficeAddress": "Av. Amazonas 100",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "OPTIONS /customers",
+      "request": {
+        "method": "OPTIONS",
+        "path": "/api/v1/customers",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": null,
+      "allow": "GET,HEAD,POST,OPTIONS",
+      "body": ""
+    },
+    {
+      "name": "OPTIONS /taxpayers/{id}",
+      "request": {
+        "method": "OPTIONS",
+        "path": "/api/v1/taxpayers/{taxpayerId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": null,
+      "allow": "PATCH,GET,HEAD,OPTIONS",
+      "body": ""
+    },
+    {
+      "name": "OPTIONS /catalogs/tax-rates",
+      "request": {
+        "method": "OPTIONS",
+        "path": "/api/v1/catalogs/tax-rates",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": null,
+      "allow": "GET,HEAD,OPTIONS",
+      "body": ""
+    },
+    {
+      "name": "DELETE /catalogs/tax-rates",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/catalogs/tax-rates",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/catalogs/tax-rates",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "HEAD /catalogs/tax-rates",
+      "request": {
+        "method": "HEAD",
+        "path": "/api/v1/catalogs/tax-rates",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": ""
+    },
+    {
+      "name": "catalogs sin credenciales",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/catalogs/tax-rates",
+        "auth": "none"
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Se requiere un token de acceso válido",
+        "instance": "/api/v1/catalogs/tax-rates",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "UNAUTHENTICATED"
+      }
+    },
+    {
+      "name": "ok GET /api/v1/catalogs/identification-types",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/catalogs/identification-types",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "code": "04",
+          "name": "RUC"
+        },
+        {
+          "code": "05",
+          "name": "CÉDULA"
+        },
+        {
+          "code": "06",
+          "name": "PASAPORTE"
+        },
+        {
+          "code": "07",
+          "name": "VENTA A CONSUMIDOR FINAL"
+        },
+        {
+          "code": "08",
+          "name": "IDENTIFICACIÓN DEL EXTERIOR"
+        }
+      ]
+    },
+    {
+      "name": "ok GET /api/v1/catalogs/payment-methods",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/catalogs/payment-methods",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "code": "01",
+          "name": "SIN UTILIZACION DEL SISTEMA FINANCIERO",
+          "validFrom": "2013-01-01",
+          "validTo": null
+        },
+        {
+          "code": "15",
+          "name": "COMPENSACIÓN DE DEUDAS",
+          "validFrom": "2013-01-01",
+          "validTo": null
+        },
+        {
+          "code": "16",
+          "name": "TARJETA DE DÉBITO",
+          "validFrom": "2016-06-01",
+          "validTo": null
+        },
+        {
+          "code": "17",
+          "name": "DINERO ELECTRÓNICO",
+          "validFrom": "2016-06-01",
+          "validTo": null
+        },
+        {
+          "code": "18",
+          "name": "TARJETA PREPAGO",
+          "validFrom": "2016-06-01",
+          "validTo": null
+        },
+        {
+          "code": "19",
+          "name": "TARJETA DE CRÉDITO",
+          "validFrom": "2016-06-01",
+          "validTo": null
+        },
+        {
+          "code": "20",
+          "name": "OTROS CON UTILIZACIÓN DEL SISTEMA FINANCIERO",
+          "validFrom": "2016-06-01",
+          "validTo": null
+        },
+        {
+          "code": "21",
+          "name": "ENDOSO DE TÍTULOS",
+          "validFrom": "2016-06-01",
+          "validTo": null
+        }
+      ]
+    },
+    {
+      "name": "ok GET /api/v1/catalogs/tax-rates",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/catalogs/tax-rates",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "taxCode": "2",
+          "rateCode": "0",
+          "description": "0%",
+          "rate": "0.00"
+        },
+        {
+          "taxCode": "2",
+          "rateCode": "2",
+          "description": "12%",
+          "rate": "12.00"
+        },
+        {
+          "taxCode": "2",
+          "rateCode": "3",
+          "description": "14%",
+          "rate": "14.00"
+        },
+        {
+          "taxCode": "2",
+          "rateCode": "4",
+          "description": "15%",
+          "rate": "15.00"
+        },
+        {
+          "taxCode": "2",
+          "rateCode": "5",
+          "description": "5%",
+          "rate": "5.00"
+        },
+        {
+          "taxCode": "2",
+          "rateCode": "6",
+          "description": "No Objeto de Impuesto",
+          "rate": "0.00"
+        },
+        {
+          "taxCode": "2",
+          "rateCode": "7",
+          "description": "Exento de IVA",
+          "rate": "0.00"
+        },
+        {
+          "taxCode": "2",
+          "rateCode": "8",
+          "description": "IVA diferenciado",
+          "rate": "8.00"
+        },
+        {
+          "taxCode": "2",
+          "rateCode": "10",
+          "description": "13%",
+          "rate": "13.00"
+        }
+      ]
+    },
+    {
+      "name": "ok GET /api/v1/taxpayers",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "ruc": "0990000003001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": true,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000023001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000002001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": true,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000019001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000009001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000004001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": true,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000015001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000005001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000011001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "EMPRENDEDOR",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{uuid}",
+          "ruc": "0990000014001",
+          "legalName": "Emisor",
+          "tradeName": null,
+          "headOfficeAddress": "Calle 1",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "EMPRENDEDOR",
+          "productionEnabledAt": null
+        },
+        {
+          "id": "{taxpayerId}",
+          "ruc": "1790012345001",
+          "legalName": "Emisor de Sondeo S.A.",
+          "tradeName": null,
+          "headOfficeAddress": "Av. Amazonas 100",
+          "phone": null,
+          "defaultEnvironment": "1",
+          "accountingRequired": false,
+          "specialTaxpayerCode": null,
+          "withholdingAgentCode": null,
+          "rimpeRegime": "NONE",
+          "productionEnabledAt": null
+        }
+      ]
+    },
+    {
+      "name": "ok GET /api/v1/taxpayers/{taxpayerId}",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers/{taxpayerId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{taxpayerId}",
+        "ruc": "1790012345001",
+        "legalName": "Emisor de Sondeo S.A.",
+        "tradeName": null,
+        "headOfficeAddress": "Av. Amazonas 100",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "ok GET /api/v1/taxpayers/{taxpayerId}/establishments",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/taxpayers/{taxpayerId}/establishments",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{establishmentId}",
+          "taxpayerId": "{taxpayerId}",
+          "code": "001",
+          "address": "Av. Amazonas 100"
+        }
+      ]
+    },
+    {
+      "name": "ok GET /api/v1/customers",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{customerId}",
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "Cliente de Sondeo",
+            "email": null,
+            "address": null,
+            "phone": null
+          }
+        ],
+        "page": 0,
+        "size": 20,
+        "total": 1
+      }
+    },
+    {
+      "name": "ok GET /api/v1/customers/{customerId}",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers/{customerId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{customerId}",
+        "idType": "05",
+        "idNumber": "1712345678",
+        "name": "Cliente de Sondeo",
+        "email": null,
+        "address": null,
+        "phone": null
+      }
+    },
+    {
+      "name": "ok GET /api/v1/products",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/products",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{uuid}",
+            "sku": "P-cero",
+            "name": "Producto",
+            "unitPrice": "0.000000",
+            "ivaRateCode": "4"
+          },
+          {
+            "id": "{uuid}",
+            "sku": "P-iva",
+            "name": "Producto",
+            "unitPrice": "1.000000",
+            "ivaRateCode": "4"
+          },
+          {
+            "id": "{uuid}",
+            "sku": "P-numero",
+            "name": "Producto",
+            "unitPrice": "10.500000",
+            "ivaRateCode": "4"
+          },
+          {
+            "id": "{productId}",
+            "sku": "SKU-SONDEO",
+            "name": "Producto de Sondeo",
+            "unitPrice": "10.500000",
+            "ivaRateCode": "4"
+          }
+        ],
+        "page": 0,
+        "size": 20,
+        "total": 4
+      }
+    },
+    {
+      "name": "ok GET /api/v1/products/{productId}",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/products/{productId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{productId}",
+        "sku": "SKU-SONDEO",
+        "name": "Producto de Sondeo",
+        "unitPrice": "10.500000",
+        "ivaRateCode": "4"
+      }
+    },
+    {
+      "name": "ok PATCH taxpayer phone",
+      "request": {
+        "method": "PATCH",
+        "path": "/api/v1/taxpayers/{taxpayerId}",
+        "auth": "owner",
+        "body": {
+          "phone": " 022 345 678 "
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{taxpayerId}",
+        "ruc": "1790012345001",
+        "legalName": "Emisor de Sondeo S.A.",
+        "tradeName": null,
+        "headOfficeAddress": "Av. Amazonas 100",
+        "phone": "022 345 678",
+        "defaultEnvironment": "1",
+        "accountingRequired": false,
+        "specialTaxpayerCode": null,
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "ok POST establishment",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers/{taxpayerId}/establishments",
+        "auth": "owner",
+        "body": {
+          "code": "002",
+          "address": "  Sucursal  "
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "taxpayerId": "{taxpayerId}",
+        "code": "002",
+        "address": "Sucursal"
+      }
+    },
+    {
+      "name": "ok POST taxpayer completo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/taxpayers",
+        "auth": "owner",
+        "body": {
+          "ruc": "0990000024001",
+          "legalName": "Emisor",
+          "headOfficeAddress": "Calle 1",
+          "defaultEnvironment": "1",
+          "tradeName": " Comercial ",
+          "phone": "",
+          "accountingRequired": true,
+          "specialTaxpayerCode": "ABC123",
+          "withholdingAgentCode": "12345",
+          "rimpeRegime": "EMPRENDEDOR"
+        }
+      },
+      "status": 201,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "ruc": "0990000024001",
+        "legalName": "Emisor",
+        "tradeName": "Comercial",
+        "headOfficeAddress": "Calle 1",
+        "phone": null,
+        "defaultEnvironment": "1",
+        "accountingRequired": true,
+        "specialTaxpayerCode": "ABC123",
+        "withholdingAgentCode": "12345",
+        "rimpeRegime": "EMPRENDEDOR",
+        "productionEnabledAt": null
+      }
+    },
+    {
+      "name": "ok PUT customer",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/customers/{customerId}",
+        "auth": "owner",
+        "body": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "Cliente Editado",
+          "email": "a@b.ec",
+          "address": "Dir",
+          "phone": "099"
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{customerId}",
+        "idType": "05",
+        "idNumber": "1712345678",
+        "name": "Cliente Editado",
+        "email": "a@b.ec",
+        "address": "Dir",
+        "phone": "099"
+      }
+    },
+    {
+      "name": "ok PUT product",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/products/{productId}",
+        "auth": "owner",
+        "body": {
+          "sku": "SKU-SONDEO",
+          "name": "Producto Editado",
+          "unitPrice": "0",
+          "ivaRateCode": "0"
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{productId}",
+        "sku": "SKU-SONDEO",
+        "name": "Producto Editado",
+        "unitPrice": "0.000000",
+        "ivaRateCode": "0"
+      }
+    },
+    {
+      "name": "ok PUT sequence",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+        "auth": "owner",
+        "body": {
+          "environment": "2",
+          "documentType": "01",
+          "nextValue": 42
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "emissionPointId": "{emissionPointId}",
+        "environment": "2",
+        "documentType": "01",
+        "nextValue": 42
+      }
+    },
+    {
+      "name": "ok DELETE customer",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/customers/{customerId}",
+        "auth": "owner"
+      },
+      "status": 204,
+      "contentType": null,
+      "allow": null,
+      "body": ""
+    },
+    {
+      "name": "ok GET customer borrado",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/customers/{customerId}",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/customers/{customerId}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "ok DELETE product",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/products/{productId}",
+        "auth": "owner"
+      },
+      "status": 204,
+      "contentType": null,
+      "allow": null,
+      "body": ""
+    },
+    {
+      "name": "ok DELETE product otra vez",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/products/{productId}",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/products/{productId}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    }
+  ]
+}

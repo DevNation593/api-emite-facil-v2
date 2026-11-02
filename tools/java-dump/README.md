@@ -38,3 +38,8 @@ ejecución produce valores distintos; la prueba lee los suyos de `meta.json`.
 
 En Windows, Java abre un socket Unix en `TEMP` para sus selectores y falla si la ruta supera 108 bytes:
 por eso el jar arranca con `-Djdk.net.unixdomain.tmpdir` apuntando al `target/` del repo Java.
+
+## Código compartido
+
+`java-app.mjs` empaqueta el jar, levanta los contenedores, arranca Java con su entorno limpio y la
+detiene matando el árbol de procesos. Lo usan `run.mjs` y `tools/java-probe/run.mjs`.

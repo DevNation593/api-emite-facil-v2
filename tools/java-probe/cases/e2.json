@@ -1,0 +1,1659 @@
+[
+  {
+    "name": "taxpayer accountingRequired texto",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000001001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": "si"
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired textoTrue",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000002001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": "true"
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired textoTRUE",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000003001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": "TRUE"
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired uno",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000004001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": 1
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired cero",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000005001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": 0
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired decimal",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000006001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": 1.5
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired objeto",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000007001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": {
+        "a": 1
+      }
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired array",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000008001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": [
+        1
+      ]
+    }
+  },
+  {
+    "name": "taxpayer accountingRequired nulo",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000009001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "accountingRequired": null
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime minusculas",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000010001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": "emprendedor"
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime mayusculas",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000011001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": "EMPRENDEDOR"
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime desconocido",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000012001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": "OTRO"
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime vacio",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000013001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": ""
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime numero",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000014001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": 1
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime nulo",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000015001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": null
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime negocioPopular",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000016001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": "NEGOCIO_POPULAR"
+    }
+  },
+  {
+    "name": "taxpayer rimpeRegime objeto",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000017001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "rimpeRegime": {}
+    }
+  },
+  {
+    "name": "taxpayer ruc numérico",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": 990099999001,
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1"
+    }
+  },
+  {
+    "name": "taxpayer defaultEnvironment numérico",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000019001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": 1
+    }
+  },
+  {
+    "name": "taxpayer defaultEnvironment 2",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000020001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "2"
+    }
+  },
+  {
+    "name": "taxpayer sin campos",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {}
+  },
+  {
+    "name": "taxpayer ruc repetido",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "1790012345001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1"
+    }
+  },
+  {
+    "name": "taxpayer códigos inválidos",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000022001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "specialTaxpayerCode": "ab",
+      "withholdingAgentCode": "0123"
+    }
+  },
+  {
+    "name": "taxpayer tenantId en el cuerpo",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000023001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "tenantId": "00000000-0000-4000-8000-000000000000"
+    }
+  },
+  {
+    "name": "emission point establishmentId malformado",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": "x",
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId numero",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": 123,
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId booleano",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": true,
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId objeto",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": {
+        "a": 1
+      },
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId array",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": [],
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId nulo",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": null,
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId vacio",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": "",
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId mayusculas",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": "{establishmentIdUpper}",
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId sinGuiones",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": "{establishmentIdNoDash}",
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point establishmentId desconocido",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": "00000000-0000-4000-8000-000000000000",
+      "code": "009"
+    }
+  },
+  {
+    "name": "emission point code numérico",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": "{establishmentId}",
+      "code": 2
+    }
+  },
+  {
+    "name": "emission point repetido",
+    "method": "POST",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "body": {
+      "establishmentId": "{establishmentId}",
+      "code": "001"
+    }
+  },
+  {
+    "name": "establishment code numérico",
+    "method": "POST",
+    "path": "/api/v1/taxpayers/{taxpayerId}/establishments",
+    "auth": "owner",
+    "body": {
+      "code": 2,
+      "address": "Calle"
+    }
+  },
+  {
+    "name": "establishment repetido",
+    "method": "POST",
+    "path": "/api/v1/taxpayers/{taxpayerId}/establishments",
+    "auth": "owner",
+    "body": {
+      "code": "001",
+      "address": "Calle"
+    }
+  },
+  {
+    "name": "sequence nextValue texto",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": "5"
+    }
+  },
+  {
+    "name": "sequence nextValue decimal",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": 5.7
+    }
+  },
+  {
+    "name": "sequence nextValue decimalCero",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": 6
+    }
+  },
+  {
+    "name": "sequence nextValue booleano",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": true
+    }
+  },
+  {
+    "name": "sequence nextValue letras",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": "abc"
+    }
+  },
+  {
+    "name": "sequence nextValue grande",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": 2147483648
+    }
+  },
+  {
+    "name": "sequence nextValue hex",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": "0x10"
+    }
+  },
+  {
+    "name": "sequence nextValue cero",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": 0
+    }
+  },
+  {
+    "name": "sequence nextValue maximo",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": 999999999
+    }
+  },
+  {
+    "name": "sequence nextValue tope",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": 1000000000
+    }
+  },
+  {
+    "name": "sequence nextValue negativo",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": -1
+    }
+  },
+  {
+    "name": "sequence nextValue nulo",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": null
+    }
+  },
+  {
+    "name": "sequence nextValue array",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": []
+    }
+  },
+  {
+    "name": "sequence nextValue objeto",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": {}
+    }
+  },
+  {
+    "name": "sequence nextValue textoEspacios",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": " 7 "
+    }
+  },
+  {
+    "name": "sequence nextValue exponente",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "rawBody": "{\"environment\":\"1\",\"documentType\":\"01\",\"nextValue\":1e3}"
+  },
+  {
+    "name": "sequence nextValue decimal con cero escrito",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "rawBody": "{\"environment\":\"1\",\"documentType\":\"01\",\"nextValue\":6.0}"
+  },
+  {
+    "name": "sequence environment numérico",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": 2,
+      "documentType": "01",
+      "nextValue": 3
+    }
+  },
+  {
+    "name": "sequence documentType 04",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "04",
+      "nextValue": 3
+    }
+  },
+  {
+    "name": "sequence punto desconocido",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/00000000-0000-4000-8000-000000000000/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": 3
+    }
+  },
+  {
+    "name": "certificate p12 saltoDeLinea",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "QUJD\nREVG",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 crlf",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "QUJD\r\n",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 espacio",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": " QUJD",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 sinRelleno",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "QUI",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 urlSafe",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "Pz8-Pz8_",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 vacio",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 unCaracter",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "Q",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 cincoCaracteres",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "QUJDR",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 basura",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "QUJD",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 relleno",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "QQ==",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 rellenoDeMas",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "QQ===",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate p12 asterisco",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "QU*D",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate taxpayerId malformado",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "x",
+      "p12": "QUJD",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate taxpayerId desconocido",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "00000000-0000-4000-8000-000000000000",
+      "p12": "QUJD",
+      "password": "x"
+    }
+  },
+  {
+    "name": "certificate password numérica",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {
+      "taxpayerId": "{taxpayerId}",
+      "p12": "QUJD",
+      "password": 123
+    }
+  },
+  {
+    "name": "certificate sin campos",
+    "method": "POST",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "body": {}
+  },
+  {
+    "name": "customer idType numérico",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "body": {
+      "idType": 5,
+      "idNumber": "1712345678",
+      "name": "X"
+    }
+  },
+  {
+    "name": "customer tipo desconocido",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "body": {
+      "idType": "99",
+      "idNumber": "1712345678",
+      "name": "X"
+    }
+  },
+  {
+    "name": "customer consumidor final como RUC",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "body": {
+      "idType": "04",
+      "idNumber": "9999999999999",
+      "name": "X"
+    }
+  },
+  {
+    "name": "customer correo inválido",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "body": {
+      "idType": "05",
+      "idNumber": "1700000001",
+      "name": "X",
+      "email": "no-es"
+    }
+  },
+  {
+    "name": "customer repetido",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "body": {
+      "idType": "05",
+      "idNumber": "1712345678",
+      "name": "X"
+    }
+  },
+  {
+    "name": "customer en blanco",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "body": {
+      "idType": "05",
+      "idNumber": "1700000002",
+      "name": "  Nombre  ",
+      "email": " ",
+      "address": "",
+      "phone": "  "
+    }
+  },
+  {
+    "name": "product unitPrice numero",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "P-numero",
+      "name": "Producto",
+      "unitPrice": 10.5,
+      "ivaRateCode": "4"
+    }
+  },
+  {
+    "name": "product unitPrice siete",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "P-siete",
+      "name": "Producto",
+      "unitPrice": "1.1234567",
+      "ivaRateCode": "4"
+    }
+  },
+  {
+    "name": "product unitPrice negativo",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "P-negativo",
+      "name": "Producto",
+      "unitPrice": "-1",
+      "ivaRateCode": "4"
+    }
+  },
+  {
+    "name": "product unitPrice exponente",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "P-exponente",
+      "name": "Producto",
+      "unitPrice": "1e3",
+      "ivaRateCode": "4"
+    }
+  },
+  {
+    "name": "product unitPrice coma",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "P-coma",
+      "name": "Producto",
+      "unitPrice": "1,5",
+      "ivaRateCode": "4"
+    }
+  },
+  {
+    "name": "product unitPrice trece",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "P-trece",
+      "name": "Producto",
+      "unitPrice": "1234567890123",
+      "ivaRateCode": "4"
+    }
+  },
+  {
+    "name": "product unitPrice cero",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "P-cero",
+      "name": "Producto",
+      "unitPrice": "0",
+      "ivaRateCode": "4"
+    }
+  },
+  {
+    "name": "product unitPrice espacios",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "P-espacios",
+      "name": "Producto",
+      "unitPrice": " 1 ",
+      "ivaRateCode": "4"
+    }
+  },
+  {
+    "name": "product ivaRateCode numérico",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "P-iva",
+      "name": "Producto",
+      "unitPrice": "1",
+      "ivaRateCode": 4
+    }
+  },
+  {
+    "name": "product tarifa desconocida",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "P-iva9",
+      "name": "Producto",
+      "unitPrice": "1",
+      "ivaRateCode": "9"
+    }
+  },
+  {
+    "name": "product sku inválido",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "con espacio",
+      "name": "Producto",
+      "unitPrice": "1",
+      "ivaRateCode": "4"
+    }
+  },
+  {
+    "name": "product sku repetido",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "body": {
+      "sku": "SKU-SONDEO",
+      "name": "Producto",
+      "unitPrice": "1",
+      "ivaRateCode": "4"
+    }
+  },
+  {
+    "name": "customers letras",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=abc"
+  },
+  {
+    "name": "customers negativo",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=-1"
+  },
+  {
+    "name": "customers decimal",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=1.5"
+  },
+  {
+    "name": "customers espacio",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=%202"
+  },
+  {
+    "name": "customers mas",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=%2B2"
+  },
+  {
+    "name": "customers hex",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=0x10"
+  },
+  {
+    "name": "customers almohadilla",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=%2310"
+  },
+  {
+    "name": "customers vacio",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page="
+  },
+  {
+    "name": "customers repetido",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=1&page=2"
+  },
+  {
+    "name": "customers tope",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=100000"
+  },
+  {
+    "name": "customers fuera",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=100001"
+  },
+  {
+    "name": "customers enorme",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "page=99999999999"
+  },
+  {
+    "name": "customers sizeCero",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "size=0"
+  },
+  {
+    "name": "customers sizeTope",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "size=100"
+  },
+  {
+    "name": "customers sizeFuera",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "size=101"
+  },
+  {
+    "name": "customers sizeVacio",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "size="
+  },
+  {
+    "name": "customers q porcentaje",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=%25"
+  },
+  {
+    "name": "customers q guion",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=_"
+  },
+  {
+    "name": "customers q barra",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=%5C"
+  },
+  {
+    "name": "customers q repetido",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=Cliente&q=Sondeo"
+  },
+  {
+    "name": "customers q cien",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "name": "customers q cientoUno",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "name": "customers q control",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=a%01"
+  },
+  {
+    "name": "customers q espacios",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=%20%20"
+  },
+  {
+    "name": "customers q mayusculas",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=CLIENTE"
+  },
+  {
+    "name": "customers q identificacion",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=1712"
+  },
+  {
+    "name": "customers q tilde",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "query": "q=%C3%B1"
+  },
+  {
+    "name": "products letras",
+    "method": "GET",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "query": "page=abc"
+  },
+  {
+    "name": "products sizeFuera",
+    "method": "GET",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "query": "size=101"
+  },
+  {
+    "name": "products porcentaje",
+    "method": "GET",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "query": "q=%25"
+  },
+  {
+    "name": "products sku",
+    "method": "GET",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "query": "q=sku-son"
+  },
+  {
+    "name": "products repetido",
+    "method": "GET",
+    "path": "/api/v1/products",
+    "auth": "owner",
+    "query": "page=0&page=1"
+  },
+  {
+    "name": "emission points ausente",
+    "method": "GET",
+    "path": "/api/v1/emission-points",
+    "auth": "owner"
+  },
+  {
+    "name": "emission points vacio",
+    "method": "GET",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "query": "establishmentId="
+  },
+  {
+    "name": "emission points malformado",
+    "method": "GET",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "query": "establishmentId=x"
+  },
+  {
+    "name": "emission points mayusculas",
+    "method": "GET",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "query": "establishmentId={establishmentIdUpper}"
+  },
+  {
+    "name": "emission points repetido",
+    "method": "GET",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "query": "establishmentId={establishmentId}&establishmentId=x"
+  },
+  {
+    "name": "emission points desconocido",
+    "method": "GET",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "query": "establishmentId=00000000-0000-4000-8000-000000000000"
+  },
+  {
+    "name": "emission points valido",
+    "method": "GET",
+    "path": "/api/v1/emission-points",
+    "auth": "owner",
+    "query": "establishmentId={establishmentId}"
+  },
+  {
+    "name": "certificates ausente",
+    "method": "GET",
+    "path": "/api/v1/certificates",
+    "auth": "owner"
+  },
+  {
+    "name": "certificates malformado",
+    "method": "GET",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "query": "taxpayerId=x"
+  },
+  {
+    "name": "certificates desconocido",
+    "method": "GET",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "query": "taxpayerId=00000000-0000-4000-8000-000000000000"
+  },
+  {
+    "name": "certificates valido",
+    "method": "GET",
+    "path": "/api/v1/certificates",
+    "auth": "owner",
+    "query": "taxpayerId={taxpayerId}"
+  },
+  {
+    "name": "GET /api/v1/taxpayers/x",
+    "method": "GET",
+    "path": "/api/v1/taxpayers/x",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /api/v1/customers/x",
+    "method": "GET",
+    "path": "/api/v1/customers/x",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /api/v1/products/x",
+    "method": "GET",
+    "path": "/api/v1/products/x",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /api/v1/taxpayers/x/establishments",
+    "method": "GET",
+    "path": "/api/v1/taxpayers/x/establishments",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /api/v1/taxpayers/00000000-0000-4000-8000-000000000000",
+    "method": "GET",
+    "path": "/api/v1/taxpayers/00000000-0000-4000-8000-000000000000",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /api/v1/customers/00000000-0000-4000-8000-000000000000",
+    "method": "GET",
+    "path": "/api/v1/customers/00000000-0000-4000-8000-000000000000",
+    "auth": "owner"
+  },
+  {
+    "name": "GET /api/v1/taxpayers/00000000-0000-4000-8000-000000000000/establishments",
+    "method": "GET",
+    "path": "/api/v1/taxpayers/00000000-0000-4000-8000-000000000000/establishments",
+    "auth": "owner"
+  },
+  {
+    "name": "PUT /customers/x",
+    "method": "PUT",
+    "path": "/api/v1/customers/x",
+    "auth": "owner",
+    "body": {
+      "idType": "05",
+      "idNumber": "1712345678",
+      "name": "X"
+    }
+  },
+  {
+    "name": "DELETE /products/x",
+    "method": "DELETE",
+    "path": "/api/v1/products/x",
+    "auth": "owner"
+  },
+  {
+    "name": "PUT /emission-points/x/sequence",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/x/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "1",
+      "documentType": "01",
+      "nextValue": 3
+    }
+  },
+  {
+    "name": "PUT /customers sin id",
+    "method": "PUT",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "body": {}
+  },
+  {
+    "name": "DELETE /taxpayers/{id}",
+    "method": "DELETE",
+    "path": "/api/v1/taxpayers/{taxpayerId}",
+    "auth": "owner"
+  },
+  {
+    "name": "PATCH taxpayer sin cuerpo",
+    "method": "PATCH",
+    "path": "/api/v1/taxpayers/{taxpayerId}",
+    "auth": "owner",
+    "rawBody": ""
+  },
+  {
+    "name": "PATCH taxpayer phone numérico",
+    "method": "PATCH",
+    "path": "/api/v1/taxpayers/{taxpayerId}",
+    "auth": "owner",
+    "body": {
+      "phone": 22223333
+    }
+  },
+  {
+    "name": "PATCH taxpayer phone objeto",
+    "method": "PATCH",
+    "path": "/api/v1/taxpayers/{taxpayerId}",
+    "auth": "owner",
+    "body": {
+      "phone": {}
+    }
+  },
+  {
+    "name": "PATCH taxpayer phone en blanco",
+    "method": "PATCH",
+    "path": "/api/v1/taxpayers/{taxpayerId}",
+    "auth": "owner",
+    "body": {
+      "phone": "  "
+    }
+  },
+  {
+    "name": "OPTIONS /customers",
+    "method": "OPTIONS",
+    "path": "/api/v1/customers",
+    "auth": "owner"
+  },
+  {
+    "name": "OPTIONS /taxpayers/{id}",
+    "method": "OPTIONS",
+    "path": "/api/v1/taxpayers/{taxpayerId}",
+    "auth": "owner"
+  },
+  {
+    "name": "OPTIONS /catalogs/tax-rates",
+    "method": "OPTIONS",
+    "path": "/api/v1/catalogs/tax-rates",
+    "auth": "owner"
+  },
+  {
+    "name": "DELETE /catalogs/tax-rates",
+    "method": "DELETE",
+    "path": "/api/v1/catalogs/tax-rates",
+    "auth": "owner"
+  },
+  {
+    "name": "HEAD /catalogs/tax-rates",
+    "method": "HEAD",
+    "path": "/api/v1/catalogs/tax-rates",
+    "auth": "owner"
+  },
+  {
+    "name": "catalogs sin credenciales",
+    "method": "GET",
+    "path": "/api/v1/catalogs/tax-rates",
+    "auth": "none"
+  },
+  {
+    "name": "ok GET /api/v1/catalogs/identification-types",
+    "method": "GET",
+    "path": "/api/v1/catalogs/identification-types",
+    "auth": "owner"
+  },
+  {
+    "name": "ok GET /api/v1/catalogs/payment-methods",
+    "method": "GET",
+    "path": "/api/v1/catalogs/payment-methods",
+    "auth": "owner"
+  },
+  {
+    "name": "ok GET /api/v1/catalogs/tax-rates",
+    "method": "GET",
+    "path": "/api/v1/catalogs/tax-rates",
+    "auth": "owner"
+  },
+  {
+    "name": "ok GET /api/v1/taxpayers",
+    "method": "GET",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner"
+  },
+  {
+    "name": "ok GET /api/v1/taxpayers/{taxpayerId}",
+    "method": "GET",
+    "path": "/api/v1/taxpayers/{taxpayerId}",
+    "auth": "owner"
+  },
+  {
+    "name": "ok GET /api/v1/taxpayers/{taxpayerId}/establishments",
+    "method": "GET",
+    "path": "/api/v1/taxpayers/{taxpayerId}/establishments",
+    "auth": "owner"
+  },
+  {
+    "name": "ok GET /api/v1/customers",
+    "method": "GET",
+    "path": "/api/v1/customers",
+    "auth": "owner"
+  },
+  {
+    "name": "ok GET /api/v1/customers/{customerId}",
+    "method": "GET",
+    "path": "/api/v1/customers/{customerId}",
+    "auth": "owner"
+  },
+  {
+    "name": "ok GET /api/v1/products",
+    "method": "GET",
+    "path": "/api/v1/products",
+    "auth": "owner"
+  },
+  {
+    "name": "ok GET /api/v1/products/{productId}",
+    "method": "GET",
+    "path": "/api/v1/products/{productId}",
+    "auth": "owner"
+  },
+  {
+    "name": "ok PATCH taxpayer phone",
+    "method": "PATCH",
+    "path": "/api/v1/taxpayers/{taxpayerId}",
+    "auth": "owner",
+    "body": {
+      "phone": " 022 345 678 "
+    }
+  },
+  {
+    "name": "ok POST establishment",
+    "method": "POST",
+    "path": "/api/v1/taxpayers/{taxpayerId}/establishments",
+    "auth": "owner",
+    "body": {
+      "code": "002",
+      "address": "  Sucursal  "
+    }
+  },
+  {
+    "name": "ok POST taxpayer completo",
+    "method": "POST",
+    "path": "/api/v1/taxpayers",
+    "auth": "owner",
+    "body": {
+      "ruc": "0990000024001",
+      "legalName": "Emisor",
+      "headOfficeAddress": "Calle 1",
+      "defaultEnvironment": "1",
+      "tradeName": " Comercial ",
+      "phone": "",
+      "accountingRequired": true,
+      "specialTaxpayerCode": "ABC123",
+      "withholdingAgentCode": "12345",
+      "rimpeRegime": "EMPRENDEDOR"
+    }
+  },
+  {
+    "name": "ok PUT customer",
+    "method": "PUT",
+    "path": "/api/v1/customers/{customerId}",
+    "auth": "owner",
+    "body": {
+      "idType": "05",
+      "idNumber": "1712345678",
+      "name": "Cliente Editado",
+      "email": "a@b.ec",
+      "address": "Dir",
+      "phone": "099"
+    }
+  },
+  {
+    "name": "ok PUT product",
+    "method": "PUT",
+    "path": "/api/v1/products/{productId}",
+    "auth": "owner",
+    "body": {
+      "sku": "SKU-SONDEO",
+      "name": "Producto Editado",
+      "unitPrice": "0",
+      "ivaRateCode": "0"
+    }
+  },
+  {
+    "name": "ok PUT sequence",
+    "method": "PUT",
+    "path": "/api/v1/emission-points/{emissionPointId}/sequence",
+    "auth": "owner",
+    "body": {
+      "environment": "2",
+      "documentType": "01",
+      "nextValue": 42
+    }
+  },
+  {
+    "name": "ok DELETE customer",
+    "method": "DELETE",
+    "path": "/api/v1/customers/{customerId}",
+    "auth": "owner"
+  },
+  {
+    "name": "ok GET customer borrado",
+    "method": "GET",
+    "path": "/api/v1/customers/{customerId}",
+    "auth": "owner"
+  },
+  {
+    "name": "ok DELETE product",
+    "method": "DELETE",
+    "path": "/api/v1/products/{productId}",
+    "auth": "owner"
+  },
+  {
+    "name": "ok DELETE product otra vez",
+    "method": "DELETE",
+    "path": "/api/v1/products/{productId}",
+    "auth": "owner"
+  }
+]
