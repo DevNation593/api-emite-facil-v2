@@ -137,6 +137,81 @@ describe('contenido', () => {
   });
 });
 
+describe('plazo y simultaneidad', () => {
+  const ok = { valid: true, errors: [] };
+
+  it('nunca hay más de 4 validaciones a la vez y se atienden en orden', async () => {
+    let running = 0;
+    let peak = 0;
+    const started: number[] = [];
+    const releases: (() => void)[] = [];
+    const engine = (xml: Buffer) => {
+      started.push(xml.length);
+      running++;
+      peak = Math.max(peak, running);
+      return new Promise<typeof ok>((resolve) =>
+        releases.push(() => {
+          running--;
+          resolve(ok);
+        }),
+      );
+    };
+    const limited = new XsdValidator({ engine });
+    const all = Array.from({ length: 10 }, (_, i) =>
+      limited.validate(
+        Buffer.from(`<a>${'x'.repeat(i)}</a>`),
+        DOCUMENT_SCHEMAS.INVOICE_1_1_0,
+      ),
+    );
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 20));
+    await tick();
+    expect(started).toHaveLength(4);
+    for (let done = 0; done < 10; done++) {
+      releases[done]!();
+      await tick();
+      expect(running).toBeLessThanOrEqual(4);
+    }
+    expect((await Promise.all(all)).every((r) => r.valid)).toBe(true);
+    expect(peak).toBe(4);
+    expect(started).toEqual([...started].sort((a, b) => a - b)); // FIFO: llegaron con longitud creciente
+  });
+
+  it('una validación que no termina da el error de plazo y libera el turno', async () => {
+    const limited = new XsdValidator({
+      engine: () => new Promise(() => {}),
+      timeoutMs: 30,
+      maxConcurrent: 1,
+    });
+    const first = await limited.validate(
+      standard,
+      DOCUMENT_SCHEMAS.INVOICE_1_1_0,
+    );
+    expect(first).toEqual({
+      valid: false,
+      errors: ['La validación XSD no terminó en 0.03 s'],
+    });
+    // El turno quedó libre: la siguiente también responde, no se queda esperando.
+    const second = await limited.validate(
+      standard,
+      DOCUMENT_SCHEMAS.INVOICE_1_1_0,
+    );
+    expect(second.valid).toBe(false);
+  });
+
+  it('un motor que rechaza se informa como error, sin excepción, y libera el turno', async () => {
+    const limited = new XsdValidator({
+      engine: () => Promise.reject(new Error('worker caído')),
+      maxConcurrent: 1,
+    });
+    expect(
+      await limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0),
+    ).toEqual({ valid: false, errors: ['worker caído'] });
+    expect(
+      (await limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0)).errors,
+    ).toEqual(['worker caído']);
+  });
+});
+
 describe('lista cerrada de recursos de esquema', () => {
   let server: Server;
   let hits: string[] = [];

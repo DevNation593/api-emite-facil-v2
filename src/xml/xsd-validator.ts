@@ -66,8 +66,94 @@ export async function validateWithSchema(
   }
 }
 
+/** Validaciones simultáneas como máximo: cada una crea un Worker de hasta 256 MiB. */
+export const MAX_CONCURRENT_VALIDATIONS = 4;
+/** Plazo de una validación; pasado, se informa como error y se libera su turno. */
+export const VALIDATION_TIMEOUT_MS = 10_000;
+
+export type SchemaEngine = (
+  xml: Buffer,
+  main: SchemaFile,
+  preload: readonly SchemaFile[],
+) => Promise<ValidationResult>;
+
+export interface XsdValidatorOptions {
+  /** Motor de validación; por defecto libxml2. Se inyecta en las pruebas. */
+  readonly engine?: SchemaEngine;
+  readonly timeoutMs?: number;
+  readonly maxConcurrent?: number;
+}
+
 export class XsdValidator {
+  private readonly engine: SchemaEngine;
+  private readonly timeoutMs: number;
+  private readonly maxConcurrent: number;
+  private active = 0;
+  private readonly waiting: (() => void)[] = [];
   private readonly files = new Map<string, Promise<string>>();
+
+  constructor(options: XsdValidatorOptions = {}) {
+    this.engine = options.engine ?? validateWithSchema;
+    this.timeoutMs = options.timeoutMs ?? VALIDATION_TIMEOUT_MS;
+    this.maxConcurrent = options.maxConcurrent ?? MAX_CONCURRENT_VALIDATIONS;
+  }
+
+  private async acquire(): Promise<void> {
+    if (this.active < this.maxConcurrent) {
+      this.active++;
+      return;
+    }
+    // El turno pasa directamente al primero de la cola (FIFO): `active` no baja ni sube.
+    await new Promise<void>((resolve) => this.waiting.push(resolve));
+  }
+
+  private release(): void {
+    const next = this.waiting.shift();
+    if (next) next();
+    else this.active--;
+  }
+
+  /**
+   * Corre el motor con turno y plazo. xmllint-wasm no expone el Worker, así que no se puede terminar uno
+   * colgado: al vencer el plazo se libera el turno y el Worker queda a lo que haga; no hay forma de
+   * cancelarlo desde aquí.
+   */
+  private async runLimited(
+    xml: Buffer,
+    main: SchemaFile,
+    preload: readonly SchemaFile[],
+  ): Promise<ValidationResult> {
+    await this.acquire();
+    let timer: NodeJS.Timeout | undefined;
+    try {
+      const timeout = new Promise<ValidationResult>((resolve) => {
+        timer = setTimeout(
+          () =>
+            resolve({
+              valid: false,
+              errors: [
+                `La validación XSD no terminó en ${this.timeoutMs / 1000} s`,
+              ],
+            }),
+          this.timeoutMs,
+        );
+      });
+      const run = this.engine(xml, main, preload).catch(
+        (error: unknown): ValidationResult => ({
+          valid: false,
+          errors: [
+            error instanceof Error && error.message
+              ? error.message
+              : 'No se pudo validar el XML',
+          ],
+        }),
+      );
+      return await Promise.race([run, timeout]);
+    } finally {
+      clearTimeout(timer);
+      this.release();
+    }
+  }
 
   /** Lee cada archivo del disco una sola vez. */
   private load(path: string): Promise<string> {
@@ -81,6 +167,7 @@ export class XsdValidator {
     return content;
   }
 
+  /** El límite de 320 KB del envío lo aplica DocumentXmlCheck, no este validador. */
   async validate(
     xml: Buffer,
     schema: DocumentSchema,
@@ -106,7 +193,7 @@ export class XsdValidator {
       this.load(xsdFile(schema)),
       this.load(XMLDSIG_FILE),
     ]);
-    return validateWithSchema(xml, { fileName: 'schema.xsd', contents: xsd }, [
+    return this.runLimited(xml, { fileName: 'schema.xsd', contents: xsd }, [
       { fileName: XMLDSIG_NAME, contents: xmldsig },
       EMPTY_DTD,
     ]);
