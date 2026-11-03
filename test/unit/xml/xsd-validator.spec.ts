@@ -176,39 +176,39 @@ describe('plazo y simultaneidad', () => {
     expect(started).toEqual([...started].sort((a, b) => a - b)); // FIFO: llegaron con longitud creciente
   });
 
-  it('una validación que no termina da el error de plazo y libera el turno', async () => {
+  it('una validación que no termina lanza el error de plazo y libera el turno', async () => {
     const limited = new XsdValidator({
       engine: () => new Promise(() => {}),
       timeoutMs: 30,
       maxConcurrent: 1,
     });
-    const first = await limited.validate(
-      standard,
-      DOCUMENT_SCHEMAS.INVOICE_1_1_0,
-    );
-    expect(first).toEqual({
-      valid: false,
-      errors: ['La validación XSD no terminó en 0.03 s'],
-    });
+    await expect(
+      limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0),
+    ).rejects.toThrow('La validación XSD no terminó en 0.03 s');
     // El turno quedó libre: la siguiente también responde, no se queda esperando.
-    const second = await limited.validate(
-      standard,
-      DOCUMENT_SCHEMAS.INVOICE_1_1_0,
-    );
-    expect(second.valid).toBe(false);
+    await expect(
+      limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0),
+    ).rejects.toThrow('La validación XSD no terminó');
   });
 
-  it('un motor que rechaza se informa como error, sin excepción, y libera el turno', async () => {
+  it('un motor que rechaza lanza un error, no un XML inválido, y libera el turno', async () => {
     const limited = new XsdValidator({
       engine: () => Promise.reject(new Error('worker caído')),
       maxConcurrent: 1,
     });
-    expect(
-      await limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0),
-    ).toEqual({ valid: false, errors: ['worker caído'] });
-    expect(
-      (await limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0)).errors,
-    ).toEqual(['worker caído']);
+    await expect(
+      limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0),
+    ).rejects.toThrow('worker caído');
+    await expect(
+      limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0),
+    ).rejects.toThrow('worker caído');
+  });
+
+  it('el contenido inválido sigue siendo un resultado, no una excepción', async () => {
+    const limited = new XsdValidator({ maxConcurrent: 1 });
+    const doctype = Buffer.from('<!DOCTYPE a [<!ENTITY e "x">]><a/>');
+    expect((await limited.validate(doctype, DOCUMENT_SCHEMAS.INVOICE_1_1_0)).valid).toBe(false);
+    expect((await limited.validate(Buffer.from('<a/>'), DOCUMENT_SCHEMAS.INVOICE_1_1_0)).valid).toBe(false);
   });
 });
 
@@ -240,12 +240,16 @@ describe('lista cerrada de recursos de esquema', () => {
     `<?xml version="1.0"?>${prologue}<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:x="urn:x" xmlns:y="urn:ext" targetNamespace="urn:x" elementFormDefault="qualified">` +
     `<xsd:import namespace="urn:ext" schemaLocation="${location}"/>` +
     '<xsd:element name="root"><xsd:complexType><xsd:sequence><xsd:element ref="y:thing"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema>';
+  // Un XSD que no compila hace fallar al motor (rechaza); aquí cuenta igual que «no valida».
   const run = (xsd: string, preload: SchemaFile[] = []) =>
     validateWithSchema(
       utf8(instance),
       { fileName: 'schema.xsd', contents: xsd },
       preload,
-    );
+    ).catch((error: unknown) => ({
+      valid: false,
+      errors: [error instanceof Error ? error.message : String(error)],
+    }));
 
   it('un import de http no valida y no abre conexiones', async () => {
     const result = await run(schemaImporting(`${base}/x.xsd`));

@@ -28,6 +28,7 @@ import { APP_CONFIG, type AppConfig } from '../../../src/config/app-config.js';
 import { DATABASE } from '../../../src/database/database.module.js';
 import type { DB } from '../../../src/database/schema.js';
 import { createPinoLogger } from '../../../src/observability/logging.js';
+import { XsdValidator } from '../../../src/xml/xsd-validator.js';
 import { SequenceService } from '../../../src/sequence/sequence.service.js';
 import { TaxpayerService } from '../../../src/taxpayer/taxpayer.service.js';
 import { TenantAccess } from '../../../src/tenancy/tenant-access.js';
@@ -227,6 +228,43 @@ describe('textos que el XML no admite', () => {
     expect((res.body.detail as string).length).toBeLessThanOrEqual(500);
     expect(await documentCount()).toBe(0);
     expect(await nextValue()).toBeUndefined();
+  });
+});
+
+describe('el XML no se puede comprobar', () => {
+  const nothingLeft = async () => {
+    expect(await documentCount()).toBe(0);
+    expect(await count('SELECT count(*) AS n FROM document_sequences WHERE tenant_id = $1')).toBe(0);
+    expect(await count('SELECT count(*) AS n FROM outbox_events WHERE tenant_id = $1')).toBe(0);
+    expect(await count('SELECT count(*) AS n FROM idempotency_records WHERE tenant_id = $1')).toBe(0);
+  };
+
+  it('el detalle de un problema de XML se corta en los primeros 500 caracteres', async () => {
+    const check = testApp.app.get(DocumentXmlCheck);
+    const problem = `${'a'.repeat(500)}${'b'.repeat(100)}`;
+    const spy = vi.spyOn(check, 'problem').mockResolvedValueOnce(problem);
+    try {
+      const res = await invoiceRequest(http(), s.owner, invoiceJson(s, '1', '11.50'), randomUUID()).expect(422);
+      expect(res.body).toMatchObject({ errorCode: 'DOCUMENT_XML_INVALID', detail: 'a'.repeat(500) });
+    } finally {
+      spy.mockRestore();
+    }
+    await nothingLeft();
+  });
+
+  it('un fallo del motor de validación es 500 y no deja comprobante, secuencial, outbox ni idempotencia', async () => {
+    const validator = testApp.app.get(XsdValidator);
+    const spy = vi.spyOn(validator, 'validate').mockRejectedValueOnce(new Error('worker caído'));
+    try {
+      const res = await invoiceRequest(http(), s.owner, invoiceJson(s, '1', '11.50'), randomUUID()).expect(500);
+      expect(res.body.errorCode).toBe('INTERNAL_ERROR');
+      expect(JSON.stringify(res.body)).not.toContain('worker caído');
+    } finally {
+      spy.mockRestore();
+    }
+    await nothingLeft();
+    // Con el motor de nuevo en pie, la misma empresa emite.
+    await issueInvoice(http(), s.owner, invoiceJson(s, '1', '11.50'));
   });
 });
 

@@ -1,6 +1,8 @@
 /**
  * Valida un XML contra el XSD de un comprobante en una versión. Nunca lanza por el contenido del XML
- * y rechaza cualquier DOCTYPE antes de pasarlo a libxml2 (docs/10-security.md). Port de xml/XsdValidator.java,
+ * (un XML ilegible, un DOCTYPE o un error de esquema son un `ValidationResult` inválido), pero sí cuando
+ * falla el motor: un plazo vencido o un worker caído no dicen nada del XML, así que son un error
+ * interno y no un XML inválido. Rechaza cualquier DOCTYPE antes de pasarlo a libxml2 (docs/10-security.md). Port de xml/XsdValidator.java,
  * xml/DocumentSchemas.java y xml/ClasspathSchemaResolver.java.
  *
  * libxml2 (xmllint-wasm) corre en un worker con un sistema de archivos en memoria que solo contiene el XSD
@@ -31,44 +33,36 @@ const MAX_MEMORY_PAGES = 4096; // 256 MiB en páginas de 64 KiB
 
 /**
  * Valida con libxml2 contra `main`, con solo `preload` en el sistema de archivos virtual.
- * Devuelve los errores como `<mensaje> (línea N)`. Un fallo de libxml2 que no es de validación
- * (XSD que no compila, memoria agotada) también se informa como error, nunca como excepción.
+ * Devuelve los errores como `<mensaje> (línea N)`. Un fallo del motor que no es de validación
+ * (el worker se cae, memoria agotada) lanza un `Error`, no un resultado inválido.
  */
 export async function validateWithSchema(
   xml: Buffer,
   main: SchemaFile,
   preload: readonly SchemaFile[],
 ): Promise<ValidationResult> {
-  try {
-    const result = await validateXML({
-      xml: { fileName: 'comprobante.xml', contents: new Uint8Array(xml) },
-      schema: main,
-      preload: [...preload],
-      maxMemoryPages: MAX_MEMORY_PAGES,
-    });
-    if (result.valid) return { valid: true, errors: [] };
-    const errors = result.errors.map((error) =>
-      error.loc
-        ? `${error.message} (línea ${error.loc.lineNumber})`
-        : error.message,
-    );
-    return {
-      valid: false,
-      errors:
-        errors.length > 0
-          ? errors
-          : [result.rawOutput.trim() || 'XML no válido'],
-    };
-  } catch (error) {
-    const detail =
-      error instanceof Error ? error.message.trim() : String(error);
-    return { valid: false, errors: [detail || 'No se pudo validar el XML'] };
-  }
+  const result = await validateXML({
+    xml: { fileName: 'comprobante.xml', contents: new Uint8Array(xml) },
+    schema: main,
+    preload: [...preload],
+    maxMemoryPages: MAX_MEMORY_PAGES,
+  });
+  if (result.valid) return { valid: true, errors: [] };
+  const errors = result.errors.map((error) =>
+    error.loc
+      ? `${error.message} (línea ${error.loc.lineNumber})`
+      : error.message,
+  );
+  return {
+    valid: false,
+    errors:
+      errors.length > 0 ? errors : [result.rawOutput.trim() || 'XML no válido'],
+  };
 }
 
 /** Validaciones simultáneas como máximo: cada una crea un Worker de hasta 256 MiB. */
 export const MAX_CONCURRENT_VALIDATIONS = 4;
-/** Plazo de una validación; pasado, se informa como error y se libera su turno. */
+/** Plazo de una validación; pasado, lanza un error y se libera su turno. */
 export const VALIDATION_TIMEOUT_MS = 10_000;
 
 export type SchemaEngine = (
@@ -115,8 +109,8 @@ export class XsdValidator {
 
   /**
    * Corre el motor con turno y plazo. xmllint-wasm no expone el Worker, así que no se puede terminar uno
-   * colgado: al vencer el plazo se libera el turno y el Worker queda a lo que haga; no hay forma de
-   * cancelarlo desde aquí.
+   * colgado: al vencer el plazo (o al fallar el motor) se libera el turno y se lanza un `Error`; el Worker
+   * queda a lo que haga, sin forma de cancelarlo desde aquí.
    */
   private async runLimited(
     xml: Buffer,
@@ -126,27 +120,24 @@ export class XsdValidator {
     await this.acquire();
     let timer: NodeJS.Timeout | undefined;
     try {
-      const timeout = new Promise<ValidationResult>((resolve) => {
+      const timeout = new Promise<never>((_, reject) => {
         timer = setTimeout(
           () =>
-            resolve({
-              valid: false,
-              errors: [
+            reject(
+              new Error(
                 `La validación XSD no terminó en ${this.timeoutMs / 1000} s`,
-              ],
-            }),
+              ),
+            ),
           this.timeoutMs,
         );
       });
       const run = this.engine(xml, main, preload).catch(
-        (error: unknown): ValidationResult => ({
-          valid: false,
-          errors: [
-            error instanceof Error && error.message
-              ? error.message
-              : 'No se pudo validar el XML',
-          ],
-        }),
+        (error: unknown): never => {
+          const detail = error instanceof Error ? error.message.trim() : '';
+          throw new Error(detail || 'No se pudo validar el XML', {
+            cause: error,
+          });
+        },
       );
       return await Promise.race([run, timeout]);
     } finally {
