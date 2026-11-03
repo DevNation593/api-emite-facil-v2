@@ -172,8 +172,9 @@ export class CustomerService {
     };
   }
 
-  async get(access: TenantAccess, id: string): Promise<CustomerView & { version: string }> {
-    const row = await this.require(this.db, access.tenantId, id);
+  /** Uno archivado o de otra empresa es 404. La emisión pasa su transacción: no pide otra conexión. */
+  async get(access: TenantAccess, id: string, db: Db = this.db): Promise<CustomerView & { version: string }> {
+    const row = await this.require(db, access.tenantId, id);
     return { ...view(row), version: row.version };
   }
 

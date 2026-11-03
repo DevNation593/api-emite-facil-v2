@@ -49,7 +49,7 @@ const SHORT_ESCAPES: Record<string, string> = {
 };
 
 /** Como el generador de Jackson: solo escapa comillas, barra invertida y controles (hex en mayúsculas). */
-function quote(text: string): string {
+export function quote(text: string): string {
   let out = '"';
   for (let i = 0; i < text.length; i++) {
     const ch = text[i] as string;

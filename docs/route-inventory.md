@@ -48,7 +48,7 @@ Rutas de los controladores de la API Java (`@RequestMapping` de clase más `@Get
 | POST | `/api/v1/debit-notes` | sí | `notes` (`DebitNoteController`) | E3 | no |
 | GET | `/api/v1/documents` | sí | `billing` (`DocumentController`) | E3 | no |
 | GET | `/api/v1/documents/{id}` | sí | `billing` (`DocumentController`) | E3 | no |
-| POST | `/api/v1/invoices` | sí | `billing` (`InvoiceController`) | E3 | no |
+| POST | `/api/v1/invoices` | sí | `billing` (`InvoiceController`) | E3 | sí |
 | POST | `/api/v1/documents/{id}/retry` | sí | `orchestration` (`DocumentRetryController`) | E4 | no |
 | GET | `/api/v1/documents/{id}/sri-attempts` | sí | `sri` (`SriAttemptController`) | E4 | no |
 | POST | `/api/v1/webhooks/deliveries/{id}/retry` | sí | `webhook` (`WebhookController`) | E4 | no |

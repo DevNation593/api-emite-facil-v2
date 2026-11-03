@@ -1,4 +1,4 @@
-import { runWithContext } from '../../../src/common/request-context.js';
+import { runWithContext, setDocumentId } from '../../../src/common/request-context.js';
 import { createPinoLogger, severityOf } from '../../../src/observability/logging.js';
 import { testConfig } from '../../support/test-env.js';
 
@@ -196,4 +196,19 @@ describe('URL con credenciales en cualquier propiedad', () => {
     logger.info({ url: 'https://example.com/a?b=c@d' }, 'x');
     expect(JSON.parse(lines[0]!).url).toBe('https://example.com/a?b=c@d');
   });
+});
+
+it('una línea de una emisión lleva el documentId que fijó el emisor', () => {
+  const { logger, lines } = jsonLogger();
+  runWithContext({ correlationId: 'c-2' }, () => {
+    logger.info('antes');
+    setDocumentId('6f1c1d2e-0000-4000-8000-000000000001');
+    logger.info('después');
+  });
+  setDocumentId('fuera de una petición no se guarda');
+  logger.info('fuera');
+  const [before, after, outside] = lines.map((l) => JSON.parse(l) as Record<string, unknown>);
+  expect(before).not.toHaveProperty('documentId');
+  expect(after).toMatchObject({ correlationId: 'c-2', documentId: '6f1c1d2e-0000-4000-8000-000000000001' });
+  expect(outside).not.toHaveProperty('documentId');
 });

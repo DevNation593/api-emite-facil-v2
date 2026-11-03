@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import type { ArgumentMetadata } from '@nestjs/common';
+import { IssueInvoiceDto, PaymentDto } from '../../../src/billing/invoice.dto.js';
 import { ApiException } from '../../../src/common/api-exception.js';
 import {
   JsonBoolean,
@@ -135,10 +136,10 @@ describe('establishmentId, UUID de Jackson', () => {
 });
 
 /*
- * E3: cada caso de cuerpo de test/golden/http/e3.json se pasa por el pipe con DTOs que copian los
- * records de InvoiceController, CreditNoteController y DebitNoteController de Java. Lo que decide la
- * deserialización o Bean Validation (400 MALFORMED_REQUEST, y VALIDATION_FAILED con mensajes de
- * Hibernate) debe salir igual; el resto (reglas de negocio: 202, 401, 404, 409, 422 o un
+ * E3: cada caso de cuerpo de test/golden/http/e3.json se pasa por el pipe con el DTO de la factura
+ * (invoice.dto.ts) y con DTOs que copian los records de CreditNoteController y DebitNoteController de
+ * Java. Lo que decide la deserialización o Bean Validation (400 MALFORMED_REQUEST, y
+ * VALIDATION_FAILED con mensajes de Hibernate) debe salir igual; el resto (reglas de negocio: 202, 401, 404, 409, 422 o un
  * VALIDATION_FAILED propio de Java) debe pasar el pipe, y ahí se comprueba el valor convertido.
  */
 const e3 = (
@@ -146,34 +147,6 @@ const e3 = (
     results: Array<Result & { request: { method: string; path: string } }>;
   }
 ).results;
-
-class LineRequest {
-  @JsonUuid() @NotNull() productId?: string | null;
-  @JsonString() @NotNull() @Pattern(QUANTITY_OR_PRICE) quantity?: string | null;
-  @JsonString() @Pattern(QUANTITY_OR_PRICE) unitPrice?: string | null;
-  @JsonString() @Pattern(AMOUNT) discount?: string | null;
-}
-
-class PaymentRequest {
-  @JsonString() @NotNull() @Pattern('[0-9]{2}') methodCode?: string | null;
-  @JsonString() @NotNull() @Pattern(AMOUNT) amount?: string | null;
-  @JsonString() @Pattern(AMOUNT) term?: string | null;
-  @JsonString() @Size({ max: 10 }) @NoControlChars() timeUnit?: string | null;
-}
-
-class IssueInvoiceRequest {
-  @JsonUuid() @NotNull() taxpayerId?: string | null;
-  @JsonString() @NotNull() @Pattern('[0-9]{3}') establishmentCode?: string | null;
-  @JsonString() @NotNull() @Pattern('[0-9]{3}') emissionPointCode?: string | null;
-  @JsonUuid() @NotNull() customerId?: string | null;
-  @JsonLocalDate() issueDate?: string | null;
-  @JsonString() @Pattern('[A-Z]{3}') currency?: string | null;
-  @JsonList(() => LineRequest) @NotNull() @Size({ min: 1, max: 500 }) @NotNullElements() @Valid()
-  lines?: Array<LineRequest | null> | null;
-  @JsonList(() => PaymentRequest) @NotNull() @Size({ min: 1, max: 20 }) @NotNullElements() @Valid()
-  payments?: Array<PaymentRequest | null> | null;
-  @JsonUuid() replacesDocumentId?: string | null;
-}
 
 class ModifiedDocumentRequest {
   @JsonString() @NotNull() @Pattern('01') code?: string | null;
@@ -218,12 +191,12 @@ class IssueDebitNoteRequest {
   @JsonUuid() customerId?: string | null;
   @JsonList(() => ReasonRequest) @NotNull() @Size({ min: 1, max: 20 }) @NotNullElements() @Valid()
   reasons?: Array<ReasonRequest | null> | null;
-  @JsonList(() => PaymentRequest) @NotNull() @Size({ min: 1, max: 1 }) @NotNullElements() @Valid()
-  payments?: Array<PaymentRequest | null> | null;
+  @JsonList(() => PaymentDto) @NotNull() @Size({ min: 1, max: 1 }) @NotNullElements() @Valid()
+  payments?: Array<PaymentDto | null> | null;
 }
 
 const DTO: Record<string, ArgumentMetadata['metatype']> = {
-  '/api/v1/invoices': IssueInvoiceRequest,
+  '/api/v1/invoices': IssueInvoiceDto,
   '/api/v1/credit-notes': IssueCreditNoteRequest,
   '/api/v1/debit-notes': IssueDebitNoteRequest,
 };

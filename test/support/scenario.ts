@@ -1,4 +1,4 @@
-import { randomInt } from 'node:crypto';
+import { randomInt, randomUUID } from 'node:crypto';
 import type pg from 'pg';
 import type request from 'supertest';
 import { registerAndLogin } from './test-app.js';
@@ -117,4 +117,87 @@ export function createProduct(
   return created(
     http.post('/api/v1/products').set('Authorization', bearer(token)).send(productJson(sku, unitPrice, ivaRateCode)),
   );
+}
+
+/**
+ * Empresa lista para facturar (BillingScenario de Java): emisor con establecimiento 001 y punto de
+ * emisión 001, un cliente con cédula y un producto de 10.00 con IVA del 15 % (código 4).
+ */
+export interface BillingScenario {
+  owner: string;
+  tenant: string;
+  taxpayer: string;
+  ruc: string;
+  establishment: string;
+  point: string;
+  customer: string;
+  product: string;
+}
+
+/** newBillingScenario de AbstractIntegrationTest: todo se crea por la API. */
+export async function billingScenario(http: Http, _db: pg.Client): Promise<BillingScenario> {
+  const { token: owner, tenant } = await newOwner(http);
+  const ruc = randomRuc();
+  const taxpayer = await createTaxpayer(http, owner, ruc);
+  const establishment = await createEstablishment(http, owner, taxpayer, '001');
+  const point = await createEmissionPoint(http, owner, establishment, '001');
+  const customer = await createCustomer(http, owner, '05', '1712345678');
+  const product = await createProduct(http, owner, 'SRV-001', '10.00', '4');
+  return { owner, tenant, taxpayer, ruc, establishment, point, customer, product };
+}
+
+/** Una línea de factura; el precio y el descuento solo van si se dan. */
+export function invoiceLine(
+  productId: string,
+  quantity: string,
+  unitPrice?: string,
+  discount?: string,
+): Record<string, unknown> {
+  return {
+    productId,
+    quantity,
+    ...(unitPrice === undefined ? {} : { unitPrice }),
+    ...(discount === undefined ? {} : { discount }),
+  };
+}
+
+/** Cuerpo de POST /invoices con esas líneas, al cliente dado y con un solo pago (forma 20) por el importe dado. */
+export function invoiceBody(
+  s: BillingScenario,
+  customerId: string,
+  lines: unknown[],
+  paymentAmount: string,
+): Record<string, unknown> {
+  return {
+    taxpayerId: s.taxpayer,
+    establishmentCode: '001',
+    emissionPointCode: '001',
+    customerId,
+    lines,
+    payments: [{ methodCode: '20', amount: paymentAmount }],
+  };
+}
+
+/** Cuerpo de POST /invoices con una línea del producto del escenario y un pago por el importe dado. */
+export function invoiceJson(s: BillingScenario, quantity: string, paymentAmount: string): Record<string, unknown> {
+  return invoiceBody(s, s.customer, [{ productId: s.product, quantity }], paymentAmount);
+}
+
+/** POST /invoices; un texto se envía tal cual, para conservar números como 2.50. */
+export function invoiceRequest(http: Http, token: string, body: unknown, key?: string): request.Test {
+  let call = http.post('/api/v1/invoices').set('Authorization', bearer(token));
+  if (key !== undefined) call = call.set('Idempotency-Key', key);
+  return typeof body === 'string' ? call.set('Content-Type', 'application/json').send(body) : call.send(body as object);
+}
+
+/** Emite una factura con una clave de idempotencia nueva (o la dada) y devuelve el id del documento. */
+export async function issueInvoice(http: Http, token: string, body: unknown, key: string = randomUUID()): Promise<string> {
+  const res = await invoiceRequest(http, token, body, key);
+  if (res.status !== 202) throw new Error(`Se esperaba 202 y llegó ${res.status}: ${res.text}`);
+  return (res.body as { id: string }).id;
+}
+
+/** Pone el comprobante en ese estado por SQL: en E3 no hay worker ni SRI que lo hagan avanzar. */
+export async function setState(db: pg.Client, documentId: string, state: string): Promise<void> {
+  await db.query('UPDATE fiscal_documents SET state = $1 WHERE id = $2', [state, documentId]);
 }

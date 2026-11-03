@@ -59,6 +59,15 @@ const MAX_LOGIN_FAILURES = 5;
 const LOCKOUT_MS = parseDuration('15m');
 const PUBLIC_REQUESTS_PER_MINUTE = 20;
 
+/** Monto máximo de un comprobante a consumidor final (einvoice.invoice.final-consumer-limit). */
+export const FINAL_CONSUMER_LIMIT = '50.00';
+
+/**
+ * Plazo tras el cual un comprobante reservado que nadie procesó vuelve a la cola
+ * (einvoice.worker.redelivery-lease); como los de einvoice.auth.*, no se lee del entorno.
+ */
+export const REDELIVERY_LEASE_MS = parseDuration('5m');
+
 /** Enlace de la web con un código de un solo uso: el código va en el fragmento, que no viaja al servidor. */
 export function authLink(webUrl: URL, path: string, token: string): string {
   return `${webUrl.href.replace(/\/+$/, '')}${path}#token=${token}`;
