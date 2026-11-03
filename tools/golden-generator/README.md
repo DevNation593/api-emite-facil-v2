@@ -16,7 +16,7 @@ Para regenerar una sola familia sin tocar el resto de fixtures ni `SOURCE.json`:
 node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil --only bean-validation
 ```
 
-Familias con `--only` (`bean-validation`, `certificates`, `xsd` y `calculations`): `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
+Familias con `--only` (`bean-validation`, `certificates`, `xsd`, `calculations` y `documents`): `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
 `@Pattern(NO_CONTROL_CHARS)`, más `@Pattern("[0-9]{3}")`, `@Min(1)` y `@Max(999_999_999)`, validados con Hibernate Validator y `Locale.ENGLISH`). Es determinista: no
 depende de aleatorios.
 
@@ -40,6 +40,15 @@ y `<factura` sin cerrar) anota si `XsdValidator` lo da por válido y, si lo es, 
 descuento hasta el bruto y las tarifas `0`, `2`, `3`, `4`, `5`, `8` y `10` con su porcentaje del catálogo). Cada
 decimal se escribe con `toString()` para conservar la escala, y de una entrada rechazada se guarda el mensaje.
 Es determinista.
+
+`documents` (`documents.json` y `documents/*.xml`): el XML de `InvoiceXmlBuilder`, `CreditNoteXmlBuilder` y
+`DebitNoteXmlBuilder` y, para las notas, el `contentJson` de `CreditNoteKind` y `DebitNoteKind` (construidos con un
+repositorio nulo). Casos: la factura de `InvoiceXmlFixtures.standard()` y sus variantes (RUC del proveedor, RIMPE
+emprendedor, negocio popular, agente de retención con contribuyente especial y contabilidad, caracteres especiales,
+pago con plazo, sin opcionales, redondeo de escalas), dos notas de crédito (sobre una factura y a mano), una de solo
+JSON con caracteres de control (`xml` nulo) y dos notas de débito (con y sin plazo). Cada caso trae sus datos de
+entrada con los decimales como cadenas planas con su escala (`toPlainString()`), la ruta de su XML y `contentJson` (nulo en la
+factura). Es determinista.
 
 Requisitos: Java 25 (`java`, `javac`) en el `PATH`, Node 24 y acceso a las dependencias de Maven del repo
 Java (el repo debe poder ejecutar su `mvnw`).

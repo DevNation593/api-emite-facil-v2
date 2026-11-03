@@ -35,6 +35,7 @@ public final class GoldenGenerator {
 				case "certificates" -> CertificateCases.generate(out.resolve("certificates"));
 				case "xsd" -> XsdCases.generate(out, Path.of(args[1]));
 				case "calculations" -> write(out.resolve("calculations.json"), CalculationCases.generate());
+				case "documents" -> DocumentCases.generate(out);
 				default -> throw new IllegalArgumentException("Familia desconocida: " + args[3]);
 			}
 			System.out.println("Familia " + args[3] + " generada en " + out.toAbsolutePath());
@@ -51,6 +52,7 @@ public final class GoldenGenerator {
 		CertificateCases.generate(out.resolve("certificates"));
 		XsdCases.generate(out, Path.of(args[1]));
 		write(out.resolve("calculations.json"), CalculationCases.generate());
+		DocumentCases.generate(out);
 
 		Map<String, Object> source = new LinkedHashMap<>();
 		source.put("javaRepoCommit", args[2]);

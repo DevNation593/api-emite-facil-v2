@@ -1,0 +1,1281 @@
+{
+  "cases": [
+    {
+      "name": "factura-estandar",
+      "type": "01",
+      "data": {
+        "environment": "1",
+        "issuerLegalName": "Comercial Andina S.A.",
+        "issuerTradeName": "Andina",
+        "issuerRuc": "1790012345001",
+        "accessKey": "0710202601179001234500110010020000001231234567816",
+        "documentType": "01",
+        "establishmentCode": "001",
+        "emissionPointCode": "002",
+        "sequence": 123,
+        "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "issueDate": "2026-10-07",
+        "establishmentAddress": "Av. 10 de Agosto, Quito",
+        "specialTaxpayerCode": null,
+        "accountingRequired": false,
+        "customerIdType": "05",
+        "customerName": "María Pérez",
+        "customerIdNumber": "1712345678",
+        "customerAddress": "Av. República, Quito",
+        "subtotal": "34.00",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "0",
+            "rate": "0.00",
+            "base": "14.00",
+            "amount": "0.00"
+          },
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "20.00",
+            "amount": "3.00"
+          }
+        ],
+        "total": "37.00",
+        "lines": [
+          {
+            "mainCode": "SRV-001",
+            "description": "Servicio de consultoría",
+            "quantity": "2",
+            "unitPrice": "10.00",
+            "discount": "0.00",
+            "subtotal": "20.00",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "3.00"
+          },
+          {
+            "mainCode": "LIB-001",
+            "description": "Libro",
+            "quantity": "1.5",
+            "unitPrice": "9.333333",
+            "discount": "0.00",
+            "subtotal": "14.00",
+            "taxCode": "2",
+            "taxRateCode": "0",
+            "taxRate": "0.00",
+            "taxAmount": "0.00"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "20",
+            "amount": "30.00",
+            "term": null,
+            "timeUnit": null
+          },
+          {
+            "methodCode": "01",
+            "amount": "7.00",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "providerRuc": null
+      },
+      "xml": "documents/factura-estandar.xml",
+      "contentJson": null
+    },
+    {
+      "name": "factura-con-ruc-proveedor",
+      "type": "01",
+      "data": {
+        "environment": "1",
+        "issuerLegalName": "Comercial Andina S.A.",
+        "issuerTradeName": "Andina",
+        "issuerRuc": "1790012345001",
+        "accessKey": "0710202601179001234500110010020000001231234567816",
+        "documentType": "01",
+        "establishmentCode": "001",
+        "emissionPointCode": "002",
+        "sequence": 123,
+        "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "issueDate": "2026-10-07",
+        "establishmentAddress": "Av. 10 de Agosto, Quito",
+        "specialTaxpayerCode": null,
+        "accountingRequired": false,
+        "customerIdType": "05",
+        "customerName": "María Pérez",
+        "customerIdNumber": "1712345678",
+        "customerAddress": "Av. República, Quito",
+        "subtotal": "34.00",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "0",
+            "rate": "0.00",
+            "base": "14.00",
+            "amount": "0.00"
+          },
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "20.00",
+            "amount": "3.00"
+          }
+        ],
+        "total": "37.00",
+        "lines": [
+          {
+            "mainCode": "SRV-001",
+            "description": "Servicio de consultoría",
+            "quantity": "2",
+            "unitPrice": "10.00",
+            "discount": "0.00",
+            "subtotal": "20.00",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "3.00"
+          },
+          {
+            "mainCode": "LIB-001",
+            "description": "Libro",
+            "quantity": "1.5",
+            "unitPrice": "9.333333",
+            "discount": "0.00",
+            "subtotal": "14.00",
+            "taxCode": "2",
+            "taxRateCode": "0",
+            "taxRate": "0.00",
+            "taxAmount": "0.00"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "20",
+            "amount": "30.00",
+            "term": null,
+            "timeUnit": null
+          },
+          {
+            "methodCode": "01",
+            "amount": "7.00",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "providerRuc": "1790012345001"
+      },
+      "xml": "documents/factura-con-ruc-proveedor.xml",
+      "contentJson": null
+    },
+    {
+      "name": "factura-rimpe-emprendedor",
+      "type": "01",
+      "data": {
+        "environment": "1",
+        "issuerLegalName": "Comercial Andina S.A.",
+        "issuerTradeName": "Andina",
+        "issuerRuc": "1790012345001",
+        "accessKey": "0710202601179001234500110010020000001231234567816",
+        "documentType": "01",
+        "establishmentCode": "001",
+        "emissionPointCode": "002",
+        "sequence": 123,
+        "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+        "withholdingAgentCode": null,
+        "rimpeRegime": "EMPRENDEDOR",
+        "issueDate": "2026-10-07",
+        "establishmentAddress": "Av. 10 de Agosto, Quito",
+        "specialTaxpayerCode": null,
+        "accountingRequired": false,
+        "customerIdType": "05",
+        "customerName": "María Pérez",
+        "customerIdNumber": "1712345678",
+        "customerAddress": "Av. República, Quito",
+        "subtotal": "34.00",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "0",
+            "rate": "0.00",
+            "base": "14.00",
+            "amount": "0.00"
+          },
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "20.00",
+            "amount": "3.00"
+          }
+        ],
+        "total": "37.00",
+        "lines": [
+          {
+            "mainCode": "SRV-001",
+            "description": "Servicio de consultoría",
+            "quantity": "2",
+            "unitPrice": "10.00",
+            "discount": "0.00",
+            "subtotal": "20.00",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "3.00"
+          },
+          {
+            "mainCode": "LIB-001",
+            "description": "Libro",
+            "quantity": "1.5",
+            "unitPrice": "9.333333",
+            "discount": "0.00",
+            "subtotal": "14.00",
+            "taxCode": "2",
+            "taxRateCode": "0",
+            "taxRate": "0.00",
+            "taxAmount": "0.00"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "20",
+            "amount": "30.00",
+            "term": null,
+            "timeUnit": null
+          },
+          {
+            "methodCode": "01",
+            "amount": "7.00",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "providerRuc": null
+      },
+      "xml": "documents/factura-rimpe-emprendedor.xml",
+      "contentJson": null
+    },
+    {
+      "name": "factura-negocio-popular",
+      "type": "01",
+      "data": {
+        "environment": "1",
+        "issuerLegalName": "Comercial Andina S.A.",
+        "issuerTradeName": "Andina",
+        "issuerRuc": "1790012345001",
+        "accessKey": "0710202601179001234500110010020000001231234567816",
+        "documentType": "01",
+        "establishmentCode": "001",
+        "emissionPointCode": "002",
+        "sequence": 123,
+        "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NEGOCIO_POPULAR",
+        "issueDate": "2026-10-07",
+        "establishmentAddress": "Av. 10 de Agosto, Quito",
+        "specialTaxpayerCode": null,
+        "accountingRequired": false,
+        "customerIdType": "05",
+        "customerName": "María Pérez",
+        "customerIdNumber": "1712345678",
+        "customerAddress": "Av. República, Quito",
+        "subtotal": "34.00",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "0",
+            "rate": "0.00",
+            "base": "14.00",
+            "amount": "0.00"
+          },
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "20.00",
+            "amount": "3.00"
+          }
+        ],
+        "total": "37.00",
+        "lines": [
+          {
+            "mainCode": "SRV-001",
+            "description": "Servicio de consultoría",
+            "quantity": "2",
+            "unitPrice": "10.00",
+            "discount": "0.00",
+            "subtotal": "20.00",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "3.00"
+          },
+          {
+            "mainCode": "LIB-001",
+            "description": "Libro",
+            "quantity": "1.5",
+            "unitPrice": "9.333333",
+            "discount": "0.00",
+            "subtotal": "14.00",
+            "taxCode": "2",
+            "taxRateCode": "0",
+            "taxRate": "0.00",
+            "taxAmount": "0.00"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "20",
+            "amount": "30.00",
+            "term": null,
+            "timeUnit": null
+          },
+          {
+            "methodCode": "01",
+            "amount": "7.00",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "providerRuc": null
+      },
+      "xml": "documents/factura-negocio-popular.xml",
+      "contentJson": null
+    },
+    {
+      "name": "factura-agente-retencion-contribuyente-especial",
+      "type": "01",
+      "data": {
+        "environment": "1",
+        "issuerLegalName": "Comercial Andina S.A.",
+        "issuerTradeName": "Andina",
+        "issuerRuc": "1790012345001",
+        "accessKey": "0710202601179001234500110010020000001231234567816",
+        "documentType": "01",
+        "establishmentCode": "001",
+        "emissionPointCode": "002",
+        "sequence": 123,
+        "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+        "withholdingAgentCode": "1",
+        "rimpeRegime": "NONE",
+        "issueDate": "2026-10-07",
+        "establishmentAddress": "Av. 10 de Agosto, Quito",
+        "specialTaxpayerCode": "5368",
+        "accountingRequired": true,
+        "customerIdType": "05",
+        "customerName": "María Pérez",
+        "customerIdNumber": "1712345678",
+        "customerAddress": "Av. República, Quito",
+        "subtotal": "34.00",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "0",
+            "rate": "0.00",
+            "base": "14.00",
+            "amount": "0.00"
+          },
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "20.00",
+            "amount": "3.00"
+          }
+        ],
+        "total": "37.00",
+        "lines": [
+          {
+            "mainCode": "SRV-001",
+            "description": "Servicio de consultoría",
+            "quantity": "2",
+            "unitPrice": "10.00",
+            "discount": "0.00",
+            "subtotal": "20.00",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "3.00"
+          },
+          {
+            "mainCode": "LIB-001",
+            "description": "Libro",
+            "quantity": "1.5",
+            "unitPrice": "9.333333",
+            "discount": "0.00",
+            "subtotal": "14.00",
+            "taxCode": "2",
+            "taxRateCode": "0",
+            "taxRate": "0.00",
+            "taxAmount": "0.00"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "20",
+            "amount": "30.00",
+            "term": null,
+            "timeUnit": null
+          },
+          {
+            "methodCode": "01",
+            "amount": "7.00",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "providerRuc": null
+      },
+      "xml": "documents/factura-agente-retencion-contribuyente-especial.xml",
+      "contentJson": null
+    },
+    {
+      "name": "factura-caracteres-especiales",
+      "type": "01",
+      "data": {
+        "environment": "1",
+        "issuerLegalName": "Ñandú & Hijos <\"S.A.\"> 'O'Brien' ñ é 😀",
+        "issuerTradeName": "Andina",
+        "issuerRuc": "1790012345001",
+        "accessKey": "0710202601179001234500110010020000001231234567816",
+        "documentType": "01",
+        "establishmentCode": "001",
+        "emissionPointCode": "002",
+        "sequence": 123,
+        "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "issueDate": "2026-10-07",
+        "establishmentAddress": "Av. 10 de Agosto, Quito",
+        "specialTaxpayerCode": null,
+        "accountingRequired": false,
+        "customerIdType": "05",
+        "customerName": "María Pérez",
+        "customerIdNumber": "1712345678",
+        "customerAddress": "Av. República, Quito",
+        "subtotal": "34.00",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "0",
+            "rate": "0.00",
+            "base": "14.00",
+            "amount": "0.00"
+          },
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "20.00",
+            "amount": "3.00"
+          }
+        ],
+        "total": "37.00",
+        "lines": [
+          {
+            "mainCode": "SRV-001",
+            "description": "Café & té <frío> \"doble\" 'simple' 😀",
+            "quantity": "2",
+            "unitPrice": "10.00",
+            "discount": "0.00",
+            "subtotal": "20.00",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "3.00"
+          },
+          {
+            "mainCode": "LIB-001",
+            "description": "Libro",
+            "quantity": "1.5",
+            "unitPrice": "9.333333",
+            "discount": "0.00",
+            "subtotal": "14.00",
+            "taxCode": "2",
+            "taxRateCode": "0",
+            "taxRate": "0.00",
+            "taxAmount": "0.00"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "20",
+            "amount": "30.00",
+            "term": null,
+            "timeUnit": null
+          },
+          {
+            "methodCode": "01",
+            "amount": "7.00",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "providerRuc": null
+      },
+      "xml": "documents/factura-caracteres-especiales.xml",
+      "contentJson": null
+    },
+    {
+      "name": "factura-pago-con-plazo",
+      "type": "01",
+      "data": {
+        "environment": "1",
+        "issuerLegalName": "Comercial Andina S.A.",
+        "issuerTradeName": "Andina",
+        "issuerRuc": "1790012345001",
+        "accessKey": "0710202601179001234500110010020000001231234567816",
+        "documentType": "01",
+        "establishmentCode": "001",
+        "emissionPointCode": "002",
+        "sequence": 123,
+        "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "issueDate": "2026-10-07",
+        "establishmentAddress": "Av. 10 de Agosto, Quito",
+        "specialTaxpayerCode": null,
+        "accountingRequired": false,
+        "customerIdType": "05",
+        "customerName": "María Pérez",
+        "customerIdNumber": "1712345678",
+        "customerAddress": "Av. República, Quito",
+        "subtotal": "34.00",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "0",
+            "rate": "0.00",
+            "base": "14.00",
+            "amount": "0.00"
+          },
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "20.00",
+            "amount": "3.00"
+          }
+        ],
+        "total": "37.00",
+        "lines": [
+          {
+            "mainCode": "SRV-001",
+            "description": "Servicio de consultoría",
+            "quantity": "2",
+            "unitPrice": "10.00",
+            "discount": "0.00",
+            "subtotal": "20.00",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "3.00"
+          },
+          {
+            "mainCode": "LIB-001",
+            "description": "Libro",
+            "quantity": "1.5",
+            "unitPrice": "9.333333",
+            "discount": "0.00",
+            "subtotal": "14.00",
+            "taxCode": "2",
+            "taxRateCode": "0",
+            "taxRate": "0.00",
+            "taxAmount": "0.00"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "20",
+            "amount": "30.00",
+            "term": "30",
+            "timeUnit": "dias"
+          },
+          {
+            "methodCode": "01",
+            "amount": "7.00",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "providerRuc": null
+      },
+      "xml": "documents/factura-pago-con-plazo.xml",
+      "contentJson": null
+    },
+    {
+      "name": "factura-sin-opcionales",
+      "type": "01",
+      "data": {
+        "environment": "1",
+        "issuerLegalName": "Comercial Andina S.A.",
+        "issuerTradeName": null,
+        "issuerRuc": "1790012345001",
+        "accessKey": "0710202601179001234500110010020000001231234567816",
+        "documentType": "01",
+        "establishmentCode": "001",
+        "emissionPointCode": "002",
+        "sequence": 123,
+        "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "issueDate": "2026-10-07",
+        "establishmentAddress": null,
+        "specialTaxpayerCode": null,
+        "accountingRequired": false,
+        "customerIdType": "05",
+        "customerName": "María Pérez",
+        "customerIdNumber": "1712345678",
+        "customerAddress": " ",
+        "subtotal": "34.00",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "0",
+            "rate": "0.00",
+            "base": "14.00",
+            "amount": "0.00"
+          },
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "20.00",
+            "amount": "3.00"
+          }
+        ],
+        "total": "37.00",
+        "lines": [
+          {
+            "mainCode": "SRV-001",
+            "description": "Servicio de consultoría",
+            "quantity": "2",
+            "unitPrice": "10.00",
+            "discount": "0.00",
+            "subtotal": "20.00",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "3.00"
+          },
+          {
+            "mainCode": "LIB-001",
+            "description": "Libro",
+            "quantity": "1.5",
+            "unitPrice": "9.333333",
+            "discount": "0.00",
+            "subtotal": "14.00",
+            "taxCode": "2",
+            "taxRateCode": "0",
+            "taxRate": "0.00",
+            "taxAmount": "0.00"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "20",
+            "amount": "30.00",
+            "term": null,
+            "timeUnit": null
+          },
+          {
+            "methodCode": "01",
+            "amount": "7.00",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "providerRuc": null
+      },
+      "xml": "documents/factura-sin-opcionales.xml",
+      "contentJson": null
+    },
+    {
+      "name": "factura-redondeo-de-escalas",
+      "type": "01",
+      "data": {
+        "environment": "1",
+        "issuerLegalName": "Comercial Andina S.A.",
+        "issuerTradeName": "Andina",
+        "issuerRuc": "1790012345001",
+        "accessKey": "0710202601179001234500110010020000001231234567816",
+        "documentType": "01",
+        "establishmentCode": "001",
+        "emissionPointCode": "002",
+        "sequence": 123,
+        "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+        "withholdingAgentCode": null,
+        "rimpeRegime": "NONE",
+        "issueDate": "2026-10-07",
+        "establishmentAddress": "Av. 10 de Agosto, Quito",
+        "specialTaxpayerCode": null,
+        "accountingRequired": false,
+        "customerIdType": "05",
+        "customerName": "María Pérez",
+        "customerIdNumber": "1712345678",
+        "customerAddress": "Av. República, Quito",
+        "subtotal": "34.00",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "0",
+            "rate": "0.00",
+            "base": "14.00",
+            "amount": "0.00"
+          },
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "20.00",
+            "amount": "3.00"
+          }
+        ],
+        "total": "37.00",
+        "lines": [
+          {
+            "mainCode": "RED-001",
+            "description": "Redondeo",
+            "quantity": "1.2345675",
+            "unitPrice": "0.0000005",
+            "discount": "0.005",
+            "subtotal": "20.005",
+            "taxCode": "2",
+            "taxRateCode": "2",
+            "taxRate": "12",
+            "taxAmount": "2.4005"
+          },
+          {
+            "mainCode": "LIB-001",
+            "description": "Libro",
+            "quantity": "1.5",
+            "unitPrice": "9.333333",
+            "discount": "0.00",
+            "subtotal": "14.00",
+            "taxCode": "2",
+            "taxRateCode": "0",
+            "taxRate": "0.00",
+            "taxAmount": "0.00"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "20",
+            "amount": "30.00",
+            "term": null,
+            "timeUnit": null
+          },
+          {
+            "methodCode": "01",
+            "amount": "7.00",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "providerRuc": null
+      },
+      "xml": "documents/factura-redondeo-de-escalas.xml",
+      "contentJson": null
+    },
+    {
+      "name": "nota-credito-sobre-factura",
+      "type": "04",
+      "data": {
+        "envelope": {
+          "type": "04",
+          "environment": "1",
+          "issuer": {
+            "legalName": "Comercial Andina S.A.",
+            "tradeName": "Andina",
+            "ruc": "1790012345001",
+            "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+            "establishmentAddress": "Av. 10 de Agosto, Quito",
+            "accountingRequired": false,
+            "specialTaxpayerCode": null,
+            "withholdingAgentCode": null,
+            "rimpeRegime": "NONE",
+            "phone": "022345678"
+          },
+          "accessKey": "1910202604179001234500110010020000000071234567817",
+          "establishmentCode": "001",
+          "emissionPointCode": "002",
+          "sequence": 7,
+          "issueDate": "2026-10-19",
+          "recipient": {
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "María Pérez",
+            "address": "Av. República, Quito",
+            "email": "maria@example.com",
+            "phone": null
+          },
+          "totals": {
+            "subtotal": "34.00",
+            "totalDiscount": "0.00",
+            "totalTax": "3.00",
+            "total": "37.00"
+          },
+          "modified": {
+            "documentId": "5d0f3a52-8c1e-4b63-9a7d-2e4f6a1b9c30",
+            "code": "01",
+            "number": "001-001-000000123",
+            "issueDate": "2026-10-01"
+          },
+          "providerRuc": null
+        },
+        "content": {
+          "reason": "Devolución de mercadería",
+          "lines": [
+            {
+              "invoiceLineNo": 1,
+              "productId": "0b9e6c1a-3d47-4f2e-8a15-7c3d9e0f2b64",
+              "mainCode": "SRV-001",
+              "description": "Servicio de consultoría",
+              "quantity": "2",
+              "unitPrice": "10.00",
+              "discount": "0.00",
+              "subtotal": "20.00",
+              "taxCode": "2",
+              "taxRateCode": "4",
+              "taxRate": "15.00",
+              "taxAmount": "3.00"
+            },
+            {
+              "invoiceLineNo": 2,
+              "productId": "c4a81f77-92de-4a0b-b3c6-15e8d70a49f2",
+              "mainCode": "LIB-001",
+              "description": "Libro",
+              "quantity": "1.5",
+              "unitPrice": "9.333333",
+              "discount": "0.00",
+              "subtotal": "14.00",
+              "taxCode": "2",
+              "taxRateCode": "0",
+              "taxRate": "0.00",
+              "taxAmount": "0.00"
+            }
+          ],
+          "taxes": [
+            {
+              "taxCode": "2",
+              "rateCode": "0",
+              "rate": "0.00",
+              "base": "14.00",
+              "amount": "0.00"
+            },
+            {
+              "taxCode": "2",
+              "rateCode": "4",
+              "rate": "15.00",
+              "base": "20.00",
+              "amount": "3.00"
+            }
+          ]
+        }
+      },
+      "xml": "documents/nota-credito-sobre-factura.xml",
+      "contentJson": "{\"reason\":\"Devolución de mercadería\",\"lines\":[{\"invoiceLineNo\":1,\"productId\":\"0b9e6c1a-3d47-4f2e-8a15-7c3d9e0f2b64\",\"mainCode\":\"SRV-001\",\"description\":\"Servicio de consultoría\",\"quantity\":\"2\",\"unitPrice\":\"10.00\",\"discount\":\"0.00\",\"subtotal\":\"20.00\",\"taxCode\":\"2\",\"taxRateCode\":\"4\",\"taxRate\":\"15.00\",\"taxAmount\":\"3.00\"},{\"invoiceLineNo\":2,\"productId\":\"c4a81f77-92de-4a0b-b3c6-15e8d70a49f2\",\"mainCode\":\"LIB-001\",\"description\":\"Libro\",\"quantity\":\"1.5\",\"unitPrice\":\"9.333333\",\"discount\":\"0.00\",\"subtotal\":\"14.00\",\"taxCode\":\"2\",\"taxRateCode\":\"0\",\"taxRate\":\"0.00\",\"taxAmount\":\"0.00\"}],\"taxes\":[{\"taxCode\":\"2\",\"rateCode\":\"0\",\"rate\":\"0.00\",\"base\":\"14.00\",\"amount\":\"0.00\"},{\"taxCode\":\"2\",\"rateCode\":\"4\",\"rate\":\"15.00\",\"base\":\"20.00\",\"amount\":\"3.00\"}]}"
+    },
+    {
+      "name": "nota-credito-a-mano",
+      "type": "04",
+      "data": {
+        "envelope": {
+          "type": "04",
+          "environment": "1",
+          "issuer": {
+            "legalName": "Comercial Andina S.A.",
+            "tradeName": "Andina",
+            "ruc": "1790012345001",
+            "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+            "establishmentAddress": "Av. 10 de Agosto, Quito",
+            "accountingRequired": true,
+            "specialTaxpayerCode": "5368",
+            "withholdingAgentCode": "1",
+            "rimpeRegime": "EMPRENDEDOR",
+            "phone": "022345678"
+          },
+          "accessKey": "1910202604179001234500110010020000000071234567817",
+          "establishmentCode": "001",
+          "emissionPointCode": "002",
+          "sequence": 7,
+          "issueDate": "2026-10-19",
+          "recipient": {
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "María Pérez",
+            "address": "Av. República, Quito",
+            "email": "maria@example.com",
+            "phone": null
+          },
+          "totals": {
+            "subtotal": "34.00",
+            "totalDiscount": "0",
+            "totalTax": "3.00",
+            "total": "37.00"
+          },
+          "modified": {
+            "documentId": null,
+            "code": "01",
+            "number": "001-001-000000123",
+            "issueDate": "2026-10-01"
+          },
+          "providerRuc": "1790099999001"
+        },
+        "content": {
+          "reason": "Cambio & <ajuste>",
+          "lines": [
+            {
+              "invoiceLineNo": null,
+              "productId": null,
+              "mainCode": "SRV-001",
+              "description": "Servicio de consultoría",
+              "quantity": "2",
+              "unitPrice": "10.00",
+              "discount": "0",
+              "subtotal": "20.00",
+              "taxCode": "2",
+              "taxRateCode": "4",
+              "taxRate": "15.00",
+              "taxAmount": "3.00"
+            },
+            {
+              "invoiceLineNo": null,
+              "productId": null,
+              "mainCode": "LIB-001",
+              "description": "Libro",
+              "quantity": "1.5",
+              "unitPrice": "9.333333",
+              "discount": "0",
+              "subtotal": "14.00",
+              "taxCode": "2",
+              "taxRateCode": "0",
+              "taxRate": "0.00",
+              "taxAmount": "0.00"
+            }
+          ],
+          "taxes": [
+            {
+              "taxCode": "2",
+              "rateCode": "0",
+              "rate": "0.00",
+              "base": "14.00",
+              "amount": "0.00"
+            },
+            {
+              "taxCode": "2",
+              "rateCode": "4",
+              "rate": "15.00",
+              "base": "20.00",
+              "amount": "3.00"
+            }
+          ]
+        }
+      },
+      "xml": "documents/nota-credito-a-mano.xml",
+      "contentJson": "{\"reason\":\"Cambio & <ajuste>\",\"lines\":[{\"invoiceLineNo\":null,\"productId\":null,\"mainCode\":\"SRV-001\",\"description\":\"Servicio de consultoría\",\"quantity\":\"2\",\"unitPrice\":\"10.00\",\"discount\":\"0\",\"subtotal\":\"20.00\",\"taxCode\":\"2\",\"taxRateCode\":\"4\",\"taxRate\":\"15.00\",\"taxAmount\":\"3.00\"},{\"invoiceLineNo\":null,\"productId\":null,\"mainCode\":\"LIB-001\",\"description\":\"Libro\",\"quantity\":\"1.5\",\"unitPrice\":\"9.333333\",\"discount\":\"0\",\"subtotal\":\"14.00\",\"taxCode\":\"2\",\"taxRateCode\":\"0\",\"taxRate\":\"0.00\",\"taxAmount\":\"0.00\"}],\"taxes\":[{\"taxCode\":\"2\",\"rateCode\":\"0\",\"rate\":\"0.00\",\"base\":\"14.00\",\"amount\":\"0.00\"},{\"taxCode\":\"2\",\"rateCode\":\"4\",\"rate\":\"15.00\",\"base\":\"20.00\",\"amount\":\"3.00\"}]}"
+    },
+    {
+      "name": "nota-credito-json-con-controles",
+      "type": "04",
+      "data": {
+        "envelope": {
+          "type": "04",
+          "environment": "1",
+          "issuer": {
+            "legalName": "Comercial Andina S.A.",
+            "tradeName": "Andina",
+            "ruc": "1790012345001",
+            "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+            "establishmentAddress": "Av. 10 de Agosto, Quito",
+            "accountingRequired": false,
+            "specialTaxpayerCode": null,
+            "withholdingAgentCode": null,
+            "rimpeRegime": "NONE",
+            "phone": "022345678"
+          },
+          "accessKey": "1910202604179001234500110010020000000071234567817",
+          "establishmentCode": "001",
+          "emissionPointCode": "002",
+          "sequence": 7,
+          "issueDate": "2026-10-19",
+          "recipient": {
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "María Pérez",
+            "address": "Av. República, Quito",
+            "email": "maria@example.com",
+            "phone": null
+          },
+          "totals": {
+            "subtotal": "34.00",
+            "totalDiscount": "0.00",
+            "totalTax": "3.00",
+            "total": "37.00"
+          },
+          "modified": {
+            "documentId": "5d0f3a52-8c1e-4b63-9a7d-2e4f6a1b9c30",
+            "code": "01",
+            "number": "001-001-000000123",
+            "issueDate": "2026-10-01"
+          },
+          "providerRuc": null
+        },
+        "content": {
+          "reason": "Tab\t, salto\n, comillas \" y barra \\, \u0001 \u001f  é 😀",
+          "lines": [
+            {
+              "invoiceLineNo": 1,
+              "productId": "0b9e6c1a-3d47-4f2e-8a15-7c3d9e0f2b64",
+              "mainCode": "SRV-001",
+              "description": "Servicio de consultoría",
+              "quantity": "2",
+              "unitPrice": "10.00",
+              "discount": "0.00",
+              "subtotal": "20.00",
+              "taxCode": "2",
+              "taxRateCode": "4",
+              "taxRate": "15.00",
+              "taxAmount": "3.00"
+            },
+            {
+              "invoiceLineNo": null,
+              "productId": null,
+              "mainCode": "LIB-001",
+              "description": "Libro",
+              "quantity": "1.5",
+              "unitPrice": "9.333333",
+              "discount": "0.00",
+              "subtotal": "14.00",
+              "taxCode": "2",
+              "taxRateCode": "0",
+              "taxRate": "0.00",
+              "taxAmount": "0.00"
+            }
+          ],
+          "taxes": [
+            {
+              "taxCode": "2",
+              "rateCode": "0",
+              "rate": "0.00",
+              "base": "14.00",
+              "amount": "0.00"
+            },
+            {
+              "taxCode": "2",
+              "rateCode": "4",
+              "rate": "15.00",
+              "base": "20.00",
+              "amount": "3.00"
+            }
+          ]
+        }
+      },
+      "xml": null,
+      "contentJson": "{\"reason\":\"Tab\\t, salto\\n, comillas \\\" y barra \\\\, \\u0001 \\u001F  é 😀\",\"lines\":[{\"invoiceLineNo\":1,\"productId\":\"0b9e6c1a-3d47-4f2e-8a15-7c3d9e0f2b64\",\"mainCode\":\"SRV-001\",\"description\":\"Servicio de consultoría\",\"quantity\":\"2\",\"unitPrice\":\"10.00\",\"discount\":\"0.00\",\"subtotal\":\"20.00\",\"taxCode\":\"2\",\"taxRateCode\":\"4\",\"taxRate\":\"15.00\",\"taxAmount\":\"3.00\"},{\"invoiceLineNo\":null,\"productId\":null,\"mainCode\":\"LIB-001\",\"description\":\"Libro\",\"quantity\":\"1.5\",\"unitPrice\":\"9.333333\",\"discount\":\"0.00\",\"subtotal\":\"14.00\",\"taxCode\":\"2\",\"taxRateCode\":\"0\",\"taxRate\":\"0.00\",\"taxAmount\":\"0.00\"}],\"taxes\":[{\"taxCode\":\"2\",\"rateCode\":\"0\",\"rate\":\"0.00\",\"base\":\"14.00\",\"amount\":\"0.00\"},{\"taxCode\":\"2\",\"rateCode\":\"4\",\"rate\":\"15.00\",\"base\":\"20.00\",\"amount\":\"3.00\"}]}"
+    },
+    {
+      "name": "nota-debito-dos-tarifas",
+      "type": "05",
+      "data": {
+        "envelope": {
+          "type": "05",
+          "environment": "1",
+          "issuer": {
+            "legalName": "Comercial Andina S.A.",
+            "tradeName": "Andina",
+            "ruc": "1790012345001",
+            "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+            "establishmentAddress": "Av. 10 de Agosto, Quito",
+            "accountingRequired": false,
+            "specialTaxpayerCode": null,
+            "withholdingAgentCode": null,
+            "rimpeRegime": "NEGOCIO_POPULAR",
+            "phone": "022345678"
+          },
+          "accessKey": "1910202605179001234500110010020000000071234567813",
+          "establishmentCode": "001",
+          "emissionPointCode": "002",
+          "sequence": 7,
+          "issueDate": "2026-10-19",
+          "recipient": {
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "María Pérez",
+            "address": "Av. República, Quito",
+            "email": "maria@example.com",
+            "phone": null
+          },
+          "totals": {
+            "subtotal": "15.00",
+            "totalDiscount": "0.00",
+            "totalTax": "1.50",
+            "total": "16.50"
+          },
+          "modified": {
+            "documentId": "5d0f3a52-8c1e-4b63-9a7d-2e4f6a1b9c30",
+            "code": "01",
+            "number": "001-001-000000123",
+            "issueDate": "2026-10-01"
+          },
+          "providerRuc": "1790099999001"
+        },
+        "content": {
+          "reasons": [
+            {
+              "reason": "Intereses de mora & <gastos>",
+              "value": "10.00",
+              "taxCode": "2",
+              "taxRateCode": "4",
+              "taxRate": "15.00",
+              "taxAmount": "1.50"
+            },
+            {
+              "reason": "Gastos de cobranza",
+              "value": "5.00",
+              "taxCode": "2",
+              "taxRateCode": "0",
+              "taxRate": "0.00",
+              "taxAmount": "0.00"
+            }
+          ],
+          "taxes": [
+            {
+              "taxCode": "2",
+              "rateCode": "0",
+              "rate": "0.00",
+              "base": "5.00",
+              "amount": "0.00"
+            },
+            {
+              "taxCode": "2",
+              "rateCode": "4",
+              "rate": "15.00",
+              "base": "10.00",
+              "amount": "1.50"
+            }
+          ],
+          "payments": [
+            {
+              "methodCode": "01",
+              "amount": "16.50",
+              "term": null,
+              "timeUnit": null
+            }
+          ]
+        }
+      },
+      "xml": "documents/nota-debito-dos-tarifas.xml",
+      "contentJson": "{\"reasons\":[{\"reason\":\"Intereses de mora & <gastos>\",\"value\":\"10.00\",\"taxCode\":\"2\",\"taxRateCode\":\"4\",\"taxRate\":\"15.00\",\"taxAmount\":\"1.50\"},{\"reason\":\"Gastos de cobranza\",\"value\":\"5.00\",\"taxCode\":\"2\",\"taxRateCode\":\"0\",\"taxRate\":\"0.00\",\"taxAmount\":\"0.00\"}],\"taxes\":[{\"taxCode\":\"2\",\"rateCode\":\"0\",\"rate\":\"0.00\",\"base\":\"5.00\",\"amount\":\"0.00\"},{\"taxCode\":\"2\",\"rateCode\":\"4\",\"rate\":\"15.00\",\"base\":\"10.00\",\"amount\":\"1.50\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"16.50\",\"term\":null,\"timeUnit\":null}]}"
+    },
+    {
+      "name": "nota-debito-con-plazo",
+      "type": "05",
+      "data": {
+        "envelope": {
+          "type": "05",
+          "environment": "1",
+          "issuer": {
+            "legalName": "Comercial Andina S.A.",
+            "tradeName": "Andina",
+            "ruc": "1790012345001",
+            "headOfficeAddress": "Av. Amazonas N34-12, Quito",
+            "establishmentAddress": "Av. 10 de Agosto, Quito",
+            "accountingRequired": false,
+            "specialTaxpayerCode": null,
+            "withholdingAgentCode": null,
+            "rimpeRegime": "NEGOCIO_POPULAR",
+            "phone": "022345678"
+          },
+          "accessKey": "1910202605179001234500110010020000000071234567813",
+          "establishmentCode": "001",
+          "emissionPointCode": "002",
+          "sequence": 7,
+          "issueDate": "2026-10-19",
+          "recipient": {
+            "idType": "05",
+            "idNumber": "1712345678",
+            "name": "María Pérez",
+            "address": "Av. República, Quito",
+            "email": "maria@example.com",
+            "phone": null
+          },
+          "totals": {
+            "subtotal": "15.00",
+            "totalDiscount": "0.00",
+            "totalTax": "1.50",
+            "total": "16.50"
+          },
+          "modified": {
+            "documentId": "5d0f3a52-8c1e-4b63-9a7d-2e4f6a1b9c30",
+            "code": "01",
+            "number": "001-001-000000123",
+            "issueDate": "2026-10-01"
+          },
+          "providerRuc": "1790099999001"
+        },
+        "content": {
+          "reasons": [
+            {
+              "reason": "Intereses de mora & <gastos>",
+              "value": "10.00",
+              "taxCode": "2",
+              "taxRateCode": "4",
+              "taxRate": "15.00",
+              "taxAmount": "1.50"
+            },
+            {
+              "reason": "Gastos de cobranza",
+              "value": "5.00",
+              "taxCode": "2",
+              "taxRateCode": "0",
+              "taxRate": "0.00",
+              "taxAmount": "0.00"
+            }
+          ],
+          "taxes": [
+            {
+              "taxCode": "2",
+              "rateCode": "0",
+              "rate": "0.00",
+              "base": "5.00",
+              "amount": "0.00"
+            },
+            {
+              "taxCode": "2",
+              "rateCode": "4",
+              "rate": "15.00",
+              "base": "10.00",
+              "amount": "1.50"
+            }
+          ],
+          "payments": [
+            {
+              "methodCode": "01",
+              "amount": "16.50",
+              "term": "2",
+              "timeUnit": "meses"
+            }
+          ]
+        }
+      },
+      "xml": "documents/nota-debito-con-plazo.xml",
+      "contentJson": "{\"reasons\":[{\"reason\":\"Intereses de mora & <gastos>\",\"value\":\"10.00\",\"taxCode\":\"2\",\"taxRateCode\":\"4\",\"taxRate\":\"15.00\",\"taxAmount\":\"1.50\"},{\"reason\":\"Gastos de cobranza\",\"value\":\"5.00\",\"taxCode\":\"2\",\"taxRateCode\":\"0\",\"taxRate\":\"0.00\",\"taxAmount\":\"0.00\"}],\"taxes\":[{\"taxCode\":\"2\",\"rateCode\":\"0\",\"rate\":\"0.00\",\"base\":\"5.00\",\"amount\":\"0.00\"},{\"taxCode\":\"2\",\"rateCode\":\"4\",\"rate\":\"15.00\",\"base\":\"10.00\",\"amount\":\"1.50\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"16.50\",\"term\":\"2\",\"timeUnit\":\"meses\"}]}"
+    }
+  ]
+}
