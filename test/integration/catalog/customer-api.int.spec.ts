@@ -1,10 +1,20 @@
 import pg from 'pg';
 import { CatalogRepository } from '../../../src/catalog/catalog.repository.js';
 import { startStack, type StackHandle } from '../../support/containers.js';
-import { bearer, createCustomer, customerJson, memberToken, newOwner } from '../../support/scenario.js';
+import {
+  bearer,
+  billingScenario,
+  createCustomer,
+  customerJson,
+  invoiceJson,
+  invoiceRequest,
+  issueInvoice,
+  memberToken,
+  newOwner,
+} from '../../support/scenario.js';
 import { startTestApp, type TestApp } from '../../support/test-app.js';
 
-// Traducción de CustomerApiIT. removingCustomerAndProductPreservesIssuedInvoice llega en E3.
+// Traducción de CustomerApiIT.
 const CUSTOMERS = '/api/v1/customers';
 let stack: StackHandle;
 let testApp: TestApp;
@@ -275,4 +285,23 @@ it('una edición obsoleta no revive un cliente que otra petición acaba de borra
     spy.mockRestore();
   }
   await get(owner, `${CUSTOMERS}/${id}`).expect(404);
+});
+
+it('borrar el cliente y el producto conserva la factura emitida', async () => {
+  const scenario = await billingScenario(http(), db);
+  const document = await issueInvoice(http(), scenario.owner, invoiceJson(scenario, '1', '11.50'));
+  await del(scenario.owner, scenario.customer).expect(204);
+  await http().delete(`/api/v1/products/${scenario.product}`).set('Authorization', bearer(scenario.owner)).expect(204);
+  const customerName = await db.query<{ customer_name: string }>(
+    'SELECT customer_name FROM fiscal_documents WHERE id = $1',
+    [document],
+  );
+  expect(customerName.rows[0]!.customer_name).toBe('María Pérez');
+  const description = await db.query<{ description: string }>(
+    'SELECT description FROM fiscal_document_lines WHERE document_id = $1',
+    [document],
+  );
+  expect(description.rows[0]!.description).toBe('Servicio de consultoría');
+  await get(scenario.owner, `/api/v1/documents/${document}`).expect(200);
+  await invoiceRequest(http(), scenario.owner, invoiceJson(scenario, '1', '11.50'), 'otra-clave').expect(404);
 });

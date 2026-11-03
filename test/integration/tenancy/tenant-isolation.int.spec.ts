@@ -11,6 +11,7 @@ import {
   createTaxpayer,
   invoiceJson,
   invoiceRequest,
+  issueInvoice,
   newOwner,
   randomRuc,
   sameProblem,
@@ -20,7 +21,7 @@ import { startTestApp, type TestApp } from '../../support/test-app.js';
 /*
  * Traducción de TenantIsolationIT, con las rutas portadas hasta la emisión de facturas. Dos empresas, A y B: ninguna
  * petición de B lee ni modifica nada de A, y la respuesta no distingue un recurso ajeno de uno
- * inexistente. documentOfAnotherTenantIsNotFound llega con la consulta de comprobantes.
+ * inexistente.
  */
 let stack: StackHandle;
 let testApp: TestApp;
@@ -155,4 +156,21 @@ it('no se emite con el emisor, el cliente o el producto de otra empresa', async 
     );
   expect(await count('fiscal_documents')).toBe(0);
   expect(await count('document_sequences')).toBe(0);
+});
+
+it('el comprobante de otra empresa no existe', async () => {
+  const a = await billingScenario(http(), db);
+  const b = await billingScenario(http(), db);
+  const documentA = await issueInvoice(http(), a.owner, invoiceJson(a, '1', '11.50'));
+
+  const foreign = await notFoundBody(b.owner, `/api/v1/documents/${documentA}`);
+  const unknown = await notFoundBody(b.owner, `/api/v1/documents/${randomUUID()}`);
+  sameProblem(foreign.body, unknown.body);
+  const listed = await http().get('/api/v1/documents').set('Authorization', bearer(b.owner)).expect(200);
+  expect(listed.body.total).toBe(0);
+  expect(listed.body.items).toEqual([]);
+  // La empresa A sí lo ve, y el filtro por tipo tampoco cruza empresas.
+  await http().get(`/api/v1/documents/${documentA}`).set('Authorization', bearer(a.owner)).expect(200);
+  const byType = await http().get('/api/v1/documents?documentType=01').set('Authorization', bearer(b.owner)).expect(200);
+  expect(byType.body.total).toBe(0);
 });

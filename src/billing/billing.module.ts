@@ -17,6 +17,7 @@ import { TenancyModule } from '../tenancy/tenancy.module.js';
 import { XmlModule } from '../xml/xml.module.js';
 import { XsdValidator } from '../xml/xsd-validator.js';
 import { CatalogLines } from './catalog-lines.js';
+import { DocumentController } from './document.controller.js';
 import { DocumentIssuer } from './document-issuer.js';
 import { DocumentKinds } from './document-kind.js';
 import { DocumentXmlCheck } from './document-xml-check.js';
@@ -31,7 +32,7 @@ import { OutboxWriter } from './outbox-writer.js';
 /** Emisión de facturas y lo común a todo comprobante; las notas (NotesModule) reutilizan lo exportado. */
 @Module({
   imports: [TenancyModule, ComplianceModule, CatalogModule, TaxpayerModule, SequenceModule, XmlModule],
-  controllers: [InvoiceController],
+  controllers: [InvoiceController, DocumentController],
   providers: [
     { provide: FiscalDocumentRepository, useFactory: () => new FiscalDocumentRepository() },
     { provide: IdempotencyStore, useFactory: () => new IdempotencyStore() },
