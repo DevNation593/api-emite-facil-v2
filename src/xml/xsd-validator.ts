@@ -132,11 +132,10 @@ export class XsdValidator {
         );
       });
       const run = this.engine(xml, main, preload).catch(
-        (error: unknown): never => {
-          const detail = error instanceof Error ? error.message.trim() : '';
-          throw new Error(detail || 'No se pudo validar el XML', {
-            cause: error,
-          });
+        (): never => {
+          // El texto del motor (stderr de libxml2) puede incluir un fragmento del XML, con datos del
+          // comprador: no se copia ni al mensaje ni a `cause`.
+          throw new Error('Falló el motor XSD');
         },
       );
       return await Promise.race([run, timeout]);

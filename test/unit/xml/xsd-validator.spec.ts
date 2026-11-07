@@ -163,12 +163,14 @@ describe('plazo y simultaneidad', () => {
         DOCUMENT_SCHEMAS.INVOICE_1_1_0,
       ),
     );
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 20));
-    await tick();
-    expect(started).toHaveLength(4);
+    // Sin esperas fijas: cada paso aguarda a que el estado esperado se alcance (la primera lectura de los XSD puede tardar).
+    await vi.waitFor(() => expect(started).toHaveLength(4), { timeout: 5000 });
     for (let done = 0; done < 10; done++) {
       releases[done]!();
-      await tick();
+      await vi.waitFor(
+        () => expect(started).toHaveLength(Math.min(done + 5, 10)),
+        { timeout: 5000 },
+      );
       expect(running).toBeLessThanOrEqual(4);
     }
     expect((await Promise.all(all)).every((r) => r.valid)).toBe(true);
@@ -198,10 +200,34 @@ describe('plazo y simultaneidad', () => {
     });
     await expect(
       limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0),
-    ).rejects.toThrow('worker caído');
+    ).rejects.toThrow('Falló el motor XSD');
     await expect(
       limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0),
-    ).rejects.toThrow('worker caído');
+    ).rejects.toThrow('Falló el motor XSD');
+  });
+
+  it('un fallo del motor no filtra su texto (puede traer datos del XML) ni en message ni en cause', async () => {
+    const limited = new XsdValidator({
+      engine: () =>
+        Promise.reject(
+          new Error('Element razonSocial: JUAN PEREZ 1712345678 no válido'),
+        ),
+      maxConcurrent: 1,
+    });
+    const error = await limited
+      .validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0)
+      .then(
+        () => undefined,
+        (e: unknown) => e,
+      );
+    expect(error).toBeInstanceOf(Error);
+    const dump = JSON.stringify([
+      (error as Error).message,
+      String((error as Error).cause),
+      (error as Error).stack,
+    ]);
+    expect(dump).not.toContain('JUAN PEREZ');
+    expect(dump).not.toContain('1712345678');
   });
 
   it('el contenido inválido sigue siendo un resultado, no una excepción', async () => {
