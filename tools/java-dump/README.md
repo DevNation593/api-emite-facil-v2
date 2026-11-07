@@ -3,8 +3,10 @@
 Genera `test/fixtures/java-e1/` con datos escritos por la API Java (`backend-emite-facil`). La prueba
 `test/integration/identity/java-compat.int.spec.ts` carga ese volcado y comprueba que NestJS sigue
 aceptando lo que Java dejó: la contraseña Argon2, el token de renovación, la API key y su empresa, el
-access token firmado por Java, el historial de Flyway, el emisor, el cliente y el producto, y el
-certificado cifrado con AES-GCM, que NestJS descifra y lee.
+access token firmado por Java, el historial de Flyway, el emisor, el cliente y el producto, el
+certificado cifrado con AES-GCM, que NestJS descifra y lee, y los comprobantes de E3: NestJS los
+muestra como Java, reconoce el reintento de cada emisión con la clave y el cuerpo que usó Java (misma
+huella de la petición) y cuenta la nota de crédito de Java en el saldo de la factura.
 
 ## Uso
 
@@ -31,11 +33,21 @@ Si uno falla, termina con código distinto de cero, nombra el paso y muestra el 
    key, un emisor con su establecimiento y punto de emisión, un cliente y un producto, y carga un
    certificado RSA 2048 creado con el `keytool` de esa JVM y vigente diez años. Comprueba la key contra
    `GET /api/v1/tenants/current`.
-5. Detiene Java y vuelca la base con `pg_dump --no-owner --no-privileges` en `dump.sql`.
-6. Escribe `meta.json`: el commit y la versión de Java, el correo y la contraseña, `userId`,
+5. Emite por HTTP, cada uno con su `Idempotency-Key`: una factura de dos líneas con tarifas distintas
+   (15 % con descuento y 0 %, de un segundo producto) y dos pagos (uno a 30 días), con una cantidad y
+   un importe escritos como números JSON (`3` y `20.00`); la pasa a `AUTHORIZED` por SQL, con
+   `authorization_number` igual a su clave de acceso y un `authorized_at` con microsegundos (`.123456`),
+   porque sin SRI ni worker Java la deja en `RESERVED`; y emite sobre ella una nota de crédito (una
+   unidad de la línea 1) y una nota de débito (dos motivos con tarifas distintas), más una nota de
+   crédito sobre una factura escrita a mano. Lee `GET /api/v1/documents/{id}` de cada uno y
+   `GET /api/v1/documents`.
+6. Detiene Java y vuelca la base con `pg_dump --no-owner --no-privileges` en `dump.sql`.
+7. Escribe `meta.json`: el commit y la versión de Java, el correo y la contraseña, `userId`,
    `tenantId`, los dos tokens con el `iat` y el `exp` del access token, la API key, los ids del
-   emisor, el cliente, el producto y el certificado con su huella, lo que Java respondió al crearlos
-   (`views`), y `EINVOICE_JWT_SECRET` y `EINVOICE_MASTER_KEY`.
+   emisor, el cliente, el producto y el certificado con su huella, `invoiceId`, `creditNoteId`,
+   `manualCreditNoteId` y `debitNoteId`, lo que Java respondió al crearlos (`views`), y
+   `EINVOICE_JWT_SECRET` y `EINVOICE_MASTER_KEY`. `requests.json` guarda la ruta, la clave y el texto
+   exacto del cuerpo de cada emisión, y `views.json`, lo que Java respondió al leer los comprobantes.
 
 Todo son valores de prueba generados en esa ejecución: no sirven fuera de estos fixtures. Cada
 ejecución produce valores distintos; la prueba lee los suyos de `meta.json`.

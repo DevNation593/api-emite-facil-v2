@@ -44,10 +44,10 @@ Rutas de los controladores de la API Java (`@RequestMapping` de clase más `@Get
 | PATCH | `/api/v1/taxpayers/{id}` | sí | `taxpayer` (`TaxpayerController`) | E2 | sí |
 | GET | `/api/v1/taxpayers/{taxpayerId}/establishments` | sí | `taxpayer` (`EstablishmentController`) | E2 | sí |
 | POST | `/api/v1/taxpayers/{taxpayerId}/establishments` | sí | `taxpayer` (`EstablishmentController`) | E2 | sí |
-| POST | `/api/v1/credit-notes` | sí | `notes` (`CreditNoteController`) | E3 | no |
-| POST | `/api/v1/debit-notes` | sí | `notes` (`DebitNoteController`) | E3 | no |
-| GET | `/api/v1/documents` | sí | `billing` (`DocumentController`) | E3 | no |
-| GET | `/api/v1/documents/{id}` | sí | `billing` (`DocumentController`) | E3 | no |
+| POST | `/api/v1/credit-notes` | sí | `notes` (`CreditNoteController`) | E3 | sí |
+| POST | `/api/v1/debit-notes` | sí | `notes` (`DebitNoteController`) | E3 | sí |
+| GET | `/api/v1/documents` | sí | `billing` (`DocumentController`) | E3 | sí |
+| GET | `/api/v1/documents/{id}` | sí | `billing` (`DocumentController`) | E3 | sí |
 | POST | `/api/v1/invoices` | sí | `billing` (`InvoiceController`) | E3 | sí |
 | POST | `/api/v1/documents/{id}/retry` | sí | `orchestration` (`DocumentRetryController`) | E4 | no |
 | GET | `/api/v1/documents/{id}/sri-attempts` | sí | `sri` (`SriAttemptController`) | E4 | no |
@@ -65,7 +65,7 @@ Rutas de los controladores de la API Java (`@RequestMapping` de clase más `@Get
 | POST | `/api/v1/webhooks/subscriptions/{id}/secret` | sí | `webhook` (`WebhookController`) | E6 | no |
 | POST | `/api/v1/webhooks/subscriptions/{id}/test` | sí | `webhook` (`WebhookController`) | E6 | no |
 
-Total: 60 rutas en Java; 60 operaciones en el contrato. Portadas: 40 (16 de E1 y 24 de E2).
+Total: 60 rutas en Java; 60 operaciones en el contrato. Portadas: 45 (16 de E1, 24 de E2 y 5 de E3).
 
 ## Diferencias entre Java y el contrato
 
@@ -88,3 +88,10 @@ pero no en el enum: `DOCUMENT_XML_INVALID`, `REPLACED_DOCUMENT_OTHER_TYPE`, `MOD
 `MODIFIED_DOCUMENT_NOT_INVOICE`, `MODIFIED_INVOICE_OTHER_ISSUER`, `MODIFIED_INVOICE_NOT_AUTHORIZED`,
 `INVALID_MODIFIED_DOCUMENT_DATE`, `CREDIT_LINE_UNKNOWN`, `CREDIT_LINE_EXCEEDS_INVOICE` y
 `CREDIT_EXCEEDS_INVOICE`. También están en `JAVA_ONLY_ERROR_CODES`.
+
+### Detalle de `DOCUMENT_XML_INVALID`
+
+Cuando el XML generado no pasa el XSD del SRI, o no se puede leer, Java pone en `detail` el mensaje de
+Xerces; NestJS valida con libxml2 (`xmllint-wasm`) y lee el XML con `saxes`, así que el `detail` trae
+el mensaje de libxml2 o de `saxes`. El estado (422), el `errorCode`, el título, el tope de 500
+caracteres y que no se consuma el secuencial son los mismos; solo cambia el texto del motor.

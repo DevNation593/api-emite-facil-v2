@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // Genera test/fixtures/java-e1/ con datos escritos por la API Java: arranca su jar contra
 // PostgreSQL, RabbitMQ y Redis efímeros, crea por HTTP una cuenta, una sesión, una empresa y una
-// API key, un emisor con su establecimiento y punto de emisión, un cliente, un producto y un
-// certificado, y vuelca la base. Solo escribe en el target/ del repo Java. Uso:
+// API key, un emisor con su establecimiento y punto de emisión, un cliente, dos productos, un
+// certificado, una factura (que autoriza por SQL), dos notas de crédito y una de débito, y vuelca la
+// base. Solo escribe en el target/ del repo Java. Uso:
 //   node tools/java-dump/run.mjs --java-repo ../backend-emite-facil [--skip-build]
 import { randomBytes, randomUUID } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
@@ -10,10 +11,31 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import pg from 'pg';
 import { callJava, fail, javaArguments, javaSource, runTool, startJavaApp } from './java-app.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const outDir = join(resolve(here, '..', '..'), 'test', 'fixtures', 'java-e1');
+
+/** Marca un texto para escribirlo como número JSON (con ese texto exacto) en `rawJson`. */
+class JsonNumber {
+  constructor(text) {
+    if (!/^-?\d+(\.\d+)?$/.test(text)) throw new Error(`número inválido: ${text}`);
+    this.text = text;
+  }
+}
+const number = (text) => new JsonNumber(text);
+
+/** JSON.stringify, salvo que cada JsonNumber sale como número con su texto (20.00, no 20). */
+function rawJson(value) {
+  const numbers = [];
+  const text = JSON.stringify(value, (_key, item) => {
+    if (!(item instanceof JsonNumber)) return item;
+    numbers.push(item.text);
+    return `\u0000${numbers.length - 1}\u0000`;
+  });
+  return text.replace(/"\\u0000(\d+)\\u0000"/g, (_match, i) => numbers[Number(i)]);
+}
 
 /** Un .p12 RSA 2048 con KeyUsage=digitalSignature, vigente diez años, creado con el keytool de esa JVM. */
 function keytoolP12(password) {
@@ -126,6 +148,104 @@ await runTool('java-dump', async (step, onFailure) => {
       expected: 201,
     });
 
+    step('emitir una factura, autorizarla y emitir dos notas de crédito y una de débito');
+    // Segundo producto con otra tarifa (0 %): la factura lleva dos grupos de IVA.
+    const product2 = await call('producto con IVA 0 %', 'POST', '/api/v1/products', {
+      body: { sku: 'LIB-001', name: 'Libro técnico', unitPrice: '5.25', ivaRateCode: '0' },
+      headers: owner,
+      expected: 201,
+    });
+    // Cada emisión guarda su clave y el texto exacto del cuerpo: NestJS debe reconocer el reintento.
+    const requests = {};
+    const issue = async (name, path, key, body) => {
+      const text = rawJson(body);
+      const res = await fetch(`${app.base}${path}`, {
+        method: 'POST',
+        headers: { ...owner, 'Content-Type': 'application/json', 'Idempotency-Key': key },
+        body: text,
+        signal: AbortSignal.timeout(30_000),
+      });
+      const answer = await res.text();
+      if (res.status !== 202) fail(`${name}: se esperaba 202 y llegó ${res.status} ${answer}`);
+      requests[name] = { path, key, body: text };
+      return JSON.parse(answer).id;
+    };
+    // Línea 1: 2 × 10.50 − 1.00 = 20.00 con IVA 15 % (3.00); línea 2: 3 × 5.25 = 15.75 con IVA 0 %.
+    // Total 38.75 en dos pagos, uno a 30 días. La cantidad 3 y el importe 20.00 van como números
+    // JSON: la huella de Java los toma con el texto recibido.
+    const invoiceId = await issue('invoice', '/api/v1/invoices', 'java-dump-factura', {
+      taxpayerId: taxpayer.id,
+      establishmentCode: '001',
+      emissionPointCode: '001',
+      customerId: customer.id,
+      lines: [
+        { productId: product.id, quantity: '2', discount: '1.00' },
+        { productId: product2.id, quantity: number('3') },
+      ],
+      payments: [
+        { methodCode: '01', amount: '18.75' },
+        { methodCode: '20', amount: number('20.00'), term: '30', timeUnit: 'dias' },
+      ],
+    });
+    // Sin SRI ni worker, Java la deja en RESERVED: se autoriza por SQL, con un authorized_at con
+    // microsegundos (Jackson los escribe con seis decimales).
+    const db = new pg.Client({ connectionString: app.postgres.getConnectionUri() });
+    await db.connect();
+    try {
+      await db.query(
+        `UPDATE fiscal_documents
+            SET state = 'AUTHORIZED', authorization_number = access_key,
+                authorized_at = date_trunc('second', now()) + interval '0.123456 second'
+          WHERE id = $1`,
+        [invoiceId],
+      );
+    } finally {
+      await db.end();
+    }
+    // Devuelve 1 de las 2 unidades de la línea 1, con el descuento prorrateado: 10.00 + IVA 1.50.
+    const creditNoteId = await issue('creditNote', '/api/v1/credit-notes', 'java-dump-nc', {
+      taxpayerId: taxpayer.id,
+      establishmentCode: '001',
+      emissionPointCode: '001',
+      reason: 'Devolución parcial',
+      invoiceId,
+      lines: [{ invoiceLineNo: 1, quantity: '1' }],
+    });
+    const manualCreditNoteId = await issue('manualCreditNote', '/api/v1/credit-notes', 'java-dump-nc-mano', {
+      taxpayerId: taxpayer.id,
+      establishmentCode: '001',
+      emissionPointCode: '001',
+      reason: 'Devolución de una factura en papel',
+      modifiedDocument: { code: '01', number: '001-001-000000099', issueDate: '2026-10-01' },
+      customerId: customer.id,
+      lines: [{ productId: product2.id, quantity: '2' }],
+    });
+    // 5.00 con IVA 15 % y 2.00 con IVA 0 %: 7.75 en un pago.
+    const debitNoteId = await issue('debitNote', '/api/v1/debit-notes', 'java-dump-nd', {
+      taxpayerId: taxpayer.id,
+      establishmentCode: '001',
+      emissionPointCode: '001',
+      invoiceId,
+      reasons: [
+        { reason: 'Intereses de mora', value: '5.00', ivaRateCode: '4' },
+        { reason: 'Gastos de cobranza', value: '2.00', ivaRateCode: '0' },
+      ],
+      payments: [{ methodCode: '01', amount: '7.75' }],
+    });
+
+    step('leer los comprobantes en Java');
+    const read = (name, path) => call(name, 'GET', path, { headers: owner, expected: 200 });
+    const documentViews = {
+      invoice: await read('factura', `/api/v1/documents/${invoiceId}`),
+      creditNote: await read('nota de crédito', `/api/v1/documents/${creditNoteId}`),
+      manualCreditNote: await read('nota de crédito a mano', `/api/v1/documents/${manualCreditNoteId}`),
+      debitNote: await read('nota de débito', `/api/v1/documents/${debitNoteId}`),
+      list: await read('listado', '/api/v1/documents'),
+    };
+    if (!/\.123456Z$/.test(documentViews.invoice.authorizedAt ?? '')) {
+      fail(`authorizedAt sin microsegundos: ${documentViews.invoice.authorizedAt}`);
+    }
+
     step('comprobar los datos en Java');
     const viaKey = await call('empresa con la API key', 'GET', '/api/v1/tenants/current', {
       headers: { 'X-Api-Key': apiKey.key },
@@ -164,11 +284,17 @@ await runTool('java-dump', async (step, onFailure) => {
       certificateFingerprint: certificate.fingerprintSha256,
       customerId: customer.id,
       productId: product.id,
+      invoiceId,
+      creditNoteId,
+      manualCreditNoteId,
+      debitNoteId,
       // Lo que Java respondió al crearlos: NestJS debe leer lo mismo.
       views: { taxpayer, establishment, emissionPoint, customer, product, certificate },
       env: app.secrets,
     };
     writeFileSync(join(outDir, 'meta.json'), `${JSON.stringify(meta, null, 2)}\n`);
+    writeFileSync(join(outDir, 'requests.json'), `${JSON.stringify(requests, null, 2)}\n`);
+    writeFileSync(join(outDir, 'views.json'), `${JSON.stringify(documentViews, null, 2)}\n`);
     console.log(`[java-dump] listo: ${outDir}`);
   } finally {
     await app.stop();
