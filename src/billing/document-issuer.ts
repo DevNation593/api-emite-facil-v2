@@ -1,6 +1,7 @@
 import { type Kysely, sql, type Transaction } from 'kysely';
 import { ApiException } from '../common/api-exception.js';
 import type { ErrorCode } from '../common/error-codes.js';
+import { localDateIsAfter } from '../common/java-time.js';
 import { setDocumentId } from '../common/request-context.js';
 import type { CustomerView } from '../catalog/customer.service.js';
 import type { AuditLog } from '../compliance/audit-log.js';
@@ -95,18 +96,6 @@ function xmlInvalid(problem: string | null): ApiException {
   );
 }
 
-/** `LocalDate.isAfter` sobre el texto de un LocalDate de Java, que puede llevar signo y más de cuatro cifras de año. */
-function isAfter(date: string, other: string): boolean {
-  const parts = (text: string) => {
-    const match = /^([+-]?\d+)-(\d{2})-(\d{2})$/.exec(text);
-    if (match === null) throw new Error(`Fecha inválida: ${text}`);
-    return [Number(match[1]), Number(match[2]), Number(match[3])] as const;
-  };
-  const [y1, m1, d1] = parts(date);
-  const [y2, m2, d2] = parts(other);
-  return y1 !== y2 ? y1 > y2 : m1 !== m2 ? m1 > m2 : d1 > d2;
-}
-
 /**
  * Emisión de un comprobante de cualquier tipo hasta el estado RESERVED: lo que no depende del tipo
  * (billing/DocumentIssuer.java). Todo ocurre en una transacción: si algo falla, incluido el XML, no
@@ -162,7 +151,7 @@ export class DocumentIssuer {
       if (currency !== CURRENCY) throw unprocessable('UNSUPPORTED_CURRENCY', 'Solo se emiten comprobantes en USD');
       const today = fiscalDateOf(this.now());
       const issueDate = request.issueDate ?? today;
-      if (isAfter(issueDate, today)) {
+      if (localDateIsAfter(issueDate, today)) {
         throw unprocessable('INVALID_ISSUE_DATE', 'La fecha de emisión no puede ser futura');
       }
 

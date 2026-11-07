@@ -25,12 +25,14 @@ export function jacksonJson(value: unknown): string {
   if (value === null || value === undefined) return 'null';
   if (typeof value === 'string') return jacksonString(value);
   if (typeof value === 'boolean') return String(value);
+  // Un Integer (invoiceLineNo) se escribe en decimal, igual en Java y en JS.
+  if (typeof value === 'number' && Number.isSafeInteger(value)) return String(value);
   if (Array.isArray(value)) return `[${value.map(jacksonJson).join(',')}]`;
   if (typeof value === 'object') {
     const entries = Object.entries(value as Record<string, unknown>);
     return `{${entries.map(([key, item]) => `${jacksonString(key)}:${jacksonJson(item)}`).join(',')}}`;
   }
-  // La vista solo lleva texto: un número se habría escrito con el formato de double de JS, no el de Java.
+  // Fuera de los enteros, la vista solo lleva texto: un double se escribiría con el formato de JS, no el de Java.
   throw new Error(`Valor sin forma JSON definida para la huella: ${typeof value}`);
 }
 

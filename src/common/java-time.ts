@@ -128,3 +128,20 @@ export function parseIsoLocalDateTimeDate(text: string): string | null {
   if (Number(hour) > 23 || Number(minute) > 59 || Number(second) > 59) return null;
   return parseIsoLocalDate(text.slice(0, t));
 }
+
+/** Texto de un LocalDate de Java (`2026-11-02`, `-0001-01-01`, `+10000-01-01`). */
+const LOCAL_DATE_TEXT = /^([+-]?\d+)-(\d{2})-(\d{2})$/;
+
+/** Año (con signo), mes y día del texto de un LocalDate; lanza si no lo es (un error de programación). */
+export function localDateParts(date: string): readonly [year: number, month: number, day: number] {
+  const match = LOCAL_DATE_TEXT.exec(date);
+  if (match === null) throw new Error(`Fecha no válida: ${date}`);
+  return [Number(match[1]), Number(match[2]), Number(match[3])];
+}
+
+/** `LocalDate.isAfter` sobre el texto de dos LocalDate, que pueden llevar signo y más de cuatro cifras de año. */
+export function localDateIsAfter(date: string, other: string): boolean {
+  const [y1, m1, d1] = localDateParts(date);
+  const [y2, m2, d2] = localDateParts(other);
+  return y1 !== y2 ? y1 > y2 : m1 !== m2 ? m1 > m2 : d1 > d2;
+}

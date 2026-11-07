@@ -1,4 +1,5 @@
 import type { BigDecimal } from '../common/big-decimal.js';
+import type { CreditNoteContent, CreditNoteLine } from '../notes/credit-note-content.js';
 import type { DocumentEnvelope } from './document-envelope.js';
 import type { DocumentRow, LineRow, Links, PaymentRow } from './fiscal-document.repository.js';
 import type { TaxTotal } from './invoice-calculator.js';
@@ -162,6 +163,36 @@ export function lineView(line: LineRow): LineView {
     taxRateCode: line.taxRateCode,
     taxRate: line.taxRate.toFixed(2),
     taxAmount: line.taxAmount.toFixed(2),
+  };
+}
+
+/** Línea de una nota de crédito: numerada desde 1 en su orden y con la línea de la factura que corrige. */
+export function creditLineView(lineNo: number, line: CreditNoteLine): LineView {
+  return {
+    lineNo,
+    invoiceLineNo: line.invoiceLineNo,
+    productId: line.productId,
+    mainCode: line.mainCode,
+    description: line.description,
+    quantity: line.quantity.toFixed(6),
+    unitPrice: line.unitPrice.toFixed(6),
+    discount: line.discount.toFixed(2),
+    subtotal: line.subtotal.toFixed(2),
+    taxCode: line.taxCode,
+    taxRateCode: line.taxRateCode,
+    taxRate: line.taxRate.toFixed(2),
+    taxAmount: line.taxAmount.toFixed(2),
+  };
+}
+
+/** Lo propio de una nota de crédito, de su contenido: el motivo, sus líneas e impuestos y ningún pago. */
+export function creditNoteParts(content: CreditNoteContent): DocumentParts {
+  return {
+    taxes: content.taxes.map(taxView),
+    lines: content.lines.map((line, i) => creditLineView(i + 1, line)),
+    payments: [],
+    reason: content.reason,
+    reasons: null,
   };
 }
 

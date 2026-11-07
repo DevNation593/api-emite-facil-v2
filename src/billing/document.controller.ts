@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, Param, Query, UseGuards } from '@nestjs/common';
-import type { Kysely } from 'kysely';
+import type { Kysely, Transaction } from 'kysely';
 import { ApiException } from '../common/api-exception.js';
 import { type PageResponse, pageRequest } from '../common/pagination.js';
 import { IntQueryPipe, OptionalStringQueryPipe } from '../common/query-params.js';
@@ -9,7 +9,10 @@ import type { DB } from '../database/schema.js';
 import { Tenant, type TenantAccess } from '../tenancy/tenant-access.js';
 import { TenantAccessGuard } from '../tenancy/tenant-access.guard.js';
 import { DOCUMENT_TYPES } from '../xml/document-type.js';
+import type { CreditNoteContent } from '../notes/credit-note-content.js';
+import { DocumentKinds } from './document-kind.js';
 import {
+  creditNoteParts,
   type DocumentParts,
   type DocumentSummary,
   type DocumentView,
@@ -22,6 +25,9 @@ import {
 import { FiscalDocumentRepository } from './fiscal-document.repository.js';
 
 const KNOWN_CODES: readonly string[] = Object.values(DOCUMENT_TYPES).map((type) => type.code);
+
+/** Las notas guardan su contenido como JSON; los demás tipos, en las tablas hijas. */
+const NOTE_CODES: readonly string[] = [DOCUMENT_TYPES.CREDIT_NOTE.code, DOCUMENT_TYPES.DEBIT_NOTE.code];
 
 /** Un código que no es de un tipo conocido es una petición mal formada. */
 function parseType(code: string | null): string | null {
@@ -38,6 +44,7 @@ function parseType(code: string | null): string | null {
 export class DocumentController {
   constructor(
     private readonly documents: FiscalDocumentRepository,
+    private readonly kinds: DocumentKinds,
     @Inject(DATABASE) private readonly db: Kysely<DB>,
   ) {}
 
@@ -48,20 +55,35 @@ export class DocumentController {
       const row = await this.documents.find(trx, tenantId, id);
       if (row === null) throw ApiException.notFound();
       const links = await this.documents.links(trx, tenantId, id);
-      // Las ramas de las notas de crédito y débito (contenido propio) llegan con sus tipos; el resto, la
-      // factura y la guía incluidas, sale de las tablas hijas.
-      const parts: DocumentParts = {
-        taxes: (await this.documents.taxes(trx, tenantId, id)).map(taxView),
-        lines: (await this.documents.lines(trx, tenantId, id)).map(lineView),
-        payments: (await this.documents.payments(trx, tenantId, id)).map(paymentView),
-        reason: null,
-        reasons: null,
-      };
+      const parts: DocumentParts = NOTE_CODES.includes(row.documentType)
+        ? await this.noteParts(trx, tenantId, row.documentType, id)
+        : {
+            taxes: (await this.documents.taxes(trx, tenantId, id)).map(taxView),
+            lines: (await this.documents.lines(trx, tenantId, id)).map(lineView),
+            payments: (await this.documents.payments(trx, tenantId, id)).map(paymentView),
+            reason: null,
+            reasons: null,
+          };
       const envelope = await this.documents.envelope(trx, tenantId, id);
       const creditedTotal =
         row.documentType === DOCUMENT_TYPES.INVOICE.code ? await this.documents.creditedTotal(trx, tenantId, id) : null;
       return documentView(row, links, envelope, parts, creditedTotal);
     });
+  }
+
+  /** Lo propio de una nota, de su contenido leído con el tipo registrado (DocumentController.noteContent). */
+  private async noteParts(
+    trx: Transaction<DB>,
+    tenantId: string,
+    documentType: string,
+    id: string,
+  ): Promise<DocumentParts> {
+    const kind = this.kinds.find(documentType);
+    if (kind === null) throw new Error(`Sin kind para ${documentType}`);
+    const content = await kind.loadContent(trx, tenantId, id);
+    if (documentType === DOCUMENT_TYPES.CREDIT_NOTE.code) return creditNoteParts(content as CreditNoteContent);
+    // La rama de la nota de débito llega con su tipo (Task 11).
+    throw new Error(`Sin vista para ${documentType}`);
   }
 
   /** `page` y `size` se validan antes que `documentType`. */

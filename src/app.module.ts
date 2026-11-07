@@ -9,6 +9,7 @@ import { RateLimiterModule } from './common/rate-limiter.js';
 import { ComplianceModule } from './compliance/compliance.module.js';
 import { DatabaseModule } from './database/database.module.js';
 import { IdentityModule } from './identity/identity.module.js';
+import { NotesModule } from './notes/notes.module.js';
 import { SequenceModule } from './sequence/sequence.module.js';
 import { TaxpayerModule } from './taxpayer/taxpayer.module.js';
 import { TenancyModule } from './tenancy/tenancy.module.js';
@@ -26,6 +27,7 @@ import { HealthModule } from './observability/health.controller.js';
     DatabaseModule,
     HealthModule,
     IdentityModule,
+    NotesModule,
     RateLimiterModule,
     SequenceModule,
     TaxpayerModule,

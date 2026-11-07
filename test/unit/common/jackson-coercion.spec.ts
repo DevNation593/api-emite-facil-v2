@@ -21,9 +21,10 @@ import {
   Size,
   Valid,
 } from '../../../src/common/bean-validation.js';
-import { AMOUNT, QUANTITY_OR_PRICE } from '../../../src/common/decimals.js';
+import { AMOUNT } from '../../../src/common/decimals.js';
 import { recordNumberSource } from '../../../src/common/json-source.js';
 import { validationPipe } from '../../../src/common/validation.js';
+import { IssueCreditNoteDto, ModifiedDocumentDto } from '../../../src/notes/credit-note.dto.js';
 
 // Cada caso de cuerpo de test/golden/http/e2.json se pasa por el pipe de validación con un DTO que
 // solo tiene el campo sondeado, y el resultado se compara con lo que respondió Java.
@@ -137,8 +138,8 @@ describe('establishmentId, UUID de Jackson', () => {
 
 /*
  * E3: cada caso de cuerpo de test/golden/http/e3.json se pasa por el pipe con el DTO de la factura
- * (invoice.dto.ts) y con DTOs que copian los records de CreditNoteController y DebitNoteController de
- * Java. Lo que decide la deserialización o Bean Validation (400 MALFORMED_REQUEST, y
+ * (invoice.dto.ts), con el de la nota de crédito (credit-note.dto.ts) y con un DTO que copia el record
+ * de DebitNoteController de Java. Lo que decide la deserialización o Bean Validation (400 MALFORMED_REQUEST, y
  * VALIDATION_FAILED con mensajes de Hibernate) debe salir igual; el resto (reglas de negocio: 202, 401, 404, 409, 422 o un
  * VALIDATION_FAILED propio de Java) debe pasar el pipe, y ahí se comprueba el valor convertido.
  */
@@ -147,33 +148,6 @@ const e3 = (
     results: Array<Result & { request: { method: string; path: string } }>;
   }
 ).results;
-
-class ModifiedDocumentRequest {
-  @JsonString() @NotNull() @Pattern('01') code?: string | null;
-  @JsonString() @NotNull() @Pattern('[0-9]{3}-[0-9]{3}-[0-9]{9}') number?: string | null;
-  @JsonLocalDate() @NotNull() issueDate?: string | null;
-}
-
-class CreditLineRequest {
-  @JsonInteger() invoiceLineNo?: number | null;
-  @JsonUuid() productId?: string | null;
-  @JsonString() @NotNull() @Pattern(QUANTITY_OR_PRICE) quantity?: string | null;
-  @JsonString() @Pattern(QUANTITY_OR_PRICE) unitPrice?: string | null;
-  @JsonString() @Pattern(AMOUNT) discount?: string | null;
-}
-
-class IssueCreditNoteRequest {
-  @JsonUuid() @NotNull() taxpayerId?: string | null;
-  @JsonString() @NotNull() @Pattern('[0-9]{3}') establishmentCode?: string | null;
-  @JsonString() @NotNull() @Pattern('[0-9]{3}') emissionPointCode?: string | null;
-  @JsonLocalDate() issueDate?: string | null;
-  @JsonString() @NotBlank() @Size({ max: 300 }) @NoControlChars() reason?: string | null;
-  @JsonUuid() invoiceId?: string | null;
-  @JsonObject(() => ModifiedDocumentRequest) @Valid() modifiedDocument?: ModifiedDocumentRequest | null;
-  @JsonUuid() customerId?: string | null;
-  @JsonList(() => CreditLineRequest) @NotNull() @Size({ min: 1, max: 200 }) @NotNullElements() @Valid()
-  lines?: Array<CreditLineRequest | null> | null;
-}
 
 class ReasonRequest {
   @JsonString() @NotBlank() @Size({ max: 300 }) @NoControlChars() reason?: string | null;
@@ -187,7 +161,7 @@ class IssueDebitNoteRequest {
   @JsonString() @NotNull() @Pattern('[0-9]{3}') emissionPointCode?: string | null;
   @JsonLocalDate() issueDate?: string | null;
   @JsonUuid() invoiceId?: string | null;
-  @JsonObject(() => ModifiedDocumentRequest) @Valid() modifiedDocument?: ModifiedDocumentRequest | null;
+  @JsonObject(() => ModifiedDocumentDto) @Valid() modifiedDocument?: ModifiedDocumentDto | null;
   @JsonUuid() customerId?: string | null;
   @JsonList(() => ReasonRequest) @NotNull() @Size({ min: 1, max: 20 }) @NotNullElements() @Valid()
   reasons?: Array<ReasonRequest | null> | null;
@@ -197,7 +171,7 @@ class IssueDebitNoteRequest {
 
 const DTO: Record<string, ArgumentMetadata['metatype']> = {
   '/api/v1/invoices': IssueInvoiceDto,
-  '/api/v1/credit-notes': IssueCreditNoteRequest,
+  '/api/v1/credit-notes': IssueCreditNoteDto,
   '/api/v1/debit-notes': IssueDebitNoteRequest,
 };
 

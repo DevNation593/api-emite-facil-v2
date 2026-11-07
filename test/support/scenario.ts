@@ -201,3 +201,60 @@ export async function issueInvoice(http: Http, token: string, body: unknown, key
 export async function setState(db: pg.Client, documentId: string, state: string): Promise<void> {
   await db.query('UPDATE fiscal_documents SET state = $1 WHERE id = $2', [state, documentId]);
 }
+
+/** Línea de una nota de crédito sobre una factura: el número de línea y la cantidad devuelta (creditLine). */
+export function creditLine(invoiceLineNo: number, quantity: string): Record<string, unknown> {
+  return { invoiceLineNo, quantity };
+}
+
+/** Cuerpo de POST /credit-notes sobre una factura de la plataforma (creditNoteJson de BillingScenario). */
+export function creditNoteJson(s: BillingScenario, invoiceId: string, lines: unknown[]): Record<string, unknown> {
+  return {
+    taxpayerId: s.taxpayer,
+    establishmentCode: '001',
+    emissionPointCode: '001',
+    reason: 'Devolución de mercadería',
+    invoiceId,
+    lines,
+  };
+}
+
+/**
+ * Cuerpo de POST /credit-notes sobre una factura escrita a mano, al cliente del escenario, con una línea
+ * del producto del escenario (manualCreditNoteJson).
+ */
+export function manualCreditNoteJson(
+  s: BillingScenario,
+  invoiceNumber: string,
+  invoiceDate: string,
+  quantity: string,
+): Record<string, unknown> {
+  return {
+    taxpayerId: s.taxpayer,
+    establishmentCode: '001',
+    emissionPointCode: '001',
+    reason: 'Devolución de mercadería',
+    modifiedDocument: { code: '01', number: invoiceNumber, issueDate: invoiceDate },
+    customerId: s.customer,
+    lines: [{ productId: s.product, quantity }],
+  };
+}
+
+/** POST /credit-notes; un texto se envía tal cual. Sin `key`, la petición va sin Idempotency-Key. */
+export function creditNoteRequest(http: Http, token: string, body: unknown, key?: string): request.Test {
+  let call = http.post('/api/v1/credit-notes').set('Authorization', bearer(token));
+  if (key !== undefined) call = call.set('Idempotency-Key', key);
+  return typeof body === 'string' ? call.set('Content-Type', 'application/json').send(body) : call.send(body as object);
+}
+
+/** Emite una nota de crédito con una clave nueva (o la dada) y devuelve el id del documento. */
+export async function issueCreditNote(
+  http: Http,
+  token: string,
+  body: unknown,
+  key: string = randomUUID(),
+): Promise<string> {
+  const res = await creditNoteRequest(http, token, body, key);
+  if (res.status !== 202) throw new Error(`Se esperaba 202 y llegó ${res.status}: ${res.text}`);
+  return (res.body as { id: string }).id;
+}

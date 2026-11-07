@@ -5,6 +5,7 @@
  */
 import type { BigDecimal } from '../common/big-decimal.js';
 import { strip } from '../common/java-text.js';
+import { localDateParts } from '../common/java-time.js';
 
 /** Tipo de emisión normal: el único del esquema off-line. */
 export const NORMAL_EMISSION = '1';
@@ -34,8 +35,6 @@ export interface InfoTributaria {
   withholdingAgentCode: string | null;
   rimpeRegime: string;
 }
-
-const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 /** Hay valor si no es nulo ni solo espacios (`String.isBlank` de Java). */
 export function present(value: string | null | undefined): value is string {
@@ -146,11 +145,17 @@ export class XmlWriter {
     if (present(value)) this.element(name, value);
   }
 
-  /** Fecha `YYYY-MM-DD` escrita como `dd/MM/yyyy`. */
+  /**
+   * Fecha (el texto de un LocalDate) escrita como `DateTimeFormatter.ofPattern("dd/MM/yyyy")` de Java:
+   * nunca falla para una fecha que Jackson lee; lo que el comprobante no admite (un año fuera de 20xx) lo
+   * rechaza el XSD, como en Java.
+   */
   date(name: string, isoDate: string): void {
-    const match = ISO_DATE.exec(isoDate);
-    if (match === null) throw new Error(`Fecha no válida: ${isoDate}`);
-    this.element(name, `${match[3]}/${match[2]}/${match[1]}`);
+    const [year, month, day] = localDateParts(isoDate);
+    // `yyyy` es el año de la era (el año 0 es el 1 a. C.), con «+» si pasa de cuatro cifras.
+    const yearOfEra = year >= 1 ? year : 1 - year;
+    const yearText = yearOfEra > 9999 ? `+${yearOfEra}` : String(yearOfEra).padStart(4, '0');
+    this.element(name, `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${yearText}`);
   }
 
   /** Importe con dos decimales. */
