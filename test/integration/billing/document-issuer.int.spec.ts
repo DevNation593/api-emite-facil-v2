@@ -43,11 +43,12 @@ import {
   invoiceLine,
   invoiceRequest,
   issueInvoice,
+  setState,
 } from '../../support/scenario.js';
 import { startTestApp, type TestApp } from '../../support/test-app.js';
 
 /*
- * Traducción de DocumentIssuerIT (replacementMustBeOfTheSameType llega con la reemisión), más las
+ * Traducción de DocumentIssuerIT, más las
  * pruebas del cambio de día fiscal, de los textos que el XML no admite y del documentId en los logs.
  */
 let stack: StackHandle;
@@ -103,10 +104,22 @@ async function ownerAccess(): Promise<TenantAccess> {
   return new TenantAccess(await newUser(db), s.tenant, 'OWNER');
 }
 
-function issueBroken(access: TenantAccess, key: string, hash: string): Promise<string> {
+/** Nota de crédito de prueba: de tipo 04, para reemplazar un comprobante de otro tipo. */
+class SampleCreditNoteKind extends BrokenLiquidationKind {
+  override readonly type = DOCUMENT_TYPES.CREDIT_NOTE;
+  override readonly schema = DOCUMENT_SCHEMAS.CREDIT_NOTE_1_1_0;
+}
+
+function issueBroken(
+  access: TenantAccess,
+  key: string,
+  hash: string,
+  replacesDocumentId: string | null = null,
+  kindOf: (documents: FiscalDocumentRepository) => BrokenLiquidationKind = (d) => new BrokenLiquidationKind(d),
+): Promise<string> {
   const issuer = testApp.app.get(DocumentIssuer);
   const customers = testApp.app.get(CustomerService);
-  const kind = new BrokenLiquidationKind(testApp.app.get(FiscalDocumentRepository));
+  const kind = kindOf(testApp.app.get(FiscalDocumentRepository));
   return issuer.issue(
     access,
     key,
@@ -117,7 +130,7 @@ function issueBroken(access: TenantAccess, key: string, hash: string): Promise<s
       emissionPointCode: '001',
       issueDate: null,
       currency: null,
-      replacesDocumentId: null,
+      replacesDocumentId,
     },
     async (trx) => {
       const customer = await customers.get(access, s.customer, trx);
@@ -163,6 +176,29 @@ it('un XML inválido se rechaza sin dejar rastro', async () => {
 
   // La clave quedó libre: otra petición con ella vuelve a emitirse (y vuelve a fallar por el XML), sin conflicto.
   await expect(issueBroken(access, key, 'hash-2')).rejects.toMatchObject({ errorCode: 'DOCUMENT_XML_INVALID' });
+});
+
+it('el reemplazo es del mismo tipo que el reemplazado', async () => {
+  const invoice = await issueInvoice(http(), s.owner, invoiceJson(s, '1', '11.50'));
+  await setState(db, invoice, 'XSD_INVALID');
+  const access = await ownerAccess();
+  const nextValue = async () => (await db.query('SELECT next_value FROM document_sequences WHERE document_type = $1', ['04'])).rows;
+
+  const error = await issueBroken(access, randomUUID(), 'hash-1', invoice, (d) => new SampleCreditNoteKind(d)).catch(
+    (e: unknown) => e,
+  );
+  expect(error).toBeInstanceOf(ApiException);
+  expect(error).toMatchObject({
+    status: 409,
+    errorCode: 'REPLACED_DOCUMENT_OTHER_TYPE',
+    detail: 'El comprobante que se reemplaza es de otro tipo',
+  });
+  expect(await documentCount()).toBe(1);
+  expect(await nextValue()).toEqual([]);
+  expect(await count('SELECT count(*) AS n FROM idempotency_records WHERE tenant_id = $1')).toBe(1);
+  expect(
+    await count("SELECT count(*) AS n FROM audit_events WHERE action = 'DOCUMENT_REPLACED' AND tenant_id = $1"),
+  ).toBe(0);
 });
 
 it('el XML validado al emitir es, byte a byte, el que se genera después de lo guardado', async () => {

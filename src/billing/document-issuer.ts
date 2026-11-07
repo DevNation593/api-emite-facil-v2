@@ -25,6 +25,9 @@ export const STATE_RESERVED = 'RESERVED';
 /** Evento del outbox de todo comprobante reservado; lo recoge la cola de emisión. */
 export const EVENT_RESERVED = 'DOCUMENT_RESERVED';
 
+/** Estados en que un comprobante admite que otro lo reemplace. */
+const REPLACEABLE_STATES: ReadonlySet<string> = new Set(['RETURNED', 'NOT_AUTHORIZED', 'XSD_INVALID']);
+
 const CURRENCY = 'USD';
 
 /** Largo máximo del detalle de un XML inválido, como el motivo de XSD_INVALID. */
@@ -147,7 +150,10 @@ export class DocumentIssuer {
     const documentId = await this.db.transaction().execute(async (trx) => {
       const previous = await this.idempotency.begin(trx, access.tenantId, idempotencyKey, requestHash);
       if (previous !== null) return previous;
-      // request.replacesDocumentId (la reemisión) todavía no se atiende: llega con la Task 9.
+      const replacedType =
+        request.replacesDocumentId === null
+          ? null
+          : await this.requireReplaceable(trx, access, request.replacesDocumentId, request.taxpayerId);
       const taxpayer = await this.taxpayers.findForTenant(trx, access.tenantId, request.taxpayerId);
       if (taxpayer === null) throw ApiException.notFound();
       const point = await this.emissionPoint(trx, access.tenantId, taxpayer.id, request);
@@ -162,6 +168,9 @@ export class DocumentIssuer {
 
       const preparation = await prepare(trx, { taxpayer, issueDate });
       const kind = preparation.kind;
+      if (replacedType !== null && replacedType !== kind.type.code) {
+        throw new ApiException(409, 'REPLACED_DOCUMENT_OTHER_TYPE', 'El comprobante que se reemplaza es de otro tipo');
+      }
 
       const environment = taxpayer.default_environment;
       const documentType = kind.type.code;
@@ -231,6 +240,12 @@ export class DocumentIssuer {
       await this.documents.recordStateChange(trx, access.tenantId, id, null, STATE_RESERVED, null);
       await this.audit.recordFor(trx, access, kind.auditReserved, 'FISCAL_DOCUMENT', id, { sequence, environment });
       await this.outbox.write(trx, access.tenantId, id, EVENT_RESERVED, { documentId: id });
+      if (request.replacesDocumentId !== null) {
+        await this.documents.linkReplacement(trx, access.tenantId, id, request.replacesDocumentId);
+        await this.audit.recordFor(trx, access, 'DOCUMENT_REPLACED', 'FISCAL_DOCUMENT', request.replacesDocumentId, {
+          replacedBy: id,
+        });
+      }
       // Red de seguridad: si ese evento se pierde o nadie logra procesarlo, el planificador retoma el documento.
       await this.documents.schedule(trx, access.tenantId, id, REDELIVERY_LEASE_MS, 0);
       await this.idempotency.complete(trx, access.tenantId, idempotencyKey, id);
@@ -256,6 +271,41 @@ export class DocumentIssuer {
     }
     const problem = await this.xmlCheck.problem(xml, kind.schema);
     if (problem !== null) throw xmlInvalid(problem);
+  }
+
+  /**
+   * Solo se reemplaza un comprobante propio que el SRI devolvió o no autorizó, o cuyo XML no se pudo
+   * generar, y una sola vez. Lo deja bloqueado hasta confirmar: dos reemisiones a la vez del mismo
+   * comprobante se deciden de una en una. Devuelve su tipo, que debe ser el del comprobante nuevo.
+   * Uno de otra empresa o inexistente es 404.
+   */
+  private async requireReplaceable(
+    trx: Transaction<DB>,
+    access: TenantAccess,
+    replacedId: string,
+    taxpayerId: string,
+  ): Promise<string> {
+    const replaced = await this.documents.lockForProcessing(trx, access.tenantId, replacedId);
+    if (replaced === null) throw ApiException.notFound();
+    if (!REPLACEABLE_STATES.has(replaced.state)) {
+      throw new ApiException(
+        409,
+        'REPLACED_DOCUMENT_NOT_REJECTED',
+        'Solo se reemplaza un comprobante devuelto o no autorizado por el SRI, o cuyo XML no se pudo generar',
+      );
+    }
+    // El enlace es único y no se deshace: no se gasta en un comprobante de otro RUC.
+    if (replaced.taxpayerId !== taxpayerId) {
+      throw new ApiException(
+        409,
+        'REPLACED_DOCUMENT_OTHER_ISSUER',
+        'El comprobante que se reemplaza es de otro emisor de la empresa',
+      );
+    }
+    if ((await this.documents.replacementOf(trx, access.tenantId, replacedId)) !== null) {
+      throw new ApiException(409, 'DOCUMENT_ALREADY_REPLACED', 'Ese comprobante ya fue reemplazado por otro');
+    }
+    return replaced.documentType;
   }
 
   /** El punto de emisión se localiza por los códigos del comprobante, siempre dentro del emisor y del tenant. */
