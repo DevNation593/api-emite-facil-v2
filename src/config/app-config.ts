@@ -40,6 +40,8 @@ export interface AppConfig {
   rateLimit: { requestsPerMinute: number; writesPerMinute: number };
   sri: { enabledEnvironments: Array<'1' | '2'> };
   providerRuc: string | null;
+  /** Monto máximo de un comprobante a consumidor final, como decimal en texto (EINVOICE_INVOICE_FINAL_CONSUMER_LIMIT). */
+  finalConsumerLimit: string;
 }
 
 const MASTER_KEY_BYTES = 32;
@@ -59,8 +61,8 @@ const MAX_LOGIN_FAILURES = 5;
 const LOCKOUT_MS = parseDuration('15m');
 const PUBLIC_REQUESTS_PER_MINUTE = 20;
 
-/** Monto máximo de un comprobante a consumidor final (einvoice.invoice.final-consumer-limit). */
-export const FINAL_CONSUMER_LIMIT = '50.00';
+/** Monto máximo por defecto de un comprobante a consumidor final (einvoice.invoice.final-consumer-limit). */
+export const DEFAULT_FINAL_CONSUMER_LIMIT = '50.00';
 
 /**
  * Plazo tras el cual un comprobante reservado que nadie procesó vuelve a la cola
@@ -130,6 +132,17 @@ function loadTrustedProxyHops(env: NodeJS.ProcessEnv): number {
     );
   }
   return hops;
+}
+
+function loadFinalConsumerLimit(env: NodeJS.ProcessEnv): string {
+  const raw = read(env, 'EINVOICE_INVOICE_FINAL_CONSUMER_LIMIT');
+  if (raw === undefined) return DEFAULT_FINAL_CONSUMER_LIMIT;
+  if (!/^\d+(\.\d{1,2})?$/.test(raw)) {
+    throw new Error(
+      'EINVOICE_INVOICE_FINAL_CONSUMER_LIMIT debe ser un monto decimal no negativo con hasta 2 decimales (por ejemplo 50.00)',
+    );
+  }
+  return raw;
 }
 
 function loadMail(env: NodeJS.ProcessEnv): AppConfig['mail'] {
@@ -275,5 +288,6 @@ export function loadConfig(env: NodeJS.ProcessEnv): AppConfig {
     },
     sri: { enabledEnvironments },
     providerRuc,
+    finalConsumerLimit: loadFinalConsumerLimit(env),
   };
 }

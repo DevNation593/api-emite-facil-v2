@@ -253,3 +253,24 @@ describe('configuración de autenticación y correo', () => {
     });
   });
 });
+
+describe('límite de consumidor final', () => {
+  it('vale 50.00 por defecto', () => {
+    expect(loadConfig(base()).finalConsumerLimit).toBe('50.00');
+  });
+
+  it('se puede cambiar con EINVOICE_INVOICE_FINAL_CONSUMER_LIMIT', () => {
+    expect(
+      loadConfig({ ...base(), EINVOICE_INVOICE_FINAL_CONSUMER_LIMIT: '200' }).finalConsumerLimit,
+    ).toBe('200');
+    expect(
+      loadConfig({ ...base(), EINVOICE_INVOICE_FINAL_CONSUMER_LIMIT: '0.5' }).finalConsumerLimit,
+    ).toBe('0.5');
+  });
+
+  it.each(['-1', 'abc', '50.001', '1e3', '50,00', '.5'])('rechaza %s', (value) => {
+    expect(messageOf({ ...base(), EINVOICE_INVOICE_FINAL_CONSUMER_LIMIT: value })).toContain(
+      'EINVOICE_INVOICE_FINAL_CONSUMER_LIMIT debe ser un monto decimal',
+    );
+  });
+});

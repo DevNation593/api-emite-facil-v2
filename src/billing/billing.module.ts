@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import type { Kysely } from 'kysely';
+import { BigDecimal } from '../common/big-decimal.js';
 import { CatalogModule } from '../catalog/catalog.module.js';
 import { CatalogRepository } from '../catalog/catalog.repository.js';
 import { CustomerService } from '../catalog/customer.service.js';
@@ -63,8 +64,9 @@ import { OutboxWriter } from './outbox-writer.js';
     },
     {
       provide: FinalConsumerLimit,
-      useFactory: (catalogs: CatalogRepository) => new FinalConsumerLimit(catalogs),
-      inject: [CatalogRepository],
+      useFactory: (catalogs: CatalogRepository, config: AppConfig) =>
+        new FinalConsumerLimit(catalogs, BigDecimal.of(config.finalConsumerLimit)),
+      inject: [CatalogRepository, APP_CONFIG],
     },
     {
       provide: DocumentIssuer,

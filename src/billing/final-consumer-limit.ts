@@ -2,14 +2,14 @@ import type { Transaction } from 'kysely';
 import { ApiException } from '../common/api-exception.js';
 import { BigDecimal } from '../common/big-decimal.js';
 import type { CatalogRepository } from '../catalog/catalog.repository.js';
-import { FINAL_CONSUMER_LIMIT } from '../config/app-config.js';
+import { DEFAULT_FINAL_CONSUMER_LIMIT } from '../config/app-config.js';
 import type { DB } from '../database/schema.js';
 
 /** Monto máximo de un comprobante a consumidor final: lo comparten la factura y la nota de débito. */
 export class FinalConsumerLimit {
   constructor(
     private readonly catalogs: CatalogRepository,
-    private readonly limit: BigDecimal = BigDecimal.of(FINAL_CONSUMER_LIMIT),
+    private readonly limit: BigDecimal = BigDecimal.of(DEFAULT_FINAL_CONSUMER_LIMIT),
   ) {}
 
   /** 422 FINAL_CONSUMER_LIMIT_EXCEEDED si el comprador es consumidor final y el total supera el límite. */
