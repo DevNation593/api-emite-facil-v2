@@ -1,30 +1,20 @@
 import { readFileSync } from 'node:fs';
 import type { ArgumentMetadata } from '@nestjs/common';
-import { IssueInvoiceDto, PaymentDto } from '../../../src/billing/invoice.dto.js';
+import { IssueInvoiceDto } from '../../../src/billing/invoice.dto.js';
 import { ApiException } from '../../../src/common/api-exception.js';
 import {
   JsonBoolean,
   JsonEnum,
   JsonInteger,
-  JsonList,
-  JsonLocalDate,
-  JsonObject,
-  JsonString,
   JsonUuid,
   Max,
   Min,
-  NoControlChars,
-  NotBlank,
   NotNull,
-  NotNullElements,
-  Pattern,
-  Size,
-  Valid,
 } from '../../../src/common/bean-validation.js';
-import { AMOUNT } from '../../../src/common/decimals.js';
 import { recordNumberSource } from '../../../src/common/json-source.js';
 import { validationPipe } from '../../../src/common/validation.js';
-import { IssueCreditNoteDto, ModifiedDocumentDto } from '../../../src/notes/credit-note.dto.js';
+import { IssueCreditNoteDto } from '../../../src/notes/credit-note.dto.js';
+import { IssueDebitNoteDto } from '../../../src/notes/debit-note.dto.js';
 
 // Cada caso de cuerpo de test/golden/http/e2.json se pasa por el pipe de validación con un DTO que
 // solo tiene el campo sondeado, y el resultado se compara con lo que respondió Java.
@@ -138,8 +128,8 @@ describe('establishmentId, UUID de Jackson', () => {
 
 /*
  * E3: cada caso de cuerpo de test/golden/http/e3.json se pasa por el pipe con el DTO de la factura
- * (invoice.dto.ts), con el de la nota de crédito (credit-note.dto.ts) y con un DTO que copia el record
- * de DebitNoteController de Java. Lo que decide la deserialización o Bean Validation (400 MALFORMED_REQUEST, y
+ * (invoice.dto.ts), con el de la nota de crédito (credit-note.dto.ts) y con el de la nota de débito
+ * (debit-note.dto.ts). Lo que decide la deserialización o Bean Validation (400 MALFORMED_REQUEST, y
  * VALIDATION_FAILED con mensajes de Hibernate) debe salir igual; el resto (reglas de negocio: 202, 401, 404, 409, 422 o un
  * VALIDATION_FAILED propio de Java) debe pasar el pipe, y ahí se comprueba el valor convertido.
  */
@@ -149,30 +139,10 @@ const e3 = (
   }
 ).results;
 
-class ReasonRequest {
-  @JsonString() @NotBlank() @Size({ max: 300 }) @NoControlChars() reason?: string | null;
-  @JsonString() @NotNull() @Pattern(AMOUNT) value?: string | null;
-  @JsonString() @NotNull() @Pattern('[0-9]{1,4}') ivaRateCode?: string | null;
-}
-
-class IssueDebitNoteRequest {
-  @JsonUuid() @NotNull() taxpayerId?: string | null;
-  @JsonString() @NotNull() @Pattern('[0-9]{3}') establishmentCode?: string | null;
-  @JsonString() @NotNull() @Pattern('[0-9]{3}') emissionPointCode?: string | null;
-  @JsonLocalDate() issueDate?: string | null;
-  @JsonUuid() invoiceId?: string | null;
-  @JsonObject(() => ModifiedDocumentDto) @Valid() modifiedDocument?: ModifiedDocumentDto | null;
-  @JsonUuid() customerId?: string | null;
-  @JsonList(() => ReasonRequest) @NotNull() @Size({ min: 1, max: 20 }) @NotNullElements() @Valid()
-  reasons?: Array<ReasonRequest | null> | null;
-  @JsonList(() => PaymentDto) @NotNull() @Size({ min: 1, max: 1 }) @NotNullElements() @Valid()
-  payments?: Array<PaymentDto | null> | null;
-}
-
 const DTO: Record<string, ArgumentMetadata['metatype']> = {
   '/api/v1/invoices': IssueInvoiceDto,
   '/api/v1/credit-notes': IssueCreditNoteDto,
-  '/api/v1/debit-notes': IssueDebitNoteRequest,
+  '/api/v1/debit-notes': IssueDebitNoteDto,
 };
 
 // El día de los marcadores {today…}: cualquiera sirve, el golden los conserva sin resolver.

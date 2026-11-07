@@ -258,3 +258,48 @@ export async function issueCreditNote(
   if (res.status !== 202) throw new Error(`Se esperaba 202 y llegó ${res.status}: ${res.text}`);
   return (res.body as { id: string }).id;
 }
+
+/** Los dos motivos de DebitNoteApiIT.REASONS: 10.00 al 15 % y 5.00 al 0 %, 15.00 más IVA 1.50. */
+export const DEBIT_REASONS: Array<Record<string, unknown>> = [
+  { reason: 'Intereses por mora', value: '10.00', ivaRateCode: '4' },
+  { reason: 'Gastos de cobranza', value: '5.00', ivaRateCode: '0' },
+];
+
+/** Un pago (forma 20) por 16.50, el total de DEBIT_REASONS. */
+export const DEBIT_PAYMENT_16_50: Array<Record<string, unknown>> = [{ methodCode: '20', amount: '16.50' }];
+
+/** Cuerpo de POST /debit-notes sobre una factura de la plataforma (body de DebitNoteApiIT). */
+export function debitNoteJson(
+  s: BillingScenario,
+  invoiceId: string,
+  reasons: unknown[] = DEBIT_REASONS,
+  payments: unknown[] = DEBIT_PAYMENT_16_50,
+): Record<string, unknown> {
+  return {
+    taxpayerId: s.taxpayer,
+    establishmentCode: '001',
+    emissionPointCode: '001',
+    invoiceId,
+    reasons,
+    payments,
+  };
+}
+
+/** POST /debit-notes; un texto se envía tal cual. Sin `key`, la petición va sin Idempotency-Key. */
+export function debitNoteRequest(http: Http, token: string, body: unknown, key?: string): request.Test {
+  let call = http.post('/api/v1/debit-notes').set('Authorization', bearer(token));
+  if (key !== undefined) call = call.set('Idempotency-Key', key);
+  return typeof body === 'string' ? call.set('Content-Type', 'application/json').send(body) : call.send(body as object);
+}
+
+/** Emite una nota de débito con una clave nueva (o la dada) y devuelve el id del documento. */
+export async function issueDebitNote(
+  http: Http,
+  token: string,
+  body: unknown,
+  key: string = randomUUID(),
+): Promise<string> {
+  const res = await debitNoteRequest(http, token, body, key);
+  if (res.status !== 202) throw new Error(`Se esperaba 202 y llegó ${res.status}: ${res.text}`);
+  return (res.body as { id: string }).id;
+}

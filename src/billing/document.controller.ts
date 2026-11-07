@@ -10,9 +10,11 @@ import { Tenant, type TenantAccess } from '../tenancy/tenant-access.js';
 import { TenantAccessGuard } from '../tenancy/tenant-access.guard.js';
 import { DOCUMENT_TYPES } from '../xml/document-type.js';
 import type { CreditNoteContent } from '../notes/credit-note-content.js';
+import type { DebitNoteContent } from '../notes/debit-note-content.js';
 import { DocumentKinds } from './document-kind.js';
 import {
   creditNoteParts,
+  debitNoteParts,
   type DocumentParts,
   type DocumentSummary,
   type DocumentView,
@@ -82,8 +84,7 @@ export class DocumentController {
     if (kind === null) throw new Error(`Sin kind para ${documentType}`);
     const content = await kind.loadContent(trx, tenantId, id);
     if (documentType === DOCUMENT_TYPES.CREDIT_NOTE.code) return creditNoteParts(content as CreditNoteContent);
-    // La rama de la nota de débito llega con su tipo (Task 11).
-    throw new Error(`Sin vista para ${documentType}`);
+    return debitNoteParts(content as DebitNoteContent);
   }
 
   /** `page` y `size` se validan antes que `documentType`. */

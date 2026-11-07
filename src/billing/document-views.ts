@@ -1,5 +1,6 @@
 import type { BigDecimal } from '../common/big-decimal.js';
 import type { CreditNoteContent, CreditNoteLine } from '../notes/credit-note-content.js';
+import type { DebitNoteContent } from '../notes/debit-note-content.js';
 import type { DocumentEnvelope } from './document-envelope.js';
 import type { DocumentRow, LineRow, Links, PaymentRow } from './fiscal-document.repository.js';
 import type { TaxTotal } from './invoice-calculator.js';
@@ -193,6 +194,30 @@ export function creditNoteParts(content: CreditNoteContent): DocumentParts {
     payments: [],
     reason: content.reason,
     reasons: null,
+  };
+}
+
+/** Lo propio de una nota de débito, de su contenido: los motivos con su IVA, los impuestos y el pago; sin líneas. */
+export function debitNoteParts(content: DebitNoteContent): DocumentParts {
+  return {
+    taxes: content.taxes.map(taxView),
+    lines: [],
+    payments: content.payments.map((payment) => ({
+      methodCode: payment.methodCode,
+      amount: payment.amount.toFixed(2),
+      term: payment.term === null ? null : payment.term.toFixed(2),
+      timeUnit: payment.timeUnit,
+    })),
+    reason: null,
+    reasons: content.reasons.map(
+      (reason): ReasonView => ({
+        reason: reason.reason,
+        value: reason.value.toFixed(2),
+        taxRateCode: reason.taxRateCode,
+        taxRate: reason.taxRate.toFixed(2),
+        taxAmount: reason.taxAmount.toFixed(2),
+      }),
+    ),
   };
 }
 
