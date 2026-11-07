@@ -95,3 +95,7 @@ Cuando el XML generado no pasa el XSD del SRI, o no se puede leer, Java pone en 
 Xerces; NestJS valida con libxml2 (`xmllint-wasm`) y lee el XML con `saxes`, así que el `detail` trae
 el mensaje de libxml2 o de `saxes`. El estado (422), el `errorCode`, el título, el tope de 500
 caracteres y que no se consuma el secuencial son los mismos; solo cambia el texto del motor.
+
+Hay una diferencia más: si el motor XSD no responde (plazo de 10 s vencido o fallo del worker de libxml2),
+NestJS contesta `500 INTERNAL_ERROR` y revierte la transacción, sin consumir el secuencial. Java
+(`XsdValidator.java`) trata la `IOException` como un resultado inválido y contestaría `422`.
