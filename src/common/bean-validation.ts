@@ -1,8 +1,11 @@
-import { Allow, registerDecorator, type ValidationOptions } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Allow, registerDecorator, ValidateNested, type ValidationOptions } from 'class-validator';
+import { plainToInstance, Transform } from 'class-transformer';
 import { ApiException } from './api-exception.js';
 import { idnToAscii } from './idn.js';
-import { strip } from './java-text.js';
+import { isFloatToken, numberSource } from './json-source.js';
+import { localDateOf, localDateOfEpochDay, parseIsoLocalDate, parseIsoLocalDateTimeDate } from './java-time.js';
+import { jacksonUuid } from './java-uuid.js';
+import { javaTrim, strip } from './java-text.js';
 
 /*
  * Decoradores con la semántica y los mensajes de Bean Validation (Hibernate Validator,
@@ -37,7 +40,7 @@ export const NotBlank = (options?: ValidationOptions): PropertyDecorator =>
     options,
   );
 
-/** Cuenta unidades UTF-16, como `String.length()`. */
+/** En un texto cuenta unidades UTF-16, como `String.length()`; en una lista, elementos. */
 export const Size = (
   { max, min = 0 }: { max: number; min?: number },
   options?: ValidationOptions,
@@ -48,9 +51,32 @@ export const Size = (
     (v) =>
       v === null ||
       v === undefined ||
-      (typeof v === 'string' && v.length >= min && v.length <= max),
+      ((typeof v === 'string' || Array.isArray(v)) && v.length >= min && v.length <= max),
     options,
   );
+
+/** Nombre de la restricción de NotNullElements: validation.ts la reparte en un error por elemento. */
+export const NOT_NULL_ELEMENTS = 'notNullElements';
+
+/**
+ * `List<@NotNull …>`: ningún elemento puede ser null. Cada uno que lo sea da `must not be null` en
+ * `campo[i]` (el pipe de validation.ts nombra el índice); una lista null no se comprueba aquí.
+ */
+export const NotNullElements = (options?: ValidationOptions): PropertyDecorator =>
+  constraint(
+    NOT_NULL_ELEMENTS,
+    'must not be null',
+    (v) => !Array.isArray(v) || v.every((e) => e !== null && e !== undefined),
+    options,
+  );
+
+/**
+ * `@Valid`: valida el objeto anidado, o cada elemento de la lista, con sus propias restricciones.
+ * Sobre null no valida nada (el pipe descarta la queja de class-validator). Va con JsonObject o
+ * JsonList, que dejan instancias del tipo.
+ */
+export const Valid = (options?: ValidationOptions): PropertyDecorator => ValidateNested(options);
+
 // Con la bandera `u` los rangos 0x80 a 0xFFFF excluyen los caracteres fuera del plano
 // básico, como los Pattern de Java (que trabajan por code point). Las comillas escapadas
 // de la parte local se escriben `\\"` (barra y comilla): `\"` no es válido con `u`.
@@ -118,21 +144,201 @@ export const NoControlChars = (options?: ValidationOptions): PropertyDecorator =
   );
 
 /**
- * Propiedad de texto con la coerción de Jackson: número o booleano pasan a texto; un
- * objeto o un array son JSON no legible (400). Incluye `@Allow()` para que `whitelist`
- * no la descarte si no lleva otra restricción.
+ * `@Pattern(regexp = …)`: el texto entero debe coincidir, como `Matcher.matches()`. La expresión
+ * debe significar lo mismo en Java y en JS (clases ASCII como `[0-9]`).
  */
-export const JsonString = (): PropertyDecorator => {
+export const Pattern = (regexp: string, options?: ValidationOptions): PropertyDecorator => {
+  const whole = new RegExp(`^(?:${regexp})$`, 'u');
+  return constraint(
+    'pattern',
+    `must match "${regexp}"`,
+    (v) => v === null || v === undefined || (typeof v === 'string' && whole.test(v)),
+    options,
+  );
+};
+
+/** `@Min(value)`. */
+export const Min = (min: number, options?: ValidationOptions): PropertyDecorator =>
+  constraint(
+    'min',
+    `must be greater than or equal to ${min}`,
+    (v) => v === null || v === undefined || (typeof v === 'number' && v >= min),
+    options,
+  );
+
+/** `@Max(value)`. */
+export const Max = (max: number, options?: ValidationOptions): PropertyDecorator =>
+  constraint(
+    'max',
+    `must be less than or equal to ${max}`,
+    (v) => v === null || v === undefined || (typeof v === 'number' && v <= max),
+    options,
+  );
+
+/*
+ * Coerciones de Jackson para las propiedades que no son texto. Lo que cada una admite y convierte
+ * sale de las respuestas de la API Java (test/golden/http/e2.json). Lo que Jackson no sabe leer es
+ * JSON no legible: 400 MALFORMED_REQUEST. Cada una incluye `@Allow()` para que `whitelist` no
+ * descarte la propiedad si no lleva otra restricción.
+ */
+
+const notJson = () => new ApiException(400, 'MALFORMED_REQUEST', 'El cuerpo de la petición no es JSON válido');
+
+/**
+ * `holder` y `key` ubican el valor en el cuerpo, para leer el texto original de un número. Se
+ * convierte el valor del cuerpo, no el que entrega class-transformer: de un objeto o una lista este
+ * da una copia, y el texto de los números va ligado al original (json-source.ts).
+ */
+function jsonCoercion(convert: (value: unknown, holder: unknown, key: string) => unknown): PropertyDecorator {
   const allow = Allow();
-  const transform = Transform(({ value }: { value: unknown }) => {
-    if (typeof value === 'number' || typeof value === 'boolean') return String(value);
-    if (typeof value === 'object' && value !== null) {
-      throw new ApiException(400, 'MALFORMED_REQUEST', 'El cuerpo de la petición no es JSON válido');
-    }
-    return value;
+  const transform = Transform(({ value, obj, key }: { value: unknown; obj: unknown; key: string }) => {
+    const original = typeof obj === 'object' && obj !== null && key in obj ? (obj as Record<string, unknown>)[key] : value;
+    return original === null || original === undefined ? original : convert(original, obj, key);
   });
   return (target, propertyName) => {
     allow(target, propertyName);
     transform(target, propertyName);
   };
-};
+}
+
+/**
+ * Texto: un booleano pasa a texto y un número, al texto con que se escribió (1.50 sigue siendo
+ * "1.50", no "1.5"); un objeto o un array son JSON no legible.
+ */
+export const JsonString = (): PropertyDecorator =>
+  jsonCoercion((value, holder, key) => {
+    if (typeof value === 'number') return numberSource(holder, key) ?? String(value);
+    if (typeof value === 'boolean') return String(value);
+    if (typeof value === 'object') throw notJson();
+    return value;
+  });
+
+const INT_MIN = -(2 ** 31);
+const INT_MAX = 2 ** 31 - 1;
+
+/**
+ * `Integer`: un número decimal se trunca hacia cero (5.7 da 5); un texto se recorta y se lee en
+ * decimal con signo opcional ("" es null); fuera del rango de int, o cualquier otra cosa, no se lee.
+ */
+export const JsonInteger = (): PropertyDecorator =>
+  jsonCoercion((value) => {
+    let number: number;
+    if (typeof value === 'number') {
+      number = Math.trunc(value) || 0;
+    } else if (typeof value === 'string') {
+      const text = javaTrim(value);
+      if (text === '') return null;
+      if (!/^[+-]?[0-9]+$/.test(text)) throw notJson();
+      number = Number(text);
+    } else {
+      throw notJson();
+    }
+    if (number < INT_MIN || number > INT_MAX) throw notJson();
+    return number;
+  });
+
+const TRUE = new Set(['true', 'True', 'TRUE']);
+const FALSE = new Set(['false', 'False', 'FALSE']);
+
+/**
+ * `Boolean`: un entero es true salvo el 0; un texto recortado vale si es true o false (en
+ * minúsculas, capitalizado o en mayúsculas) y "" es null. "1", "si" o un decimal no se leen.
+ */
+export const JsonBoolean = (): PropertyDecorator =>
+  jsonCoercion((value, holder, key) => {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'number') {
+      // 1.0 es un número decimal para Jackson, aunque su valor sea entero.
+      if (isFloatToken(holder, key, value)) throw notJson();
+      return value !== 0;
+    }
+    if (typeof value === 'string') {
+      const text = javaTrim(value);
+      if (text === '') return null;
+      if (TRUE.has(text)) return true;
+      if (FALSE.has(text)) return false;
+    }
+    throw notJson();
+  });
+
+/**
+ * Enum: el nombre exacto (el texto se recorta), o su posición como entero o como texto de dígitos
+ * (1 o "1" es el segundo valor). "", otra caja, una posición fuera de rango o un decimal no se leen.
+ */
+export const JsonEnum = (values: readonly string[]): PropertyDecorator =>
+  jsonCoercion((value, holder, key) => {
+    if (typeof value === 'number') {
+      if (!isFloatToken(holder, key, value) && value >= 0 && value < values.length) return values[value];
+      throw notJson();
+    }
+    if (typeof value === 'string') {
+      const text = javaTrim(value);
+      if (values.includes(text)) return text;
+      if (/^[0-9]+$/.test(text) && Number(text) < values.length) return values[Number(text)];
+    }
+    throw notJson();
+  });
+
+/** `UUID`: el texto recortado, de 36 caracteres (cualquier caja) o 24 en Base64; "" es null. */
+export const JsonUuid = (): PropertyDecorator =>
+  jsonCoercion((value) => {
+    if (typeof value !== 'string') throw notJson();
+    const text = javaTrim(value);
+    if (text === '') return null;
+    const id = jacksonUuid(text);
+    if (id === null) throw notJson();
+    return id;
+  });
+
+/**
+ * `LocalDate` (deja `YYYY-MM-DD`). Un texto recortado en ISO estricto; con hora (`T` en la posición
+ * 10, y una `Z` final opcional) vale su fecha; "" es null. Un entero es un día de época (20000 es
+ * 2024-10-04); `[año, mes, día]` con enteros es esa fecha y `[]` es null. Lo demás no se lee.
+ */
+export const JsonLocalDate = (): PropertyDecorator =>
+  jsonCoercion((value, holder, key) => {
+    let date: string | null = null;
+    if (typeof value === 'string') {
+      const text = javaTrim(value);
+      if (text === '') return null;
+      if (text.length > 10 && text.charAt(10) === 'T') {
+        date = parseIsoLocalDateTimeDate(text.endsWith('Z') ? text.slice(0, -1) : text);
+      } else {
+        date = parseIsoLocalDate(text);
+      }
+    } else if (typeof value === 'number') {
+      if (!isFloatToken(holder, key, value)) date = localDateOfEpochDay(BigInt(numberSource(holder, key) ?? value));
+    } else if (Array.isArray(value)) {
+      if (value.length === 0) return null;
+      const ints = value.every((v, i) => typeof v === 'number' && !isFloatToken(value, i, v));
+      if (ints && value.length === 3) date = localDateOf(value[0] as number, value[1] as number, value[2] as number);
+    }
+    if (date === null) throw notJson();
+    return date;
+  });
+
+function isPlainObject(value: unknown): value is object {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/** Un objeto JSON pasa a una instancia de `type()`; una lista, un texto o un número no se leen. */
+export const JsonObject = (type: () => new () => object): PropertyDecorator =>
+  jsonCoercion((value) => {
+    if (!isPlainObject(value)) throw notJson();
+    return plainToInstance(type(), value);
+  });
+
+/**
+ * `List<T>`: una lista JSON con cada objeto convertido en una instancia de `type()`; un elemento
+ * null se conserva (lo rechaza NotNullElements si hace falta). Una lista que no lo es, o un elemento
+ * que no es un objeto, no se leen.
+ */
+export const JsonList = (type: () => new () => object): PropertyDecorator =>
+  jsonCoercion((value) => {
+    if (!Array.isArray(value)) throw notJson();
+    return value.map((element: unknown) => {
+      if (element === null) return null;
+      if (!isPlainObject(element)) throw notJson();
+      return plainToInstance(type(), element);
+    });
+  });

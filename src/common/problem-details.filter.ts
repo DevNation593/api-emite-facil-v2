@@ -81,15 +81,17 @@ export class ProblemDetailsFilter implements ExceptionFilter {
       currentCorrelationId() ??
       '';
 
+    // Como lo escribe Spring (sondeado en test/golden/http): sin "type" (about:blank no se
+    // serializa), los campos de ProblemDetail en orden alfabético y luego sus propiedades en el
+    // orden en que se añaden.
     const body = {
-      type: 'about:blank',
-      title: reasonPhrase(resolved.status),
-      status: resolved.status,
       detail: resolved.detail,
       instance: req.originalUrl.split('?')[0],
+      status: resolved.status,
+      title: reasonPhrase(resolved.status),
       errorCode: resolved.errorCode,
-      correlationId,
       ...(resolved.errors.length > 0 ? { errors: resolved.errors } : {}),
+      correlationId,
     };
 
     res.status(resolved.status);
@@ -148,8 +150,9 @@ export class ProblemDetailsFilter implements ExceptionFilter {
         req.method !== 'OPTIONS'
       ) {
         status = 405;
-        // Como HttpHeaders.setAllow de Spring: separados por comas, sin espacios.
-        headers = { Allow: allowed.join(',') };
+        // Como el 405 de Spring: los métodos declarados (sin el HEAD que Express añade a cada GET),
+        // separados por ", ". El Allow de OPTIONS sí lleva HEAD y va sin espacios (bootstrap.ts).
+        headers = { Allow: allowed.filter((method) => method !== 'HEAD').join(', ') };
       }
     }
     return {

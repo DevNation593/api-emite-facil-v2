@@ -12,6 +12,21 @@ export function strip(value: string): string {
   return value.replace(LEADING, '').replace(TRAILING, '');
 }
 
+const ANY_WHITESPACE = new RegExp(`[${JAVA_WHITESPACE}]`, 'g');
+
+/** Como `StringUtils.trimAllWhitespace` de Spring: quita todo espacio de Java, también el interior. */
+export function removeAllWhitespace(value: string): string {
+  return value.replace(ANY_WHITESPACE, '');
+}
+
+// eslint-disable-next-line no-control-regex
+const TRIM_EDGES = /^[\u0000- ]+|[\u0000- ]+$/g;
+
+/** Como `String.trim()` de Java: quita en los extremos todo carácter hasta U+0020. */
+export function javaTrim(value: string): string {
+  return value.replace(TRIM_EDGES, '');
+}
+
 /** Como `String.codePointCount`: un par sustituto cuenta uno; un sustituto suelto también. */
 export function codePointLength(value: string): number {
   let count = 0;

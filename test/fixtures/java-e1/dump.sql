@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict G20PixsP9hUuBtG0rurDcGlxebPA7lMkZ6HurPJmt77fFniyfWPybJrYHmQZeqS
+\restrict fXdmGvtGXtjzAz8IV2eq7K4zOpU3SX9W2hQCBK2ORDajAaWGlvKygPNv6skBQBX
 
 -- Dumped from database version 16.15 (Debian 16.15-1.pgdg13+2)
 -- Dumped by pg_dump version 16.15 (Debian 16.15-1.pgdg13+2)
@@ -708,7 +708,7 @@ CREATE TABLE public.webhook_subscriptions (
 --
 
 COPY public.api_keys (id, tenant_id, created_by, name, public_id, secret_hash, created_at, last_used_at, revoked_at, revoked_by) FROM stdin;
-114b0718-2e85-4e4b-b054-eca62d935c2b	1fd6b2c3-9aa0-48d6-ad0e-6a33b71033ec	da0028a7-ab1f-4d5d-a3fd-0acffb8a3aa3	ERP de Java	ewsBQkThpJRO	297316e0c94fa3c3543103cd6384df2eb90a63ae17180befa627701ec8683566	2026-11-02 00:07:17.872018+00	2026-11-02 00:07:17.895548+00	\N	\N
+92683487-d637-4a1d-b03b-e6092f61b389	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	ERP de Java	FSKOdncmYy1u	08e7f63208c4de63c1ff59053b7fec27e17baf8a5396ba6d9acfb4d669d4f21b	2026-11-07 19:55:48.470246+00	2026-11-07 19:55:50.579336+00	\N	\N
 \.
 
 
@@ -725,8 +725,19 @@ COPY public.artifact_integrity (artifact_id, verified_at, ok) FROM stdin;
 --
 
 COPY public.audit_events (id, tenant_id, actor_id, action, entity_type, entity_id, metadata, created_at, api_key_id) FROM stdin;
-37f98886-7691-407c-856a-556e462eed20	1fd6b2c3-9aa0-48d6-ad0e-6a33b71033ec	da0028a7-ab1f-4d5d-a3fd-0acffb8a3aa3	TENANT_CREATED	TENANT	1fd6b2c3-9aa0-48d6-ad0e-6a33b71033ec	{"name": "Empresa creada por Java"}	2026-11-02 00:07:17.735653+00	\N
-96b6364e-41aa-4062-84bb-049da755799c	1fd6b2c3-9aa0-48d6-ad0e-6a33b71033ec	da0028a7-ab1f-4d5d-a3fd-0acffb8a3aa3	API_KEY_CREATED	API_KEY	114b0718-2e85-4e4b-b054-eca62d935c2b	{"name": "ERP de Java"}	2026-11-02 00:07:17.872018+00	\N
+a26f3984-908b-4dcc-8805-12b05f6f7e1e	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	TENANT_CREATED	TENANT	4b01b201-42ff-4331-9aa3-565fb6d5b531	{"name": "Empresa creada por Java"}	2026-11-07 19:55:48.297638+00	\N
+8f331b07-8747-4932-b4e1-2e52e4c685d7	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	API_KEY_CREATED	API_KEY	92683487-d637-4a1d-b03b-e6092f61b389	{"name": "ERP de Java"}	2026-11-07 19:55:48.470246+00	\N
+22421305-6b71-4c9e-9992-7f6027e0d4f8	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	TAXPAYER_CREATED	TAXPAYER	135d9a94-5bce-4bed-b033-fb3c20275fc5	{"ruc": "1799999999001"}	2026-11-07 19:55:48.516747+00	\N
+425c7ce2-1e6a-4477-8ad7-429dc2d12d52	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	ESTABLISHMENT_CREATED	ESTABLISHMENT	53c6d916-8842-4a78-9342-2e30f9cfe392	{"code": "001", "taxpayerId": "135d9a94-5bce-4bed-b033-fb3c20275fc5"}	2026-11-07 19:55:48.581276+00	\N
+2abfe30b-73b1-4f85-98c7-1a8d43d57f93	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	EMISSION_POINT_CREATED	EMISSION_POINT	0eaea883-8607-45da-9849-029b39575778	{"code": "001", "establishmentId": "53c6d916-8842-4a78-9342-2e30f9cfe392"}	2026-11-07 19:55:48.627242+00	\N
+eda0ba3f-e235-45c9-a044-97f360ed6e5a	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	CUSTOMER_CREATED	CUSTOMER	be8447c8-1a49-4a7c-bacd-396454f51373	{"idType": "05"}	2026-11-07 19:55:48.664112+00	\N
+1c69abc2-56e1-476b-8d6e-616cf2299613	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	PRODUCT_CREATED	PRODUCT	dd0553ff-372b-4838-94c3-98e8691aaad9	{"sku": "SRV-001"}	2026-11-07 19:55:48.701689+00	\N
+9e32cba3-9843-4d55-a744-5deab56741f3	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	CERTIFICATE_UPLOADED	CERTIFICATE	7759b9db-9317-4e2e-805f-cd8701d6bf4c	{"validTo": "2036-11-03T19:55:49Z", "taxpayerId": "135d9a94-5bce-4bed-b033-fb3c20275fc5", "fingerprintSha256": "e45bd198352a0367ffa850f1a63116430418948cc55cadb15e29737268dcbe90"}	2026-11-07 19:55:49.669037+00	\N
+e1e6520e-15a2-4ad6-917b-b59e6fbdf2d3	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	PRODUCT_CREATED	PRODUCT	5ce0c62e-0d95-41a0-b7ca-8c4db8044fa5	{"sku": "LIB-001"}	2026-11-07 19:55:49.75292+00	\N
+a1266334-7742-4a4a-9c54-af90a381a9a3	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	INVOICE_RESERVED	FISCAL_DOCUMENT	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	{"sequence": 1, "environment": "1"}	2026-11-07 19:55:49.82119+00	\N
+429358b3-52e5-403f-8b5b-b90fd5ed6a4c	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	CREDIT_NOTE_RESERVED	FISCAL_DOCUMENT	8f8bc2b9-d69c-454c-9385-261b33bc4632	{"sequence": 1, "environment": "1"}	2026-11-07 19:55:50.168803+00	\N
+ae9fc95d-b6ef-44b1-9c7e-1bf9fbba9139	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	CREDIT_NOTE_RESERVED	FISCAL_DOCUMENT	bb40bf12-59f9-498c-814d-bfe0d64285e0	{"sequence": 2, "environment": "1"}	2026-11-07 19:55:50.32179+00	\N
+b5b27b6b-af9e-465b-aea8-cc0426202c7c	4b01b201-42ff-4331-9aa3-565fb6d5b531	696ccdee-c954-4ec4-9c8c-2fb6653a7720	DEBIT_NOTE_RESERVED	FISCAL_DOCUMENT	3c503cc5-641f-4d5f-9a76-d166d2051e31	{"sequence": 1, "environment": "1"}	2026-11-07 19:55:50.391281+00	\N
 \.
 
 
@@ -735,7 +746,7 @@ COPY public.audit_events (id, tenant_id, actor_id, action, entity_type, entity_i
 --
 
 COPY public.auth_refresh_tokens (token_hash, session_id, created_at, used_at) FROM stdin;
-598540fcd3f278b578f50d9d9fae2be8d4ace7f22e53dc5cbc329ae2f47118c2	245154fb-2b8a-48c9-97d7-5d8069c2fb89	2026-11-02 00:07:17.595811+00	\N
+3e7d55a4c51fc4ba2025e08ce4652e2c7ade4b7032e5e08a9495ae55ae287c93	882fba35-5d88-4223-ac41-a582b3d23134	2026-11-07 19:55:48.122153+00	\N
 \.
 
 
@@ -744,7 +755,7 @@ COPY public.auth_refresh_tokens (token_hash, session_id, created_at, used_at) FR
 --
 
 COPY public.auth_sessions (id, user_id, created_at, expires_at, last_used_at, revoked_at, revoke_reason) FROM stdin;
-245154fb-2b8a-48c9-97d7-5d8069c2fb89	da0028a7-ab1f-4d5d-a3fd-0acffb8a3aa3	2026-11-02 00:07:17.595811+00	2036-10-30 00:07:17.595811+00	2026-11-02 00:07:17.595811+00	\N	\N
+882fba35-5d88-4223-ac41-a582b3d23134	696ccdee-c954-4ec4-9c8c-2fb6653a7720	2026-11-07 19:55:48.122153+00	2036-11-04 19:55:48.122153+00	2026-11-07 19:55:48.122153+00	\N	\N
 \.
 
 
@@ -753,6 +764,7 @@ COPY public.auth_sessions (id, user_id, created_at, expires_at, last_used_at, re
 --
 
 COPY public.certificates (id, tenant_id, taxpayer_id, subject, issuer, serial_number, fingerprint_sha256, valid_from, valid_to, status, encrypted_p12, encrypted_password, created_by, created_at) FROM stdin;
+7759b9db-9317-4e2e-805f-cd8701d6bf4c	4b01b201-42ff-4331-9aa3-565fb6d5b531	135d9a94-5bce-4bed-b033-fb3c20275fc5	CN=Emisor de Java,O=Pruebas,C=EC	CN=Emisor de Java,O=Pruebas,C=EC	1609927165598210986	e45bd198352a0367ffa850f1a63116430418948cc55cadb15e29737268dcbe90	2026-11-06 19:55:49+00	2036-11-03 19:55:49+00	ACTIVE	\\x0110f5750f989cc6757f5176cced0aa820c625f4fe63e6ae08ebdd2a2df8b885849ec45448642e1c1c6fb0a2600fa1f825fc084dbda7386182cc07dc24c6e787000f99b99796a81b427ab703985794e13777bd13a3fa21591b4108fd57fa85e340f5b379edf82ed3ceb91a5464bad8db0515633b97178f2eaf6f5efc518cd5ee0829074872eaf48cd6a6c46e9ccc93170626daf5dc76c8c69ffa5b3ebb6253eb1a89e969cb447306ba5536f337aea73a946a3b434dc7976f61a759329a0081c739bb065fb64e74ff11e782e705e1fa58ce17addc360b0d20bb83e3fc2bffa9dfed853ed44302c981080ece81ac5adf369ed1621163a7a8049594fe6772da4be071b014efb23101e189bc441f7fa605daf0885cc415bf52e5449089cf9dc104a7bd16185ebf165d5852422b5e5196812deb92e4c421c98b8e448c86d62af8638131c9ab7b6bf5186b020c6840bd9eb969acb5b4e292efb13c6da05a571be65d5d4017b7d987cdc87275ac2f6d821f02f7eb11e64611a5e79301f59c888dc2abae0027f6bcfa59bd930a2e03b1266a72e65be98339565e6f6be7bb123e1cb81a8a5540fd10b9cad900ae5092a11abfa8aad10e30a2c06d2f40683980f8a4f0cc2baea2b99ea4cd164445b8be6a97455fcdb3ab2e16e6868cfeb3e8c454a21684c24ddece70cc7210c746353a5e72caa69a0bc4432a4516053e5e6c7cdf271dda109f6d7f3bb08e9a5dc278ce96a60dd11761fd7b57236dc3ad45c91beca015660a0fe192066a0dbb007611a4da22086d9f0356ccb3df9464c5844a014e9c273a559361241a6fabfa3f4ebe2d2405a73a70a90bb74b1dd2e16767da5faa7d2101d3ed10141539b39bbe0253a98c578f4c91eaec8dd28f7c11377f4b57a5e11691d26f333d80a2dade902644c0386b2a09a929abf185e438c3fccff166afc1eb1c36b6c2edaea36922239ffb23cad0da48c9864a49e8db3da699264433a9c254ee11374c1eaec100731fc52733acf0bb44d50730ec7540e1099a60ce2b38ba6dbbaa088fb10444eb3609a486435f927a44719171a5de2694c387a810994bc08e8d22bf77dd4a2531d51e469911f246edef81cc6edb06448361bd6ba4a94938bd117114ef811520bac0f1265deaa78ea441b43241455388c19948418298e9c97bdc4d37af963134f64544c99e13762609c3d5449e7fc9e4f73e60e0f21b69d1dbbc5faa3aebee3aac99c415b040fa72672691d197bea953448b1019a4e2c906b6aa96d176951e748c1b0bb68900fe7a5010996fefbe32a688514847351d6779b5ccb431732e18f63c3fffee3bc157a6e6c031645835deccf1b5db27695fd75e72d42419f35066e97f42797b84fe2d4f1579120064f1899c6b8a2028360b86fab6f4bd9a4404a7fc96f19e92e575a78875ea2d5f86bef75b9692caf90f801af573e052b50eb69c4db1c376849ef569f34d5d00e2f2a325062abf3fb740e3eccdd363da6bf1e43617713270e0ac84360119336d9a3a96c53b589a3a1f43047bbb6045b16b7ffbf642d4a501d73b13b4e442fb1c8ab4f2cd6c8ecaa0e3bca8965a9ef7a0ecded1670529e4c02007db8c273e2f726ace84be4c0cc04c6aa5021ebbedf070be418dcfffa4ce654e7cb482884066849e33079604b525eeb1c77a06e1b20eecc9af778980139fd44bb0ef7617efb24168d9fd24456cf63f7829648e1c8e1c50540e99990295224a080e8b36a9a04872601effc151595ac8193dcfa822c75b9ee0cdb2d94b90de2be4ddf5a7442e4b559df7d6f2a873b2860596a4d6e164e31ace9d22999a78fc4842a6f27157607e01c9c98ac4362abf476882a791285488bbf58e64a5219dcf660cc84f461122aebefb9be413249130eb0dc59fda5d97d25aff5e730b2094432bceee9b5cd058697a42b5ac5ff915844ccc079740ec0773f292238a45bf1fd62e112964a50ec16696ba34177734408dcbb09bef188c16e831ef99f807d2ba0f013edebb5f920ad1da413bc262302e00f1f21360cea12ba0735985c6f689f2747db72d54f45cc2af3f37f5883c904daea2042fa7fa43264c631c68b31a220930ee10897c5ae172361ffd8c19f0f8d73a19c7741b79590327f21317e5baf17feea5efb79592e8bad6a41a179769002a45e0bd7db21dee2d9a170ed98e949b8269ccb6da9b30f546be9b826c73b84538882097d0895dcede5328b78afb17bfb687f70631a131e06ac32ae7bca43f0bdca8e19a6dedc7c35533d7196750e9862b70ada6323f2c4a548856134412d4359d9278ff8cd15d42d00b1e82da6f963c7826bc5ee215c96078eae5cefed7c7a6482f0c19e4a9f00808e2127acf901d98f63020ce611d1848426315c147e4faba06e5c264abd6ba300ce8c16a23e474b430e9dff95833c55892fccd1213c3eee23ae7fcb9871cb1a9258bb9ffeed41481b943f804ea7d5d03a45caac75e62449c6ae2352a62f3f083dd5d9e43b5cc728369fee0c9d41137554feaf9253c97c4c6b52b2b901d0769ffff59a1c217f1935b39afbf03332eedd9b8017afcc398c5d529c26a1fe87cf9f0a57ed3078b9181341c83ce71395b0627f3c4cc1458b78b2658f5d1fb1a121b48af9c243c15a49b3ff18e0de5121c77a3d1e898e2d324aa314cd263893a20a0fa205816132d3cb2b26fb3f2b540b903335b76ea2aec5e13b6a3122a73c1c8c49f91c1ccf4794c07e70bca3e06312a10941bffca33c150b7e48f77a1c6b40aebc613d29d3eaa43c2f41db0d6c99e9913b628032267efe0ffdeec33cfb90ff8e6a5566a84ab9cc169fbdba0f8435dc80ec4430dd1854eb322ae3ff12aa4cd042f5e542e679c80735704931e2cd3e0c168572cc2817c565e0d6ee9c13df0ed0021ed8a7f9447586968bf4e281ddd3d6ae2810e5e4c947de0f737b3fa0c229d17b1f936f41e42970347e9e7dcc39b668e9b66bf02bf8660b2b25d58df1fd0f03db83d17439e33cece2b4000802938bb70fa288a1afce80e18702660cc52a91c39dd75a6167c61ee2734fad19667d39425865366db91565f7c966f9391fbb299f9b4a6b155a5752880c4eeb59dc7684dd2d65f6c8ba089e1d5290e28fab3674c3b32accc2f1dc377698af16910175576bb464476d6dcc81e1f06baef28641763519681bd028b495ab16814f2b1e08865aabe65a34ea872543b20750b19c1a111297a0a3a798be125b5a77f4f75e9eef9e682f83aa6d0074bf1fd864c4a30fe3b61d5a4e844188f7770daf0c4ed63c240a26c7979732dcac2bf14e9e2138d8078e05eeea3ff0bd5ec5f5961c67fcc734ca1429507ea4437ea1ddc34b3ad7cfca1e2ebdce055b5bf5affb86a45bf1bb7408292dfc6071f489628d17001e3ee65132a6ddef5fd63d31ebc0f637009b014f1dee25c08704d0dde8827a5bc84d3620ee719faf37c78f773bf193cb802d5451cc9d9425ded49730460b70ed4a609e2265e95dcb87dbd406ba8721c4637b153dd84cbeb1b788fba0b2dad47f94115af4ee089c6ee63cec087c2a6f91921f7f53398a8b5a8f9db2c66d8fab09c2001bfa6d041036291c89e2ed312433ddbaf64ad02b3a82a92aaf5264598d3cea9d473da9d977a83f06ba8000baf039e55d271f83dd94ce9486d22a9cbe97ede09351ac39397b7e95b7167d4d16d0792f1fdba17f9bc4d12ece6a3b18835519d9183bafd8321a5a91879275b42016f8e1c1f9a6f985528e7f14769b07ed1c0e754fd05028b97a5624cbdbb6f0a25d5d80ead3f99796a9d6bb0525bb24191be14b80d183a183de57913a247a01b3db6e728819a9e6bc39f809d8f299b20010301f801677c5fd6d4aeba051ed1bff2c88f5c3b4547b60f84b82f	\\x0181cc896743731f44cc83748db973eda69144d3b01b00081884d7d3ed3eca83cd94f98fffb8f41a3943bcac5bb591a4e63cbcba2af438561e8a305de93bfcb2c9e742908517aaeb81c2bfa8896dcc1f35098ebcd180be22f3ae5e8a27fbae731410006f1b5bf760e856	696ccdee-c954-4ec4-9c8c-2fb6653a7720	2026-11-07 19:55:49.669037+00
 \.
 
 
@@ -761,6 +773,7 @@ COPY public.certificates (id, tenant_id, taxpayer_id, subject, issuer, serial_nu
 --
 
 COPY public.customers (id, tenant_id, id_type, id_number, name, email, address, phone, created_at, deleted_at, version) FROM stdin;
+be8447c8-1a49-4a7c-bacd-396454f51373	4b01b201-42ff-4331-9aa3-565fb6d5b531	05	1712345678	María Pérez	cliente@example.test	\N	\N	2026-11-07 19:55:48.664112+00	\N	0
 \.
 
 
@@ -785,6 +798,9 @@ COPY public.document_artifacts (id, tenant_id, document_id, kind, sha256, conten
 --
 
 COPY public.document_sequences (tenant_id, emission_point_id, environment, document_type, next_value, last_issue_date) FROM stdin;
+4b01b201-42ff-4331-9aa3-565fb6d5b531	0eaea883-8607-45da-9849-029b39575778	1	01	2	2026-11-07
+4b01b201-42ff-4331-9aa3-565fb6d5b531	0eaea883-8607-45da-9849-029b39575778	1	04	3	2026-11-07
+4b01b201-42ff-4331-9aa3-565fb6d5b531	0eaea883-8607-45da-9849-029b39575778	1	05	2	2026-11-07
 \.
 
 
@@ -793,6 +809,7 @@ COPY public.document_sequences (tenant_id, emission_point_id, environment, docum
 --
 
 COPY public.emission_points (id, tenant_id, establishment_id, code, enabled, created_at) FROM stdin;
+0eaea883-8607-45da-9849-029b39575778	4b01b201-42ff-4331-9aa3-565fb6d5b531	53c6d916-8842-4a78-9342-2e30f9cfe392	001	t	2026-11-07 19:55:48.627242+00
 \.
 
 
@@ -801,6 +818,7 @@ COPY public.emission_points (id, tenant_id, establishment_id, code, enabled, cre
 --
 
 COPY public.establishments (id, tenant_id, taxpayer_id, code, address, created_at) FROM stdin;
+53c6d916-8842-4a78-9342-2e30f9cfe392	4b01b201-42ff-4331-9aa3-565fb6d5b531	135d9a94-5bce-4bed-b033-fb3c20275fc5	001	Av. Amazonas 100, Quito	2026-11-07 19:55:48.581276+00
 \.
 
 
@@ -809,6 +827,8 @@ COPY public.establishments (id, tenant_id, taxpayer_id, code, address, created_a
 --
 
 COPY public.fiscal_document_lines (id, tenant_id, document_id, line_no, product_id, main_code, description, quantity, unit_price, discount, subtotal, tax_code, tax_rate_code, tax_rate, tax_amount) FROM stdin;
+79256ddc-30e1-40a6-9bee-fd680fe11748	4b01b201-42ff-4331-9aa3-565fb6d5b531	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	1	dd0553ff-372b-4838-94c3-98e8691aaad9	SRV-001	Servicio de consultoría	2.000000	10.500000	1.00	20.00	2	4	15.00	3.00
+8c5d3559-c744-47f6-930e-9c489a018e35	4b01b201-42ff-4331-9aa3-565fb6d5b531	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	2	5ce0c62e-0d95-41a0-b7ca-8c4db8044fa5	LIB-001	Libro técnico	3.000000	5.250000	0.00	15.75	2	0	0.00	0.00
 \.
 
 
@@ -817,6 +837,8 @@ COPY public.fiscal_document_lines (id, tenant_id, document_id, line_no, product_
 --
 
 COPY public.fiscal_document_payments (tenant_id, document_id, line_no, method_code, amount, term, time_unit) FROM stdin;
+4b01b201-42ff-4331-9aa3-565fb6d5b531	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	1	01	18.75	\N	\N
+4b01b201-42ff-4331-9aa3-565fb6d5b531	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	2	20	20.00	30.00	dias
 \.
 
 
@@ -825,6 +847,8 @@ COPY public.fiscal_document_payments (tenant_id, document_id, line_no, method_co
 --
 
 COPY public.fiscal_document_taxes (tenant_id, document_id, tax_code, rate_code, rate, base, amount) FROM stdin;
+4b01b201-42ff-4331-9aa3-565fb6d5b531	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	2	0	0.00	15.75	0.00
+4b01b201-42ff-4331-9aa3-565fb6d5b531	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	2	4	15.00	20.00	3.00
 \.
 
 
@@ -833,6 +857,10 @@ COPY public.fiscal_document_taxes (tenant_id, document_id, tax_code, rate_code, 
 --
 
 COPY public.fiscal_documents (id, tenant_id, taxpayer_id, emission_point_id, customer_id, document_type, schema_version, environment, issuer_ruc, establishment_code, emission_point_code, sequence, access_key, state, issue_date, currency, customer_id_type, customer_id_number, customer_name, customer_address, customer_email, subtotal, total_discount, total_tax, total, created_by, created_at, version, issuer_legal_name, issuer_trade_name, issuer_head_office_address, establishment_address, issuer_accounting_required, issuer_special_taxpayer_code, issuer_withholding_agent_code, issuer_rimpe_regime, provider_ruc, next_attempt_at, attempt_count, authorization_number, authorized_at, replaces_document_id, state_changed_at, content, modified_document_id, modified_doc_code, modified_doc_number, modified_doc_date, issuer_phone, customer_phone) FROM stdin;
+bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	4b01b201-42ff-4331-9aa3-565fb6d5b531	135d9a94-5bce-4bed-b033-fb3c20275fc5	0eaea883-8607-45da-9849-029b39575778	be8447c8-1a49-4a7c-bacd-396454f51373	01	\N	1	1799999999001	001	001	1	0711202601179999999900110010010000000015692639610	AUTHORIZED	2026-11-07	USD	05	1712345678	María Pérez	\N	cliente@example.test	35.75	1.00	3.00	38.75	696ccdee-c954-4ec4-9c8c-2fb6653a7720	2026-11-07 19:55:49.82119+00	0	Emisor de Java S.A.	Java	Av. Amazonas 100, Quito	Av. Amazonas 100, Quito	t	5368	\N	EMPRENDEDOR	\N	2026-11-07 20:00:49.82119+00	0	0711202601179999999900110010010000000015692639610	2026-11-07 19:55:50.123456+00	\N	2026-11-07 19:55:49.82119+00	\N	\N	\N	\N	\N	022345678	\N
+8f8bc2b9-d69c-454c-9385-261b33bc4632	4b01b201-42ff-4331-9aa3-565fb6d5b531	135d9a94-5bce-4bed-b033-fb3c20275fc5	0eaea883-8607-45da-9849-029b39575778	be8447c8-1a49-4a7c-bacd-396454f51373	04	\N	1	1799999999001	001	001	1	0711202604179999999900110010010000000016345193918	RESERVED	2026-11-07	USD	05	1712345678	María Pérez	\N	cliente@example.test	10.00	0.50	1.50	11.50	696ccdee-c954-4ec4-9c8c-2fb6653a7720	2026-11-07 19:55:50.168803+00	0	Emisor de Java S.A.	Java	Av. Amazonas 100, Quito	Av. Amazonas 100, Quito	t	5368	\N	EMPRENDEDOR	\N	2026-11-07 20:00:50.168803+00	0	\N	\N	\N	2026-11-07 19:55:50.168803+00	{"lines": [{"taxCode": "2", "taxRate": "15.00", "discount": "0.50", "mainCode": "SRV-001", "quantity": "1", "subtotal": "10.00", "productId": "dd0553ff-372b-4838-94c3-98e8691aaad9", "taxAmount": "1.50", "unitPrice": "10.500000", "description": "Servicio de consultoría", "taxRateCode": "4", "invoiceLineNo": 1}], "taxes": [{"base": "10.00", "rate": "15.00", "amount": "1.50", "taxCode": "2", "rateCode": "4"}], "reason": "Devolución parcial"}	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	01	001-001-000000001	2026-11-07	022345678	\N
+bb40bf12-59f9-498c-814d-bfe0d64285e0	4b01b201-42ff-4331-9aa3-565fb6d5b531	135d9a94-5bce-4bed-b033-fb3c20275fc5	0eaea883-8607-45da-9849-029b39575778	be8447c8-1a49-4a7c-bacd-396454f51373	04	\N	1	1799999999001	001	001	2	0711202604179999999900110010010000000021487960316	RESERVED	2026-11-07	USD	05	1712345678	María Pérez	\N	cliente@example.test	10.50	0.00	0.00	10.50	696ccdee-c954-4ec4-9c8c-2fb6653a7720	2026-11-07 19:55:50.32179+00	0	Emisor de Java S.A.	Java	Av. Amazonas 100, Quito	Av. Amazonas 100, Quito	t	5368	\N	EMPRENDEDOR	\N	2026-11-07 20:00:50.32179+00	0	\N	\N	\N	2026-11-07 19:55:50.32179+00	{"lines": [{"taxCode": "2", "taxRate": "0.00", "discount": "0", "mainCode": "LIB-001", "quantity": "2", "subtotal": "10.50", "productId": "5ce0c62e-0d95-41a0-b7ca-8c4db8044fa5", "taxAmount": "0.00", "unitPrice": "5.250000", "description": "Libro técnico", "taxRateCode": "0", "invoiceLineNo": null}], "taxes": [{"base": "10.50", "rate": "0.00", "amount": "0.00", "taxCode": "2", "rateCode": "0"}], "reason": "Devolución de una factura en papel"}	\N	01	001-001-000000099	2026-10-01	022345678	\N
+3c503cc5-641f-4d5f-9a76-d166d2051e31	4b01b201-42ff-4331-9aa3-565fb6d5b531	135d9a94-5bce-4bed-b033-fb3c20275fc5	0eaea883-8607-45da-9849-029b39575778	be8447c8-1a49-4a7c-bacd-396454f51373	05	\N	1	1799999999001	001	001	1	0711202605179999999900110010010000000012681759114	RESERVED	2026-11-07	USD	05	1712345678	María Pérez	\N	cliente@example.test	7.00	0.00	0.75	7.75	696ccdee-c954-4ec4-9c8c-2fb6653a7720	2026-11-07 19:55:50.391281+00	0	Emisor de Java S.A.	Java	Av. Amazonas 100, Quito	Av. Amazonas 100, Quito	t	5368	\N	EMPRENDEDOR	\N	2026-11-07 20:00:50.391281+00	0	\N	\N	\N	2026-11-07 19:55:50.391281+00	{"taxes": [{"base": "2.00", "rate": "0.00", "amount": "0.00", "taxCode": "2", "rateCode": "0"}, {"base": "5.00", "rate": "15.00", "amount": "0.75", "taxCode": "2", "rateCode": "4"}], "reasons": [{"value": "5.00", "reason": "Intereses de mora", "taxCode": "2", "taxRate": "15.00", "taxAmount": "0.75", "taxRateCode": "4"}, {"value": "2.00", "reason": "Gastos de cobranza", "taxCode": "2", "taxRate": "0.00", "taxAmount": "0.00", "taxRateCode": "0"}], "payments": [{"term": null, "amount": "7.75", "timeUnit": null, "methodCode": "01"}]}	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	01	001-001-000000001	2026-11-07	022345678	\N
 \.
 
 
@@ -841,25 +869,25 @@ COPY public.fiscal_documents (id, tenant_id, taxpayer_id, emission_point_id, cus
 --
 
 COPY public.flyway_schema_history (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) FROM stdin;
-1	1	schema registry	SQL	V1__schema_registry.sql	812014979	test	2026-11-01 19:07:10.220366	18	t
-2	2	identity tenancy	SQL	V2__identity_tenancy.sql	1059035978	test	2026-11-01 19:07:10.263217	146	t
-3	3	catalogs billing	SQL	V3__catalogs_billing.sql	879002973	test	2026-11-01 19:07:10.432843	234	t
-4	4	issuer snapshot certificates artifacts	SQL	V4__issuer_snapshot_certificates_artifacts.sql	-1190276012	test	2026-11-01 19:07:10.692132	57	t
-5	5	sri transmission	SQL	V5__sri_transmission.sql	300901594	test	2026-11-01 19:07:10.766793	44	t
-6	6	archive delivery	SQL	V6__archive_delivery.sql	-10461312	test	2026-11-01 19:07:10.825865	38	t
-7	7	production activation	SQL	V7__production_activation.sql	1768594005	test	2026-11-01 19:07:10.880351	5	t
-8	8	operational indexes	SQL	V8__operational_indexes.sql	-974741680	test	2026-11-01 19:07:10.898192	17	t
-9	9	artifact integrity	SQL	V9__artifact_integrity.sql	460727416	test	2026-11-01 19:07:10.929669	25	t
-10	10	team invitations	SQL	V10__team_invitations.sql	-1326548818	test	2026-11-01 19:07:10.968668	36	t
-11	11	document replacement	SQL	V11__document_replacement.sql	-1202611449	test	2026-11-01 19:07:11.018888	11	t
-12	12	state time and append only audit	SQL	V12__state_time_and_append_only_audit.sql	424163220	test	2026-11-01 19:07:11.043046	17	t
-13	13	webhooks	SQL	V13__webhooks.sql	1352317869	test	2026-11-01 19:07:11.074089	70	t
-14	14	webhook test and fairness	SQL	V14__webhook_test_and_fairness.sql	1497966659	test	2026-11-01 19:07:11.158289	19	t
-15	15	own authentication	SQL	V15__own_authentication.sql	-1760892435	test	2026-11-01 19:07:11.190945	73	t
-16	16	api keys	SQL	V16__api_keys.sql	1911195593	test	2026-11-01 19:07:11.279632	29	t
-17	17	catalog soft deletion	SQL	V17__catalog_soft_deletion.sql	145051380	test	2026-11-01 19:07:11.32128	19	t
-18	18	generic documents	SQL	V18__generic_documents.sql	-978879458	test	2026-11-01 19:07:11.353165	11	t
-19	19	phones and payment terms	SQL	V19__phones_and_payment_terms.sql	-1619117491	test	2026-11-01 19:07:11.377943	5	t
+1	1	schema registry	SQL	V1__schema_registry.sql	812014979	test	2026-11-07 14:55:38.383079	21	t
+2	2	identity tenancy	SQL	V2__identity_tenancy.sql	1059035978	test	2026-11-07 14:55:38.43153	152	t
+3	3	catalogs billing	SQL	V3__catalogs_billing.sql	879002973	test	2026-11-07 14:55:38.611943	247	t
+4	4	issuer snapshot certificates artifacts	SQL	V4__issuer_snapshot_certificates_artifacts.sql	-1190276012	test	2026-11-07 14:55:38.886104	59	t
+5	5	sri transmission	SQL	V5__sri_transmission.sql	300901594	test	2026-11-07 14:55:38.968649	50	t
+6	6	archive delivery	SQL	V6__archive_delivery.sql	-10461312	test	2026-11-07 14:55:39.035878	45	t
+7	7	production activation	SQL	V7__production_activation.sql	1768594005	test	2026-11-07 14:55:39.097901	8	t
+8	8	operational indexes	SQL	V8__operational_indexes.sql	-974741680	test	2026-11-07 14:55:39.123941	18	t
+9	9	artifact integrity	SQL	V9__artifact_integrity.sql	460727416	test	2026-11-07 14:55:39.160284	25	t
+10	10	team invitations	SQL	V10__team_invitations.sql	-1326548818	test	2026-11-07 14:55:39.202285	39	t
+11	11	document replacement	SQL	V11__document_replacement.sql	-1202611449	test	2026-11-07 14:55:39.257374	14	t
+12	12	state time and append only audit	SQL	V12__state_time_and_append_only_audit.sql	424163220	test	2026-11-07 14:55:39.285297	19	t
+13	13	webhooks	SQL	V13__webhooks.sql	1352317869	test	2026-11-07 14:55:39.319597	74	t
+14	14	webhook test and fairness	SQL	V14__webhook_test_and_fairness.sql	1497966659	test	2026-11-07 14:55:39.408169	18	t
+15	15	own authentication	SQL	V15__own_authentication.sql	-1760892435	test	2026-11-07 14:55:39.439461	81	t
+16	16	api keys	SQL	V16__api_keys.sql	1911195593	test	2026-11-07 14:55:39.537018	30	t
+17	17	catalog soft deletion	SQL	V17__catalog_soft_deletion.sql	145051380	test	2026-11-07 14:55:39.58099	22	t
+18	18	generic documents	SQL	V18__generic_documents.sql	-978879458	test	2026-11-07 14:55:39.62075	12	t
+19	19	phones and payment terms	SQL	V19__phones_and_payment_terms.sql	-1619117491	test	2026-11-07 14:55:39.646802	5	t
 \.
 
 
@@ -868,6 +896,10 @@ COPY public.flyway_schema_history (installed_rank, version, description, type, s
 --
 
 COPY public.idempotency_records (tenant_id, idempotency_key, request_hash, document_id, created_at) FROM stdin;
+4b01b201-42ff-4331-9aa3-565fb6d5b531	java-dump-factura	a85db194a1a941005c2299de65506c1e3aee198d2caff63b6471d68c69c986c7	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	2026-11-07 19:55:49.82119+00
+4b01b201-42ff-4331-9aa3-565fb6d5b531	java-dump-nc	5a48ac436c72439cbc2c6f1a7845baaf8046ae78411537ce4cc6a38f917393c9	8f8bc2b9-d69c-454c-9385-261b33bc4632	2026-11-07 19:55:50.168803+00
+4b01b201-42ff-4331-9aa3-565fb6d5b531	java-dump-nc-mano	e578bf4ca9ea82482ebf67550723646e4f3c334eb4012d5f8bc8e5ca1e6af47a	bb40bf12-59f9-498c-814d-bfe0d64285e0	2026-11-07 19:55:50.32179+00
+4b01b201-42ff-4331-9aa3-565fb6d5b531	java-dump-nd	2d8c33bcb20bac20b739134dd27ae154bf952271b6f01e27d57402f17a2cd74d	3c503cc5-641f-4d5f-9a76-d166d2051e31	2026-11-07 19:55:50.391281+00
 \.
 
 
@@ -889,7 +921,7 @@ COPY public.identification_types (code, name, id_number_pattern, final_consumer)
 --
 
 COPY public.memberships (id, user_id, tenant_id, role, status, created_at) FROM stdin;
-161d8828-6fab-4a6b-8638-bb3357c6f813	da0028a7-ab1f-4d5d-a3fd-0acffb8a3aa3	1fd6b2c3-9aa0-48d6-ad0e-6a33b71033ec	OWNER	ACTIVE	2026-11-02 00:07:17.735653+00
+d341c33e-18d6-4dda-9a7e-868ad9e1e6a7	696ccdee-c954-4ec4-9c8c-2fb6653a7720	4b01b201-42ff-4331-9aa3-565fb6d5b531	OWNER	ACTIVE	2026-11-07 19:55:48.297638+00
 \.
 
 
@@ -898,6 +930,10 @@ COPY public.memberships (id, user_id, tenant_id, role, status, created_at) FROM 
 --
 
 COPY public.outbox_events (id, tenant_id, aggregate_id, event_type, payload, created_at, dispatched_at) FROM stdin;
+0e392e88-383b-4122-8e7f-3817cc992962	4b01b201-42ff-4331-9aa3-565fb6d5b531	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	DOCUMENT_RESERVED	{"documentId": "bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab"}	2026-11-07 19:55:49.82119+00	\N
+5fa8ca3d-9c8c-4fb2-9955-bd68244bfdc6	4b01b201-42ff-4331-9aa3-565fb6d5b531	8f8bc2b9-d69c-454c-9385-261b33bc4632	DOCUMENT_RESERVED	{"documentId": "8f8bc2b9-d69c-454c-9385-261b33bc4632"}	2026-11-07 19:55:50.168803+00	\N
+c0991ffb-57c0-4a8e-88db-193b987c0531	4b01b201-42ff-4331-9aa3-565fb6d5b531	bb40bf12-59f9-498c-814d-bfe0d64285e0	DOCUMENT_RESERVED	{"documentId": "bb40bf12-59f9-498c-814d-bfe0d64285e0"}	2026-11-07 19:55:50.32179+00	\N
+80e11bfc-d7c8-4081-9d3d-b0be13455cf5	4b01b201-42ff-4331-9aa3-565fb6d5b531	3c503cc5-641f-4d5f-9a76-d166d2051e31	DOCUMENT_RESERVED	{"documentId": "3c503cc5-641f-4d5f-9a76-d166d2051e31"}	2026-11-07 19:55:50.391281+00	\N
 \.
 
 
@@ -922,6 +958,8 @@ COPY public.payment_methods (code, name, valid_from, valid_to) FROM stdin;
 --
 
 COPY public.products (id, tenant_id, sku, name, unit_price, iva_tax_code, iva_rate_code, created_at, deleted_at, version) FROM stdin;
+dd0553ff-372b-4838-94c3-98e8691aaad9	4b01b201-42ff-4331-9aa3-565fb6d5b531	SRV-001	Servicio de consultoría	10.500000	2	4	2026-11-07 19:55:48.701689+00	\N	0
+5ce0c62e-0d95-41a0-b7ca-8c4db8044fa5	4b01b201-42ff-4331-9aa3-565fb6d5b531	LIB-001	Libro técnico	5.250000	2	0	2026-11-07 19:55:49.75292+00	\N	0
 \.
 
 
@@ -958,6 +996,10 @@ COPY public.sri_messages (attempt_id, "position", identifier, message, additiona
 --
 
 COPY public.state_events (id, tenant_id, document_id, previous_state, new_state, reason, event_time) FROM stdin;
+6bb701b6-ad58-4651-a657-dcfab52eeba0	4b01b201-42ff-4331-9aa3-565fb6d5b531	bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab	\N	RESERVED	\N	2026-11-07 19:55:50.082287+00
+03b78d71-b5c4-4d07-a241-98b617ff07b1	4b01b201-42ff-4331-9aa3-565fb6d5b531	8f8bc2b9-d69c-454c-9385-261b33bc4632	\N	RESERVED	\N	2026-11-07 19:55:50.287063+00
+0666c856-e5db-4f4a-9771-3bbcd76ca596	4b01b201-42ff-4331-9aa3-565fb6d5b531	bb40bf12-59f9-498c-814d-bfe0d64285e0	\N	RESERVED	\N	2026-11-07 19:55:50.342495+00
+451c4fa1-313f-435b-86fc-ddd7690a8b76	4b01b201-42ff-4331-9aa3-565fb6d5b531	3c503cc5-641f-4d5f-9a76-d166d2051e31	\N	RESERVED	\N	2026-11-07 19:55:50.440148+00
 \.
 
 
@@ -983,6 +1025,7 @@ COPY public.tax_rates (tax_code, rate_code, description, rate) FROM stdin;
 --
 
 COPY public.taxpayers (id, tenant_id, ruc, legal_name, trade_name, head_office_address, provider_ruc, default_environment, created_at, accounting_required, special_taxpayer_code, withholding_agent_code, rimpe_regime, production_enabled_at, production_enabled_by, phone) FROM stdin;
+135d9a94-5bce-4bed-b033-fb3c20275fc5	4b01b201-42ff-4331-9aa3-565fb6d5b531	1799999999001	Emisor de Java S.A.	Java	Av. Amazonas 100, Quito	\N	1	2026-11-07 19:55:48.516747+00	t	5368	\N	EMPRENDEDOR	\N	\N	022345678
 \.
 
 
@@ -991,7 +1034,7 @@ COPY public.taxpayers (id, tenant_id, ruc, legal_name, trade_name, head_office_a
 --
 
 COPY public.tenants (id, name, status, created_at) FROM stdin;
-1fd6b2c3-9aa0-48d6-ad0e-6a33b71033ec	Empresa creada por Java	ACTIVE	2026-11-02 00:07:17.735653+00
+4b01b201-42ff-4331-9aa3-565fb6d5b531	Empresa creada por Java	ACTIVE	2026-11-07 19:55:48.297638+00
 \.
 
 
@@ -1000,7 +1043,7 @@ COPY public.tenants (id, name, status, created_at) FROM stdin;
 --
 
 COPY public.user_tokens (id, user_id, purpose, token_hash, created_at, expires_at, used_at) FROM stdin;
-f935f655-dacc-4f52-b532-519467b6e22c	da0028a7-ab1f-4d5d-a3fd-0acffb8a3aa3	VERIFY_EMAIL	85db89f3d2a41297462582f42435ea741ef845997b56e2a169e2cab9cafd4f7d	2026-11-02 00:07:17.096186+00	2026-11-03 00:07:17.096186+00	\N
+7aa1aa60-75d1-4414-a96b-f17b4f3e5864	696ccdee-c954-4ec4-9c8c-2fb6653a7720	VERIFY_EMAIL	e141e15aaddf154158854203e58e5deb798e33050cc25c860929bd63206ea063	2026-11-07 19:55:47.475822+00	2026-11-08 19:55:47.475822+00	\N
 \.
 
 
@@ -1009,7 +1052,7 @@ f935f655-dacc-4f52-b532-519467b6e22c	da0028a7-ab1f-4d5d-a3fd-0acffb8a3aa3	VERIFY
 --
 
 COPY public.users (id, email, created_at, password_hash, email_verified_at) FROM stdin;
-da0028a7-ab1f-4d5d-a3fd-0acffb8a3aa3	java-ae790de3@example.test	2026-11-02 00:07:17.096186+00	$argon2id$v=19$m=16384,t=2,p=1$GtjVCYgmib968vyy+oUo7g$1RfwuxcMtu0oPX1hvnmLy4Jhe+8P3OZHXubD4ntlzc8	\N
+696ccdee-c954-4ec4-9c8c-2fb6653a7720	java-e9ae8e5d@example.test	2026-11-07 19:55:47.475822+00	$argon2id$v=19$m=16384,t=2,p=1$Sn/wfH6R3TdKO6Lok8CDzg$rJ9S7f+l4Bp5xvazJp13zu4MSRtz7QZmfX/09P4TbE0	\N
 \.
 
 
@@ -2103,5 +2146,5 @@ ALTER TABLE ONLY public.webhook_subscriptions
 -- PostgreSQL database dump complete
 --
 
-\unrestrict G20PixsP9hUuBtG0rurDcGlxebPA7lMkZ6HurPJmt77fFniyfWPybJrYHmQZeqS
+\unrestrict fXdmGvtGXtjzAz8IV2eq7K4zOpU3SX9W2hQCBK2ORDajAaWGlvKygPNv6skBQBX
 

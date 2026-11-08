@@ -5,8 +5,7 @@ import { createApp } from '../../../src/bootstrap.js';
 import { FailingModule } from '../../support/failing.controller.js';
 import { testAuthHeader } from '../../support/test-app.js';
 
-const problem = (status: number, extra: object) =>
-  expect.objectContaining({ type: 'about:blank', status, ...extra });
+const problem = (status: number, extra: object) => expect.objectContaining({ status, ...extra });
 
 let app: NestExpressApplication;
 let http: ReturnType<typeof request>;
@@ -40,7 +39,6 @@ it('ruta inexistente', async () => {
   expect(res.headers['etag']).toBeUndefined();
   expect(res.headers['x-powered-by']).toBeUndefined();
   expect(res.body).toEqual({
-    type: 'about:blank',
     title: 'Not Found',
     status: 404,
     detail: 'Recurso no encontrado',
@@ -48,6 +46,8 @@ it('ruta inexistente', async () => {
     errorCode: 'NOT_FOUND',
     correlationId: 'abc-123',
   });
+  // Como Spring: sin "type", los campos de ProblemDetail en orden alfabético y luego los propios.
+  expect(Object.keys(res.body)).toEqual(['detail', 'instance', 'status', 'title', 'errorCode', 'correlationId']);
 });
 
 it.each(['/nada', '/', '/api', '/api/v2/x', '/actuatorx'])(
@@ -275,10 +275,10 @@ describe('OPTIONS, como Spring MVC', () => {
   });
 });
 
-it('un 405 lleva Allow separado por comas, como HttpHeaders.setAllow', async () => {
+it('un 405 lleva en Allow los métodos declarados, sin HEAD y separados por ", ", como Spring', async () => {
   const res = await authed.delete('/api/v1/test/boom');
   expect(res.status).toBe(405);
-  expect(res.headers.allow).toBe('GET,HEAD');
+  expect(res.headers.allow).toBe('GET');
 });
 
 it('una HttpException 5xx de Nest se registra y no filtra la causa', async () => {

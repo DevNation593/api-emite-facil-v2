@@ -171,16 +171,18 @@ El mismo `ProblemDetail` (RFC 9457) que produce Spring, con `Content-Type: appli
 
 ```json
 {
-  "type": "about:blank",
-  "title": "Unprocessable Content",
-  "status": 422,
   "detail": "…",
   "instance": "/api/v1/…",
+  "status": 422,
+  "title": "Unprocessable Content",
   "errorCode": "…",
-  "correlationId": "…",
-  "errors": [{ "field": "lines[0].quantity", "message": "…" }]
+  "errors": [{ "field": "lines[0].quantity", "message": "…" }],
+  "correlationId": "…"
 }
 ```
+
+Corrección de E2, comprobada contra la API Java con `tools/java-probe`: Spring no escribe `type` (`about:blank`
+no se serializa) y ordena los campos de ProblemDetail alfabéticamente antes de los propios.
 
 - `ApiException` en TypeScript: estado, `errorCode`, detalle, errores por campo y `Retry-After`.
 - Validación: `400 VALIDATION_FAILED`, con nombres de campo en la notación de Spring (`lines[0].quantity`).

@@ -1,0 +1,22 @@
+{
+  "invoice": {
+    "path": "/api/v1/invoices",
+    "key": "java-dump-factura",
+    "body": "{\"taxpayerId\":\"135d9a94-5bce-4bed-b033-fb3c20275fc5\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"customerId\":\"be8447c8-1a49-4a7c-bacd-396454f51373\",\"lines\":[{\"productId\":\"dd0553ff-372b-4838-94c3-98e8691aaad9\",\"quantity\":\"2\",\"discount\":\"1.00\"},{\"productId\":\"5ce0c62e-0d95-41a0-b7ca-8c4db8044fa5\",\"quantity\":3}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"18.75\"},{\"methodCode\":\"20\",\"amount\":20.00,\"term\":\"30\",\"timeUnit\":\"dias\"}]}"
+  },
+  "creditNote": {
+    "path": "/api/v1/credit-notes",
+    "key": "java-dump-nc",
+    "body": "{\"taxpayerId\":\"135d9a94-5bce-4bed-b033-fb3c20275fc5\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución parcial\",\"invoiceId\":\"bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab\",\"lines\":[{\"invoiceLineNo\":1,\"quantity\":\"1\"}]}"
+  },
+  "manualCreditNote": {
+    "path": "/api/v1/credit-notes",
+    "key": "java-dump-nc-mano",
+    "body": "{\"taxpayerId\":\"135d9a94-5bce-4bed-b033-fb3c20275fc5\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"reason\":\"Devolución de una factura en papel\",\"modifiedDocument\":{\"code\":\"01\",\"number\":\"001-001-000000099\",\"issueDate\":\"2026-10-01\"},\"customerId\":\"be8447c8-1a49-4a7c-bacd-396454f51373\",\"lines\":[{\"productId\":\"5ce0c62e-0d95-41a0-b7ca-8c4db8044fa5\",\"quantity\":\"2\"}]}"
+  },
+  "debitNote": {
+    "path": "/api/v1/debit-notes",
+    "key": "java-dump-nd",
+    "body": "{\"taxpayerId\":\"135d9a94-5bce-4bed-b033-fb3c20275fc5\",\"establishmentCode\":\"001\",\"emissionPointCode\":\"001\",\"invoiceId\":\"bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab\",\"reasons\":[{\"reason\":\"Intereses de mora\",\"value\":\"5.00\",\"ivaRateCode\":\"4\"},{\"reason\":\"Gastos de cobranza\",\"value\":\"2.00\",\"ivaRateCode\":\"0\"}],\"payments\":[{\"methodCode\":\"01\",\"amount\":\"7.75\"}]}"
+  }
+}

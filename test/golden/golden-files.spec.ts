@@ -150,15 +150,15 @@ describe('golden files', () => {
     }
   });
 
-  it('bean-validation: casos de las cinco restricciones con mensajes de Hibernate', () => {
+  it('bean-validation: casos de las ocho restricciones con mensajes de Hibernate', () => {
     const { cases } = read('./bean-validation.json');
     const kinds = new Set(cases.map((c: { constraint: string }) => c.constraint));
     expect(kinds).toEqual(
-      new Set(['NotBlank', 'NotNull', 'Size', 'Email', 'NoControlChars']),
+      new Set(['NotBlank', 'NotNull', 'Size', 'Email', 'NoControlChars', 'Pattern', 'Min', 'Max']),
     );
     for (const c of cases) {
       expect(typeof c.valid).toBe('boolean');
-      expect(c.value === null || typeof c.value === 'string').toBe(true);
+      expect(c.value === null || typeof c.value === 'string' || typeof c.value === 'number').toBe(true);
       expect(c.message === null).toBe(c.valid);
     }
     expect(

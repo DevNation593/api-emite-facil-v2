@@ -1,252 +1,302 @@
 #!/usr/bin/env node
 // Genera test/fixtures/java-e1/ con datos escritos por la API Java: arranca su jar contra
 // PostgreSQL, RabbitMQ y Redis efímeros, crea por HTTP una cuenta, una sesión, una empresa y una
-// API key, y vuelca la base. Solo escribe en el target/ del repo Java. Uso:
+// API key, un emisor con su establecimiento y punto de emisión, un cliente, dos productos, un
+// certificado, una factura (que autoriza por SQL), dos notas de crédito y una de débito, y vuelca la
+// base. Solo escribe en el target/ del repo Java. Uso:
 //   node tools/java-dump/run.mjs --java-repo ../backend-emite-facil [--skip-build]
-import { spawn, spawnSync } from 'node:child_process';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { createWriteStream, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import net from 'node:net';
+import { spawnSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { PostgreSqlContainer } from '@testcontainers/postgresql';
-import { RabbitMQContainer } from '@testcontainers/rabbitmq';
-import { RedisContainer } from '@testcontainers/redis';
+import pg from 'pg';
+import { callJava, fail, javaArguments, javaSource, runTool, startJavaApp } from './java-app.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const projectRoot = resolve(here, '..', '..');
-const outDir = join(projectRoot, 'test', 'fixtures', 'java-e1');
-const windows = process.platform === 'win32';
-const JAR = join('target', 'einvoice-0.0.1-SNAPSHOT.jar');
-// Mismas imágenes que test/support/containers.ts.
-const POSTGRES_IMAGE = 'postgres:16';
-const RABBIT_IMAGE = 'rabbitmq:4-management';
-const REDIS_IMAGE = 'redis:7-alpine';
+const outDir = join(resolve(here, '..', '..'), 'test', 'fixtures', 'java-e1');
 
-class StepError extends Error {}
-
-let currentStep = 'arranque';
-function step(name) {
-  currentStep = name;
-  console.log(`[java-dump] ${name}`);
-}
-const fail = (detail) => {
-  throw new StepError(detail);
-};
-
-// En Windows el .cmd exige shell:true y, con él, Node no entrecomilla los argumentos.
-const quote = (arg) => (windows && /[\s&()^|<>]/.test(arg) ? `"${arg}"` : arg);
-function runSync(command, args, options) {
-  const result = windows
-    ? spawnSync([command, ...args].map(quote).join(' '), { shell: true, stdio: 'inherit', ...options })
-    : spawnSync(command, args, { stdio: 'inherit', ...options });
-  if (result.error) fail(result.error.message);
-  if (result.status !== 0) fail(`código de salida ${result.status}`);
-  return result;
-}
-
-async function freePort() {
-  const server = net.createServer();
-  await new Promise((done) => server.listen(0, '127.0.0.1', done));
-  const { port } = server.address();
-  await new Promise((done) => server.close(done));
-  return port;
-}
-
-const argv = process.argv.slice(2);
-const flag = argv.indexOf('--java-repo');
-const skipBuild = argv.includes('--skip-build');
-
-const cleanups = [];
-let work;
-let javaLog;
-try {
-  step('argumentos');
-  if (flag === -1 || !argv[flag + 1]) fail('falta --java-repo <ruta>');
-  const javaRepo = resolve(process.cwd(), argv[flag + 1]);
-  if (!existsSync(join(javaRepo, 'pom.xml'))) fail(`${javaRepo} no es el repo Java (sin pom.xml)`);
-  work = mkdtempSync(join(tmpdir(), 'java-dump-'));
-
-  step('commit del repo Java');
-  const git = spawnSync('git', ['-C', javaRepo, 'rev-parse', 'HEAD'], { encoding: 'utf8' });
-  if (git.status !== 0) fail(git.stderr.trim());
-  const javaCommit = git.stdout.trim();
-  const dirty = spawnSync('git', ['-C', javaRepo, 'status', '--porcelain', '--', 'src', 'pom.xml'], {
-    encoding: 'utf8',
-  }).stdout.trim();
-
-  if (!skipBuild) {
-    step('empaquetar el jar de Java');
-    runSync(join(javaRepo, windows ? 'mvnw.cmd' : 'mvnw'), ['-q', '-DskipTests', '-Djacoco.skip=true', 'package'], {
-      cwd: javaRepo,
-    });
+/** Marca un texto para escribirlo como número JSON (con ese texto exacto) en `rawJson`. */
+class JsonNumber {
+  constructor(text) {
+    if (!/^-?\d+(\.\d+)?$/.test(text)) throw new Error(`número inválido: ${text}`);
+    this.text = text;
   }
-  if (!existsSync(join(javaRepo, JAR))) fail(`no existe ${JAR}; ejecute sin --skip-build`);
+}
+const number = (text) => new JsonNumber(text);
 
-  step('levantar PostgreSQL, RabbitMQ y Redis');
-  const [postgres, rabbit, redis] = await Promise.all([
-    new PostgreSqlContainer(POSTGRES_IMAGE).withDatabase('einvoice').withUsername('test').withPassword('test').start(),
-    new RabbitMQContainer(RABBIT_IMAGE).start(),
-    new RedisContainer(REDIS_IMAGE).start(),
-  ]);
-  cleanups.push(() => postgres.stop(), () => rabbit.stop(), () => redis.stop());
-
-  // Valores de prueba de esta ejecución: van a meta.json para que NestJS arranque con ellos.
-  const jwtSecret = randomBytes(48).toString('base64');
-  const masterKey = randomBytes(32).toString('base64');
-  const port = await freePort();
-  const base = `http://127.0.0.1:${port}`;
-
-  step('arrancar la API Java');
-  const env = { ...process.env };
-  // Nada del entorno del desarrollador debe llegar a Java: ni su SMTP ni sus secretos.
-  for (const name of Object.keys(env)) {
-    if (/^(SPRING_|EINVOICE_|SRI_|DELIVERY_|SMTP_|DATABASE_URL|RABBITMQ_URL|REDIS_URL|SERVER_PORT)/.test(name)) {
-      delete env[name];
-    }
-  }
-  Object.assign(env, {
-    PORT: String(port),
-    DATABASE_URL: postgres.getConnectionUri(),
-    RABBITMQ_URL: rabbit.getAmqpUrl(),
-    REDIS_URL: redis.getConnectionUrl(),
-    EINVOICE_MASTER_KEY: masterKey,
-    EINVOICE_JWT_SECRET: jwtSecret,
-    EINVOICE_WEB_URL: 'http://web.test',
-    // Sin SMTP el correo queda apagado; sin ambientes no se transmite al SRI.
-    SRI_ENABLED_ENVIRONMENTS: '',
-    EINVOICE_WORKER_ENABLED: 'false',
-    // La sesión del dump no caduca: la prueba de renovación sigue valiendo con el tiempo.
-    EINVOICE_AUTH_SESSIONTTL: '87600h',
+/** JSON.stringify, salvo que cada JsonNumber sale como número con su texto (20.00, no 20). */
+function rawJson(value) {
+  const numbers = [];
+  const text = JSON.stringify(value, (_key, item) => {
+    if (!(item instanceof JsonNumber)) return item;
+    numbers.push(item.text);
+    return `\u0000${numbers.length - 1}\u0000`;
   });
-  javaLog = join(work, 'java.log');
-  const logStream = createWriteStream(javaLog);
-  // En Windows los selectores de Java abren un socket Unix en TEMP, cuya ruta no puede pasar de
-  // 108 bytes; un TEMP largo impide arrancar. target/ del repo Java es corto y ya es de Maven.
-  const java = spawn('java', [`-Djdk.net.unixdomain.tmpdir=${join(javaRepo, 'target')}`, '-jar', JAR], {
-    cwd: javaRepo,
-    env,
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  java.stdout.pipe(logStream);
-  java.stderr.pipe(logStream);
-  let exited = false;
-  java.on('exit', () => (exited = true));
-  cleanups.unshift(async () => {
-    if (!exited) {
-      const done = new Promise((resolve) => java.once('exit', resolve));
-      // En Windows "java" suele ser el lanzador de Oracle (javapath), que arranca la JVM como hija:
-      // matar solo el lanzador la deja viva con las tuberías abiertas y Node no termina nunca.
-      if (windows) spawnSync('taskkill', ['/pid', String(java.pid), '/T', '/F'], { stdio: 'ignore' });
-      else java.kill();
-      await done;
-    }
-    java.stdout.destroy();
-    java.stderr.destroy();
-    await new Promise((resolve) => logStream.end(resolve));
-  });
+  return text.replace(/"\\u0000(\d+)\\u0000"/g, (_match, i) => numbers[Number(i)]);
+}
 
-  step('esperar a que Java esté lista');
-  const deadline = Date.now() + 180_000;
-  for (;;) {
-    if (exited) fail('Java terminó antes de estar lista');
-    if (Date.now() > deadline) fail('Java no estuvo lista en 180 s');
-    const ready = await fetch(`${base}/actuator/health/readiness`, { signal: AbortSignal.timeout(5_000) }).then(
-      (res) => res.status === 200,
-      () => false,
+/** Un .p12 RSA 2048 con KeyUsage=digitalSignature, vigente diez años, creado con el keytool de esa JVM. */
+function keytoolP12(password) {
+  const settings = spawnSync('java', ['-XshowSettings:properties', '-version'], { encoding: 'utf8' }).stderr;
+  const javaHome = /^\s*java\.home = (.+)$/m.exec(settings)?.[1]?.trim();
+  if (javaHome === undefined) fail('no se encontró java.home');
+  const work = mkdtempSync(join(tmpdir(), 'java-dump-p12-'));
+  try {
+    const store = join(work, 'certificado.p12');
+    const result = spawnSync(
+      join(javaHome, 'bin', 'keytool'),
+      [
+        '-genkeypair', '-alias', 'firma', '-keyalg', 'RSA', '-keysize', '2048', '-sigalg', 'SHA256withRSA',
+        '-dname', 'CN=Emisor de Java, O=Pruebas, C=EC', '-startdate', '-1d', '-validity', '3650',
+        '-ext', 'KeyUsage=digitalSignature', '-storetype', 'PKCS12', '-keystore', store, '-storepass', password,
+      ],
+      { encoding: 'utf8' },
     );
-    if (ready) break;
-    await new Promise((done) => setTimeout(done, 1_000));
+    if (result.status !== 0) fail(`keytool falló: ${result.stderr || result.stdout}`);
+    return readFileSync(store);
+  } finally {
+    rmSync(work, { recursive: true, force: true });
   }
-
-  async function call(name, method, path, { body, headers = {}, expected }) {
-    const res = await fetch(`${base}${path}`, {
-      method,
-      headers: { 'Content-Type': 'application/json', ...headers },
-      body: body === undefined ? undefined : JSON.stringify(body),
-      // Una petición que no vuelve no debe colgar el generador.
-      signal: AbortSignal.timeout(30_000),
-    });
-    const text = await res.text();
-    if (res.status !== expected) fail(`${name}: se esperaba ${expected} y llegó ${res.status} ${text}`);
-    return text === '' ? undefined : JSON.parse(text);
-  }
-
-  step('crear la cuenta, la sesión, la empresa y la API key');
-  // En mayúsculas: Java guarda el correo normalizado y NestJS debe encontrarlo igual. Espacios no:
-  // @Email los rechaza antes de normalizar.
-  const email = `java-${randomUUID().slice(0, 8)}@example.test`;
-  const password = `java ${randomBytes(9).toString('base64url')}`;
-  await call('registro', 'POST', '/api/v1/auth/register', {
-    body: { email: email.toUpperCase(), password },
-    expected: 202,
-  });
-  const tokens = await call('ingreso', 'POST', '/api/v1/auth/login', { body: { email, password }, expected: 200 });
-  const auth = { Authorization: `Bearer ${tokens.accessToken}` };
-  const tenant = await call('empresa', 'POST', '/api/v1/tenants', {
-    body: { name: 'Empresa creada por Java' },
-    headers: auth,
-    expected: 201,
-  });
-  const apiKey = await call('API key', 'POST', '/api/v1/api-keys', {
-    body: { name: 'ERP de Java' },
-    headers: { ...auth, 'X-Tenant-Id': tenant.id },
-    expected: 201,
-  });
-
-  step('comprobar los datos en Java');
-  const viaKey = await call('empresa con la API key', 'GET', '/api/v1/tenants/current', {
-    headers: { 'X-Api-Key': apiKey.key },
-    expected: 200,
-  });
-  if (viaKey.id !== tenant.id) fail('la API key no resuelve su empresa');
-
-  // Se detiene Java antes de volcar: nada más escribe en la base.
-  step('detener Java');
-  await cleanups.shift()();
-
-  step('volcar la base');
-  const dump = await postgres.exec(['pg_dump', '--no-owner', '--no-privileges', '-U', 'test', 'einvoice']);
-  if (dump.exitCode !== 0) fail(dump.stderr || dump.output);
-  const claims = JSON.parse(Buffer.from(tokens.accessToken.split('.')[1], 'base64url').toString('utf8'));
-
-  step('escribir los fixtures');
-  mkdirSync(outDir, { recursive: true });
-  writeFileSync(join(outDir, 'dump.sql'), dump.stdout.replaceAll('\r\n', '\n'));
-  const meta = {
-    // Valores de prueba generados en esta ejecución; ninguno sirve fuera de estos fixtures.
-    source: {
-      javaCommit,
-      javaDirty: dirty !== '',
-      javaVersion: spawnSync('java', ['-version'], { encoding: 'utf8' }).stderr.split('\n')[0].trim(),
-      generatedAt: new Date().toISOString(),
-    },
-    email,
-    password,
-    userId: claims.sub,
-    tenantId: tenant.id,
-    tenantName: tenant.name,
-    refreshToken: tokens.refreshToken,
-    accessToken: tokens.accessToken,
-    accessTokenIat: claims.iat,
-    accessTokenExp: claims.exp,
-    apiKey: apiKey.key,
-    apiKeyId: apiKey.id,
-    env: { EINVOICE_JWT_SECRET: jwtSecret, EINVOICE_MASTER_KEY: masterKey },
-  };
-  writeFileSync(join(outDir, 'meta.json'), `${JSON.stringify(meta, null, 2)}\n`);
-  console.log(`[java-dump] listo: ${outDir}`);
-} catch (error) {
-  console.error(
-    `\n[java-dump] FALLÓ el paso "${currentStep}": ${error instanceof StepError ? error.message : error?.stack ?? error}`,
-  );
-  if (javaLog && existsSync(javaLog)) {
-    console.error('[java-dump] últimas líneas del log de Java:');
-    console.error(readFileSync(javaLog, 'utf8').split('\n').slice(-40).join('\n'));
-  }
-  process.exitCode = 1;
-} finally {
-  for (const cleanup of cleanups) await cleanup().catch(() => undefined);
-  if (work) rmSync(work, { recursive: true, force: true });
 }
+
+await runTool('java-dump', async (step, onFailure) => {
+  step('argumentos');
+  const { javaRepo, skipBuild } = javaArguments(process.argv.slice(2));
+  step('commit del repo Java');
+  const source = javaSource(javaRepo);
+
+  const app = await startJavaApp({
+    javaRepo,
+    skipBuild,
+    step,
+    onFailure,
+    // La sesión del dump no caduca: la prueba de renovación sigue valiendo con el tiempo.
+    env: { EINVOICE_AUTH_SESSIONTTL: '87600h' },
+  });
+  try {
+    const call = (...args) => callJava(app.base, ...args);
+
+    step('crear la cuenta, la sesión, la empresa y la API key');
+    // En mayúsculas: Java guarda el correo normalizado y NestJS debe encontrarlo igual. Espacios no:
+    // @Email los rechaza antes de normalizar.
+    const email = `java-${randomUUID().slice(0, 8)}@example.test`;
+    const password = `java ${randomBytes(9).toString('base64url')}`;
+    await call('registro', 'POST', '/api/v1/auth/register', {
+      body: { email: email.toUpperCase(), password },
+      expected: 202,
+    });
+    const tokens = await call('ingreso', 'POST', '/api/v1/auth/login', { body: { email, password }, expected: 200 });
+    const auth = { Authorization: `Bearer ${tokens.accessToken}` };
+    const tenant = await call('empresa', 'POST', '/api/v1/tenants', {
+      body: { name: 'Empresa creada por Java' },
+      headers: auth,
+      expected: 201,
+    });
+    const apiKey = await call('API key', 'POST', '/api/v1/api-keys', {
+      body: { name: 'ERP de Java' },
+      headers: { ...auth, 'X-Tenant-Id': tenant.id },
+      expected: 201,
+    });
+
+    step('crear el emisor, su establecimiento y punto de emisión, un cliente y un producto');
+    const owner = { ...auth, 'X-Tenant-Id': tenant.id };
+    const taxpayer = await call('emisor', 'POST', '/api/v1/taxpayers', {
+      body: {
+        ruc: '1799999999001',
+        legalName: 'Emisor de Java S.A.',
+        tradeName: 'Java',
+        headOfficeAddress: 'Av. Amazonas 100, Quito',
+        phone: '022345678',
+        defaultEnvironment: '1',
+        accountingRequired: true,
+        specialTaxpayerCode: '5368',
+        rimpeRegime: 'EMPRENDEDOR',
+      },
+      headers: owner,
+      expected: 201,
+    });
+    const establishment = await call('establecimiento', 'POST', `/api/v1/taxpayers/${taxpayer.id}/establishments`, {
+      body: { code: '001', address: 'Av. Amazonas 100, Quito' },
+      headers: owner,
+      expected: 201,
+    });
+    const emissionPoint = await call('punto de emisión', 'POST', '/api/v1/emission-points', {
+      body: { establishmentId: establishment.id, code: '001' },
+      headers: owner,
+      expected: 201,
+    });
+    const customer = await call('cliente', 'POST', '/api/v1/customers', {
+      body: { idType: '05', idNumber: '1712345678', name: 'María Pérez', email: 'cliente@example.test' },
+      headers: owner,
+      expected: 201,
+    });
+    const product = await call('producto', 'POST', '/api/v1/products', {
+      body: { sku: 'SRV-001', name: 'Servicio de consultoría', unitPrice: '10.5', ivaRateCode: '4' },
+      headers: owner,
+      expected: 201,
+    });
+
+    step('cargar un certificado creado con keytool');
+    // Vigente diez años: el volcado sirve para firmar mucho después de generarse.
+    const certificatePassword = `java ${randomBytes(9).toString('base64url')}`;
+    const p12 = keytoolP12(certificatePassword);
+    const certificate = await call('certificado', 'POST', '/api/v1/certificates', {
+      body: { taxpayerId: taxpayer.id, p12: p12.toString('base64'), password: certificatePassword },
+      headers: owner,
+      expected: 201,
+    });
+
+    step('emitir una factura, autorizarla y emitir dos notas de crédito y una de débito');
+    // Segundo producto con otra tarifa (0 %): la factura lleva dos grupos de IVA.
+    const product2 = await call('producto con IVA 0 %', 'POST', '/api/v1/products', {
+      body: { sku: 'LIB-001', name: 'Libro técnico', unitPrice: '5.25', ivaRateCode: '0' },
+      headers: owner,
+      expected: 201,
+    });
+    // Cada emisión guarda su clave y el texto exacto del cuerpo: NestJS debe reconocer el reintento.
+    const requests = {};
+    const issue = async (name, path, key, body) => {
+      const text = rawJson(body);
+      const res = await fetch(`${app.base}${path}`, {
+        method: 'POST',
+        headers: { ...owner, 'Content-Type': 'application/json', 'Idempotency-Key': key },
+        body: text,
+        signal: AbortSignal.timeout(30_000),
+      });
+      const answer = await res.text();
+      if (res.status !== 202) fail(`${name}: se esperaba 202 y llegó ${res.status} ${answer}`);
+      requests[name] = { path, key, body: text };
+      return JSON.parse(answer).id;
+    };
+    // Línea 1: 2 × 10.50 − 1.00 = 20.00 con IVA 15 % (3.00); línea 2: 3 × 5.25 = 15.75 con IVA 0 %.
+    // Total 38.75 en dos pagos, uno a 30 días. La cantidad 3 y el importe 20.00 van como números
+    // JSON: la huella de Java los toma con el texto recibido.
+    const invoiceId = await issue('invoice', '/api/v1/invoices', 'java-dump-factura', {
+      taxpayerId: taxpayer.id,
+      establishmentCode: '001',
+      emissionPointCode: '001',
+      customerId: customer.id,
+      lines: [
+        { productId: product.id, quantity: '2', discount: '1.00' },
+        { productId: product2.id, quantity: number('3') },
+      ],
+      payments: [
+        { methodCode: '01', amount: '18.75' },
+        { methodCode: '20', amount: number('20.00'), term: '30', timeUnit: 'dias' },
+      ],
+    });
+    // Sin SRI ni worker, Java la deja en RESERVED: se autoriza por SQL, con un authorized_at con
+    // microsegundos (Jackson los escribe con seis decimales).
+    const db = new pg.Client({ connectionString: app.postgres.getConnectionUri() });
+    await db.connect();
+    try {
+      await db.query(
+        `UPDATE fiscal_documents
+            SET state = 'AUTHORIZED', authorization_number = access_key,
+                authorized_at = date_trunc('second', now()) + interval '0.123456 second'
+          WHERE id = $1`,
+        [invoiceId],
+      );
+    } finally {
+      await db.end();
+    }
+    // Devuelve 1 de las 2 unidades de la línea 1, con el descuento prorrateado: 10.00 + IVA 1.50.
+    const creditNoteId = await issue('creditNote', '/api/v1/credit-notes', 'java-dump-nc', {
+      taxpayerId: taxpayer.id,
+      establishmentCode: '001',
+      emissionPointCode: '001',
+      reason: 'Devolución parcial',
+      invoiceId,
+      lines: [{ invoiceLineNo: 1, quantity: '1' }],
+    });
+    const manualCreditNoteId = await issue('manualCreditNote', '/api/v1/credit-notes', 'java-dump-nc-mano', {
+      taxpayerId: taxpayer.id,
+      establishmentCode: '001',
+      emissionPointCode: '001',
+      reason: 'Devolución de una factura en papel',
+      modifiedDocument: { code: '01', number: '001-001-000000099', issueDate: '2026-10-01' },
+      customerId: customer.id,
+      lines: [{ productId: product2.id, quantity: '2' }],
+    });
+    // 5.00 con IVA 15 % y 2.00 con IVA 0 %: 7.75 en un pago.
+    const debitNoteId = await issue('debitNote', '/api/v1/debit-notes', 'java-dump-nd', {
+      taxpayerId: taxpayer.id,
+      establishmentCode: '001',
+      emissionPointCode: '001',
+      invoiceId,
+      reasons: [
+        { reason: 'Intereses de mora', value: '5.00', ivaRateCode: '4' },
+        { reason: 'Gastos de cobranza', value: '2.00', ivaRateCode: '0' },
+      ],
+      payments: [{ methodCode: '01', amount: '7.75' }],
+    });
+
+    step('leer los comprobantes en Java');
+    const read = (name, path) => call(name, 'GET', path, { headers: owner, expected: 200 });
+    const documentViews = {
+      invoice: await read('factura', `/api/v1/documents/${invoiceId}`),
+      creditNote: await read('nota de crédito', `/api/v1/documents/${creditNoteId}`),
+      manualCreditNote: await read('nota de crédito a mano', `/api/v1/documents/${manualCreditNoteId}`),
+      debitNote: await read('nota de débito', `/api/v1/documents/${debitNoteId}`),
+      list: await read('listado', '/api/v1/documents'),
+    };
+    if (!/\.123456Z$/.test(documentViews.invoice.authorizedAt ?? '')) {
+      fail(`authorizedAt sin microsegundos: ${documentViews.invoice.authorizedAt}`);
+    }
+
+    step('comprobar los datos en Java');
+    const viaKey = await call('empresa con la API key', 'GET', '/api/v1/tenants/current', {
+      headers: { 'X-Api-Key': apiKey.key },
+      expected: 200,
+    });
+    if (viaKey.id !== tenant.id) fail('la API key no resuelve su empresa');
+
+    // Se detiene Java antes de volcar: nada más escribe en la base.
+    step('detener Java');
+    await app.stopJava();
+
+    step('volcar la base');
+    const dump = await app.postgres.exec(['pg_dump', '--no-owner', '--no-privileges', '-U', 'test', 'einvoice']);
+    if (dump.exitCode !== 0) fail(dump.stderr || dump.output);
+    const claims = JSON.parse(Buffer.from(tokens.accessToken.split('.')[1], 'base64url').toString('utf8'));
+
+    step('escribir los fixtures');
+    mkdirSync(outDir, { recursive: true });
+    writeFileSync(join(outDir, 'dump.sql'), dump.stdout.replaceAll('\r\n', '\n'));
+    const meta = {
+      // Valores de prueba generados en esta ejecución; ninguno sirve fuera de estos fixtures.
+      source: { ...source, generatedAt: new Date().toISOString() },
+      email,
+      password,
+      userId: claims.sub,
+      tenantId: tenant.id,
+      tenantName: tenant.name,
+      refreshToken: tokens.refreshToken,
+      accessToken: tokens.accessToken,
+      accessTokenIat: claims.iat,
+      accessTokenExp: claims.exp,
+      apiKey: apiKey.key,
+      apiKeyId: apiKey.id,
+      taxpayerId: taxpayer.id,
+      certificateId: certificate.id,
+      certificateFingerprint: certificate.fingerprintSha256,
+      customerId: customer.id,
+      productId: product.id,
+      invoiceId,
+      creditNoteId,
+      manualCreditNoteId,
+      debitNoteId,
+      // Lo que Java respondió al crearlos: NestJS debe leer lo mismo.
+      views: { taxpayer, establishment, emissionPoint, customer, product, certificate },
+      env: app.secrets,
+    };
+    writeFileSync(join(outDir, 'meta.json'), `${JSON.stringify(meta, null, 2)}\n`);
+    writeFileSync(join(outDir, 'requests.json'), `${JSON.stringify(requests, null, 2)}\n`);
+    writeFileSync(join(outDir, 'views.json'), `${JSON.stringify(documentViews, null, 2)}\n`);
+    console.log(`[java-dump] listo: ${outDir}`);
+  } finally {
+    await app.stop();
+  }
+});

@@ -1,7 +1,9 @@
+import { randomUUID } from 'node:crypto';
 import { Logger } from '@nestjs/common';
 import pg from 'pg';
 import { generateApiKey } from '../../../src/apikey/api-key-credential.js';
 import { startStack, type StackHandle } from '../../support/containers.js';
+import { billingScenario, customerJson, invoiceJson } from '../../support/scenario.js';
 import {
   registerAndLogin,
   startTestApp,
@@ -245,4 +247,77 @@ it('un fallo al anotar el último uso no falla la petición', async () => {
     spy.mockRestore();
     await db.query('DROP TRIGGER fail_touch ON api_keys');
   }
+});
+
+describe('con una empresa lista para facturar', () => {
+  let scenario: Awaited<ReturnType<typeof billingScenario>>;
+  let billerKey: string;
+  let billerKeyId: string;
+
+  beforeEach(async () => {
+    scenario = await billingScenario(http(), db);
+    const created = await http()
+      .post('/api/v1/api-keys')
+      .set('Authorization', `Bearer ${scenario.owner}`)
+      .set('X-Tenant-Id', scenario.tenant)
+      .send({ name: 'ERP Contable' })
+      .expect(201);
+    billerKey = created.body.key as string;
+    billerKeyId = created.body.id as string;
+  });
+
+  const issueWithKey = () =>
+    http()
+      .post('/api/v1/invoices')
+      .set(KEY_HEADER, billerKey)
+      .set('Idempotency-Key', randomUUID())
+      .send(invoiceJson(scenario, '1', '11.50'));
+
+  it('una key emite y lee una factura', async () => {
+    const issued = await issueWithKey().expect(202);
+    const id = issued.body.id as string;
+
+    const document = await http().get(`/api/v1/documents/${id}`).set(KEY_HEADER, billerKey).expect(200);
+    expect(document.body.id).toBe(id);
+    const current = await http().get('/api/v1/tenants/current').set(KEY_HEADER, billerKey).expect(200);
+    expect(current.body).toMatchObject({ id: scenario.tenant, role: 'BILLER' });
+  });
+
+  it('la auditoría nombra la key y a quien la creó', async () => {
+    const creator = (
+      await db.query<{ created_by: string }>('SELECT created_by FROM api_keys WHERE id = $1', [billerKeyId])
+    ).rows[0]!.created_by;
+    const issued = await issueWithKey().expect(202);
+    const documentId = issued.body.id as string;
+    await http()
+      .post('/api/v1/customers')
+      .set(KEY_HEADER, billerKey)
+      .send(customerJson('06', 'PA1234567', 'María Pérez'))
+      .expect(201);
+
+    for (const action of ['INVOICE_RESERVED', 'CUSTOMER_CREATED']) {
+      const rows = await db.query<{ actor_id: string; api_key_id: string }>(
+        'SELECT actor_id, api_key_id FROM audit_events WHERE tenant_id = $1 AND action = $2 AND api_key_id = $3',
+        [scenario.tenant, action, billerKeyId],
+      );
+      expect(rows.rows, action).toEqual([{ actor_id: creator, api_key_id: billerKeyId }]);
+    }
+    const createdBy = await db.query<{ created_by: string }>('SELECT created_by FROM fiscal_documents WHERE id = $1', [
+      documentId,
+    ]);
+    expect(createdBy.rows[0]!.created_by).toBe(creator);
+
+    // El mismo dueño con su sesión: el evento no lleva key.
+    const own = await http()
+      .post('/api/v1/customers')
+      .set('Authorization', `Bearer ${scenario.owner}`)
+      .set('X-Tenant-Id', scenario.tenant)
+      .send(customerJson('06', 'PA7654321', 'Ana Ruiz'))
+      .expect(201);
+    const ownEvents = await db.query<{ api_key_id: string | null }>(
+      "SELECT api_key_id FROM audit_events WHERE action = 'CUSTOMER_CREATED' AND entity_id = $1",
+      [own.body.id],
+    );
+    expect(ownEvents.rows).toEqual([{ api_key_id: null }]);
+  });
 });
