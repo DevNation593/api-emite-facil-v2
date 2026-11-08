@@ -36,6 +36,7 @@ public final class GoldenGenerator {
 				case "xsd" -> XsdCases.generate(out, Path.of(args[1]));
 				case "calculations" -> write(out.resolve("calculations.json"), CalculationCases.generate());
 				case "documents" -> DocumentCases.generate(out);
+				case "xades" -> XadesCases.generate(out.resolve("xades"));
 				default -> throw new IllegalArgumentException("Familia desconocida: " + args[3]);
 			}
 			System.out.println("Familia " + args[3] + " generada en " + out.toAbsolutePath());

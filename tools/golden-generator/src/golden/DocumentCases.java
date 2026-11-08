@@ -147,7 +147,7 @@ final class DocumentCases {
 
 	// ----------------------------------------------------------- notas de crédito
 
-	private static Map<String, Object[]> creditNotes() {
+	static Map<String, Object[]> creditNotes() {
 		Map<String, Object[]> cases = new LinkedHashMap<>();
 		DocumentEnvelope onInvoice = envelope(DocumentType.CREDIT_NOTE, "04", null, "NONE", null, null, false,
 				new DocumentEnvelope.Totals(d("34.00"), d("0.00"), d("3.00"), d("37.00")), INVOICE_ID);
@@ -179,7 +179,7 @@ final class DocumentCases {
 
 	// ------------------------------------------------------------ notas de débito
 
-	private static Map<String, Object[]> debitNotes() {
+	static Map<String, Object[]> debitNotes() {
 		Map<String, Object[]> cases = new LinkedHashMap<>();
 		DocumentEnvelope envelope = envelope(DocumentType.DEBIT_NOTE, "05", "1790099999001", "NEGOCIO_POPULAR", null,
 				null, false, new DocumentEnvelope.Totals(d("15.00"), d("0.00"), d("1.50"), d("16.50")), INVOICE_ID);

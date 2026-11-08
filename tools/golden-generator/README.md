@@ -16,7 +16,7 @@ Para regenerar una sola familia sin tocar el resto de fixtures ni `SOURCE.json`:
 node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil --only bean-validation
 ```
 
-Familias con `--only` (`bean-validation`, `certificates`, `xsd`, `calculations` y `documents`): `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
+Familias con `--only` (`bean-validation`, `certificates`, `xsd`, `calculations`, `documents` y `xades`): `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
 `@Pattern(NO_CONTROL_CHARS)`, más `@Pattern("[0-9]{3}")`, `@Min(1)` y `@Max(999_999_999)`, validados con Hibernate Validator y `Locale.ENGLISH`). Es determinista: no
 depende de aleatorios.
 
@@ -49,6 +49,22 @@ pago con plazo, sin opcionales, redondeo de escalas), dos notas de crédito (sob
 JSON con caracteres de control (`xml` nulo) y dos notas de débito (con y sin plazo). Cada caso trae sus datos de
 entrada con los decimales como cadenas planas con su escala (`toPlainString()`), la ruta de su XML y `contentJson` (nulo en la
 factura). Es determinista.
+
+`xades` (`xades/certificado-prueba.p12` y `xades/<caso>/{unsigned.xml,signed.xml,meta.json}`): comprobantes firmados
+con `XadesBesSigner` y aceptados por `XadesVerifier` (si no, el generador aborta). Casos: la factura estándar y con
+RUC del proveedor, la nota de crédito `nota-credito-sobre-factura` y la de débito `nota-debito-dos-tarifas` de
+`documents`, una factura con caracteres especiales (`& < > " '`, `ñ`, `é`, `😀`, tabulador, controles C1, U+2028 y
+`\r`, `\r\n` y `\n` en la dirección, sin pasar por el XSD) y una de 500 líneas. `meta.json` guarda la hora de firma,
+el `.p12`, su contraseña y `numbers`: los ocho números de los `Id` en el orden en que el firmante los pide. El
+`.p12` es RSA 2048 con vigencia de 3650 días desde el 01/01/2026, para que el golden no caduque. Además,
+`xades/serializacion-jdk/` guarda un XML de borde (atributos desordenados, declaraciones repetidas, CDATA,
+comentarios, finales de línea y una muestra de caracteres como referencias) leído con `SecureXml` y escrito con el
+`Transformer` de `XadesBesSigner.serialize` (privado: se invoca por reflexión). No es determinista: cada ejecución
+crea otra clave y otros números.
+
+El generador corre con `-Dline.separator=\n`: el `Transformer` del JDK escribe cada salto de línea de un texto con
+el separador del sistema, y se fija el de Linux, donde corre la API, para que el XML firmado no dependa del sistema
+en que se genera (`XadesCases` aborta si no está fijado).
 
 Requisitos: Java 25 (`java`, `javac`) en el `PATH`, Node 24 y acceso a las dependencias de Maven del repo
 Java (el repo debe poder ejecutar su `mvnw`).
