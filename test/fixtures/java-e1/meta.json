@@ -3,27 +3,31 @@
     "javaCommit": "ca53bcae19a468c1164465425a59db6c5e68b809",
     "javaDirty": false,
     "javaVersion": "java version \"25.0.5.0.2\" 2026-10-21 LTS",
-    "generatedAt": "2026-11-02T04:12:22.550Z"
+    "generatedAt": "2026-11-07T19:55:51.044Z"
   },
-  "email": "java-e3682c44@example.test",
-  "password": "java G368cKIV09L-",
-  "userId": "0281c65f-3a66-4801-8152-bf5ba0938106",
-  "tenantId": "9dccd405-e551-4b8d-adfc-d1c83427c75a",
+  "email": "java-e9ae8e5d@example.test",
+  "password": "java iit5kcxgqfDo",
+  "userId": "696ccdee-c954-4ec4-9c8c-2fb6653a7720",
+  "tenantId": "4b01b201-42ff-4331-9aa3-565fb6d5b531",
   "tenantName": "Empresa creada por Java",
-  "refreshToken": "c8PiSJ8IbnoYfnlEhoEUzzkUxPQnR_bHAAcGRmWusQs",
-  "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMjgxYzY1Zi0zYTY2LTQ4MDEtODE1Mi1iZjViYTA5MzgxMDYiLCJhdWQiOiJlaW52b2ljZS1hcGkiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6ImVpbnZvaWNlLWFwaSIsImV4cCI6MTc5MzU5MzY0MCwiaWF0IjoxNzkzNTkyNzQwLCJqdGkiOiJmYWJiOWE1My05NzlmLTRjZWQtOTgyZS1kYThhNDBmMWNiN2EiLCJlbWFpbCI6ImphdmEtZTM2ODJjNDRAZXhhbXBsZS50ZXN0Iiwic2lkIjoiYzBkZDBiZjEtNTc2Ny00NTA4LWFlM2UtM2I2ZGFlNjIzNGEzIn0.te6JMH1qlLIygVOrcSw6ccmYGm0Z4RaChK2lRyndFnE",
-  "accessTokenIat": 1793592740,
-  "accessTokenExp": 1793593640,
-  "apiKey": "efk_8NXefKgTOAeG_wxF2SMOj8morCqizMuxRO8WVjTwBk95cUT0vNVVc2AU",
-  "apiKeyId": "94cc28ce-f4b5-48ab-98f0-c9ca4d8ca989",
-  "taxpayerId": "2cd353d5-c63e-4b62-a3b6-5af932225cc1",
-  "certificateId": "bd21c684-f2b0-4530-94e9-27b23c398547",
-  "certificateFingerprint": "4d785445781b609aae409f715fb28af92d589a084c6e0824c6e924751d48fe9e",
-  "customerId": "1fff4588-b7ee-41c6-a33e-191aa2edbf09",
-  "productId": "5f167274-6897-4854-9bf3-db1559566726",
+  "refreshToken": "HoMX0eunfoblD6wO4vTemsRgI8vwDOM8B0Uoj3pbPSQ",
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2OTZjY2RlZS1jOTU0LTRlYzQtOWM4Yy0yZmI2NjUzYTc3MjAiLCJhdWQiOiJlaW52b2ljZS1hcGkiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6ImVpbnZvaWNlLWFwaSIsImV4cCI6MTc5NDA4MjI0OCwiaWF0IjoxNzk0MDgxMzQ4LCJqdGkiOiI2ZmQ1ODU0Ni0wMTk0LTQzZjEtOGFiYS1jODQ2NjM2NjY4MzIiLCJlbWFpbCI6ImphdmEtZTlhZThlNWRAZXhhbXBsZS50ZXN0Iiwic2lkIjoiODgyZmJhMzUtNWQ4OC00MjIzLWFjNDEtYTU4MmIzZDIzMTM0In0.0vKFStX8GznE1uu0nZqoxE8aZ1HxKIJn9mTsVQWiHks",
+  "accessTokenIat": 1794081348,
+  "accessTokenExp": 1794082248,
+  "apiKey": "efk_FSKOdncmYy1u_z7ajt8ScOvjHv9vWEHhqq34sbB-sVYdc5k4A_LIxRfc",
+  "apiKeyId": "92683487-d637-4a1d-b03b-e6092f61b389",
+  "taxpayerId": "135d9a94-5bce-4bed-b033-fb3c20275fc5",
+  "certificateId": "7759b9db-9317-4e2e-805f-cd8701d6bf4c",
+  "certificateFingerprint": "e45bd198352a0367ffa850f1a63116430418948cc55cadb15e29737268dcbe90",
+  "customerId": "be8447c8-1a49-4a7c-bacd-396454f51373",
+  "productId": "dd0553ff-372b-4838-94c3-98e8691aaad9",
+  "invoiceId": "bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab",
+  "creditNoteId": "8f8bc2b9-d69c-454c-9385-261b33bc4632",
+  "manualCreditNoteId": "bb40bf12-59f9-498c-814d-bfe0d64285e0",
+  "debitNoteId": "3c503cc5-641f-4d5f-9a76-d166d2051e31",
   "views": {
     "taxpayer": {
-      "id": "2cd353d5-c63e-4b62-a3b6-5af932225cc1",
+      "id": "135d9a94-5bce-4bed-b033-fb3c20275fc5",
       "ruc": "1799999999001",
       "legalName": "Emisor de Java S.A.",
       "tradeName": "Java",
@@ -37,19 +41,19 @@
       "productionEnabledAt": null
     },
     "establishment": {
-      "id": "cb52bc8b-3802-4b76-8cb0-27aec114d1bf",
-      "taxpayerId": "2cd353d5-c63e-4b62-a3b6-5af932225cc1",
+      "id": "53c6d916-8842-4a78-9342-2e30f9cfe392",
+      "taxpayerId": "135d9a94-5bce-4bed-b033-fb3c20275fc5",
       "code": "001",
       "address": "Av. Amazonas 100, Quito"
     },
     "emissionPoint": {
-      "id": "485d8b53-b25d-48dc-9144-7e364bd700a7",
-      "establishmentId": "cb52bc8b-3802-4b76-8cb0-27aec114d1bf",
+      "id": "0eaea883-8607-45da-9849-029b39575778",
+      "establishmentId": "53c6d916-8842-4a78-9342-2e30f9cfe392",
       "code": "001",
       "enabled": true
     },
     "customer": {
-      "id": "1fff4588-b7ee-41c6-a33e-191aa2edbf09",
+      "id": "be8447c8-1a49-4a7c-bacd-396454f51373",
       "idType": "05",
       "idNumber": "1712345678",
       "name": "María Pérez",
@@ -58,26 +62,26 @@
       "phone": null
     },
     "product": {
-      "id": "5f167274-6897-4854-9bf3-db1559566726",
+      "id": "dd0553ff-372b-4838-94c3-98e8691aaad9",
       "sku": "SRV-001",
       "name": "Servicio de consultoría",
       "unitPrice": "10.500000",
       "ivaRateCode": "4"
     },
     "certificate": {
-      "id": "bd21c684-f2b0-4530-94e9-27b23c398547",
-      "taxpayerId": "2cd353d5-c63e-4b62-a3b6-5af932225cc1",
+      "id": "7759b9db-9317-4e2e-805f-cd8701d6bf4c",
+      "taxpayerId": "135d9a94-5bce-4bed-b033-fb3c20275fc5",
       "subject": "CN=Emisor de Java,O=Pruebas,C=EC",
       "issuer": "CN=Emisor de Java,O=Pruebas,C=EC",
-      "serialNumber": "15829630426256871817",
-      "fingerprintSha256": "4d785445781b609aae409f715fb28af92d589a084c6e0824c6e924751d48fe9e",
-      "validFrom": "2026-11-01T04:12:21Z",
-      "validTo": "2036-10-29T04:12:21Z",
+      "serialNumber": "1609927165598210986",
+      "fingerprintSha256": "e45bd198352a0367ffa850f1a63116430418948cc55cadb15e29737268dcbe90",
+      "validFrom": "2026-11-06T19:55:49Z",
+      "validTo": "2036-11-03T19:55:49Z",
       "status": "ACTIVE"
     }
   },
   "env": {
-    "EINVOICE_JWT_SECRET": "KXFFIA4C41hdELRQxqXol/XkSDU+Kq2nlPfIw4KB5XdThS7XZoffEljUEpF0SFXa",
-    "EINVOICE_MASTER_KEY": "GrVKnivfQWzhXrJQeoMFV5a5GiAOoKSK7M3EVkbi1+4="
+    "EINVOICE_JWT_SECRET": "UBcWXwDvC/rCR3Q/217yr8HCDXKCowqjfdyMOMe+ZLJLjCGjwLSEP2s49rXF9Wgj",
+    "EINVOICE_MASTER_KEY": "akh+L3nnNHZSQ6o90jd9H0Bkjt2M7gnzw8RHfdfQfiI="
   }
 }

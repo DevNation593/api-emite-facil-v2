@@ -2,7 +2,7 @@ import { Writable } from 'node:stream';
 import { pino, type DestinationStream, type Logger } from 'pino';
 import { build as prettyStream } from 'pino-pretty';
 import type { AppConfig } from '../config/app-config.js';
-import { currentCorrelationId } from '../common/request-context.js';
+import { currentCorrelationId, currentDocumentId } from '../common/request-context.js';
 
 export type Severity = 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR';
 
@@ -143,7 +143,11 @@ export function createPinoLogger(
     redact: { paths: REDACTED_PATHS, censor: CENSORED },
     mixin: () => {
       const correlationId = currentCorrelationId();
-      return correlationId === undefined ? {} : { correlationId };
+      const documentId = currentDocumentId();
+      return {
+        ...(correlationId === undefined ? {} : { correlationId }),
+        ...(documentId === undefined ? {} : { documentId }),
+      };
     },
   };
 

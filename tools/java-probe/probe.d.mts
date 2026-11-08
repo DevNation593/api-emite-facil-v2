@@ -1,7 +1,7 @@
 export interface ProbeRequest {
   method: string;
   path: string;
-  headers: Record<string, string>;
+  headers: Record<string, string | string[]>;
   body?: string;
 }
 
@@ -19,7 +19,10 @@ export interface Scenario {
   values: Record<
     'email' | 'tenantId' | 'taxpayerId' | 'establishmentId' | 'emissionPointId' | 'customerId' | 'productId',
     string
-  >;
+  > &
+    Record<string, string>;
+  /** El día fiscal (YYYY-MM-DD, America/Guayaquil) fijado al crear el escenario. */
+  today: string;
 }
 
 export interface ProbeCase {
@@ -29,13 +32,15 @@ export interface ProbeCase {
   query?: string;
   body?: unknown;
   rawBody?: string;
-  headers?: Record<string, string>;
+  headers?: Record<string, string | string[]>;
+  /** Guarda el `id` de la respuesta 2xx como `scenario.values[capture]`, usable luego como `{capture}`. */
+  capture?: string;
   auth: 'owner' | 'none';
 }
 
 export interface ProbeResult {
   name: string;
-  request: Omit<ProbeCase, 'name'>;
+  request: Omit<ProbeCase, 'name' | 'capture'>;
   status: number;
   contentType: string | string[] | null;
   allow: string | string[] | null;
@@ -43,7 +48,10 @@ export interface ProbeResult {
 }
 
 export const SCENARIO_RUC: string;
-export function runScenario(send: Send): Promise<Scenario>;
+export interface ScenarioHooks {
+  authorize(documentId: string): Promise<void>;
+}
+export function runScenario(send: Send, hooks?: ScenarioHooks): Promise<Scenario>;
 export function caseRequest(probe: ProbeCase, scenario: Scenario): ProbeRequest;
 export function normalize(value: unknown, scenario: Scenario): unknown;
 export function runProbes(send: Send, cases: ProbeCase[], scenario: Scenario): Promise<ProbeResult[]>;

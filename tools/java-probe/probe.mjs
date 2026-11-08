@@ -35,6 +35,9 @@ export function sendRaw(base, { method, path, headers, body }) {
 
 const PASSWORD = 'una contraseña larga';
 
+/** El total de la factura del escenario: un producto de 10.50 con IVA del 15 %. */
+const INVOICE_TOTAL = '12.08';
+
 /** El RUC del emisor del escenario. Es único en la plataforma: cada base sondeada es nueva. */
 export const SCENARIO_RUC = '1790012345001';
 
@@ -58,8 +61,13 @@ function jsonRequest(method, path, body, headers = {}) {
 /**
  * Crea lo que los casos necesitan: una persona con su sesión, una empresa, un emisor, un
  * establecimiento, un punto de emisión, un cliente y un producto. Devuelve sus valores.
+ * Con `hooks`, además emite una factura del producto y la pasa a AUTHORIZED con `hooks.authorize`
+ * (la emisión deja el comprobante en RESERVED; una nota solo acepta una factura autorizada); sus
+ * valores ganan `invoiceId`.
  */
-export async function runScenario(send) {
+export async function runScenario(send, hooks) {
+  // El día fiscal se fija una vez: con él se rellenan los casos y se normalizan las respuestas.
+  const today = fiscalToday();
   const email = `sondeo-${randomUUID()}@example.test`;
   const ip = { 'x-forwarded-for': '198.51.100.7' };
   await expectJson(send, 'registro', jsonRequest('POST', '/api/v1/auth/register', { email, password: PASSWORD }, ip), 202);
@@ -127,34 +135,60 @@ export async function runScenario(send) {
     ),
     201,
   );
-  return {
-    headers: owner,
-    values: {
-      email,
-      tenantId: tenant.id,
-      taxpayerId: taxpayer.id,
-      establishmentId: establishment.id,
-      emissionPointId: point.id,
-      customerId: customer.id,
-      productId: product.id,
-    },
+  const values = {
+    email,
+    tenantId: tenant.id,
+    taxpayerId: taxpayer.id,
+    establishmentId: establishment.id,
+    emissionPointId: point.id,
+    customerId: customer.id,
+    productId: product.id,
   };
+  if (hooks !== undefined) {
+    // 10.50 con IVA del 15 % (código 4): subtotal 10.50, IVA 1.58 (1.575 redondeado) y total 12.08.
+    const issued = await expectJson(
+      send,
+      'factura',
+      jsonRequest(
+        'POST',
+        '/api/v1/invoices',
+        {
+          taxpayerId: taxpayer.id,
+          establishmentCode: '001',
+          emissionPointCode: '001',
+          customerId: customer.id,
+          lines: [{ productId: product.id, quantity: '1' }],
+          payments: [{ methodCode: '01', amount: INVOICE_TOTAL }],
+        },
+        { ...owner, 'idempotency-key': 'sondeo-factura' },
+      ),
+      202,
+    );
+    await hooks.authorize(issued.id);
+    values.invoiceId = issued.id;
+  }
+  return { headers: owner, values, today };
 }
 
-const PLACEHOLDER =
-  /\{(tenantId|taxpayerId|establishmentId|establishmentIdUpper|establishmentIdNoDash|emissionPointId|customerId|productId)\}/g;
+const PLACEHOLDER = /\{([A-Za-z0-9]+)\}/g;
+const UUID_ONLY = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/** Los valores del escenario y las variantes de un id que prueban la conversión de UUID. */
+/**
+ * Los valores del escenario (y los que un caso captura) y, de cada id, sus variantes en mayúsculas
+ * (`{xxxUpper}`) y sin guiones (`{xxxNoDash}`), que prueban la conversión de UUID.
+ */
 function placeholders(values) {
-  return {
-    ...values,
-    establishmentIdUpper: values.establishmentId.toUpperCase(),
-    establishmentIdNoDash: values.establishmentId.replaceAll('-', ''),
-  };
+  const all = { ...values };
+  for (const [name, value] of Object.entries(values)) {
+    if (!UUID_ONLY.test(value)) continue;
+    all[`${name}Upper`] = value.toUpperCase();
+    all[`${name}NoDash`] = value.replaceAll('-', '');
+  }
+  return all;
 }
 
 function fill(value, values) {
-  if (typeof value === 'string') return value.replace(PLACEHOLDER, (_, name) => values[name]);
+  if (typeof value === 'string') return value.replace(PLACEHOLDER, (match, name) => values[name] ?? match);
   if (Array.isArray(value)) return value.map((item) => fill(item, values));
   if (value !== null && typeof value === 'object') {
     return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, fill(item, values)]));
@@ -164,12 +198,12 @@ function fill(value, values) {
 
 /** La petición de un caso, con los valores del escenario en la ruta, la consulta y el cuerpo. */
 export function caseRequest(probe, scenario) {
-  const values = placeholders(scenario.values);
+  const values = { ...placeholders(scenario.values), ...dateValues(scenario.today ?? fiscalToday()) };
   const path = fill(probe.path, values) + (probe.query === undefined ? '' : `?${fill(probe.query, values)}`);
   const headers = { ...(probe.auth === 'owner' ? scenario.headers : {}), ...(probe.headers ?? {}) };
   let body;
   if (probe.rawBody !== undefined) {
-    body = probe.rawBody;
+    body = fill(probe.rawBody, values);
     headers['content-type'] ??= 'application/json';
   } else if ('body' in probe) {
     body = JSON.stringify(fill(probe.body, values));
@@ -180,6 +214,35 @@ export function caseRequest(probe, scenario) {
 
 const UUID = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/g;
 const TIMESTAMP = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})/g;
+const ACCESS_KEY = /(?<!\d)\d{49}(?!\d)/g;
+
+/** La fecha fiscal de hoy (YYYY-MM-DD en America/Guayaquil): la de un comprobante sin `issueDate`. */
+function fiscalToday() {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Guayaquil' }).format(new Date());
+}
+
+/** `today` más `days` días, como YYYY-MM-DD. */
+function shiftDay(today, days) {
+  const date = new Date(`${today}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+/**
+ * Marcadores de fecha, fijados con el día de la ejecución: `{today}`, `{todayYear}`, `{todayMonth}` y
+ * `{todayDay}` (sin ceros, para escribir [año, mes, día]), `{todayMinus1}` y `{todayPlus1}`.
+ */
+function dateValues(today) {
+  const [year, month, day] = today.split('-').map(Number);
+  return {
+    today,
+    todayYear: String(year),
+    todayMonth: String(month),
+    todayDay: String(day),
+    todayMinus1: shiftDay(today, -1),
+    todayPlus1: shiftDay(today, 1),
+  };
+}
 
 /**
  * Quita lo que cambia en cada ejecución: `correlationId`, los valores del escenario (por su
@@ -188,8 +251,16 @@ const TIMESTAMP = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}
 export function normalize(value, scenario) {
   if (typeof value === 'string') {
     let text = value;
-    for (const [name, known] of Object.entries(scenario.values)) text = text.replaceAll(known, `{${name}}`);
-    return text.replace(UUID, '{uuid}').replace(TIMESTAMP, '{timestamp}');
+    for (const [name, known] of Object.entries(scenario.values)) {
+      text = text.replaceAll(known, `{${name}}`);
+      // Un id sin guiones también sale en el `instance` de una petición con la ruta sin guiones.
+      if (UUID_ONLY.test(known)) text = text.replaceAll(known.replaceAll('-', ''), `{${name}NoDash}`);
+    }
+    return text
+      .replace(UUID, '{uuid}')
+      .replace(TIMESTAMP, '{timestamp}')
+      .replace(ACCESS_KEY, '{accessKey}')
+      .replaceAll(scenario.today ?? fiscalToday(), '{today}');
   }
   if (Array.isArray(value)) return value.map((item) => normalize(item, scenario));
   if (value !== null && typeof value === 'object') {
@@ -223,7 +294,11 @@ export async function runProbes(send, cases, scenario) {
     } catch {
       // Un cuerpo que no es JSON se compara como texto.
     }
-    const { name, ...request } = probe;
+    // Un caso con `capture` guarda el id que devolvió, para que los siguientes lo usen como `{nombre}`.
+    if (probe.capture !== undefined && res.status >= 200 && res.status < 300 && typeof body?.id === 'string') {
+      scenario.values[probe.capture] = body.id;
+    }
+    const { name, capture, ...request } = probe;
     let allow = res.headers.allow ?? null;
     // Spring lista los métodos permitidos de un conjunto cuyo orden cambia entre arranques, en el
     // 405 y en OPTIONS: se comparan ordenados, conservando el separador (", " o ",").

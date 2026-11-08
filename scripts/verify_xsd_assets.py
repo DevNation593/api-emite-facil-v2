@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Inventory XML schema assets; intentionally fails if any imports cannot be resolved.
-Usage: python scripts/verify_xsd_assets.py src/main/resources/xsd
+Usage: python scripts/verify_xsd_assets.py resources/xsd
 El import de xmldsig-core-schema.xsd se busca en <directorio>/common/, la única copia compartida
 (así lo resuelve ClasspathSchemaResolver); cualquier otro import, junto al XSD que lo declara.
 """

@@ -100,3 +100,12 @@ export class RequiredUuidQueryPipe implements PipeTransform<QueryValue, string> 
     return id;
   }
 }
+
+/** `@RequestParam(required = false) String`: sin el parámetro, `null`; repetido, sus valores unidos con comas. */
+@Injectable()
+export class OptionalStringQueryPipe implements PipeTransform<QueryValue, string | null> {
+  transform(value: QueryValue): string | null {
+    if (Array.isArray(value)) return value.map(String).join(',');
+    return typeof value === 'string' ? value : null;
+  }
+}

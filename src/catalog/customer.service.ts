@@ -145,8 +145,9 @@ export class CustomerService {
    * devuelve todos. Ordena por nombre e id.
    */
   async search(access: TenantAccess, term: string, page: number, size: number): Promise<PageResponse<CustomerView>> {
-    const escaped = escapeLike(term);
+    // Como Java: la página se valida antes que el término.
     const request = pageRequest(page, size);
+    const escaped = escapeLike(term);
     let filtered = this.db
       .selectFrom('customers')
       .where('tenant_id', '=', access.tenantId)
@@ -171,8 +172,9 @@ export class CustomerService {
     };
   }
 
-  async get(access: TenantAccess, id: string): Promise<CustomerView & { version: string }> {
-    const row = await this.require(this.db, access.tenantId, id);
+  /** Uno archivado o de otra empresa es 404. La emisión pasa su transacción: no pide otra conexión. */
+  async get(access: TenantAccess, id: string, db: Db = this.db): Promise<CustomerView & { version: string }> {
+    const row = await this.require(db, access.tenantId, id);
     return { ...view(row), version: row.version };
   }
 

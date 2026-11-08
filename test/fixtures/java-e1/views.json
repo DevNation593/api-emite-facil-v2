@@ -1,0 +1,336 @@
+{
+  "invoice": {
+    "id": "bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab",
+    "documentType": "01",
+    "state": "AUTHORIZED",
+    "environment": "1",
+    "taxpayerId": "135d9a94-5bce-4bed-b033-fb3c20275fc5",
+    "number": "001-001-000000001",
+    "sequence": "000000001",
+    "accessKey": "0711202601179999999900110010010000000015692639610",
+    "issueDate": "2026-11-07",
+    "currency": "USD",
+    "customer": {
+      "idType": "05",
+      "idNumber": "1712345678",
+      "name": "María Pérez"
+    },
+    "subtotal": "35.75",
+    "totalDiscount": "1.00",
+    "taxes": [
+      {
+        "taxCode": "2",
+        "rateCode": "0",
+        "rate": "0.00",
+        "base": "15.75",
+        "amount": "0.00"
+      },
+      {
+        "taxCode": "2",
+        "rateCode": "4",
+        "rate": "15.00",
+        "base": "20.00",
+        "amount": "3.00"
+      }
+    ],
+    "totalTax": "3.00",
+    "total": "38.75",
+    "lines": [
+      {
+        "lineNo": 1,
+        "invoiceLineNo": null,
+        "productId": "dd0553ff-372b-4838-94c3-98e8691aaad9",
+        "mainCode": "SRV-001",
+        "description": "Servicio de consultoría",
+        "quantity": "2.000000",
+        "unitPrice": "10.500000",
+        "discount": "1.00",
+        "subtotal": "20.00",
+        "taxCode": "2",
+        "taxRateCode": "4",
+        "taxRate": "15.00",
+        "taxAmount": "3.00"
+      },
+      {
+        "lineNo": 2,
+        "invoiceLineNo": null,
+        "productId": "5ce0c62e-0d95-41a0-b7ca-8c4db8044fa5",
+        "mainCode": "LIB-001",
+        "description": "Libro técnico",
+        "quantity": "3.000000",
+        "unitPrice": "5.250000",
+        "discount": "0.00",
+        "subtotal": "15.75",
+        "taxCode": "2",
+        "taxRateCode": "0",
+        "taxRate": "0.00",
+        "taxAmount": "0.00"
+      }
+    ],
+    "payments": [
+      {
+        "methodCode": "01",
+        "amount": "18.75",
+        "term": null,
+        "timeUnit": null
+      },
+      {
+        "methodCode": "20",
+        "amount": "20.00",
+        "term": "30.00",
+        "timeUnit": "dias"
+      }
+    ],
+    "authorizationNumber": "0711202601179999999900110010010000000015692639610",
+    "authorizedAt": "2026-11-07T19:55:50.123456Z",
+    "customerId": "be8447c8-1a49-4a7c-bacd-396454f51373",
+    "replacesDocumentId": null,
+    "replacedByDocumentId": null,
+    "modifiedDocument": null,
+    "reason": null,
+    "reasons": null,
+    "creditedTotal": "11.50"
+  },
+  "creditNote": {
+    "id": "8f8bc2b9-d69c-454c-9385-261b33bc4632",
+    "documentType": "04",
+    "state": "RESERVED",
+    "environment": "1",
+    "taxpayerId": "135d9a94-5bce-4bed-b033-fb3c20275fc5",
+    "number": "001-001-000000001",
+    "sequence": "000000001",
+    "accessKey": "0711202604179999999900110010010000000016345193918",
+    "issueDate": "2026-11-07",
+    "currency": "USD",
+    "customer": {
+      "idType": "05",
+      "idNumber": "1712345678",
+      "name": "María Pérez"
+    },
+    "subtotal": "10.00",
+    "totalDiscount": "0.50",
+    "taxes": [
+      {
+        "taxCode": "2",
+        "rateCode": "4",
+        "rate": "15.00",
+        "base": "10.00",
+        "amount": "1.50"
+      }
+    ],
+    "totalTax": "1.50",
+    "total": "11.50",
+    "lines": [
+      {
+        "lineNo": 1,
+        "invoiceLineNo": 1,
+        "productId": "dd0553ff-372b-4838-94c3-98e8691aaad9",
+        "mainCode": "SRV-001",
+        "description": "Servicio de consultoría",
+        "quantity": "1.000000",
+        "unitPrice": "10.500000",
+        "discount": "0.50",
+        "subtotal": "10.00",
+        "taxCode": "2",
+        "taxRateCode": "4",
+        "taxRate": "15.00",
+        "taxAmount": "1.50"
+      }
+    ],
+    "payments": [],
+    "authorizationNumber": null,
+    "authorizedAt": null,
+    "customerId": "be8447c8-1a49-4a7c-bacd-396454f51373",
+    "replacesDocumentId": null,
+    "replacedByDocumentId": null,
+    "modifiedDocument": {
+      "code": "01",
+      "number": "001-001-000000001",
+      "issueDate": "2026-11-07",
+      "documentId": "bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab"
+    },
+    "reason": "Devolución parcial",
+    "reasons": null,
+    "creditedTotal": null
+  },
+  "manualCreditNote": {
+    "id": "bb40bf12-59f9-498c-814d-bfe0d64285e0",
+    "documentType": "04",
+    "state": "RESERVED",
+    "environment": "1",
+    "taxpayerId": "135d9a94-5bce-4bed-b033-fb3c20275fc5",
+    "number": "001-001-000000002",
+    "sequence": "000000002",
+    "accessKey": "0711202604179999999900110010010000000021487960316",
+    "issueDate": "2026-11-07",
+    "currency": "USD",
+    "customer": {
+      "idType": "05",
+      "idNumber": "1712345678",
+      "name": "María Pérez"
+    },
+    "subtotal": "10.50",
+    "totalDiscount": "0.00",
+    "taxes": [
+      {
+        "taxCode": "2",
+        "rateCode": "0",
+        "rate": "0.00",
+        "base": "10.50",
+        "amount": "0.00"
+      }
+    ],
+    "totalTax": "0.00",
+    "total": "10.50",
+    "lines": [
+      {
+        "lineNo": 1,
+        "invoiceLineNo": null,
+        "productId": "5ce0c62e-0d95-41a0-b7ca-8c4db8044fa5",
+        "mainCode": "LIB-001",
+        "description": "Libro técnico",
+        "quantity": "2.000000",
+        "unitPrice": "5.250000",
+        "discount": "0.00",
+        "subtotal": "10.50",
+        "taxCode": "2",
+        "taxRateCode": "0",
+        "taxRate": "0.00",
+        "taxAmount": "0.00"
+      }
+    ],
+    "payments": [],
+    "authorizationNumber": null,
+    "authorizedAt": null,
+    "customerId": "be8447c8-1a49-4a7c-bacd-396454f51373",
+    "replacesDocumentId": null,
+    "replacedByDocumentId": null,
+    "modifiedDocument": {
+      "code": "01",
+      "number": "001-001-000000099",
+      "issueDate": "2026-10-01",
+      "documentId": null
+    },
+    "reason": "Devolución de una factura en papel",
+    "reasons": null,
+    "creditedTotal": null
+  },
+  "debitNote": {
+    "id": "3c503cc5-641f-4d5f-9a76-d166d2051e31",
+    "documentType": "05",
+    "state": "RESERVED",
+    "environment": "1",
+    "taxpayerId": "135d9a94-5bce-4bed-b033-fb3c20275fc5",
+    "number": "001-001-000000001",
+    "sequence": "000000001",
+    "accessKey": "0711202605179999999900110010010000000012681759114",
+    "issueDate": "2026-11-07",
+    "currency": "USD",
+    "customer": {
+      "idType": "05",
+      "idNumber": "1712345678",
+      "name": "María Pérez"
+    },
+    "subtotal": "7.00",
+    "totalDiscount": "0.00",
+    "taxes": [
+      {
+        "taxCode": "2",
+        "rateCode": "0",
+        "rate": "0.00",
+        "base": "2.00",
+        "amount": "0.00"
+      },
+      {
+        "taxCode": "2",
+        "rateCode": "4",
+        "rate": "15.00",
+        "base": "5.00",
+        "amount": "0.75"
+      }
+    ],
+    "totalTax": "0.75",
+    "total": "7.75",
+    "lines": [],
+    "payments": [
+      {
+        "methodCode": "01",
+        "amount": "7.75",
+        "term": null,
+        "timeUnit": null
+      }
+    ],
+    "authorizationNumber": null,
+    "authorizedAt": null,
+    "customerId": "be8447c8-1a49-4a7c-bacd-396454f51373",
+    "replacesDocumentId": null,
+    "replacedByDocumentId": null,
+    "modifiedDocument": {
+      "code": "01",
+      "number": "001-001-000000001",
+      "issueDate": "2026-11-07",
+      "documentId": "bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab"
+    },
+    "reason": null,
+    "reasons": [
+      {
+        "reason": "Intereses de mora",
+        "value": "5.00",
+        "taxRateCode": "4",
+        "taxRate": "15.00",
+        "taxAmount": "0.75"
+      },
+      {
+        "reason": "Gastos de cobranza",
+        "value": "2.00",
+        "taxRateCode": "0",
+        "taxRate": "0.00",
+        "taxAmount": "0.00"
+      }
+    ],
+    "creditedTotal": null
+  },
+  "list": {
+    "items": [
+      {
+        "id": "3c503cc5-641f-4d5f-9a76-d166d2051e31",
+        "documentType": "05",
+        "state": "RESERVED",
+        "number": "001-001-000000001",
+        "issueDate": "2026-11-07",
+        "customerName": "María Pérez",
+        "total": "7.75"
+      },
+      {
+        "id": "bb40bf12-59f9-498c-814d-bfe0d64285e0",
+        "documentType": "04",
+        "state": "RESERVED",
+        "number": "001-001-000000002",
+        "issueDate": "2026-11-07",
+        "customerName": "María Pérez",
+        "total": "10.50"
+      },
+      {
+        "id": "8f8bc2b9-d69c-454c-9385-261b33bc4632",
+        "documentType": "04",
+        "state": "RESERVED",
+        "number": "001-001-000000001",
+        "issueDate": "2026-11-07",
+        "customerName": "María Pérez",
+        "total": "11.50"
+      },
+      {
+        "id": "bae8b2bd-ec3e-4ac3-b438-6fd9f86a07ab",
+        "documentType": "01",
+        "state": "AUTHORIZED",
+        "number": "001-001-000000001",
+        "issueDate": "2026-11-07",
+        "customerName": "María Pérez",
+        "total": "38.75"
+      }
+    ],
+    "page": 0,
+    "size": 20,
+    "total": 4
+  }
+}

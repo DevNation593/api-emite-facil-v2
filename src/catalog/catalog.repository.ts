@@ -1,5 +1,6 @@
 import type { Decimal } from 'decimal.js';
 import { type Kysely, sql, type Transaction } from 'kysely';
+import { BigDecimal } from '../common/big-decimal.js';
 import { parseDecimal } from '../common/decimals.js';
 import type { DB } from '../database/schema.js';
 
@@ -96,6 +97,9 @@ export class CatalogRepository {
   }
 
   async paymentMethodValidOn(db: Db, code: string, date: string): Promise<boolean> {
+    // Un LocalDate del año 0 o anterior (un día de época muy negativo) es anterior a toda vigencia, y
+    // PostgreSQL no lo leería: se responde sin preguntar.
+    if (date.startsWith('-') || date.startsWith('0000-')) return false;
     const row = await db
       .selectFrom('payment_methods')
       .select(sql<string>`count(*)`.as('n'))
@@ -121,13 +125,14 @@ export class CatalogRepository {
     }));
   }
 
-  async ivaRate(db: Db, rateCode: string): Promise<Decimal | null> {
+  /** Porcentaje de la tarifa con la escala 2 de la columna (15.00), como el BigDecimal de JDBC. */
+  async ivaRate(db: Db, rateCode: string): Promise<BigDecimal | null> {
     const row = await db
       .selectFrom('tax_rates')
       .select('rate')
       .where('tax_code', '=', IVA_TAX_CODE)
       .where('rate_code', '=', rateCode)
       .executeTakeFirst();
-    return row === undefined ? null : decimal(String(row.rate));
+    return row === undefined ? null : BigDecimal.of(String(row.rate));
   }
 }

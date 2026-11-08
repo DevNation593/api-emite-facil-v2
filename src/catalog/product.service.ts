@@ -135,8 +135,9 @@ export class ProductService {
 
   /** Busca por nombre o código (contiene, sin distinguir mayúsculas). Ordena por nombre y código. */
   async search(access: TenantAccess, term: string, page: number, size: number): Promise<PageResponse<ProductView>> {
-    const escaped = escapeLike(term);
+    // Como Java: la página se valida antes que el término.
     const request = pageRequest(page, size);
+    const escaped = escapeLike(term);
     let filtered = this.db
       .selectFrom('products')
       .where('tenant_id', '=', access.tenantId)
@@ -161,8 +162,9 @@ export class ProductService {
     };
   }
 
-  async get(access: TenantAccess, id: string): Promise<ProductView & { version: string }> {
-    const row = await this.require(this.db, access.tenantId, id);
+  /** Uno archivado o de otra empresa es 404. La emisión pasa su transacción: no pide otra conexión. */
+  async get(access: TenantAccess, id: string, db: Db = this.db): Promise<ProductView & { version: string }> {
+    const row = await this.require(db, access.tenantId, id);
     return { ...view(row), version: row.version };
   }
 
