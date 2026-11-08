@@ -1,0 +1,1983 @@
+{
+  "source": {
+    "javaCommit": "ca53bcae19a468c1164465425a59db6c5e68b809",
+    "javaDirty": false,
+    "javaVersion": "java version \"25.0.5.0.2\" 2026-10-21 LTS",
+    "generatedAt": "2026-11-08T01:25:45.553Z"
+  },
+  "results": [
+    {
+      "name": "sri-attempts con intentos sembrados",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "operation": "AUTHORIZATION",
+          "outcome": null,
+          "sriStatus": null,
+          "httpStatus": null,
+          "startedAt": "2001-01-15T10:20:31Z",
+          "completedAt": null,
+          "messages": []
+        },
+        {
+          "id": "{uuid}",
+          "operation": "RECEPTION",
+          "outcome": "RETURNED",
+          "sriStatus": "DEVUELTA",
+          "httpStatus": 200,
+          "startedAt": "2001-01-15T10:20:30.123456Z",
+          "completedAt": "2001-01-15T10:20:30.500Z",
+          "messages": [
+            {
+              "identifier": "35",
+              "message": "ARCHIVO NO CUMPLE ESTRUCTURA XML",
+              "additionalInfo": "Elemento inválido: razónSocial",
+              "type": "ERROR"
+            },
+            {
+              "identifier": "43",
+              "message": "CLAVE ACCESO REGISTRADA",
+              "additionalInfo": "Ya existe el comprobante",
+              "type": "ERROR"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sri-attempts sin intentos",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{retryDocumentId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": []
+    },
+    {
+      "name": "sri-attempts de un comprobante devuelto sin intentos",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{returnedDocumentId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": []
+    },
+    {
+      "name": "documento autorizado con intentos",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{invoiceId}",
+        "documentType": "01",
+        "state": "AUTHORIZED",
+        "environment": "1",
+        "taxpayerId": "{taxpayerId}",
+        "number": "001-001-000000001",
+        "sequence": "000000001",
+        "accessKey": "{accessKey}",
+        "issueDate": "{today}",
+        "currency": "USD",
+        "customer": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "Cliente de Sondeo"
+        },
+        "subtotal": "10.50",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "10.50",
+            "amount": "1.58"
+          }
+        ],
+        "totalTax": "1.58",
+        "total": "12.08",
+        "lines": [
+          {
+            "lineNo": 1,
+            "invoiceLineNo": null,
+            "productId": "{productId}",
+            "mainCode": "SKU-SONDEO",
+            "description": "Producto de Sondeo",
+            "quantity": "1.000000",
+            "unitPrice": "10.500000",
+            "discount": "0.00",
+            "subtotal": "10.50",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "1.58"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "01",
+            "amount": "12.08",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "authorizationNumber": null,
+        "authorizedAt": null,
+        "customerId": "{customerId}",
+        "replacesDocumentId": null,
+        "replacedByDocumentId": null,
+        "modifiedDocument": null,
+        "reason": null,
+        "reasons": null,
+        "creditedTotal": "0.00"
+      }
+    },
+    {
+      "name": "documento reservado para reintentar",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{retryDocumentId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "documentType": "01",
+        "state": "RESERVED",
+        "environment": "1",
+        "taxpayerId": "{taxpayerId}",
+        "number": "001-001-000000002",
+        "sequence": "000000002",
+        "accessKey": "{accessKey}",
+        "issueDate": "{today}",
+        "currency": "USD",
+        "customer": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "Cliente de Sondeo"
+        },
+        "subtotal": "10.50",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "10.50",
+            "amount": "1.58"
+          }
+        ],
+        "totalTax": "1.58",
+        "total": "12.08",
+        "lines": [
+          {
+            "lineNo": 1,
+            "invoiceLineNo": null,
+            "productId": "{productId}",
+            "mainCode": "SKU-SONDEO",
+            "description": "Producto de Sondeo",
+            "quantity": "1.000000",
+            "unitPrice": "10.500000",
+            "discount": "0.00",
+            "subtotal": "10.50",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "1.58"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "01",
+            "amount": "12.08",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "authorizationNumber": null,
+        "authorizedAt": null,
+        "customerId": "{customerId}",
+        "replacesDocumentId": null,
+        "replacedByDocumentId": null,
+        "modifiedDocument": null,
+        "reason": null,
+        "reasons": null,
+        "creditedTotal": "0.00"
+      }
+    },
+    {
+      "name": "documento devuelto",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{returnedDocumentId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{returnedDocumentId}",
+        "documentType": "01",
+        "state": "RETURNED",
+        "environment": "1",
+        "taxpayerId": "{taxpayerId}",
+        "number": "001-001-000000003",
+        "sequence": "000000003",
+        "accessKey": "{accessKey}",
+        "issueDate": "{today}",
+        "currency": "USD",
+        "customer": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "Cliente de Sondeo"
+        },
+        "subtotal": "10.50",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "10.50",
+            "amount": "1.58"
+          }
+        ],
+        "totalTax": "1.58",
+        "total": "12.08",
+        "lines": [
+          {
+            "lineNo": 1,
+            "invoiceLineNo": null,
+            "productId": "{productId}",
+            "mainCode": "SKU-SONDEO",
+            "description": "Producto de Sondeo",
+            "quantity": "1.000000",
+            "unitPrice": "10.500000",
+            "discount": "0.00",
+            "subtotal": "10.50",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "1.58"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "01",
+            "amount": "12.08",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "authorizationNumber": null,
+        "authorizedAt": null,
+        "customerId": "{customerId}",
+        "replacesDocumentId": null,
+        "replacedByDocumentId": null,
+        "modifiedDocument": null,
+        "reason": null,
+        "reasons": null,
+        "creditedTotal": "0.00"
+      }
+    },
+    {
+      "name": "documento no autorizado",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{notAuthorizedDocumentId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{notAuthorizedDocumentId}",
+        "documentType": "01",
+        "state": "NOT_AUTHORIZED",
+        "environment": "1",
+        "taxpayerId": "{taxpayerId}",
+        "number": "001-001-000000004",
+        "sequence": "000000004",
+        "accessKey": "{accessKey}",
+        "issueDate": "{today}",
+        "currency": "USD",
+        "customer": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "Cliente de Sondeo"
+        },
+        "subtotal": "10.50",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "10.50",
+            "amount": "1.58"
+          }
+        ],
+        "totalTax": "1.58",
+        "total": "12.08",
+        "lines": [
+          {
+            "lineNo": 1,
+            "invoiceLineNo": null,
+            "productId": "{productId}",
+            "mainCode": "SKU-SONDEO",
+            "description": "Producto de Sondeo",
+            "quantity": "1.000000",
+            "unitPrice": "10.500000",
+            "discount": "0.00",
+            "subtotal": "10.50",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "1.58"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "01",
+            "amount": "12.08",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "authorizationNumber": null,
+        "authorizedAt": null,
+        "customerId": "{customerId}",
+        "replacesDocumentId": null,
+        "replacedByDocumentId": null,
+        "modifiedDocument": null,
+        "reason": null,
+        "reasons": null,
+        "creditedTotal": "0.00"
+      }
+    },
+    {
+      "name": "retry sobre RESERVED",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner"
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "state": "RESERVED"
+      }
+    },
+    {
+      "name": "retry sobre RESERVED otra vez",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner"
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "state": "RESERVED"
+      }
+    },
+    {
+      "name": "retry sobre RESERVED con el id en mayúsculas",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentIdUpper}/retry",
+        "auth": "owner"
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "state": "RESERVED"
+      }
+    },
+    {
+      "name": "retry sobre RESERVED con el id sin guiones",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentIdNoDash}/retry",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/{retryDocumentIdNoDash}/retry",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "retry sobre RETURNED",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{returnedDocumentId}/retry",
+        "auth": "owner"
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante está en un estado que no admite reintento",
+        "instance": "/api/v1/documents/{returnedDocumentId}/retry",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "DOCUMENT_NOT_RETRYABLE"
+      }
+    },
+    {
+      "name": "retry sobre AUTHORIZED",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{invoiceId}/retry",
+        "auth": "owner"
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante está en un estado que no admite reintento",
+        "instance": "/api/v1/documents/{invoiceId}/retry",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "DOCUMENT_NOT_RETRYABLE"
+      }
+    },
+    {
+      "name": "retry sobre NOT_AUTHORIZED",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{notAuthorizedDocumentId}/retry",
+        "auth": "owner"
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante está en un estado que no admite reintento",
+        "instance": "/api/v1/documents/{notAuthorizedDocumentId}/retry",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "DOCUMENT_NOT_RETRYABLE"
+      }
+    },
+    {
+      "name": "documento reservado tras reintentar",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{retryDocumentId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "documentType": "01",
+        "state": "RESERVED",
+        "environment": "1",
+        "taxpayerId": "{taxpayerId}",
+        "number": "001-001-000000002",
+        "sequence": "000000002",
+        "accessKey": "{accessKey}",
+        "issueDate": "{today}",
+        "currency": "USD",
+        "customer": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "Cliente de Sondeo"
+        },
+        "subtotal": "10.50",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "10.50",
+            "amount": "1.58"
+          }
+        ],
+        "totalTax": "1.58",
+        "total": "12.08",
+        "lines": [
+          {
+            "lineNo": 1,
+            "invoiceLineNo": null,
+            "productId": "{productId}",
+            "mainCode": "SKU-SONDEO",
+            "description": "Producto de Sondeo",
+            "quantity": "1.000000",
+            "unitPrice": "10.500000",
+            "discount": "0.00",
+            "subtotal": "10.50",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "1.58"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "01",
+            "amount": "12.08",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "authorizationNumber": null,
+        "authorizedAt": null,
+        "customerId": "{customerId}",
+        "replacesDocumentId": null,
+        "replacedByDocumentId": null,
+        "modifiedDocument": null,
+        "reason": null,
+        "reasons": null,
+        "creditedTotal": "0.00"
+      }
+    },
+    {
+      "name": "documento devuelto tras reintentar",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{returnedDocumentId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{returnedDocumentId}",
+        "documentType": "01",
+        "state": "RETURNED",
+        "environment": "1",
+        "taxpayerId": "{taxpayerId}",
+        "number": "001-001-000000003",
+        "sequence": "000000003",
+        "accessKey": "{accessKey}",
+        "issueDate": "{today}",
+        "currency": "USD",
+        "customer": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "Cliente de Sondeo"
+        },
+        "subtotal": "10.50",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "10.50",
+            "amount": "1.58"
+          }
+        ],
+        "totalTax": "1.58",
+        "total": "12.08",
+        "lines": [
+          {
+            "lineNo": 1,
+            "invoiceLineNo": null,
+            "productId": "{productId}",
+            "mainCode": "SKU-SONDEO",
+            "description": "Producto de Sondeo",
+            "quantity": "1.000000",
+            "unitPrice": "10.500000",
+            "discount": "0.00",
+            "subtotal": "10.50",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "1.58"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "01",
+            "amount": "12.08",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "authorizationNumber": null,
+        "authorizedAt": null,
+        "customerId": "{customerId}",
+        "replacesDocumentId": null,
+        "replacedByDocumentId": null,
+        "modifiedDocument": null,
+        "reason": null,
+        "reasons": null,
+        "creditedTotal": "0.00"
+      }
+    },
+    {
+      "name": "sri-attempts sin intentos tras reintentar",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{retryDocumentId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": []
+    },
+    {
+      "name": "retry con id mal formado",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/no-es-un-uuid/retry",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/no-es-un-uuid/retry",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "retry con id casi uuid",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-00000000000/retry",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/00000000-0000-4000-8000-00000000000/retry",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "retry con id desconocido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/retry",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{uuid}/retry",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "retry con comprobante de otra empresa",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{otherInvoiceId}/retry",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{otherInvoiceId}/retry",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "retry con id mal formado y rol AUDITOR",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/no-es-un-uuid/retry",
+        "auth": "auditor"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/no-es-un-uuid/retry",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "retry con rol AUDITOR sobre RESERVED",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "auditor"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El rol no permite esta operación",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "ROLE_FORBIDDEN"
+      }
+    },
+    {
+      "name": "retry con rol AUDITOR sobre RETURNED",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{returnedDocumentId}/retry",
+        "auth": "auditor"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El rol no permite esta operación",
+        "instance": "/api/v1/documents/{returnedDocumentId}/retry",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "ROLE_FORBIDDEN"
+      }
+    },
+    {
+      "name": "retry con rol AUDITOR sobre un id desconocido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/retry",
+        "auth": "auditor"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El rol no permite esta operación",
+        "instance": "/api/v1/documents/{uuid}/retry",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "ROLE_FORBIDDEN"
+      }
+    },
+    {
+      "name": "retry con rol AUDITOR sobre otra empresa",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{otherInvoiceId}/retry",
+        "auth": "auditor"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El rol no permite esta operación",
+        "instance": "/api/v1/documents/{otherInvoiceId}/retry",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "ROLE_FORBIDDEN"
+      }
+    },
+    {
+      "name": "retry con rol BILLER sobre RESERVED",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "biller"
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "state": "RESERVED"
+      }
+    },
+    {
+      "name": "retry con rol BILLER sobre RETURNED",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{returnedDocumentId}/retry",
+        "auth": "biller"
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante está en un estado que no admite reintento",
+        "instance": "/api/v1/documents/{returnedDocumentId}/retry",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "DOCUMENT_NOT_RETRYABLE"
+      }
+    },
+    {
+      "name": "retry con rol BILLER sobre un id desconocido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/retry",
+        "auth": "biller"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{uuid}/retry",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "retry con rol BILLER sobre otra empresa",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{otherInvoiceId}/retry",
+        "auth": "biller"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{otherInvoiceId}/retry",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "retry sin membresía en la empresa",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "stranger"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Sin acceso al tenant indicado",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "TENANT_FORBIDDEN"
+      }
+    },
+    {
+      "name": "retry sin autenticación",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "none"
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Se requiere un token de acceso válido",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "UNAUTHENTICATED"
+      }
+    },
+    {
+      "name": "retry con token inválido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "none",
+        "headers": {
+          "authorization": "Bearer abc"
+        }
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Se requiere un token de acceso válido",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "UNAUTHENTICATED"
+      }
+    },
+    {
+      "name": "retry con x-tenant-id mal formado",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner",
+        "headers": {
+          "x-tenant-id": "no-uuid"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La cabecera X-Tenant-Id debe ser un UUID",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "TENANT_HEADER_INVALID"
+      }
+    },
+    {
+      "name": "retry con x-tenant-id de otra empresa",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner",
+        "headers": {
+          "x-tenant-id": "{otherTenantId}"
+        }
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Sin acceso al tenant indicado",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "TENANT_FORBIDDEN"
+      }
+    },
+    {
+      "name": "retry con cuerpo JSON",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner",
+        "body": {
+          "reason": "otra vez"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "state": "RESERVED"
+      }
+    },
+    {
+      "name": "retry con cuerpo JSON mal formado",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "state": "RESERVED"
+      }
+    },
+    {
+      "name": "retry con cuerpo de texto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner",
+        "rawBody": "hola",
+        "headers": {
+          "content-type": "text/plain"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "state": "RESERVED"
+      }
+    },
+    {
+      "name": "retry con cuerpo XML",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner",
+        "rawBody": "<a/>",
+        "headers": {
+          "content-type": "application/xml"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "state": "RESERVED"
+      }
+    },
+    {
+      "name": "retry con Content-Type raro",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner",
+        "rawBody": "{}",
+        "headers": {
+          "content-type": "application/x-raro; charset=nope"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "state": "RESERVED"
+      }
+    },
+    {
+      "name": "retry con Content-Type vacío",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner",
+        "rawBody": "{}",
+        "headers": {
+          "content-type": ""
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{retryDocumentId}",
+        "state": "RESERVED"
+      }
+    },
+    {
+      "name": "retry con cuerpo en un estado no reintentable",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{returnedDocumentId}/retry",
+        "auth": "owner",
+        "body": {
+          "reason": "otra vez"
+        }
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante está en un estado que no admite reintento",
+        "instance": "/api/v1/documents/{returnedDocumentId}/retry",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "DOCUMENT_NOT_RETRYABLE"
+      }
+    },
+    {
+      "name": "retry con barra final",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/retry/",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry/",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "retry GET",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "POST",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "retry PUT",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "POST",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "retry DELETE",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "POST",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "retry PATCH",
+      "request": {
+        "method": "PATCH",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "POST",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{retryDocumentId}/retry",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "retry OPTIONS",
+      "request": {
+        "method": "OPTIONS",
+        "path": "/api/v1/documents/{retryDocumentId}/retry",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": null,
+      "allow": "OPTIONS,POST",
+      "body": ""
+    },
+    {
+      "name": "sri-attempts con intentos sembrados otra vez",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "operation": "AUTHORIZATION",
+          "outcome": null,
+          "sriStatus": null,
+          "httpStatus": null,
+          "startedAt": "2001-01-15T10:20:31Z",
+          "completedAt": null,
+          "messages": []
+        },
+        {
+          "id": "{uuid}",
+          "operation": "RECEPTION",
+          "outcome": "RETURNED",
+          "sriStatus": "DEVUELTA",
+          "httpStatus": 200,
+          "startedAt": "2001-01-15T10:20:30.123456Z",
+          "completedAt": "2001-01-15T10:20:30.500Z",
+          "messages": [
+            {
+              "identifier": "35",
+              "message": "ARCHIVO NO CUMPLE ESTRUCTURA XML",
+              "additionalInfo": "Elemento inválido: razónSocial",
+              "type": "ERROR"
+            },
+            {
+              "identifier": "43",
+              "message": "CLAVE ACCESO REGISTRADA",
+              "additionalInfo": "Ya existe el comprobante",
+              "type": "ERROR"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sri-attempts con id en mayúsculas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceIdUpper}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "operation": "AUTHORIZATION",
+          "outcome": null,
+          "sriStatus": null,
+          "httpStatus": null,
+          "startedAt": "2001-01-15T10:20:31Z",
+          "completedAt": null,
+          "messages": []
+        },
+        {
+          "id": "{uuid}",
+          "operation": "RECEPTION",
+          "outcome": "RETURNED",
+          "sriStatus": "DEVUELTA",
+          "httpStatus": 200,
+          "startedAt": "2001-01-15T10:20:30.123456Z",
+          "completedAt": "2001-01-15T10:20:30.500Z",
+          "messages": [
+            {
+              "identifier": "35",
+              "message": "ARCHIVO NO CUMPLE ESTRUCTURA XML",
+              "additionalInfo": "Elemento inválido: razónSocial",
+              "type": "ERROR"
+            },
+            {
+              "identifier": "43",
+              "message": "CLAVE ACCESO REGISTRADA",
+              "additionalInfo": "Ya existe el comprobante",
+              "type": "ERROR"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sri-attempts con id sin guiones",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceIdNoDash}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/{invoiceIdNoDash}/sri-attempts",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sri-attempts con parámetros que se ignoran",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "owner",
+        "query": "page=1&size=1&sort=startedAt"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "operation": "AUTHORIZATION",
+          "outcome": null,
+          "sriStatus": null,
+          "httpStatus": null,
+          "startedAt": "2001-01-15T10:20:31Z",
+          "completedAt": null,
+          "messages": []
+        },
+        {
+          "id": "{uuid}",
+          "operation": "RECEPTION",
+          "outcome": "RETURNED",
+          "sriStatus": "DEVUELTA",
+          "httpStatus": 200,
+          "startedAt": "2001-01-15T10:20:30.123456Z",
+          "completedAt": "2001-01-15T10:20:30.500Z",
+          "messages": [
+            {
+              "identifier": "35",
+              "message": "ARCHIVO NO CUMPLE ESTRUCTURA XML",
+              "additionalInfo": "Elemento inválido: razónSocial",
+              "type": "ERROR"
+            },
+            {
+              "identifier": "43",
+              "message": "CLAVE ACCESO REGISTRADA",
+              "additionalInfo": "Ya existe el comprobante",
+              "type": "ERROR"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sri-attempts con barra final",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts/",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{invoiceId}/sri-attempts/",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "sri-attempts con id mal formado",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/no-es-un-uuid/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/no-es-un-uuid/sri-attempts",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "sri-attempts con id desconocido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{uuid}/sri-attempts",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "sri-attempts de otra empresa",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{otherInvoiceId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{otherInvoiceId}/sri-attempts",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "sri-attempts con rol AUDITOR",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "auditor"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "operation": "AUTHORIZATION",
+          "outcome": null,
+          "sriStatus": null,
+          "httpStatus": null,
+          "startedAt": "2001-01-15T10:20:31Z",
+          "completedAt": null,
+          "messages": []
+        },
+        {
+          "id": "{uuid}",
+          "operation": "RECEPTION",
+          "outcome": "RETURNED",
+          "sriStatus": "DEVUELTA",
+          "httpStatus": 200,
+          "startedAt": "2001-01-15T10:20:30.123456Z",
+          "completedAt": "2001-01-15T10:20:30.500Z",
+          "messages": [
+            {
+              "identifier": "35",
+              "message": "ARCHIVO NO CUMPLE ESTRUCTURA XML",
+              "additionalInfo": "Elemento inválido: razónSocial",
+              "type": "ERROR"
+            },
+            {
+              "identifier": "43",
+              "message": "CLAVE ACCESO REGISTRADA",
+              "additionalInfo": "Ya existe el comprobante",
+              "type": "ERROR"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sri-attempts con rol BILLER",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "biller"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "operation": "AUTHORIZATION",
+          "outcome": null,
+          "sriStatus": null,
+          "httpStatus": null,
+          "startedAt": "2001-01-15T10:20:31Z",
+          "completedAt": null,
+          "messages": []
+        },
+        {
+          "id": "{uuid}",
+          "operation": "RECEPTION",
+          "outcome": "RETURNED",
+          "sriStatus": "DEVUELTA",
+          "httpStatus": 200,
+          "startedAt": "2001-01-15T10:20:30.123456Z",
+          "completedAt": "2001-01-15T10:20:30.500Z",
+          "messages": [
+            {
+              "identifier": "35",
+              "message": "ARCHIVO NO CUMPLE ESTRUCTURA XML",
+              "additionalInfo": "Elemento inválido: razónSocial",
+              "type": "ERROR"
+            },
+            {
+              "identifier": "43",
+              "message": "CLAVE ACCESO REGISTRADA",
+              "additionalInfo": "Ya existe el comprobante",
+              "type": "ERROR"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sri-attempts con rol AUDITOR sobre otra empresa",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{otherInvoiceId}/sri-attempts",
+        "auth": "auditor"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{otherInvoiceId}/sri-attempts",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "sri-attempts sin membresía en la empresa",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "stranger"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Sin acceso al tenant indicado",
+        "instance": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "TENANT_FORBIDDEN"
+      }
+    },
+    {
+      "name": "sri-attempts sin autenticación",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "none"
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Se requiere un token de acceso válido",
+        "instance": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "UNAUTHENTICATED"
+      }
+    },
+    {
+      "name": "sri-attempts con id mal formado y sin autenticación",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/no-es-un-uuid/sri-attempts",
+        "auth": "none"
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Se requiere un token de acceso válido",
+        "instance": "/api/v1/documents/no-es-un-uuid/sri-attempts",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "UNAUTHENTICATED"
+      }
+    },
+    {
+      "name": "sri-attempts con x-tenant-id de otra empresa",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "owner",
+        "headers": {
+          "x-tenant-id": "{otherTenantId}"
+        }
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Sin acceso al tenant indicado",
+        "instance": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "TENANT_FORBIDDEN"
+      }
+    },
+    {
+      "name": "sri-attempts POST",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "sri-attempts PUT",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "sri-attempts DELETE",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "sri-attempts PATCH",
+      "request": {
+        "method": "PATCH",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "sri-attempts OPTIONS",
+      "request": {
+        "method": "OPTIONS",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": null,
+      "allow": "GET,HEAD,OPTIONS",
+      "body": ""
+    },
+    {
+      "name": "sri-attempts POST con cuerpo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "auth": "owner",
+        "body": {}
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{invoiceId}/sri-attempts",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "documento autorizado con intentos otra vez",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{invoiceId}",
+        "documentType": "01",
+        "state": "AUTHORIZED",
+        "environment": "1",
+        "taxpayerId": "{taxpayerId}",
+        "number": "001-001-000000001",
+        "sequence": "000000001",
+        "accessKey": "{accessKey}",
+        "issueDate": "{today}",
+        "currency": "USD",
+        "customer": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "Cliente de Sondeo"
+        },
+        "subtotal": "10.50",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "10.50",
+            "amount": "1.58"
+          }
+        ],
+        "totalTax": "1.58",
+        "total": "12.08",
+        "lines": [
+          {
+            "lineNo": 1,
+            "invoiceLineNo": null,
+            "productId": "{productId}",
+            "mainCode": "SKU-SONDEO",
+            "description": "Producto de Sondeo",
+            "quantity": "1.000000",
+            "unitPrice": "10.500000",
+            "discount": "0.00",
+            "subtotal": "10.50",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "1.58"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "01",
+            "amount": "12.08",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "authorizationNumber": null,
+        "authorizedAt": null,
+        "customerId": "{customerId}",
+        "replacesDocumentId": null,
+        "replacedByDocumentId": null,
+        "modifiedDocument": null,
+        "reason": null,
+        "reasons": null,
+        "creditedTotal": "0.00"
+      }
+    },
+    {
+      "name": "documento de otra empresa",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{otherInvoiceId}",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{otherInvoiceId}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "documento de otra empresa con rol AUDITOR",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{otherInvoiceId}",
+        "auth": "auditor"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{otherInvoiceId}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "documento con intentos y rol AUDITOR",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{invoiceId}",
+        "auth": "auditor"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{invoiceId}",
+        "documentType": "01",
+        "state": "AUTHORIZED",
+        "environment": "1",
+        "taxpayerId": "{taxpayerId}",
+        "number": "001-001-000000001",
+        "sequence": "000000001",
+        "accessKey": "{accessKey}",
+        "issueDate": "{today}",
+        "currency": "USD",
+        "customer": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "Cliente de Sondeo"
+        },
+        "subtotal": "10.50",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "10.50",
+            "amount": "1.58"
+          }
+        ],
+        "totalTax": "1.58",
+        "total": "12.08",
+        "lines": [
+          {
+            "lineNo": 1,
+            "invoiceLineNo": null,
+            "productId": "{productId}",
+            "mainCode": "SKU-SONDEO",
+            "description": "Producto de Sondeo",
+            "quantity": "1.000000",
+            "unitPrice": "10.500000",
+            "discount": "0.00",
+            "subtotal": "10.50",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "1.58"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "01",
+            "amount": "12.08",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "authorizationNumber": null,
+        "authorizedAt": null,
+        "customerId": "{customerId}",
+        "replacesDocumentId": null,
+        "replacedByDocumentId": null,
+        "modifiedDocument": null,
+        "reason": null,
+        "reasons": null,
+        "creditedTotal": "0.00"
+      }
+    },
+    {
+      "name": "documentos lista",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents",
+        "auth": "owner",
+        "query": "size=100"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [
+          {
+            "id": "{notAuthorizedDocumentId}",
+            "documentType": "01",
+            "state": "NOT_AUTHORIZED",
+            "number": "001-001-000000004",
+            "issueDate": "{today}",
+            "customerName": "Cliente de Sondeo",
+            "total": "12.08"
+          },
+          {
+            "id": "{returnedDocumentId}",
+            "documentType": "01",
+            "state": "RETURNED",
+            "number": "001-001-000000003",
+            "issueDate": "{today}",
+            "customerName": "Cliente de Sondeo",
+            "total": "12.08"
+          },
+          {
+            "id": "{retryDocumentId}",
+            "documentType": "01",
+            "state": "RESERVED",
+            "number": "001-001-000000002",
+            "issueDate": "{today}",
+            "customerName": "Cliente de Sondeo",
+            "total": "12.08"
+          },
+          {
+            "id": "{invoiceId}",
+            "documentType": "01",
+            "state": "AUTHORIZED",
+            "number": "001-001-000000001",
+            "issueDate": "{today}",
+            "customerName": "Cliente de Sondeo",
+            "total": "12.08"
+          }
+        ],
+        "page": 0,
+        "size": 100,
+        "total": 4
+      }
+    }
+  ]
+}
