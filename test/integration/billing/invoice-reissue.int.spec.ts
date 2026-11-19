@@ -1,7 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import pg from 'pg';
+import { DocumentPipeline } from '../../../src/orchestration/document-pipeline.js';
 import { startStack, type StackHandle } from '../../support/containers.js';
 import {
+  accessKeyOf,
   bearer,
   type BillingScenario,
   billingScenario,
@@ -11,25 +13,27 @@ import {
   invoiceJson,
   invoiceRequest,
   issueInvoice,
-  setState,
+  uploadTestCertificate,
 } from '../../support/scenario.js';
+import { errorMsg, notAuthorized, returned } from '../../support/sri-soap-samples.js';
+import { Reply, SriStub, sriTestEnv } from '../../support/sri-stub.js';
 import { startTestApp, type TestApp } from '../../support/test-app.js';
 
 /*
  * Traducción de InvoiceReissueIT. Un comprobante que el SRI devolvió o no autorizó no se corrige: se
- * emite otro que lo reemplaza, con su propio número y su propia clave, y ambos quedan enlazados. En E3
- * no hay worker ni SRI: el estado del rechazado se pone por SQL. Las comprobaciones de artefactos
- * (document_artifacts del rechazado sin cambios) de aRejectedDocumentIsReplacedByANewOneAndBothSayIt
- * se añaden en E4, cuando existan.
+ * emite otro que lo reemplaza, con su propio número y su propia clave, y ambos quedan enlazados. El
+ * rechazado llega a su estado por el pipeline con el SRI simulado, como en Java.
  */
 let stack: StackHandle;
 let testApp: TestApp;
 let db: pg.Client;
 let s: BillingScenario;
+let sri: SriStub;
 
 beforeAll(async () => {
   stack = await startStack();
-  testApp = await startTestApp(stack, { EINVOICE_RATE_LIMIT_WRITES: '1000000' });
+  sri = await SriStub.start();
+  testApp = await startTestApp(stack, { EINVOICE_RATE_LIMIT_WRITES: '1000000', ...sriTestEnv(sri) });
   // Escuchando de antemano: si no, supertest abre un puerto por petición simultánea.
   await testApp.app.listen(0, '127.0.0.1');
   db = new pg.Client({ connectionString: stack.databaseUrl });
@@ -38,10 +42,12 @@ beforeAll(async () => {
 afterAll(async () => {
   await db?.end();
   await testApp?.close();
+  await sri?.close();
   await stack?.stop();
 });
 beforeEach(async () => {
   s = await billingScenario(testApp.http, db);
+  await uploadTestCertificate(testApp.http, s.owner, s.taxpayer);
 });
 
 const http = () => testApp.http;
@@ -51,12 +57,38 @@ async function accessKey(document: string): Promise<string> {
     .rows[0]!.access_key;
 }
 
-/** Una factura emitida y puesta en ese estado. */
-async function rejected(state: string): Promise<string> {
+const state = async (document: string) =>
+  (await db.query<{ state: string }>('SELECT state FROM fiscal_documents WHERE id = $1', [document])).rows[0]!.state;
+
+/** Lleva el comprobante por el pipeline hasta ese estado (o diez pasos). */
+async function advanceUntil(document: string, wanted: string): Promise<void> {
+  const pipeline = testApp.app.get(DocumentPipeline);
+  for (let step = 0; step < 10 && (await state(document)) !== wanted; step++) await pipeline.advance(s.tenant, document);
+  expect(await state(document)).toBe(wanted);
+}
+
+/** Una factura emitida y llevada a ese estado por el pipeline con el SRI simulado. */
+async function rejected(wanted: string): Promise<string> {
   const document = await issueInvoice(http(), s.owner, invoiceJson(s, '2', '23.00'));
-  await setState(db, document, state);
+  const key = await accessKeyOf(db, document);
+  if (wanted === 'RETURNED') {
+    sri.onReception(key, Reply.xml(returned(key, errorMsg('35', 'DOCUMENTO INVÁLIDO'))));
+  } else if (wanted === 'NOT_AUTHORIZED') {
+    sri.onAuthorization(key, Reply.xml(notAuthorized(key, 'NO AUTORIZADO', errorMsg('39', 'FIRMA INVALIDA'))));
+  } else if (wanted === 'XSD_INVALID') {
+    await db.query("UPDATE fiscal_documents SET issuer_legal_name = repeat('x', 301) WHERE id = $1", [document]);
+  }
+  await advanceUntil(document, wanted);
   return document;
 }
+
+const artifactsOf = async (document: string) =>
+  (
+    await db.query<{ a: string }>(
+      "SELECT kind || ':' || sha256 AS a FROM document_artifacts WHERE document_id = $1 ORDER BY kind",
+      [document],
+    )
+  ).rows.map((r) => r.a);
 
 const replacing = (replaced: string, scenario: BillingScenario = s) => ({
   ...invoiceJson(scenario, '2', '23.00'),
@@ -77,6 +109,8 @@ const documentCount = () => count('SELECT count(*) AS n FROM fiscal_documents WH
 it.each(['RETURNED', 'NOT_AUTHORIZED'])('un comprobante %s se reemplaza por uno nuevo y ambos lo dicen', async (state) => {
   const replaced = await rejected(state);
   const oldKey = await accessKey(replaced);
+  const oldArtifacts = await artifactsOf(replaced);
+  expect(oldArtifacts.map((a) => a.split(':')[0])).toEqual(['XML_SIGNED', 'XML_UNSIGNED']);
 
   const res = await reissue(replacing(replaced)).expect(202);
   const replacement = (res.body as { id: string }).id;
@@ -90,7 +124,15 @@ it.each(['RETURNED', 'NOT_AUTHORIZED'])('un comprobante %s se reemplaza por uno 
   expect(old).toMatchObject({ replacedByDocumentId: replacement, replacesDocumentId: null, state });
   // El rechazado no se toca.
   expect(await accessKey(replaced)).toBe(oldKey);
-  // E4: aquí se comprueba que document_artifacts del rechazado quedó igual.
+  expect(await artifactsOf(replaced)).toEqual(oldArtifacts);
+  // El nuevo hace su propio camino y tiene sus propios artefactos; los del rechazado siguen iguales.
+  await advanceUntil(replacement, 'AUTHORIZED');
+  expect((await artifactsOf(replacement)).map((a) => a.split(':')[0])).toEqual([
+    'SRI_AUTHORIZATION',
+    'XML_SIGNED',
+    'XML_UNSIGNED',
+  ]);
+  expect(await artifactsOf(replaced)).toEqual(oldArtifacts);
   const audit = await db.query<{ metadata: unknown }>(
     "SELECT metadata FROM audit_events WHERE action = 'DOCUMENT_REPLACED' AND entity_id = $1",
     [replaced],

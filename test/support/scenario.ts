@@ -326,3 +326,23 @@ export async function uploadTestCertificate(
 export function processDocument(app: INestApplicationContext, tenantId: string, documentId: string): Promise<string> {
   return app.get(DocumentProcessor).generateAndSign(tenantId, documentId);
 }
+
+/** Clave de acceso del comprobante. */
+export async function accessKeyOf(db: pg.Client, documentId: string): Promise<string> {
+  return (await db.query<{ access_key: string }>('SELECT access_key FROM fiscal_documents WHERE id = $1', [documentId]))
+    .rows[0]!.access_key;
+}
+
+/** Una factura emitida y procesada hasta SIGNED (el emisor debe tener certificado). Devuelve su id. */
+export async function signedInvoice(
+  http: Http,
+  app: INestApplicationContext,
+  s: BillingScenario,
+  quantity = '2',
+  paymentAmount = '23.00',
+): Promise<string> {
+  const document = await issueInvoice(http, s.owner, invoiceJson(s, quantity, paymentAmount));
+  const state = await processDocument(app, s.tenant, document);
+  if (state !== 'SIGNED') throw new Error(`La factura quedó en ${state}, no en SIGNED`);
+  return document;
+}

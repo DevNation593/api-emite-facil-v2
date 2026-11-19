@@ -180,3 +180,23 @@ async function respond(response: ServerResponse, reply: Reply & { headers?: Reco
   response.on('error', () => undefined);
   response.end(reply.body);
 }
+
+/**
+ * Variables con las que la aplicación de pruebas habla con el SRI simulado: solo el ambiente 1 habilitado,
+ * con esperas mínimas (simulatedSri de AbstractIntegrationTest).
+ */
+export function sriTestEnv(stub: SriStub): Record<string, string> {
+  return {
+    SRI_ENABLED_ENVIRONMENTS: '1',
+    EINVOICE_SRI_ALLOW_CUSTOM_ENDPOINTS: 'true',
+    EINVOICE_SRI_TEST_RECEPTION: stub.receptionUrl,
+    EINVOICE_SRI_TEST_AUTHORIZATION: stub.authorizationUrl,
+    EINVOICE_SRI_PRODUCTION_RECEPTION: stub.receptionUrl,
+    EINVOICE_SRI_PRODUCTION_AUTHORIZATION: stub.authorizationUrl,
+    SRI_CONNECT_TIMEOUT: '2s',
+    SRI_READ_TIMEOUT: '2s',
+    SRI_AUTHORIZATION_DELAY: '0s',
+    SRI_RETRY_BACKOFF: '1s',
+    SRI_RETRY_MAX: '5',
+  };
+}
