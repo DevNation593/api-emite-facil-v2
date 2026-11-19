@@ -8,7 +8,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 import { fail, javaArguments, javaSource, runTool, startJavaApp } from '../java-dump/java-app.mjs';
-import { runProbes, runScenario, sendRaw } from './probe.mjs';
+import { runProbes, runScenario, SEEDED_ATTEMPTS, sendRaw } from './probe.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const outDir = join(resolve(here, '..', '..'), 'test', 'golden', 'http');
@@ -38,18 +38,64 @@ await runTool('java-probe', async (step, onFailure) => {
     step('crear el escenario');
     // E3 parte de una factura autorizada: sin SRI ni worker, Java la deja en RESERVED, así que se
     // autoriza por SQL para que las notas la acepten.
-    const hooks = {
-      async authorize(documentId) {
-        const db = new pg.Client({ connectionString: app.postgres.getConnectionUri() });
-        await db.connect();
-        try {
-          await db.query("UPDATE fiscal_documents SET state = 'AUTHORIZED' WHERE id = $1", [documentId]);
-        } finally {
-          await db.end();
-        }
-      },
+    const withDb = async (work) => {
+      const db = new pg.Client({ connectionString: app.postgres.getConnectionUri() });
+      await db.connect();
+      try {
+        return await work(db);
+      } finally {
+        await db.end();
+      }
     };
-    const scenario = await runScenario(send, casesName === 'e2' ? undefined : hooks);
+    const hooks = {
+      authorize: (documentId) =>
+        withDb((db) => db.query("UPDATE fiscal_documents SET state = 'AUTHORIZED' WHERE id = $1", [documentId])),
+      // E4: sin worker ni SRI, los comprobantes no pasan de RESERVED; el resto se siembra por SQL.
+      setState: (documentId, state) =>
+        withDb((db) => db.query('UPDATE fiscal_documents SET state = $2 WHERE id = $1', [documentId, state])),
+      addMember: (tenantId, email, role) =>
+        withDb((db) =>
+          db.query(
+            `INSERT INTO memberships (user_id, tenant_id, role)
+             SELECT id, $1, $3 FROM users WHERE email = $2`,
+            [tenantId, email, role],
+          ),
+        ),
+      seedAttempts: (documentId) =>
+        withDb(async (db) => {
+          const owner = await db.query('SELECT tenant_id FROM fiscal_documents WHERE id = $1', [documentId]);
+          const tenantId = owner.rows[0].tenant_id;
+          for (const attempt of SEEDED_ATTEMPTS) {
+            // El instante sembrado ya trae sus decimales: se inserta tal cual, sin pasar por Date.
+            const inserted = await db.query(
+              `INSERT INTO sri_attempts (tenant_id, document_id, operation, environment, started_at, completed_at,
+                 outcome, sri_status, http_status, error_detail, response)
+               VALUES ($1, $2, $3, $4, $5::timestamptz, $6::timestamptz, $7, $8, $9, $10, $11) RETURNING id`,
+              [
+                tenantId,
+                documentId,
+                attempt.operation,
+                attempt.environment,
+                attempt.startedAt,
+                attempt.completedAt,
+                attempt.outcome,
+                attempt.sriStatus,
+                attempt.httpStatus,
+                attempt.errorDetail,
+                attempt.response === null ? null : Buffer.from(attempt.response, 'utf8'),
+              ],
+            );
+            for (const [index, message] of attempt.messages.entries()) {
+              await db.query(
+                `INSERT INTO sri_messages (attempt_id, position, identifier, message, additional_info, type)
+                 VALUES ($1, $2, $3, $4, $5, $6)`,
+                [inserted.rows[0].id, index + 1, message.identifier, message.message, message.additionalInfo, message.type],
+              );
+            }
+          }
+        }),
+    };
+    const scenario = await runScenario(send, casesName === 'e2' ? undefined : casesName === 'e3' ? { authorize: hooks.authorize } : hooks);
     step(`ejecutar ${cases.length} casos`);
     const results = await runProbes(send, cases, scenario);
     const errors = results.filter((result) => result.status >= 500).map((result) => result.name);

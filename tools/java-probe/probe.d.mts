@@ -21,6 +21,8 @@ export interface Scenario {
     string
   > &
     Record<string, string>;
+  /** Cabeceras de los otros usuarios del escenario de E4: `auditor`, `biller` y `stranger`. */
+  actors?: Record<string, Record<string, string>>;
   /** El día fiscal (YYYY-MM-DD, America/Guayaquil) fijado al crear el escenario. */
   today: string;
 }
@@ -35,7 +37,8 @@ export interface ProbeCase {
   headers?: Record<string, string | string[]>;
   /** Guarda el `id` de la respuesta 2xx como `scenario.values[capture]`, usable luego como `{capture}`. */
   capture?: string;
-  auth: 'owner' | 'none';
+  /** `owner`, `none` o un usuario de `scenario.actors` (`auditor`, `biller`, `stranger`). */
+  auth: string;
 }
 
 export interface ProbeResult {
@@ -48,8 +51,30 @@ export interface ProbeResult {
 }
 
 export const SCENARIO_RUC: string;
+export interface SeededAttempt {
+  operation: 'RECEPTION' | 'AUTHORIZATION';
+  environment: string;
+  /** El instante tal como la API lo devuelve; también es lo que se inserta (con microsegundos). */
+  startedAt: string;
+  completedAt: string | null;
+  outcome: string | null;
+  sriStatus: string | null;
+  httpStatus: number | null;
+  errorDetail: string | null;
+  /** Respuesta cruda del SRI (texto UTF-8 que se guarda como bytea) o null. */
+  response: string | null;
+  messages: { identifier: string; message: string; additionalInfo: string; type: string }[];
+}
+/** Los intentos que `seedAttempts` inserta, del más antiguo al más reciente. */
+export const SEEDED_ATTEMPTS: SeededAttempt[];
 export interface ScenarioHooks {
   authorize(documentId: string): Promise<void>;
+  /** E4: inserta `SEEDED_ATTEMPTS` (y sus mensajes) en el comprobante. */
+  seedAttempts?(documentId: string): Promise<void>;
+  /** E4: pone el comprobante en el estado dado (`RETURNED`, `NOT_AUTHORIZED`). */
+  setState?(documentId: string, state: string): Promise<void>;
+  /** E4: crea la membresía activa de la persona con ese correo en la empresa. */
+  addMember?(tenantId: string, email: string, role: 'AUDITOR' | 'BILLER'): Promise<void>;
 }
 export function runScenario(send: Send, hooks?: ScenarioHooks): Promise<Scenario>;
 export function caseRequest(probe: ProbeCase, scenario: Scenario): ProbeRequest;

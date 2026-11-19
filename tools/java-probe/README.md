@@ -59,3 +59,23 @@ diferencia de E2 en cuatro cosas:
 
 Los `POST` de E3 consumen secuenciales y saldo de la factura: el orden de los casos es parte del
 golden. Los que crean un comprobante usan una clave propia `sondeo-<n>-<nombre>`.
+
+## Casos de E4 (reintento e intentos ante el SRI)
+
+`cases/e4.json` (de `make-cases-e4.mjs`) sondea `POST /documents/{id}/retry` y
+`GET /documents/{id}/sri-attempts`. Usa `runScenario(send, hooks)` con hooks de E4, que `run.mjs`
+implementa por SQL sobre el PostgreSQL de Java y que la prueba contra NestJS implementa con Kysely:
+
+- `hooks.seedAttempts(documentId)` inserta `SEEDED_ATTEMPTS` (exportado por `probe.mjs`): una
+  `RECEPTION` cerrada con `RETURNED`/`DEVUELTA`, HTTP 200, dos mensajes (`35` y `43`), `response` no
+  nula y `started_at` con microsegundos; y una `AUTHORIZATION` abierta (sin `outcome` ni
+  `completed_at`). Los instantes sembrados son texto exacto y `normalize` los conserva en vez de
+  cambiarlos por `{timestamp}`, para fijar cuántos decimales muestra la API.
+- `hooks.setState(documentId, state)` deja un comprobante en `RETURNED` o `NOT_AUTHORIZED`.
+- `hooks.addMember(tenantId, email, role)` crea la membresía de una persona ya registrada.
+
+Con `seedAttempts`, el escenario emite además `retryDocumentId` (RESERVED), `returnedDocumentId`
+(RETURNED) y `notAuthorizedDocumentId` (NOT_AUTHORIZED), crea una segunda empresa con su factura
+(`otherTenantId`, `otherInvoiceId`) y expone en `scenario.actors` las cabeceras de un `auditor`, un
+`biller` y un `stranger` (sin membresía). Un caso elige actor con `auth: 'auditor' | 'biller' |
+'stranger'`, además de `'owner'` y `'none'`. Las cabeceras de un caso también admiten marcadores.

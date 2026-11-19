@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
-import type { Kysely } from 'kysely';
+import type { Kysely, Transaction } from 'kysely';
 import { ApiException } from '../common/api-exception.js';
 import type { ErrorCode } from '../common/error-codes.js';
 import { offsetDateTimeJson, offsetDateTimeToString } from '../common/java-time.js';
@@ -175,10 +175,16 @@ export class CertificateService {
   /**
    * Clave y certificado activos del emisor, listos para firmar. La vigencia se vuelve a comprobar
    * contra `now`: un certificado pudo caducar después de cargarse. No abre transacción: el rechazo
-   * es un resultado que quien llama registra.
+   * es un resultado que quien llama registra. `db` es la transacción de quien firma, si la hay: así la lectura
+   * usa su misma conexión (como en Java) y no pide otra al pool mientras tiene el comprobante bloqueado.
    */
-  async signingMaterial(tenantId: string, taxpayerId: string, now: Date): Promise<SigningMaterial> {
-    const active = await this.db
+  async signingMaterial(
+    tenantId: string,
+    taxpayerId: string,
+    now: Date,
+    db: Kysely<DB> | Transaction<DB> = this.db,
+  ): Promise<SigningMaterial> {
+    const active = await db
       .selectFrom('certificates')
       .select(['id', 'encrypted_p12', 'encrypted_password'])
       .where('tenant_id', '=', tenantId)

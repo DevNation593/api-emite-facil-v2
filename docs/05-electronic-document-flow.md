@@ -4,7 +4,7 @@
 ```mermaid
 sequenceDiagram
  participant U as Next.js/Integración
- participant A as Spring API
+ participant A as API NestJS
  participant D as PostgreSQL
  participant Q as RabbitMQ
  participant W as Worker

@@ -4,6 +4,7 @@ import {
   type DatabaseConnection,
   type RabbitConnection,
 } from './connection-urls.js';
+import { loadSriConfig, type SriConfig } from '../sri/sri-config.js';
 import { parseDuration } from './durations.js';
 
 export const APP_CONFIG = Symbol('APP_CONFIG');
@@ -14,6 +15,8 @@ export interface AppConfig {
   rabbit: RabbitConnection;
   redis: { url: string; timeoutMs: number };
   workerEnabled: boolean;
+  /** Latido del worker y consumidores de la cola de comprobantes (einvoice.worker.*, spring.rabbitmq.listener.*). */
+  worker: { pollIntervalMs: number; consumers: number; maxConsumers: number };
   logFormat: 'text' | 'json';
   masterKey: Buffer;
   auth: {
@@ -38,7 +41,7 @@ export interface AppConfig {
   };
   metricsToken: string | null;
   rateLimit: { requestsPerMinute: number; writesPerMinute: number };
-  sri: { enabledEnvironments: Array<'1' | '2'> };
+  sri: SriConfig;
   providerRuc: string | null;
   /** Monto máximo de un comprobante a consumidor final, como decimal en texto (EINVOICE_INVOICE_FINAL_CONSUMER_LIMIT). */
   finalConsumerLimit: string;
@@ -239,6 +242,18 @@ function loadRedisTimeout(env: NodeJS.ProcessEnv): number {
   }
 }
 
+function loadWorker(env: NodeJS.ProcessEnv): AppConfig['worker'] {
+  const worker = {
+    pollIntervalMs: integer(env, 'EINVOICE_WORKER_POLL_INTERVAL_MS', 2000, 1),
+    consumers: integer(env, 'EINVOICE_WORKER_CONSUMERS', 1, 1),
+    maxConsumers: integer(env, 'EINVOICE_WORKER_MAX_CONSUMERS', 4, 1),
+  };
+  if (worker.maxConsumers < worker.consumers) {
+    throw new Error('EINVOICE_WORKER_MAX_CONSUMERS no puede ser menor que EINVOICE_WORKER_CONSUMERS');
+  }
+  return worker;
+}
+
 /**
  * Valida el entorno y lo convierte en configuración tipada. No abre ninguna conexión:
  * la aplicación debe poder arrancar sin infraestructura (pg, Redis y RabbitMQ conectan
@@ -277,6 +292,7 @@ export function loadConfig(env: NodeJS.ProcessEnv): AppConfig {
       timeoutMs: loadRedisTimeout(env),
     },
     workerEnabled: read(env, 'EINVOICE_WORKER_ENABLED') !== 'false',
+    worker: loadWorker(env),
     logFormat: read(env, 'LOGGING_STRUCTURED_FORMAT_CONSOLE') ? 'json' : 'text',
     masterKey: loadMasterKey(env),
     auth: loadAuth(env),
@@ -286,7 +302,7 @@ export function loadConfig(env: NodeJS.ProcessEnv): AppConfig {
       requestsPerMinute: integer(env, 'EINVOICE_RATE_LIMIT_REQUESTS', 1200, 1),
       writesPerMinute: integer(env, 'EINVOICE_RATE_LIMIT_WRITES', 300, 1),
     },
-    sri: { enabledEnvironments },
+    sri: loadSriConfig(env, enabledEnvironments),
     providerRuc,
     finalConsumerLimit: loadFinalConsumerLimit(env),
   };

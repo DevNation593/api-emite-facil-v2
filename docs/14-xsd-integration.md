@@ -103,7 +103,8 @@ Mantener [xsd-source-registry.csv](xsd-source-registry.csv). Estados: `PENDIENTE
 ## Criterio de aceptación
 
 - Todos los XSD compilan en CI con el XMLDSig compartido y sin acceso externo.
-- Como mucho 4 validaciones XSD a la vez y un plazo de 10 s por validación; si vence, o si el motor falla, la emisión responde `500 INTERNAL_ERROR` y se revierte, no un XML inválido.
+- Como mucho 4 validaciones XSD a la vez y un plazo de 10 s por validación, que cuenta desde que se pide turno: la espera en la cola más la validación nunca pasan de 10 s con el secuencial o el comprobante bloqueados. Si vence, o si el motor falla, la emisión responde `500 INTERNAL_ERROR` y se revierte, no un XML inválido; en el worker, la generación o la firma se revierten y el comprobante vuelve a intentarse. Cada plazo vencido suma 1 a `einvoice_xsd_validation_timeouts_total`.
+- Límite conocido: xmllint-wasm no expone su Worker, así que uno colgado no se puede terminar. Al vencer el plazo se libera el turno y el Worker sigue hasta que termine o lo cierre el proceso; un aumento sostenido de `einvoice_xsd_validation_timeouts_total` es la señal de vigilarlo.
 - Los XML de ejemplo aplicables pasan la validación y la excepción de 2.0.0 queda cubierta por un test que la espera.
 - No hay descargas HTTP en producción para resolver imports ni DTD.
 - Hashes contrastados con el paquete oficial del SRI y con W3C.

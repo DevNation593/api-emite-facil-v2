@@ -79,6 +79,28 @@ describe('loadConfig', () => {
     expect(loadConfig({ ...base(), PORT: '9000', SERVER_PORT: '9100' }).port).toBe(9100);
   });
 
+  it('el worker sondea cada 2 s con 1 a 4 consumidores por defecto, y lee sus variables', () => {
+    expect(loadConfig(base()).worker).toEqual({ pollIntervalMs: 2000, consumers: 1, maxConsumers: 4 });
+    expect(
+      loadConfig({
+        ...base(),
+        EINVOICE_WORKER_POLL_INTERVAL_MS: '500',
+        EINVOICE_WORKER_CONSUMERS: '2',
+        EINVOICE_WORKER_MAX_CONSUMERS: '2',
+      }).worker,
+    ).toEqual({ pollIntervalMs: 500, consumers: 2, maxConsumers: 2 });
+  });
+
+  it('los valores del worker son enteros positivos, con el máximo de consumidores no menor que el mínimo', () => {
+    expect(() => loadConfig({ ...base(), EINVOICE_WORKER_POLL_INTERVAL_MS: '0' })).toThrow(
+      'EINVOICE_WORKER_POLL_INTERVAL_MS',
+    );
+    expect(() => loadConfig({ ...base(), EINVOICE_WORKER_CONSUMERS: 'dos' })).toThrow('EINVOICE_WORKER_CONSUMERS');
+    expect(() => loadConfig({ ...base(), EINVOICE_WORKER_CONSUMERS: '5' })).toThrow(
+      'EINVOICE_WORKER_MAX_CONSUMERS no puede ser menor que EINVOICE_WORKER_CONSUMERS',
+    );
+  });
+
   it('EINVOICE_WORKER_ENABLED=false desactiva el worker', () => {
     expect(loadConfig({ ...base(), EINVOICE_WORKER_ENABLED: 'false' }).workerEnabled).toBe(false);
     expect(loadConfig({ ...base(), EINVOICE_WORKER_ENABLED: 'true' }).workerEnabled).toBe(true);
