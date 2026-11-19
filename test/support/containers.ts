@@ -159,6 +159,9 @@ export async function startRedis(): Promise<RedisHandle> {
 
 export interface StackHandle {
   databaseUrl: string;
+  /** La base vista desde otro contenedor de su red (para Flyway), y esa red. */
+  postgresInternalUrl: string;
+  postgresNetwork: StartedNetwork;
   rabbitUrl: string;
   redisUrl: string;
   containers: {
@@ -190,6 +193,8 @@ export async function startStack(): Promise<StackHandle> {
   }
   return {
     databaseUrl: pg.databaseUrl,
+    postgresInternalUrl: pg.internalUrl,
+    postgresNetwork: pg.network,
     rabbitUrl: rabbit.rabbitUrl,
     redisUrl: redis.redisUrl,
     containers: {
