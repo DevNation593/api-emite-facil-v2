@@ -16,7 +16,7 @@ Para regenerar una sola familia sin tocar el resto de fixtures ni `SOURCE.json`:
 node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil --only bean-validation
 ```
 
-Familias con `--only` (`bean-validation`, `certificates`, `xsd`, `calculations`, `documents`, `xades` y `xades-verify`): `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
+Familias con `--only` (`bean-validation`, `certificates`, `xsd`, `calculations`, `documents`, `xades`, `xades-verify` y `sri`): `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
 `@Pattern(NO_CONTROL_CHARS)`, más `@Pattern("[0-9]{3}")`, `@Min(1)` y `@Max(999_999_999)`, validados con Hibernate Validator y `Locale.ENGLISH`). Es determinista: no
 depende de aleatorios.
 
@@ -70,6 +70,16 @@ C14N exclusiva, digest SHA-256, RSA-SHA256, raíz o `KeyInfo` sin id, sin `Signi
 ilegible, sin `SignatureMethod`, con un comentario o un espacio en el comprobante, sin firmar, ilegible, vacío y con
 `DOCTYPE`. Necesita `xades/` ya generado (con `--only xades-verify` se reutiliza el que hay). `file` es la ruta
 desde `test/golden`. No es determinista: la firma con otra clave y el certificado sustituto cambian en cada ejecución.
+
+`sri` (`sri.json`): las peticiones de `SriSoapRequests` (privada del paquete: se invoca por reflexión) en Base64 —la
+de recepción de tres `signed.xml` de `xades` y la de autorización de claves válidas e inválidas, con el mensaje de
+error— y el resultado de `SriResponseParser.reception` y `SriResponseParser.authorization` para cada cuerpo: las
+muestras de `SriSoapSamples`, `Fault`, HTML, cuerpo vacío, texto, `DOCTYPE` con entidad, dos respuestas, sin
+envoltorio, con prefijo, con BOM, entidades y CDATA, comentarios, XML mal formado, textos de más de 2000 caracteres,
+estados largos, 150 mensajes, un emoji partido en el límite, números de autorización de 9, 10, 50 dígitos y en
+cifras arábigas, ambientes `PRUEBAS`, `PRODUCCIÓN` y `produccion` y fechas con y sin desplazamiento, con fracción y
+de formatos que Java no acepta. Cada resultado lleva todos sus campos; las fechas, con `OffsetDateTime.toString()`.
+Necesita `xades/` ya generado. Es determinista.
 
 El generador corre con `-Dline.separator=\n`: el `Transformer` del JDK escribe cada salto de línea de un texto con
 el separador del sistema, y se fija el de Linux, donde corre la API, para que el XML firmado no dependa del sistema

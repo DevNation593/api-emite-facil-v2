@@ -38,6 +38,7 @@ public final class GoldenGenerator {
 				case "documents" -> DocumentCases.generate(out);
 				case "xades" -> XadesCases.generate(out.resolve("xades"));
 				case "xades-verify" -> XadesVerifyCases.generate(out);
+				case "sri" -> write(out.resolve("sri.json"), SriCases.generate(out));
 				default -> throw new IllegalArgumentException("Familia desconocida: " + args[3]);
 			}
 			System.out.println("Familia " + args[3] + " generada en " + out.toAbsolutePath());
@@ -52,6 +53,7 @@ public final class GoldenGenerator {
 		write(out.resolve("bean-validation.json"), ValidationCases.generate());
 		XadesCases.generate(out.resolve("xades"));
 		XadesVerifyCases.generate(out);
+		write(out.resolve("sri.json"), SriCases.generate(out));
 		CertificateCases.generate(out.resolve("certificates"));
 		XsdCases.generate(out, Path.of(args[1]));
 		write(out.resolve("calculations.json"), CalculationCases.generate());

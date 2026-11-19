@@ -4,6 +4,7 @@ import {
   type DatabaseConnection,
   type RabbitConnection,
 } from './connection-urls.js';
+import { loadSriConfig, type SriConfig } from '../sri/sri-config.js';
 import { parseDuration } from './durations.js';
 
 export const APP_CONFIG = Symbol('APP_CONFIG');
@@ -38,7 +39,7 @@ export interface AppConfig {
   };
   metricsToken: string | null;
   rateLimit: { requestsPerMinute: number; writesPerMinute: number };
-  sri: { enabledEnvironments: Array<'1' | '2'> };
+  sri: SriConfig;
   providerRuc: string | null;
   /** Monto máximo de un comprobante a consumidor final, como decimal en texto (EINVOICE_INVOICE_FINAL_CONSUMER_LIMIT). */
   finalConsumerLimit: string;
@@ -286,7 +287,7 @@ export function loadConfig(env: NodeJS.ProcessEnv): AppConfig {
       requestsPerMinute: integer(env, 'EINVOICE_RATE_LIMIT_REQUESTS', 1200, 1),
       writesPerMinute: integer(env, 'EINVOICE_RATE_LIMIT_WRITES', 300, 1),
     },
-    sri: { enabledEnvironments },
+    sri: loadSriConfig(env, enabledEnvironments),
     providerRuc,
     finalConsumerLimit: loadFinalConsumerLimit(env),
   };
