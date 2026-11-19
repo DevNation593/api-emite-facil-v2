@@ -11,6 +11,7 @@ import { CertificateService } from '../certificate/certificate.service.js';
 import { DATABASE, DatabaseModule } from '../database/database.module.js';
 import type { DB } from '../database/schema.js';
 import { AUTH_PURGE_INTERVAL_MS, AuthPurge } from '../identity/auth-purge.js';
+import { RabbitConnection, RabbitModule } from '../infrastructure/rabbit.module.js';
 import { SignatureModule } from '../signature/signature.module.js';
 import { SRI_GATEWAY, type SriGateway } from '../sri/http-sri-gateway.js';
 import { SriAttemptLog } from '../sri/sri-attempt-log.js';
@@ -21,6 +22,8 @@ import { ArtifactStore } from '../storage/artifact-store.js';
 import { StorageModule } from '../storage/storage.module.js';
 import { DocumentPipeline } from './document-pipeline.js';
 import { DocumentProcessor } from './document-processor.js';
+import { DueDocumentScheduler } from './due-document-scheduler.js';
+import { OutboxRelay } from './outbox-relay.js';
 import { NoWebhooks, WEBHOOK_RECORDER, type WebhookRecorder } from './webhook-recorder.js';
 import { FixedDelayScheduler } from './fixed-delay-scheduler.js';
 
@@ -36,8 +39,18 @@ export class WorkerModule {
     if (!workerEnabled) return { module: WorkerModule };
     return {
       module: WorkerModule,
-      imports: [DatabaseModule, BillingModule, CertificateModule, SignatureModule, StorageModule, SriModule],
+      imports: [DatabaseModule, BillingModule, CertificateModule, SignatureModule, StorageModule, SriModule, RabbitModule],
       providers: [
+        {
+          provide: OutboxRelay,
+          useFactory: (db: Kysely<DB>, rabbit: RabbitConnection) => new OutboxRelay(db, rabbit),
+          inject: [DATABASE, RabbitConnection],
+        },
+        {
+          provide: DueDocumentScheduler,
+          useFactory: (db: Kysely<DB>, outbox: OutboxWriter) => new DueDocumentScheduler(db, outbox),
+          inject: [DATABASE, OutboxWriter],
+        },
         // Los webhooks llegan en E6; hasta entonces el pipeline avisa a un registro que no hace nada.
         { provide: WEBHOOK_RECORDER, useFactory: () => new NoWebhooks() },
         {

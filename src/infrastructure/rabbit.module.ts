@@ -42,9 +42,19 @@ export class RabbitConnection implements OnApplicationShutdown {
     await this.open();
   }
 
+  /**
+   * Un canal nuevo con confirmaciones. Sus errores y su cierre por el broker se registran (solo el código y el
+   * texto del broker, nunca el contenido de un mensaje) y nunca quedan sin atender: un error de canal no tumba
+   * el proceso. Un canal cerrado no se reutiliza; el siguiente uso abre otro.
+   */
   async channel(): Promise<ConfirmChannel> {
     const connection = await this.open();
-    return connection.createConfirmChannel();
+    const channel = await connection.createConfirmChannel();
+    channel.on('error', (error: Error & { code?: number | string }) => {
+      this.logger.warn(`Error de canal de RabbitMQ: ${error.code ?? error.name} ${error.message}`);
+    });
+    channel.on('close', () => undefined);
+    return channel;
   }
 
   private open(): Promise<ChannelModel> {
