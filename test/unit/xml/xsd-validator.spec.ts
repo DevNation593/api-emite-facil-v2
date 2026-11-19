@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { Registry } from 'prom-client';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import {
@@ -228,6 +229,34 @@ describe('plazo y simultaneidad', () => {
     ]);
     expect(dump).not.toContain('JUAN PEREZ');
     expect(dump).not.toContain('1712345678');
+  });
+
+  it('el plazo cuenta desde que se pide turno: con los turnos ocupados, falla al vencer sin esperar a uno libre', async () => {
+    const registry = new Registry();
+    const limited = new XsdValidator({
+      engine: () => new Promise(() => {}),
+      timeoutMs: 200,
+      maxConcurrent: 4,
+      registry,
+    });
+    const busy = Array.from({ length: 4 }, () =>
+      limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0).catch((e: unknown) => e),
+    );
+    const start = performance.now();
+    const fifth = await limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0).then(
+      () => null,
+      (e: unknown) => e,
+    );
+    const elapsed = performance.now() - start;
+    expect(fifth).toBeInstanceOf(Error);
+    expect((fifth as Error).message).toBe('La validación XSD no terminó en 0.2 s');
+    // Sin el arreglo esperaría a que se libere un turno (200 ms) y luego su propio plazo (otros 200 ms).
+    expect(elapsed).toBeLessThan(350);
+    await Promise.all(busy);
+    const timeouts = (await registry.getSingleMetric('einvoice_xsd_validation_timeouts_total')!.get()).values;
+    expect(timeouts[0]?.value).toBe(5);
+    // Los turnos quedaron libres: la que viene después tiene los suyos.
+    await expect(limited.validate(standard, DOCUMENT_SCHEMAS.INVOICE_1_1_0)).rejects.toThrow('no terminó');
   });
 
   it('el contenido inválido sigue siendo un resultado, no una excepción', async () => {
