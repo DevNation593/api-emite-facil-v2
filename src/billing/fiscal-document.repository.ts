@@ -140,6 +140,28 @@ const PROCESSING_COLUMNS = sql.raw(
   'state, taxpayer_id, document_type, environment, access_key, attempt_count, version',
 );
 
+interface ProcessingSqlRow {
+  state: string;
+  taxpayer_id: string;
+  document_type: string;
+  environment: string;
+  access_key: string;
+  attempt_count: number;
+  version: string;
+}
+
+function processingState(row: ProcessingSqlRow): ProcessingState {
+  return {
+    state: row.state,
+    taxpayerId: row.taxpayer_id,
+    documentType: row.document_type,
+    environment: row.environment,
+    accessKey: row.access_key,
+    attemptCount: row.attempt_count,
+    version: Number(row.version),
+  };
+}
+
 interface DocumentSqlRow {
   id: string;
   taxpayer_id: string;
@@ -389,29 +411,12 @@ export class FiscalDocumentRepository {
     documentId: string,
   ): Promise<ProcessingState | null> {
     requireTransaction(trx);
-    const result = await sql<{
-      state: string;
-      taxpayer_id: string;
-      document_type: string;
-      environment: string;
-      access_key: string;
-      attempt_count: number;
-      version: string;
-    }>`SELECT ${PROCESSING_COLUMNS} FROM fiscal_documents
+    const result = await sql<ProcessingSqlRow>`SELECT ${PROCESSING_COLUMNS} FROM fiscal_documents
       WHERE id = ${documentId} AND tenant_id = ${tenantId} FOR UPDATE`.execute(
       trx,
     );
     const row = result.rows[0];
-    if (row === undefined) return null;
-    return {
-      state: row.state,
-      taxpayerId: row.taxpayer_id,
-      documentType: row.document_type,
-      environment: row.environment,
-      accessKey: row.access_key,
-      attemptCount: row.attempt_count,
-      version: Number(row.version),
-    };
+    return row === undefined ? null : processingState(row);
   }
 
   /**
@@ -431,6 +436,88 @@ export class FiscalDocumentRepository {
       UPDATE fiscal_documents
       SET next_attempt_at = now() + make_interval(secs => CAST(${seconds} AS double precision)),
        attempt_count = ${attemptCount}
+      WHERE id = ${documentId} AND tenant_id = ${tenantId}`.execute(trx);
+  }
+
+  /** Estado del documento sin bloquearlo; nulo si no existe en esa empresa. */
+  async processingState(db: Db, tenantId: string, documentId: string): Promise<ProcessingState | null> {
+    const result = await sql<ProcessingSqlRow>`SELECT ${PROCESSING_COLUMNS} FROM fiscal_documents
+      WHERE id = ${documentId} AND tenant_id = ${tenantId}`.execute(db);
+    const row = result.rows[0];
+    return row === undefined ? null : processingState(row);
+  }
+
+  /** Si el emisor del documento tiene activada la emisión en producción. */
+  async issuerInProduction(db: Db, tenantId: string, documentId: string): Promise<boolean> {
+    const result = await sql<{ enabled: boolean }>`
+      SELECT t.production_enabled_at IS NOT NULL AS enabled
+        FROM fiscal_documents d JOIN taxpayers t ON t.tenant_id = d.tenant_id AND t.id = d.taxpayer_id
+       WHERE d.id = ${documentId} AND d.tenant_id = ${tenantId}`.execute(db);
+    const row = result.rows[0];
+    // `single()` en Java: el documento existe siempre que se pregunta por su emisor.
+    if (row === undefined) throw new Error('El comprobante no existe en esa empresa');
+    return row.enabled;
+  }
+
+  /**
+   * Cambia el estado solo si el documento sigue en el estado de partida, y deja el evento. Devuelve
+   * false si otro proceso ya lo movió.
+   */
+  async transition(
+    trx: Transaction<DB>,
+    tenantId: string,
+    documentId: string,
+    from: string,
+    to: string,
+    reason: string | null,
+  ): Promise<boolean> {
+    requireTransaction(trx);
+    const result = await sql`
+      UPDATE fiscal_documents SET state = ${to}, version = version + 1, state_changed_at = clock_timestamp()
+      WHERE id = ${documentId} AND tenant_id = ${tenantId} AND state = ${from}`.execute(trx);
+    const updated = Number(result.numAffectedRows ?? 0) === 1;
+    if (updated) await this.recordStateChange(trx, tenantId, documentId, from, to, reason);
+    return updated;
+  }
+
+  /**
+   * Anota el número y la fecha de autorización que devolvió el SRI. `authorizedAt` es el texto de
+   * `OffsetDateTime.toString()` que deja el lector de respuestas.
+   */
+  async markAuthorized(
+    trx: Transaction<DB>,
+    tenantId: string,
+    documentId: string,
+    authorizationNumber: string,
+    authorizedAt: string,
+  ): Promise<void> {
+    requireTransaction(trx);
+    await sql`
+      UPDATE fiscal_documents SET authorization_number = ${authorizationNumber},
+       authorized_at = CAST(${authorizedAt} AS timestamptz)
+      WHERE id = ${documentId} AND tenant_id = ${tenantId}`.execute(trx);
+  }
+
+  /** Motivo del evento más reciente que dejó el documento en ese estado. */
+  async lastReason(db: Db, tenantId: string, documentId: string, state: string): Promise<string | null> {
+    const result = await sql<{ reason: string | null }>`
+      SELECT reason FROM state_events
+      WHERE tenant_id = ${tenantId} AND document_id = ${documentId} AND new_state = ${state}
+      ORDER BY event_time DESC LIMIT 1`.execute(db);
+    return result.rows[0]?.reason ?? null;
+  }
+
+  /** Versión del esquema con que se generó el documento; nula si aún no se generó. */
+  async schemaVersion(db: Db, tenantId: string, documentId: string): Promise<string | null> {
+    const result = await sql<{ schema_version: string | null }>`
+      SELECT schema_version FROM fiscal_documents WHERE id = ${documentId} AND tenant_id = ${tenantId}`.execute(db);
+    return result.rows[0]?.schema_version ?? null;
+  }
+
+  async setSchemaVersion(trx: Transaction<DB>, tenantId: string, documentId: string, version: string): Promise<void> {
+    requireTransaction(trx);
+    await sql`
+      UPDATE fiscal_documents SET schema_version = ${version}
       WHERE id = ${documentId} AND tenant_id = ${tenantId}`.execute(trx);
   }
 

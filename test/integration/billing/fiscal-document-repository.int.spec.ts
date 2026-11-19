@@ -12,6 +12,7 @@ import { OutboxWriter } from '../../../src/billing/outbox-writer.js';
 import { BigDecimal } from '../../../src/common/big-decimal.js';
 import { DOCUMENT_TYPES } from '../../../src/xml/document-type.js';
 import {
+  expectConstraintViolation,
   insertDocument,
   newScenario,
   randomAccessKey,
@@ -549,5 +550,136 @@ describe('OutboxWriter', () => {
       [id],
     );
     expect(rows.rowCount).toBe(0);
+  });
+});
+
+describe('FiscalDocumentRepository: avance del comprobante (E4)', () => {
+  const events = async (id: string) =>
+    (
+      await handle.pgc.query(
+        'SELECT previous_state, new_state, reason FROM state_events WHERE document_id = $1 ORDER BY event_time',
+        [id],
+      )
+    ).rows;
+  const row = async (id: string) =>
+    (
+      await handle.pgc.query(
+        'SELECT state, version, state_changed_at, authorization_number, authorized_at, schema_version, next_attempt_at, attempt_count, replaces_document_id FROM fiscal_documents WHERE id = $1',
+        [id],
+      )
+    ).rows[0] as Record<string, unknown>;
+
+  it('transition cambia el estado, sube version y deja el evento solo si el estado de partida sigue', async () => {
+    const s = await newScenario(handle.pgc);
+    const id = await insertDocument(handle.pgc, s, 1, { state: 'RESERVED' });
+    const before = await row(id);
+
+    expect(await inTransaction((trx) => repository.transition(trx, s.tenant, id, 'RESERVED', 'GENERATED', null))).toBe(
+      true,
+    );
+    const after = await row(id);
+    expect(after.state).toBe('GENERATED');
+    expect(Number(after.version)).toBe(Number(before.version) + 1);
+    expect((after.state_changed_at as Date).getTime()).toBeGreaterThanOrEqual(
+      (before.state_changed_at as Date).getTime(),
+    );
+
+    expect(
+      await inTransaction((trx) => repository.transition(trx, s.tenant, id, 'RESERVED', 'SIGNED', 'tarde')),
+    ).toBe(false);
+    expect((await row(id)).state).toBe('GENERATED');
+    expect(await events(id)).toEqual([{ previous_state: 'RESERVED', new_state: 'GENERATED', reason: null }]);
+  });
+
+  it('processingState lee sin bloquear, y es nulo con la empresa de otra', async () => {
+    const s = await newScenario(handle.pgc);
+    const id = await insertDocument(handle.pgc, s, 1, { state: 'SIGNED' });
+    expect(await repository.processingState(handle.db, s.tenant, id)).toMatchObject({
+      state: 'SIGNED',
+      taxpayerId: s.taxpayer,
+      documentType: '01',
+      environment: '1',
+      attemptCount: 0,
+    });
+    const other = await newScenario(handle.pgc);
+    expect(await repository.processingState(handle.db, other.tenant, id)).toBeNull();
+  });
+
+  it('markAuthorized anota número y fecha', async () => {
+    const s = await newScenario(handle.pgc);
+    const id = await insertDocument(handle.pgc, s, 1, { state: 'RECEIVED' });
+    await inTransaction((trx) =>
+      repository.markAuthorized(trx, s.tenant, id, '1'.repeat(49), '2012-03-05T16:57:34.997-05:00'),
+    );
+    const stored = await row(id);
+    expect(stored.authorization_number).toBe('1'.repeat(49));
+    expect((stored.authorized_at as Date).toISOString()).toBe('2012-03-05T21:57:34.997Z');
+    // También con la forma corta de OffsetDateTime.toString().
+    await inTransaction((trx) => repository.markAuthorized(trx, s.tenant, id, '1'.repeat(49), '2026-10-11T09:30Z'));
+    expect(((await row(id)).authorized_at as Date).toISOString()).toBe('2026-10-11T09:30:00.000Z');
+  });
+
+  it('issuerInProduction lee la activación del emisor', async () => {
+    const s = await newScenario(handle.pgc);
+    const id = await insertDocument(handle.pgc, s, 1);
+    expect(await repository.issuerInProduction(handle.db, s.tenant, id)).toBe(false);
+    await handle.pgc.query('UPDATE taxpayers SET production_enabled_at = now() WHERE id = $1', [s.taxpayer]);
+    expect(await repository.issuerInProduction(handle.db, s.tenant, id)).toBe(true);
+  });
+
+  it('lastReason devuelve el motivo del evento más reciente que dejó ese estado', async () => {
+    const s = await newScenario(handle.pgc);
+    const id = await insertDocument(handle.pgc, s, 1, { state: 'SIGNATURE_FAILED' });
+    expect(await repository.lastReason(handle.db, s.tenant, id, 'SIGNATURE_FAILED')).toBeNull();
+    await inTransaction(async (trx) => {
+      await repository.recordStateChange(trx, s.tenant, id, 'GENERATED', 'SIGNATURE_FAILED', 'primero');
+      await repository.recordStateChange(trx, s.tenant, id, 'SIGNATURE_FAILED', 'SIGNATURE_FAILED', 'segundo');
+    });
+    expect(await repository.lastReason(handle.db, s.tenant, id, 'SIGNATURE_FAILED')).toBe('segundo');
+    const other = await newScenario(handle.pgc);
+    expect(await repository.lastReason(handle.db, other.tenant, id, 'SIGNATURE_FAILED')).toBeNull();
+  });
+
+  it('schemaVersion y setSchemaVersion', async () => {
+    const s = await newScenario(handle.pgc);
+    const id = await insertDocument(handle.pgc, s, 1);
+    expect(await repository.schemaVersion(handle.db, s.tenant, id)).toBeNull();
+    await inTransaction((trx) => repository.setSchemaVersion(trx, s.tenant, id, '1.1.0'));
+    expect(await repository.schemaVersion(handle.db, s.tenant, id)).toBe('1.1.0');
+  });
+
+  it('con la empresa de otra, schedule, linkReplacement, transition, markAuthorized y setSchemaVersion no tocan la fila ajena y recordStateChange falla', async () => {
+    const s = await newScenario(handle.pgc);
+    const id = await insertDocument(handle.pgc, s, 1, { state: 'RESERVED' });
+    const replacement = await insertDocument(handle.pgc, s, 2);
+    const other = await newScenario(handle.pgc);
+    const before = await row(id);
+
+    await inTransaction(async (trx) => {
+      await repository.schedule(trx, other.tenant, id, 1000, 7);
+      await repository.linkReplacement(trx, other.tenant, id, replacement);
+      expect(await repository.transition(trx, other.tenant, id, 'RESERVED', 'GENERATED', 'ajeno')).toBe(false);
+      await repository.markAuthorized(trx, other.tenant, id, '9'.repeat(49), '2026-10-11T09:30Z');
+      await repository.setSchemaVersion(trx, other.tenant, id, '9.9.9');
+    });
+    await expectConstraintViolation(
+      inTransaction((trx) => repository.recordStateChange(trx, other.tenant, id, 'RESERVED', 'AUTHORIZED', 'ajeno')),
+    );
+
+    expect(await row(id)).toEqual(before);
+    expect(await events(id)).toEqual([]);
+  });
+
+  it('las escrituras nuevas exigen una transacción', async () => {
+    const s = await newScenario(handle.pgc);
+    const id = await insertDocument(handle.pgc, s, 1);
+    const trx = handle.db as unknown as Transaction<DB>;
+    await expect(repository.transition(trx, s.tenant, id, 'RESERVED', 'GENERATED', null)).rejects.toThrow(
+      'transacción',
+    );
+    await expect(repository.markAuthorized(trx, s.tenant, id, '1'.repeat(49), '2026-10-11T09:30Z')).rejects.toThrow(
+      'transacción',
+    );
+    await expect(repository.setSchemaVersion(trx, s.tenant, id, '1.1.0')).rejects.toThrow('transacción');
   });
 });
