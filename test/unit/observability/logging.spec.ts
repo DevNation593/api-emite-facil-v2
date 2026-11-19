@@ -212,3 +212,51 @@ it('una línea de una emisión lleva el documentId que fijó el emisor', () => {
   expect(after).toMatchObject({ correlationId: 'c-2', documentId: '6f1c1d2e-0000-4000-8000-000000000001' });
   expect(outside).not.toHaveProperty('documentId');
 });
+
+describe('errores con code y cause (E4)', () => {
+  it('un error con code y cause los conserva, y la cause sale censurada', () => {
+    const { logger, lines } = jsonLogger();
+    const cause = Object.assign(new Error('fallo en amqp://guest:clave-secreta@rabbit:5672'), {
+      code: 'ECONNREFUSED',
+      password: 'p4ss',
+    });
+    const err = Object.assign(new Error('No se pudo publicar', { cause }), { code: 'PUBLISH_FAILED' });
+    logger.error({ err }, 'fallo');
+    const entry = JSON.parse(lines[0]!) as Record<string, unknown>;
+    expect(entry).toMatchObject({ message: 'fallo', code: 'PUBLISH_FAILED' });
+    expect(entry.stack_trace).toContain('No se pudo publicar');
+    expect(entry.cause).toMatchObject({ code: 'ECONNREFUSED', password: '[Redacted]' });
+    expect((entry.cause as { message: string }).message).toContain('amqp://guest:[Redacted]@rabbit');
+    expect(lines[0]).not.toMatch(/clave-secreta|p4ss/);
+  });
+
+  it('la censura recorre err.cause en cualquier propiedad', () => {
+    const { logger, lines } = jsonLogger();
+    const inner = Object.assign(new Error('interno'), { token: 't0k3n' });
+    logger.warn({ detail: new Error('externo', { cause: inner }) }, 'aviso');
+    const entry = JSON.parse(lines[0]!) as { detail: { message: string; cause: Record<string, unknown> } };
+    expect(entry.detail.message).toBe('externo');
+    expect(entry.detail.cause).toMatchObject({ message: 'interno', token: '[Redacted]' });
+    expect(lines[0]).not.toContain('t0k3n');
+  });
+
+  it('authorizationNumber, authorizationDate y authorizedAt salen tal cual; authorization se censura', () => {
+    const { logger, lines } = jsonLogger();
+    logger.info(
+      {
+        authorizationNumber: '123',
+        authorizationDate: '2026-10-11',
+        authorizedAt: '2026-10-11T09:30Z',
+        authorization: 'Bearer x',
+      },
+      'autorizado',
+    );
+    const entry = JSON.parse(lines[0]!) as Record<string, unknown>;
+    expect(entry).toMatchObject({
+      authorizationNumber: '123',
+      authorizationDate: '2026-10-11',
+      authorizedAt: '2026-10-11T09:30Z',
+      authorization: '[Redacted]',
+    });
+  });
+});

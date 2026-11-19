@@ -1,37 +1,24 @@
 import { type DynamicModule, Module } from '@nestjs/common';
 import type { Kysely } from 'kysely';
-import { BillingModule } from '../billing/billing.module.js';
-import { DocumentKinds } from '../billing/document-kind.js';
-import { DocumentXmlCheck } from '../billing/document-xml-check.js';
-import { FiscalDocumentRepository } from '../billing/fiscal-document.repository.js';
-import { OutboxWriter } from '../billing/outbox-writer.js';
 import { APP_CONFIG, type AppConfig } from '../config/app-config.js';
-import { CertificateModule } from '../certificate/certificate.module.js';
-import { CertificateService } from '../certificate/certificate.service.js';
 import { DATABASE, DatabaseModule } from '../database/database.module.js';
 import type { DB } from '../database/schema.js';
 import { AUTH_PURGE_INTERVAL_MS, AuthPurge } from '../identity/auth-purge.js';
 import { RabbitConnection, RabbitModule } from '../infrastructure/rabbit.module.js';
-import { SignatureModule } from '../signature/signature.module.js';
-import { SRI_GATEWAY, type SriGateway } from '../sri/http-sri-gateway.js';
-import { SriAttemptLog } from '../sri/sri-attempt-log.js';
-import { SriModule } from '../sri/sri.module.js';
-import { XadesBesSigner } from '../signature/xades-signer.js';
-import { XadesVerifier } from '../signature/xades-verifier.js';
-import { ArtifactStore } from '../storage/artifact-store.js';
-import { StorageModule } from '../storage/storage.module.js';
 import { DocumentPipeline } from './document-pipeline.js';
-import { DocumentProcessor } from './document-processor.js';
+import { DocumentWorker } from './document-worker.js';
 import { DueDocumentScheduler } from './due-document-scheduler.js';
-import { OutboxRelay } from './outbox-relay.js';
-import { NoWebhooks, WEBHOOK_RECORDER, type WebhookRecorder } from './webhook-recorder.js';
 import { FixedDelayScheduler } from './fixed-delay-scheduler.js';
+import { OrchestrationModule } from './orchestration.module.js';
+import { OutboxRelay } from './outbox-relay.js';
+import { WORKER_TICK, WorkerSchedule } from './worker-schedule.js';
 
 /**
  * El trabajo en segundo plano de la instancia (EINVOICE_WORKER_ENABLED, por defecto true). Con
  * false la instancia solo atiende la API y sus tareas no existen, como los
- * `@ConditionalOnProperty(einvoice.worker.enabled)` de Java. Es el punto donde E4–E6 añadirán
- * consumidores y tareas.
+ * `@ConditionalOnProperty(einvoice.worker.enabled)` de Java: el consumidor de comprobantes, el latido
+ * que encola los vencidos y publica el outbox, y la purga de la cuenta. E5 y E6 añadirán los de entregas
+ * y avisos.
  */
 @Module({})
 export class WorkerModule {
@@ -39,80 +26,37 @@ export class WorkerModule {
     if (!workerEnabled) return { module: WorkerModule };
     return {
       module: WorkerModule,
-      imports: [DatabaseModule, BillingModule, CertificateModule, SignatureModule, StorageModule, SriModule, RabbitModule],
+      imports: [DatabaseModule, RabbitModule, OrchestrationModule],
       providers: [
-        {
-          provide: OutboxRelay,
-          useFactory: (db: Kysely<DB>, rabbit: RabbitConnection) => new OutboxRelay(db, rabbit),
-          inject: [DATABASE, RabbitConnection],
-        },
-        {
-          provide: DueDocumentScheduler,
-          useFactory: (db: Kysely<DB>, outbox: OutboxWriter) => new DueDocumentScheduler(db, outbox),
-          inject: [DATABASE, OutboxWriter],
-        },
-        // Los webhooks llegan en E6; hasta entonces el pipeline avisa a un registro que no hace nada.
-        { provide: WEBHOOK_RECORDER, useFactory: () => new NoWebhooks() },
-        {
-          provide: DocumentPipeline,
-          useFactory: (
-            db: Kysely<DB>,
-            documents: FiscalDocumentRepository,
-            processor: DocumentProcessor,
-            sri: SriGateway,
-            config: AppConfig,
-            attempts: SriAttemptLog,
-            artifacts: ArtifactStore,
-            outbox: OutboxWriter,
-            webhooks: WebhookRecorder,
-          ) => new DocumentPipeline(db, documents, processor, sri, config.sri, attempts, artifacts, outbox, webhooks),
-          inject: [
-            DATABASE,
-            FiscalDocumentRepository,
-            DocumentProcessor,
-            SRI_GATEWAY,
-            APP_CONFIG,
-            SriAttemptLog,
-            ArtifactStore,
-            OutboxWriter,
-            WEBHOOK_RECORDER,
-          ],
-        },
-        {
-          provide: DocumentProcessor,
-          useFactory: (
-            db: Kysely<DB>,
-            documents: FiscalDocumentRepository,
-            kinds: DocumentKinds,
-            xmlCheck: DocumentXmlCheck,
-            certificates: CertificateService,
-            signer: XadesBesSigner,
-            verifier: XadesVerifier,
-            artifacts: ArtifactStore,
-          ) => new DocumentProcessor(db, documents, kinds, xmlCheck, certificates, signer, verifier, artifacts),
-          inject: [
-            DATABASE,
-            FiscalDocumentRepository,
-            DocumentKinds,
-            DocumentXmlCheck,
-            CertificateService,
-            XadesBesSigner,
-            XadesVerifier,
-            ArtifactStore,
-          ],
-        },
         { provide: AuthPurge, useFactory: (db: Kysely<DB>) => new AuthPurge(db), inject: [DATABASE] },
         {
+          provide: WorkerSchedule,
+          useFactory: (due: DueDocumentScheduler, relay: OutboxRelay) => new WorkerSchedule(due, relay),
+          inject: [DueDocumentScheduler, OutboxRelay],
+        },
+        {
+          provide: DocumentWorker,
+          useFactory: (rabbit: RabbitConnection, pipeline: DocumentPipeline, config: AppConfig) =>
+            new DocumentWorker(rabbit, pipeline, config.worker.maxConsumers),
+          inject: [RabbitConnection, DocumentPipeline, APP_CONFIG],
+        },
+        {
           provide: FixedDelayScheduler,
-          useFactory: (authPurge: AuthPurge) =>
+          useFactory: (authPurge: AuthPurge, schedule: WorkerSchedule, config: AppConfig) =>
             new FixedDelayScheduler([
               {
                 name: 'auth-purge',
                 intervalMs: AUTH_PURGE_INTERVAL_MS,
                 run: () => authPurge.purge(),
               },
+              {
+                // Encola los vencidos y publica el outbox; un fallo se registra y espera al siguiente latido.
+                name: WORKER_TICK,
+                intervalMs: config.worker.pollIntervalMs,
+                run: () => schedule.tick(),
+              },
             ]),
-          inject: [AuthPurge],
+          inject: [AuthPurge, WorkerSchedule, APP_CONFIG],
         },
       ],
     };

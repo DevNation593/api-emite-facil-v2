@@ -26,6 +26,10 @@ const CENSORED = '[Redacted]';
 // newPassword, webhookSecret, set-cookie, proxy-authorization, jwtSecret o privateKey.
 const SENSITIVE_KEY =
   /password|secret|token|api[-_]?key|authorization|cookie|p12|masterkey|private[-_]?key/i;
+// Datos del SRI que contienen «authorization» y no son secretos: se registran a sabiendas.
+const NOT_SENSITIVE = new Set(['authorizationNumber', 'authorizationDate', 'authorizedAt']);
+
+const sensitive = (key: string) => !NOT_SENSITIVE.has(key) && SENSITIVE_KEY.test(key);
 
 // esquema://usuario:clave@host: la clave se enmascara en cualquier valor de texto, sea cual sea la
 // propiedad (redis://:clave@host, postgresql://app:clave@db…). Codicioso hasta el último @ de la
@@ -59,7 +63,7 @@ function censor(value: unknown, path: Set<object> = new Set()): unknown {
     : Object.entries(value);
   for (const [key, original] of entries) {
     const next =
-      typeof key === 'string' && SENSITIVE_KEY.test(key)
+      typeof key === 'string' && sensitive(key)
         ? CENSORED
         : censor(original, path);
     if (next !== original) {
@@ -67,17 +71,34 @@ function censor(value: unknown, path: Set<object> = new Set()): unknown {
       (copy as Record<string | number, unknown>)[key] = next;
     }
   }
-  path.delete(value);
   if (value instanceof Error) {
-    // message y stack no son enumerables: se limpian aparte (p. ej. un ECONNREFUSED con la URL).
+    // message, stack y cause no son enumerables: se limpian aparte (p. ej. un ECONNREFUSED con la URL). La
+    // causa se censura igual que el error y sale como objeto plano (un Error no se serializa en JSON).
     const message = scrubString(value.message);
     const stack = value.stack === undefined ? undefined : scrubString(value.stack);
-    if (copy === undefined && message === value.message && stack === value.stack) return value;
+    const hasCause = value.cause !== undefined;
+    const cause = hasCause ? plainCause(censor(value.cause, path)) : undefined;
+    path.delete(value);
+    if (copy === undefined && !hasCause && message === value.message && stack === value.stack) return value;
     // Un Error censurado pasa a objeto plano conservando lo que el formato necesita.
-    return { ...((copy ?? Object.assign({}, value)) as Record<string, unknown>), type: value.constructor.name, message, stack };
+    return {
+      ...((copy ?? Object.assign({}, value)) as Record<string, unknown>),
+      type: value.constructor.name,
+      message,
+      stack,
+      ...(hasCause ? { cause } : {}),
+    };
   }
+  path.delete(value);
   if (copy === undefined) return value;
   return copy;
+}
+
+/** Una causa ya censurada que sigue siendo un Error (no había nada que limpiar) pasa a objeto plano. */
+function plainCause(cause: unknown): unknown {
+  if (!(cause instanceof Error)) return cause;
+  const plain: Record<string, unknown> = Object.fromEntries(Object.entries(cause));
+  return Object.assign(plain, { type: cause.constructor.name, message: cause.message, stack: cause.stack });
 }
 
 /** Rutas censuradas: nunca deben llegar a un log (restricción global del proyecto). */
@@ -107,14 +128,17 @@ function formatLog(raw: Record<string, unknown>): Record<string, unknown> {
 
 function flattenError(object: Record<string, unknown>): Record<string, unknown> {
   const { err, ...rest } = object as {
-    err?: { message?: string; stack?: string };
+    err?: { message?: string; stack?: string; code?: unknown; cause?: unknown };
     [key: string]: unknown;
   };
-  if (err === undefined || typeof err !== 'object') return object;
+  if (err === undefined || typeof err !== 'object' || err === null) return object;
   if (err.stack !== undefined) rest['stack_trace'] = err.stack;
   if (rest['message'] === undefined && err.message !== undefined) {
     rest['message'] = err.message;
   }
+  // El código (ECONNREFUSED, 23505…) y la causa ya censurada dicen qué falló sin abrir la pila.
+  if (rest['code'] === undefined && err.code !== undefined) rest['code'] = err.code;
+  if (rest['cause'] === undefined && err.cause !== undefined) rest['cause'] = plainCause(err.cause);
   return rest;
 }
 
