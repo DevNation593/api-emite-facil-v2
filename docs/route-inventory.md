@@ -49,9 +49,9 @@ Rutas de los controladores de la API Java (`@RequestMapping` de clase más `@Get
 | GET | `/api/v1/documents` | sí | `billing` (`DocumentController`) | E3 | sí |
 | GET | `/api/v1/documents/{id}` | sí | `billing` (`DocumentController`) | E3 | sí |
 | POST | `/api/v1/invoices` | sí | `billing` (`InvoiceController`) | E3 | sí |
-| POST | `/api/v1/documents/{id}/retry` | sí | `orchestration` (`DocumentRetryController`) | E4 | no |
-| GET | `/api/v1/documents/{id}/sri-attempts` | sí | `sri` (`SriAttemptController`) | E4 | no |
-| POST | `/api/v1/webhooks/deliveries/{id}/retry` | sí | `webhook` (`WebhookController`) | E4 | no |
+| POST | `/api/v1/documents/{id}/retry` | sí | `orchestration` (`DocumentRetryController`) | E4 | sí |
+| GET | `/api/v1/documents/{id}/sri-attempts` | sí | `sri` (`SriAttemptController`) | E4 | sí |
+| POST | `/api/v1/webhooks/deliveries/{id}/retry` | sí | `webhook` (`WebhookController`) | E6 | no |
 | GET | `/api/v1/documents/{id}/artifacts/{kind}` | sí | `storage` (`ArtifactController`) | E5 | no |
 | GET | `/api/v1/documents/{id}/deliveries` | sí | `delivery` (`DeliveryController`) | E5 | no |
 | POST | `/api/v1/documents/{id}/deliveries` | sí | `delivery` (`DeliveryController`) | E5 | no |
@@ -65,7 +65,7 @@ Rutas de los controladores de la API Java (`@RequestMapping` de clase más `@Get
 | POST | `/api/v1/webhooks/subscriptions/{id}/secret` | sí | `webhook` (`WebhookController`) | E6 | no |
 | POST | `/api/v1/webhooks/subscriptions/{id}/test` | sí | `webhook` (`WebhookController`) | E6 | no |
 
-Total: 60 rutas en Java; 60 operaciones en el contrato. Portadas: 45 (16 de E1, 24 de E2 y 5 de E3).
+Total: 60 rutas en Java; 60 operaciones en el contrato. Portadas: 47 (16 de E1, 24 de E2, 5 de E3 y 2 de E4). `POST /webhooks/deliveries/{id}/retry` pasa de E4 a E6: necesita las entregas de webhooks.
 
 ## Diferencias entre Java y el contrato
 
@@ -99,3 +99,15 @@ caracteres y que no se consuma el secuencial son los mismos; solo cambia el text
 Hay una diferencia más: si el motor XSD no responde (plazo de 10 s vencido o fallo del worker de libxml2),
 NestJS contesta `500 INTERNAL_ERROR` y revierte la transacción, sin consumir el secuencial. Java
 (`XsdValidator.java`) trata la `IOException` como un resultado inválido y contestaría `422`.
+
+### Consumidor de comprobantes (E4)
+
+El consumidor de `document.issue` toma a la vez tantos mensajes como `EINVOICE_WORKER_MAX_CONSUMERS`
+(`prefetch`), en lugar de escalar entre `EINVOICE_WORKER_CONSUMERS` y ese máximo como el contenedor de Spring.
+Un mensaje ilegible o sin empresa o sin documento va directo a `document.issue.dlq`, sin los 3 reintentos que
+Spring le daría antes de rechazarlo; un mensaje legible que falla sí se reintenta (a los 2, 4 y 8 s) antes de ir
+a la cola de mensajes muertos. Al apagarse, un mensaje que espera su reintento vuelve a la cola en vez de esperar.
+
+Rutas: como Spring 6, una ruta con barra final (`/documents/{id}/retry/`) no es la misma y responde 404, y
+`POST /documents/{id}/retry` no lee el cuerpo (un JSON ilegible no es un error), como un manejador sin
+`@RequestBody`. `tools/java-probe` lo fija en `test/golden/http/e4.json`.
