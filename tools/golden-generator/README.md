@@ -16,7 +16,7 @@ Para regenerar una sola familia sin tocar el resto de fixtures ni `SOURCE.json`:
 node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil --only bean-validation
 ```
 
-Familias con `--only` (`bean-validation`, `certificates`, `xsd`, `calculations`, `documents` y `xades`): `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
+Familias con `--only` (`bean-validation`, `certificates`, `xsd`, `calculations`, `documents`, `xades` y `xades-verify`): `bean-validation` (`bean-validation.json`: `@NotBlank`, `@NotNull`, `@Size`, `@Email` y
 `@Pattern(NO_CONTROL_CHARS)`, más `@Pattern("[0-9]{3}")`, `@Min(1)` y `@Max(999_999_999)`, validados con Hibernate Validator y `Locale.ENGLISH`). Es determinista: no
 depende de aleatorios.
 
@@ -61,6 +61,15 @@ el `.p12`, su contraseña y `numbers`: los ocho números de los `Id` en el orden
 comentarios, finales de línea y una muestra de caracteres como referencias) leído con `SecureXml` y escrito con el
 `Transformer` de `XadesBesSigner.serialize` (privado: se invoca por reflexión). No es determinista: cada ejecución
 crea otra clave y otros números.
+
+`xades-verify` (`xades-verify.json` y `xades-verify/*.xml`): el resultado de `XadesVerifier.verify` (`valid` y
+`errors`, en orden) para cada `signed.xml` de `xades` y para variantes de la factura estándar firmada: importe,
+`SigningTime`, certificado de `KeyInfo`, número de serie, emisor, exponente o valor de la firma cambiados, firma con
+otra clave, firma fuera de la raíz, dos firmas, una cuarta referencia, la transformación del comprobante cambiada,
+C14N exclusiva, digest SHA-256, RSA-SHA256, raíz o `KeyInfo` sin id, sin `SigningCertificate`, certificado
+ilegible, sin `SignatureMethod`, con un comentario o un espacio en el comprobante, sin firmar, ilegible, vacío y con
+`DOCTYPE`. Necesita `xades/` ya generado (con `--only xades-verify` se reutiliza el que hay). `file` es la ruta
+desde `test/golden`. No es determinista: la firma con otra clave y el certificado sustituto cambian en cada ejecución.
 
 El generador corre con `-Dline.separator=\n`: el `Transformer` del JDK escribe cada salto de línea de un texto con
 el separador del sistema, y se fija el de Linux, donde corre la API, para que el XML firmado no dependa del sistema

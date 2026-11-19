@@ -63,7 +63,7 @@ function ancestorNamespaces(node: Element): NamespacePrefix[] {
 }
 
 /** C14N inclusiva (sin comentarios) del subárbol de `node`, con los espacios de nombres que tiene en el documento. */
-function canonicalize(node: Element): string {
+export function canonicalize(node: Element): string {
   const c14n = new C14nCanonicalization();
   // xml-crypto tipa el nodo con el DOM del navegador; recorre el de xmldom igual.
   const target = node as unknown as Parameters<C14nCanonicalization['process']>[0];
