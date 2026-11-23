@@ -29,6 +29,10 @@ import type { WebhookRecorder } from './webhook-recorder.js';
  * Cada paso es una transacción corta y las llamadas al SRI quedan fuera de toda transacción. El paso a SENDING
  * se confirma antes de transmitir: si después no hay una respuesta clara, el envío es de resultado incierto y
  * nunca se repite sin consultar antes la autorización por clave de acceso.
+ *
+ * Un evento puede llegar repetido. La consulta de autorización se reserva con el comprobante bloqueado
+ * (`reserveQuery`): los avances que la encuentran en curso, o que llegan antes de que pase la espera desde el
+ * último resultado, se descartan sin llamar al SRI ni gastar un intento. Java no lo hace (docs/route-inventory.md).
  */
 
 export const SENDING = 'SENDING';
@@ -229,9 +233,10 @@ export class DocumentPipeline {
       if (locked.state !== SENDING || (await this.attempts.sendInFlight(trx, documentId, sendLeaseMs(this.config)))) {
         return none(locked.state);
       }
-      await this.attempts.abandonSends(trx, documentId);
       const environment = sriEnvironmentOf(locked.environment);
-      const attemptId = await this.attempts.start(trx, tenantId, documentId, 'AUTHORIZATION', environment);
+      const attemptId = await this.reserveQuery(trx, tenantId, documentId, locked, environment);
+      if (attemptId === null) return none(locked.state);
+      await this.attempts.abandonSends(trx, documentId);
       return { attemptId, state: SENDING, environment, accessKey: locked.accessKey, xml: null, version: locked.version };
     });
     if (call.attemptId === null) return call.state;
@@ -246,9 +251,9 @@ export class DocumentPipeline {
           : call.accessKey === result.consultedAccessKey
             ? result.outcome
             : 'MISMATCH';
-      await this.attempts.completeAuthorization(trx, call.attemptId!, outcome, result, true);
-      // Otro proceso movió el documento mientras se consultaba: su decisión manda.
-      if (locked.state !== SENDING || locked.version !== call.version) return locked.state;
+      const open = await this.attempts.completeAuthorization(trx, call.attemptId!, outcome, result, true);
+      // Otro proceso dio la consulta por abandonada, o movió el documento mientras se consultaba: su decisión manda.
+      if (!open || locked.state !== SENDING || locked.version !== call.version) return locked.state;
       switch (outcome) {
         case 'AUTHORIZED':
         case 'NOT_AUTHORIZED':
@@ -288,14 +293,52 @@ export class DocumentPipeline {
     });
   }
 
+  /**
+   * Abre la consulta de autorización de un comprobante bloqueado y lo programa para el plazo de la llamada, por
+   * si este proceso muere antes de anotar el resultado. Nulo si el avance es un duplicado: hay una consulta en
+   * curso, o no ha pasado la espera desde el último resultado no concluyente.
+   *
+   * La espera se mide desde el último intento y no con `next_attempt_at`, porque el planificador lo mueve a su
+   * plazo de reentrega al encolar el evento legítimo. Cuenta la espera más corta posible (sin la variación al
+   * alza). Con la cuenta a cero (recién recibido, o un reintento manual) no hay nada que esperar.
+   */
+  private async reserveQuery(
+    trx: Transaction<DB>,
+    tenantId: string,
+    documentId: string,
+    locked: ProcessingState,
+    environment: SriEnvironment,
+  ): Promise<string | null> {
+    const lease = sendLeaseMs(this.config);
+    if (await this.attempts.queryInFlight(trx, documentId, lease)) return null;
+    if (locked.attemptCount > 0) {
+      const { retryBackoffMs, retryMaxBackoffMs } = this.config;
+      const since = await this.attempts.sinceLastResultMs(trx, documentId);
+      const remaining = since === null ? 0 : retryDelayMs(locked.attemptCount, retryBackoffMs, retryMaxBackoffMs, 0) - since;
+      if (remaining > 0) {
+        await this.documents.bringForward(trx, tenantId, documentId, remaining);
+        return null;
+      }
+    }
+    await this.attempts.abandonQueries(trx, documentId);
+    const attemptId = await this.attempts.start(trx, tenantId, documentId, 'AUTHORIZATION', environment);
+    await this.documents.schedule(trx, tenantId, documentId, lease, locked.attemptCount);
+    return attemptId;
+  }
+
   /** Consulta la autorización de un comprobante recibido y, si hay resultado definitivo, lo cierra. */
   private async authorize(tenantId: string, documentId: string): Promise<string> {
-    const seen = await this.documents.processingState(this.db, tenantId, documentId);
-    if (seen === null) throw ApiException.notFound();
-    if (seen.state !== RECEIVED) return seen.state;
-    const environment = sriEnvironmentOf(seen.environment);
-    const attemptId = await this.attempts.start(this.db, tenantId, documentId, 'AUTHORIZATION', environment);
-    const result = await this.sri.authorize(environment, seen.accessKey);
+    const call = await this.transaction(async (trx): Promise<Call> => {
+      const locked = await this.lock(trx, tenantId, documentId);
+      if (locked.state !== RECEIVED) return none(locked.state);
+      const environment = sriEnvironmentOf(locked.environment);
+      const attemptId = await this.reserveQuery(trx, tenantId, documentId, locked, environment);
+      if (attemptId === null) return none(locked.state);
+      return { attemptId, state: RECEIVED, environment, accessKey: locked.accessKey, xml: null, version: locked.version };
+    });
+    if (call.attemptId === null) return call.state;
+    const environment = call.environment!;
+    const result = await this.sri.authorize(environment, call.accessKey!);
     return this.transaction(async (trx) => {
       const locked = await this.lock(trx, tenantId, documentId);
       const sameKey = locked.accessKey === result.consultedAccessKey;
@@ -316,8 +359,15 @@ export class DocumentPipeline {
       }
       const applies = locked.state === RECEIVED;
       // La respuesta que autoriza se conserva como artefacto; guardarla también aquí la duplicaría.
-      await this.attempts.completeAuthorization(trx, attemptId, outcome, result, !(applies && outcome === 'AUTHORIZED'));
-      if (!applies) return locked.state;
+      const open = await this.attempts.completeAuthorization(
+        trx,
+        call.attemptId!,
+        outcome,
+        result,
+        !(applies && outcome === 'AUTHORIZED'),
+      );
+      // Si el intento ya no está abierto, otro proceso lo dio por abandonado y se hizo cargo.
+      if (!applies || !open) return locked.state;
       switch (outcome) {
         case 'AUTHORIZED':
           await this.artifacts.save(trx, tenantId, documentId, 'SRI_AUTHORIZATION', result.rawResponse!);

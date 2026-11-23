@@ -82,6 +82,14 @@ const attemptCount = () => one<number>('SELECT attempt_count FROM fiscal_documen
 const signedXml = async () => (await testApp.app.get(ArtifactStore).find(kysely, s.tenant, document, 'XML_SIGNED'))!.content;
 const count = <T>(items: T[], item: T) => items.filter((i) => i === item).length;
 
+/** Deja pasar la espera entre reintentos: el pipeline la mide desde el último intento. */
+const elapseBackoff = () =>
+  db.query(
+    `UPDATE sri_attempts SET started_at = started_at - interval '2 hours', completed_at = completed_at - interval '2 hours'
+     WHERE document_id = $1 AND outcome IS NOT NULL`,
+    [document],
+  );
+
 it('signedInvoiceIsSentAndReceived', async () => {
   expect(await advance()).toBe('RECEIVED');
 
@@ -177,6 +185,7 @@ it('uncertainSendIsNeverResentBlindly', async () => {
   expect(sri.authorizationCalls(key)).toBe(0);
 
   // El SRI sí lo había recibido: al conciliar se descubre y no se envía otra vez.
+  await elapseBackoff();
   expect(await advance()).not.toBe('SENDING');
 
   expect(sri.receptionCalls(key)).toBe(1);
@@ -189,6 +198,7 @@ it('uncertainSendIsResentOnlyWhenTheSriDoesNotKnowTheKey', async () => {
   sri.onReception(key, Reply.dropConnection(), Reply.xml(received()));
   sri.onAuthorization(key, Reply.xml(notFound(key)));
   expect(await advance()).toBe('SENDING');
+  await elapseBackoff();
 
   expect(await advance()).toBe('RECEIVED');
 
@@ -212,7 +222,9 @@ it('notFoundThatIsNotAboutThisKeyDoesNotTriggerAResend', async () => {
   sri.onAuthorization(key, Reply.xml(notFound('9'.repeat(49))), Reply.xml(emptyAuthorizationResponse()));
   await advance();
 
+  await elapseBackoff();
   expect(await advance()).toBe('SENDING');
+  await elapseBackoff();
   expect(await advance()).toBe('SENDING');
 
   expect(sri.receptionCalls(key)).toBe(1);
@@ -225,10 +237,11 @@ it('concurrentReconcilersResendOnce', async () => {
   sri.onReception(key, Reply.status(500, 'Internal Server Error'), Reply.delayed(600, Reply.xml(received())));
   sri.onAuthorization(key, Reply.delayed(300, Reply.xml(notFound(key))));
   expect(await advance()).toBe('SENDING');
+  await elapseBackoff();
 
   await Promise.all(Array.from({ length: 5 }, () => advance()));
 
-  // El envío incierto y un único reenvío, aunque todos vieron que el SRI no conocía la clave.
+  // El envío incierto y un único reenvío.
   expect(sri.receptionCalls(key)).toBe(2);
   expect(count(await transitions(), 'SENDING>SIGNED')).toBe(1);
   expect(await state()).toBe('RECEIVED');
@@ -238,6 +251,7 @@ it('sriDownWhileReconcilingKeepsTheDocumentSending', async () => {
   sri.onReception(key, Reply.status(500, 'Internal Server Error'));
   sri.onAuthorization(key, Reply.status(503, 'Service Unavailable'));
   await advance();
+  await elapseBackoff();
 
   expect(await advance()).toBe('SENDING');
 
@@ -245,6 +259,28 @@ it('sriDownWhileReconcilingKeepsTheDocumentSending', async () => {
   expect(await attempts('AUTHORIZATION')).toEqual(['UNCERTAIN']);
   expect(await attemptCount()).toBe(2);
   expect((await nextAttemptAt())!.getTime()).toBeGreaterThan(Date.now());
+});
+
+it('varias conciliaciones a la vez hacen una sola consulta y gastan un solo intento', async () => {
+  sri.onReception(key, Reply.status(500, 'Internal Server Error'));
+  sri.onAuthorization(key, Reply.delayed(500, Reply.status(503, 'Service Unavailable')));
+  await advance();
+  await elapseBackoff();
+
+  await Promise.all(Array.from({ length: 5 }, () => advance()));
+
+  expect(sri.authorizationCalls(key)).toBe(1);
+  expect(await attemptCount()).toBe(2);
+});
+
+it('un evento repetido dentro de la espera no concilia antes de tiempo', async () => {
+  sri.onReception(key, Reply.status(500, 'Internal Server Error'));
+  await advance();
+
+  for (let i = 0; i < 4; i++) expect(await advance()).toBe('SENDING');
+
+  expect(sri.authorizationCalls(key)).toBe(0);
+  expect(await attemptCount()).toBe(1);
 });
 
 /** Deja el documento como si el proceso hubiera muerto en mitad del envío. */
@@ -344,6 +380,7 @@ it('retriesAreExhausted', async () => {
   await advance();
   // El máximo de intentos de las pruebas es 5.
   await db.query('UPDATE fiscal_documents SET attempt_count = 4 WHERE id = $1', [document]);
+  await elapseBackoff();
 
   expect(await advance()).toBe('SENDING');
 

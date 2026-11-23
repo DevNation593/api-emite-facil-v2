@@ -108,6 +108,17 @@ Un mensaje ilegible o sin empresa o sin documento va directo a `document.issue.d
 Spring le daría antes de rechazarlo; un mensaje legible que falla sí se reintenta (a los 2, 4 y 8 s) antes de ir
 a la cola de mensajes muertos. Al apagarse, un mensaje que espera su reintento vuelve a la cola en vez de esperar.
 
-Rutas: como Spring 6, una ruta con barra final (`/documents/{id}/retry/`) no es la misma y responde 404, y
+### Consultas de autorización duplicadas (E4)
+
+Diferencia deliberada en el pipeline: si llegan varios eventos del mismo comprobante en `RECEIVED` o `SENDING`,
+Java consulta al SRI por cada uno y cada respuesta no concluyente gasta un reintento. NestJS reserva la consulta
+con el comprobante bloqueado: descarta el avance si ya hay una consulta en curso (conexión + lectura + 30 s) o si
+no ha pasado la espera mínima desde el último resultado, sin llamar al SRI ni tocar `attempt_count`. Una consulta
+que pasa ese plazo queda `ABANDONED` y su resultado tardío no se aplica. El reintento manual pone la cuenta a
+cero, así que consulta de inmediato.
+
+### Rutas estrictas (E4)
+
+Como Spring 6, una ruta con barra final (`/documents/{id}/retry/`) no es la misma y responde 404, y
 `POST /documents/{id}/retry` no lee el cuerpo (un JSON ilegible no es un error), como un manejador sin
 `@RequestBody`. `tools/java-probe` lo fija en `test/golden/http/e4.json`.

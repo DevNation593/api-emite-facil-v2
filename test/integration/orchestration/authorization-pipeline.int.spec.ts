@@ -3,10 +3,12 @@ import pg from 'pg';
 import { DATABASE } from '../../../src/database/database.module.js';
 import type { DB } from '../../../src/database/schema.js';
 import { DocumentPipeline } from '../../../src/orchestration/document-pipeline.js';
+import { DueDocumentScheduler } from '../../../src/orchestration/due-document-scheduler.js';
 import { ArtifactStore } from '../../../src/storage/artifact-store.js';
 import { startStack, type StackHandle } from '../../support/containers.js';
 import {
   accessKeyOf,
+  bearer,
   billingScenario,
   invoiceJson,
   issueInvoice,
@@ -84,6 +86,14 @@ const nextAttemptAt = () => one<Date | null>('SELECT next_attempt_at FROM fiscal
 const attemptCount = () => one<number>('SELECT attempt_count FROM fiscal_documents WHERE id = $1', document);
 const authorizationArtifact = () => testApp.app.get(ArtifactStore).find(kysely, s.tenant, document, 'SRI_AUTHORIZATION');
 
+/** Deja pasar la espera entre reintentos: el pipeline la mide desde el último intento. */
+const elapseBackoff = () =>
+  db.query(
+    `UPDATE sri_attempts SET started_at = started_at - interval '2 hours', completed_at = completed_at - interval '2 hours'
+     WHERE document_id = $1 AND outcome IS NOT NULL`,
+    [document],
+  );
+
 it('receivedInvoiceBecomesAuthorized', async () => {
   expect(await advance()).toBe('AUTHORIZED');
 
@@ -155,6 +165,7 @@ it('processingIsPolledAgainLater', async () => {
   expect(await attemptCount()).toBe(1);
   expect((await nextAttemptAt())!.getTime()).toBeGreaterThan(Date.now());
 
+  await elapseBackoff();
   expect(await advance()).toBe('AUTHORIZED');
   expect(await attempts('AUTHORIZATION')).toEqual(['PROCESSING', 'AUTHORIZED']);
   expect(await attemptCount()).toBe(0);
@@ -165,6 +176,7 @@ it('notFoundAfterReceptionKeepsWaiting', async () => {
   sri.onAuthorization(key, Reply.xml(notFound(key)));
 
   expect(await advance()).toBe('RECEIVED');
+  await elapseBackoff();
   expect(await advance()).toBe('RECEIVED');
 
   expect(await attempts('AUTHORIZATION')).toEqual(['NOT_FOUND', 'NOT_FOUND']);
@@ -182,7 +194,9 @@ it('authorizationForAnotherKeyOrEnvironmentIsNotAccepted', async () => {
   );
 
   expect(await advance()).toBe('RECEIVED');
+  await elapseBackoff();
   expect(await advance()).toBe('RECEIVED');
+  await elapseBackoff();
   expect(await advance()).toBe('RECEIVED');
 
   expect(await attempts('AUTHORIZATION')).toEqual(['MISMATCH', 'MISMATCH', 'MISMATCH']);
@@ -213,17 +227,26 @@ it('authorizationRetriesAreExhausted', async () => {
   await advance();
   // El máximo de intentos de las pruebas es 5.
   await db.query('UPDATE fiscal_documents SET attempt_count = 4 WHERE id = $1', [document]);
+  await elapseBackoff();
 
   expect(await advance()).toBe('RECEIVED');
 
   expect(await nextAttemptAt()).toBeNull();
   expect(await lastReason()).toBe('SRI_RETRIES_EXHAUSTED');
   expect((await transitions()).at(-1)).toBe('RECEIVED>RECEIVED');
+
+  // Un evento repetido no revive el seguimiento ni repite la constancia.
+  const before = await transitions();
+  expect(await advance()).toBe('RECEIVED');
+  expect(await nextAttemptAt()).toBeNull();
+  expect(await attemptCount()).toBe(5);
+  expect(await transitions()).toEqual(before);
 });
 
 it('uncertainSendThatWasAuthorizedEndsAuthorized', async () => {
   sri.onReception(key, Reply.status(500, 'Internal Server Error'));
   expect(await advance()).toBe('SENDING');
+  await elapseBackoff();
 
   expect(await advance()).toBe('AUTHORIZED');
 
@@ -248,14 +271,128 @@ it('authorizedDocumentIsNeverTouchedAgain', async () => {
 it('concurrentAuthorizationStoresOneArtifact', async () => {
   sri.onAuthorization(key, Reply.xml(processing(key)), Reply.xml(authorized(key)));
   expect(await advance()).toBe('RECEIVED');
+  await elapseBackoff();
 
   const results = await Promise.all(Array.from({ length: 5 }, () => advance()));
 
-  expect(results).toEqual(Array(5).fill('AUTHORIZED'));
+  // En Java las cinco consultan; aquí consulta una y las demás se descartan mientras está en curso.
+  expect(results).toContain('AUTHORIZED');
+  for (const result of results) expect(['AUTHORIZED', 'RECEIVED']).toContain(result);
+  expect(await state()).toBe('AUTHORIZED');
+  expect(sri.authorizationCalls(key)).toBe(2);
   expect(
     Number(
       await one("SELECT count(*) FROM document_artifacts WHERE document_id = $1 AND kind = 'SRI_AUTHORIZATION'", document),
     ),
   ).toBe(1);
   expect((await transitions()).filter((t) => t === 'RECEIVED>AUTHORIZED')).toHaveLength(1);
+});
+
+describe('avances duplicados en RECEIVED', () => {
+  it('varios eventos a la vez hacen una sola consulta y gastan un solo intento', async () => {
+    sri.onAuthorization(key, Reply.xml(processing(key)), Reply.delayed(500, Reply.xml(processing(key))));
+    expect(await advance()).toBe('RECEIVED');
+    await elapseBackoff();
+
+    await Promise.all(Array.from({ length: 5 }, () => advance()));
+
+    expect(sri.authorizationCalls(key)).toBe(2);
+    expect(await attempts('AUTHORIZATION')).toEqual(['PROCESSING', 'PROCESSING']);
+    expect(await attemptCount()).toBe(2);
+  });
+
+  it.each([
+    ['PROCESSING', () => Reply.xml(processing(key))],
+    ['UNCERTAIN', () => Reply.status(503, 'Service Unavailable')],
+  ])('tras %s, un evento repetido dentro de la espera no consulta, no gasta intento ni retrasa el siguiente', async (_o, reply) => {
+    sri.onAuthorization(key, reply());
+    await advance();
+    const scheduled = (await nextAttemptAt())!;
+
+    for (let i = 0; i < 4; i++) expect(await advance()).toBe('RECEIVED');
+
+    expect(sri.authorizationCalls(key)).toBe(1);
+    expect(await attemptCount()).toBe(1);
+    expect((await nextAttemptAt())!.getTime()).toBeLessThanOrEqual(scheduled.getTime());
+
+    await elapseBackoff();
+    await advance();
+    expect(sri.authorizationCalls(key)).toBe(2);
+    expect(await attemptCount()).toBe(2);
+  });
+
+  it('un descarte no deja el comprobante esperando el plazo de reentrega del planificador', async () => {
+    sri.onAuthorization(key, Reply.xml(processing(key)));
+    await advance();
+    // Lo que hace DueDocumentScheduler al encolar: cinco minutos.
+    await db.query("UPDATE fiscal_documents SET next_attempt_at = now() + interval '5 minutes' WHERE id = $1", [document]);
+
+    await advance();
+
+    expect((await nextAttemptAt())!.getTime()).toBeLessThan(Date.now() + 5_000);
+  });
+
+  it('el reintento manual consulta ya, y el evento que además genera el planificador se descarta', async () => {
+    sri.onAuthorization(key, Reply.xml(processing(key)));
+    await advance();
+    await testApp.http.post(`/api/v1/documents/${document}/retry`).set('Authorization', bearer(s.owner)).expect(202);
+    await testApp.app.get(DueDocumentScheduler).enqueueDue();
+
+    await advance(); // el evento del reintento
+    await advance(); // el DOCUMENT_DUE del planificador
+
+    expect(sri.authorizationCalls(key)).toBe(2);
+    expect(await attemptCount()).toBe(1);
+    expect((await nextAttemptAt())!.getTime()).toBeLessThan(Date.now() + 5_000);
+  });
+
+  /** Una consulta abierta hace ese tiempo, como si el proceso hubiera muerto a mitad. */
+  async function openQuery(seconds: number): Promise<void> {
+    await db.query(
+      `INSERT INTO sri_attempts (tenant_id, document_id, operation, environment, started_at)
+       VALUES ($1, $2, 'AUTHORIZATION', '1', now() - make_interval(secs => $3))`,
+      [s.tenant, document, seconds],
+    );
+  }
+
+  it('una consulta en curso se respeta; una que pasó su plazo se abandona y se repite', async () => {
+    sri.onAuthorization(key, Reply.xml(processing(key)), Reply.xml(authorized(key)));
+    await advance();
+    await elapseBackoff();
+    await openQuery(1);
+
+    expect(await advance()).toBe('RECEIVED');
+    expect(sri.authorizationCalls(key)).toBe(1);
+
+    await db.query("UPDATE sri_attempts SET started_at = now() - interval '10 minutes' WHERE document_id = $1 AND outcome IS NULL", [
+      document,
+    ]);
+    expect(await advance()).toBe('AUTHORIZED');
+    expect(await attempts('AUTHORIZATION')).toEqual(['PROCESSING', 'ABANDONED', 'AUTHORIZED']);
+  });
+
+  it('mientras consulta, el comprobante queda programado para retomarse si el proceso muere', async () => {
+    sri.onAuthorization(key, Reply.delayed(800, Reply.xml(authorized(key))));
+    const running = advance();
+    await vi.waitFor(() => expect(sri.authorizationCalls(key)).toBe(1), { timeout: 10_000, interval: 20 });
+
+    // Conexión 2 s + lectura 2 s + margen de 30 s.
+    const wait = (await nextAttemptAt())!.getTime() - Date.now();
+    expect(wait).toBeGreaterThan(25_000);
+    expect(wait).toBeLessThan(35_000);
+    expect(await running).toBe('AUTHORIZED');
+  });
+
+  it('el resultado de una consulta ya abandonada no se aplica', async () => {
+    sri.onAuthorization(key, Reply.delayed(800, Reply.xml(processing(key))));
+    const running = advance();
+    await vi.waitFor(() => expect(sri.authorizationCalls(key)).toBe(1), { timeout: 10_000, interval: 20 });
+    await db.query(
+      "UPDATE sri_attempts SET outcome = 'ABANDONED', completed_at = clock_timestamp() WHERE document_id = $1 AND outcome IS NULL",
+      [document],
+    );
+
+    expect(await running).toBe('RECEIVED');
+    expect(await attemptCount()).toBe(0);
+  });
 });

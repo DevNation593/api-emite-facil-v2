@@ -670,6 +670,28 @@ describe('FiscalDocumentRepository: avance del comprobante (E4)', () => {
     expect(await events(id)).toEqual([]);
   });
 
+  it('bringForward adelanta, nunca retrasa, no programa lo que no lo estaba ni toca otra empresa', async () => {
+    const s = await newScenario(handle.pgc);
+    const other = await newScenario(handle.pgc);
+    const id = await insertDocument(handle.pgc, s, 1);
+    const bring = (tenant: string, ms: number) => inTransaction((trx) => repository.bringForward(trx, tenant, id, ms));
+    const wait = async () => {
+      const at = (await row(id)).next_attempt_at as Date | null;
+      return at === null ? null : at.getTime() - Date.now();
+    };
+
+    await bring(s.tenant, 1_000);
+    expect(await wait()).toBeNull();
+    await inTransaction((trx) => repository.schedule(trx, s.tenant, id, 300_000, 3));
+    await bring(other.tenant, 1_000);
+    expect(await wait()).toBeGreaterThan(200_000);
+    await bring(s.tenant, 60_000);
+    expect(await wait()).toBeLessThanOrEqual(61_000);
+    await bring(s.tenant, 300_000);
+    expect(await wait()).toBeLessThanOrEqual(61_000);
+    expect((await row(id)).attempt_count).toBe(3);
+  });
+
   it('las escrituras nuevas exigen una transacción', async () => {
     const s = await newScenario(handle.pgc);
     const id = await insertDocument(handle.pgc, s, 1);

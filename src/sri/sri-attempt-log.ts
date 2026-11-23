@@ -119,11 +119,41 @@ export class SriAttemptLog {
   }
 
   /** Da por abandonados los envíos a la recepción que quedaron abiertos. */
-  async abandonSends(db: Db, documentId: string): Promise<number> {
+  abandonSends(db: Db, documentId: string): Promise<number> {
+    return this.abandon(db, documentId, 'RECEPTION');
+  }
+
+  /** Si hay una consulta de autorización abierta hace menos del plazo dado: sigue en curso. */
+  async queryInFlight(db: Db, documentId: string, leaseMs: number): Promise<boolean> {
+    const result = await sql<{ count: string }>`
+      SELECT count(*) AS count FROM sri_attempts
+      WHERE document_id = ${documentId} AND operation = 'AUTHORIZATION' AND outcome IS NULL
+       AND started_at > now() - make_interval(secs => CAST(${leaseMs / 1000} AS double precision))`.execute(db);
+    return Number(result.rows[0]!.count) > 0;
+  }
+
+  /** Da por abandonadas las consultas de autorización que quedaron abiertas. */
+  abandonQueries(db: Db, documentId: string): Promise<number> {
+    return this.abandon(db, documentId, 'AUTHORIZATION');
+  }
+
+  private async abandon(db: Db, documentId: string, operation: SriOperation): Promise<number> {
     const result = await sql`
       UPDATE sri_attempts SET outcome = 'ABANDONED', completed_at = clock_timestamp()
-      WHERE document_id = ${documentId} AND operation = 'RECEPTION' AND outcome IS NULL`.execute(db);
+      WHERE document_id = ${documentId} AND operation = ${operation} AND outcome IS NULL`.execute(db);
     return Number(result.numAffectedRows ?? 0);
+  }
+
+  /**
+   * Cuánto hace que terminó el último intento del documento, por el reloj de la base; nulo si no hay intentos o
+   * el último sigue abierto (un proceso que murió a mitad: no hay resultado del que esperar).
+   */
+  async sinceLastResultMs(db: Db, documentId: string): Promise<number | null> {
+    const result = await sql<{ ms: string | null }>`
+      SELECT extract(epoch FROM (clock_timestamp() - completed_at)) * 1000 AS ms FROM sri_attempts
+      WHERE document_id = ${documentId} ORDER BY started_at DESC, id LIMIT 1`.execute(db);
+    const ms = result.rows[0]?.ms ?? null;
+    return ms === null ? null : Number(ms);
   }
 
   /** Intentos del documento con sus mensajes, el más reciente primero. Nunca la respuesta cruda. */

@@ -439,6 +439,19 @@ export class FiscalDocumentRepository {
       WHERE id = ${documentId} AND tenant_id = ${tenantId}`.execute(trx);
   }
 
+  /**
+   * Adelanta el siguiente intento a ese plazo si estaba más lejos. Nunca lo retrasa, ni programa un documento
+   * que no tenía nada programado; la cuenta de intentos no cambia.
+   */
+  async bringForward(trx: Transaction<DB>, tenantId: string, documentId: string, delayMs: number): Promise<void> {
+    requireTransaction(trx);
+    await sql`
+      UPDATE fiscal_documents
+      SET next_attempt_at = LEAST(next_attempt_at,
+       now() + make_interval(secs => CAST(${delayMs / 1000} AS double precision)))
+      WHERE id = ${documentId} AND tenant_id = ${tenantId} AND next_attempt_at IS NOT NULL`.execute(trx);
+  }
+
   /** Estado del documento sin bloquearlo; nulo si no existe en esa empresa. */
   async processingState(db: Db, tenantId: string, documentId: string): Promise<ProcessingState | null> {
     const result = await sql<ProcessingSqlRow>`SELECT ${PROCESSING_COLUMNS} FROM fiscal_documents
