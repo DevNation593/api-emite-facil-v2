@@ -84,6 +84,8 @@ async function readData(lines: AsyncIterator<string>): Promise<Buffer> {
 interface Mailbox {
   script: Reply[];
   messages: Buffer[];
+  /** Mensajes recibidos enteros que aún no tienen respuesta. */
+  pending: number;
 }
 
 export class ScriptedSmtp {
@@ -116,6 +118,11 @@ export class ScriptedSmtp {
     return Promise.all(this.raw(email).map((raw) => simpleParser(raw)));
   }
 
+  /** Mensajes de esa dirección recibidos enteros y aún sin respuesta. */
+  inDelivery(email: string): number {
+    return this.mailbox(email).pending;
+  }
+
   /** Conexiones recibidas. */
   connections(): number {
     return this.opened;
@@ -129,7 +136,7 @@ export class ScriptedSmtp {
     const key = email.toLowerCase();
     let box = this.mailboxes.get(key);
     if (box === undefined) {
-      box = { script: [], messages: [] };
+      box = { script: [], messages: [], pending: 0 };
       this.mailboxes.set(key, box);
     }
     return box;
@@ -170,7 +177,10 @@ export class ScriptedSmtp {
         await say(socket, '354 Adelante');
         const raw = await readData(lines);
         const { reply } = recipients[0]!;
+        const box = this.mailbox(recipients[0]!.address);
+        box.pending++;
         if (reply.delayMs > 0) await sleep(reply.delayMs);
+        box.pending--;
         if (reply.kind === 'drop') return;
         if (reply.kind === 'fail-data') {
           await say(socket, `${reply.code} ${reply.text}`);

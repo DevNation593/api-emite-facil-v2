@@ -3,6 +3,7 @@ import type { Kysely } from 'kysely';
 import { BillingModule } from '../billing/billing.module.js';
 import { DocumentKinds } from '../billing/document-kind.js';
 import { FiscalDocumentRepository } from '../billing/fiscal-document.repository.js';
+import { OutboxWriter } from '../billing/outbox-writer.js';
 import { APP_CONFIG, type AppConfig } from '../config/app-config.js';
 import { DATABASE, DatabaseModule } from '../database/database.module.js';
 import type { DB } from '../database/schema.js';
@@ -14,6 +15,7 @@ import type { DeliveryMailer } from './delivery-mailer.js';
 import { DeliveryRepository } from './delivery.repository.js';
 import { DELIVERY_MAILER, DeliveryService } from './delivery.service.js';
 import { DocumentArchiver } from './document-archiver.js';
+import { DueDeliveryScheduler } from './due-delivery-scheduler.js';
 import { SmtpDeliveryMailer } from './smtp-delivery-mailer.js';
 
 /**
@@ -33,6 +35,11 @@ import { SmtpDeliveryMailer } from './smtp-delivery-mailer.js';
         kinds: DocumentKinds,
       ) => new DocumentArchiver(db, documents, artifacts, kinds),
       inject: [DATABASE, FiscalDocumentRepository, ArtifactStore, DocumentKinds],
+    },
+    {
+      provide: DueDeliveryScheduler,
+      useFactory: (db: Kysely<DB>, outbox: OutboxWriter) => new DueDeliveryScheduler(db, outbox),
+      inject: [DATABASE, OutboxWriter],
     },
     {
       // Solo existe con el correo habilitado: entonces exige un servidor SMTP para arrancar.
@@ -68,6 +75,6 @@ import { SmtpDeliveryMailer } from './smtp-delivery-mailer.js';
       ],
     },
   ],
-  exports: [DocumentArchiver, DeliveryService, DeliveryRepository],
+  exports: [DocumentArchiver, DeliveryService, DeliveryRepository, DueDeliveryScheduler],
 })
 export class DeliveryModule {}
