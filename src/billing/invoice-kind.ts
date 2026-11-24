@@ -1,5 +1,6 @@
 import type { Kysely, Transaction } from 'kysely';
 import type { DB } from '../database/schema.js';
+import { buildInvoiceRide } from '../delivery/invoice-ride.js';
 import { DOCUMENT_TYPES } from '../xml/document-type.js';
 import {
   buildInvoiceXml,
@@ -16,6 +17,7 @@ import type {
   FiscalDocumentRepository,
   InvoiceBody,
 } from './fiscal-document.repository.js';
+import type { RideEnvelope } from './ride-envelope.js';
 
 export type { InvoiceBody } from './fiscal-document.repository.js';
 
@@ -59,6 +61,23 @@ export class InvoiceKind implements DocumentKind<InvoiceBody> {
 
   buildXml(envelope: DocumentEnvelope, content: InvoiceBody): Buffer {
     return buildInvoiceXml(invoiceXmlData(envelope, content));
+  }
+
+  async buildRide(
+    db: Kysely<DB> | Transaction<DB>,
+    ride: RideEnvelope,
+    content: InvoiceBody,
+  ): Promise<Buffer> {
+    const { envelope } = ride;
+    return buildInvoiceRide({
+      invoice: invoiceXmlData(envelope, content),
+      authorizationNumber: ride.authorizationNumber,
+      authorizedAt: ride.authorizedAt,
+      customerEmail: envelope.recipient.email,
+      customerPhone: envelope.recipient.phone,
+      issuerPhone: envelope.issuer.phone,
+      paymentMethodNames: await this.documents.paymentMethodNames(db),
+    });
   }
 }
 

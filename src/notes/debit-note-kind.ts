@@ -1,6 +1,9 @@
+import type { Kysely, Transaction } from 'kysely';
 import type { FiscalDocumentRepository } from '../billing/fiscal-document.repository.js';
 import type { DocumentEnvelope } from '../billing/document-envelope.js';
 import { JsonContentKind } from '../billing/json-content-kind.js';
+import type { RideEnvelope } from '../billing/ride-envelope.js';
+import type { DB } from '../database/schema.js';
 import { DOCUMENT_TYPES } from '../xml/document-type.js';
 import {
   buildDebitNoteXml,
@@ -8,6 +11,7 @@ import {
   DEBIT_NOTE_SCHEMA,
   type DebitNoteContent,
 } from './debit-note-content.js';
+import { buildDebitNoteRide } from './note-ride.js';
 
 /** La nota de débito como tipo de comprobante: su contenido viaja como JSON en el sobre. */
 export class DebitNoteKind extends JsonContentKind<DebitNoteContent> {
@@ -23,5 +27,13 @@ export class DebitNoteKind extends JsonContentKind<DebitNoteContent> {
 
   buildXml(envelope: DocumentEnvelope, content: DebitNoteContent): Buffer {
     return buildDebitNoteXml(envelope, content);
+  }
+
+  async buildRide(
+    db: Kysely<DB> | Transaction<DB>,
+    ride: RideEnvelope,
+    content: DebitNoteContent,
+  ): Promise<Buffer> {
+    return buildDebitNoteRide(ride, content, await this.documents.paymentMethodNames(db));
   }
 }
