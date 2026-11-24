@@ -12,6 +12,19 @@ export function strip(value: string): string {
   return value.replace(LEADING, '').replace(TRAILING, '');
 }
 
+const ONE_WHITESPACE = new RegExp(`^[${JAVA_WHITESPACE}]$`);
+
+/** Como `Character.isWhitespace` sobre un solo carácter. */
+export function isJavaWhitespace(character: string): boolean {
+  return ONE_WHITESPACE.test(character);
+}
+
+/** Como `Character.isISOControl` sobre un solo carácter: U+0000–U+001F y U+007F–U+009F. */
+export function isIsoControl(character: string): boolean {
+  // eslint-disable-next-line no-control-regex
+  return /^[\u0000-\u001f\u007f-\u009f]$/.test(character);
+}
+
 const ANY_WHITESPACE = new RegExp(`[${JAVA_WHITESPACE}]`, 'g');
 
 /** Como `StringUtils.trimAllWhitespace` de Spring: quita todo espacio de Java, también el interior. */

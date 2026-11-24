@@ -8,10 +8,12 @@ import { ConfigModule } from './config/config.module.js';
 import { RateLimiterModule } from './common/rate-limiter.js';
 import { ComplianceModule } from './compliance/compliance.module.js';
 import { DatabaseModule } from './database/database.module.js';
+import { DeliveryModule } from './delivery/delivery.module.js';
 import { IdentityModule } from './identity/identity.module.js';
 import { NotesModule } from './notes/notes.module.js';
 import { OrchestrationModule } from './orchestration/orchestration.module.js';
 import { SequenceModule } from './sequence/sequence.module.js';
+import { StorageModule } from './storage/storage.module.js';
 import { TaxpayerModule } from './taxpayer/taxpayer.module.js';
 import { TenancyModule } from './tenancy/tenancy.module.js';
 import { HealthModule } from './observability/health.controller.js';
@@ -26,12 +28,14 @@ import { HealthModule } from './observability/health.controller.js';
     ComplianceModule,
     ConfigModule,
     DatabaseModule,
+    DeliveryModule,
     HealthModule,
     IdentityModule,
     NotesModule,
     OrchestrationModule,
     RateLimiterModule,
     SequenceModule,
+    StorageModule,
     TaxpayerModule,
     TenancyModule,
   ] })

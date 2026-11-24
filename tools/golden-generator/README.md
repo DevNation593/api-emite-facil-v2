@@ -116,3 +116,8 @@ módulo 11 solo para buscar los casos de borde (10 y 11); las claves guardadas s
 
 Solo si cambia el comportamiento de la API Java de referencia. Revisar el diff de `test/golden/` antes de
 confirmarlo: los archivos no deterministas siempre cambian.
+
+La familia `delivery` (E5) anota las direcciones que admite `DeliveryProperties`, el texto de cabecera y el correo de
+`DeliveryEmailFactory`, el XML autorizado y cómo clasifica `SmtpDeliveryMailer` cada respuesta de un servidor SMTP de
+guion. La familia `ride` guarda en `ride/` un PDF de Java por caso y en `ride.json` sus datos, los textos e importes de
+`RideLayout` y las barras de `Barcode128`; los PDF llevan la hora de generación, así que cambian en cada ejecución.

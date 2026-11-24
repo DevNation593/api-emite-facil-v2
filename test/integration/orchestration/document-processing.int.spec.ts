@@ -25,8 +25,7 @@ import {
 import { TEST_P12_PASSWORD, testP12 } from '../../support/test-certificates.js';
 import { startTestApp, type TestApp } from '../../support/test-app.js';
 
-// Traducción de orchestration/DocumentProcessingIT.java. La descarga de signedXmlIsDownloadableAndStateIsVisible
-// llega en E5: aquí el estado y el artefacto se comprueban por SQL.
+// Traducción de orchestration/DocumentProcessingIT.java.
 const PROVIDER_RUC = '1790099999001';
 let stack: StackHandle;
 let testApp: TestApp;
@@ -106,10 +105,15 @@ it('reservedInvoiceBecomesSigned', async () => {
   expect((await find('XML_UNSIGNED'))!.content.toString('utf8')).not.toContain('Signature');
 });
 
-it('signedXmlIsDownloadableAndStateIsVisible (estado y artefacto; la descarga llega en E5)', async () => {
+it('signedXmlIsDownloadableAndStateIsVisible', async () => {
   await uploadTestCertificate(http(), s.owner, s.taxpayer);
   await process(s.tenant, document);
-  expect(verifier.verify((await find('XML_SIGNED'))!.content).valid).toBe(true);
+  const downloaded = await http()
+    .get(`/api/v1/documents/${document}/artifacts/xml-signed`)
+    .set('Authorization', `Bearer ${s.owner}`)
+    .responseType('blob')
+    .expect(200);
+  expect(verifier.verify(downloaded.body as Buffer).valid).toBe(true);
   const res = await http().get(`/api/v1/documents/${document}`).set('Authorization', `Bearer ${s.owner}`).expect(200);
   expect((res.body as { state: string }).state).toBe('SIGNED');
 });

@@ -26,6 +26,14 @@ describe('BigDecimal, como java.math.BigDecimal', () => {
     expect(() => BigDecimal.parse('1e2', 12, 2)).toThrow('No es un decimal válido: 1e2');
   });
 
+  it('stripTrailingZeros quita los ceros finales sin bajar de escala 0', () => {
+    expect(bd('1.50').stripTrailingZeros().toString()).toBe('1.5');
+    expect(bd('10.00').stripTrailingZeros().toString()).toBe('10');
+    expect(bd('0.000000').stripTrailingZeros().toString()).toBe('0');
+    expect(bd('1.234567').stripTrailingZeros().scale).toBe(6);
+    expect(bd('100').stripTrailingZeros().toString()).toBe('100');
+  });
+
   it('las operaciones fijan la escala como Java', () => {
     expect(bd('1.5').multiply(bd('9.333333')).toString()).toBe('13.9999995');
     expect(bd('13.9999995').setScale(2).toString()).toBe('14.00');

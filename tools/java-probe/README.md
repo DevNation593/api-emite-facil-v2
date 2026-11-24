@@ -79,3 +79,20 @@ Con `seedAttempts`, el escenario emite además `retryDocumentId` (RESERVED), `re
 (`otherTenantId`, `otherInvoiceId`) y expone en `scenario.actors` las cabeceras de un `auditor`, un
 `biller` y un `stranger` (sin membresía). Un caso elige actor con `auth: 'auditor' | 'biller' |
 'stranger'`, además de `'owner'` y `'none'`. Las cabeceras de un caso también admiten marcadores.
+
+## Casos de E5 (artefactos y entregas)
+
+`cases/e5.json` (de `make-cases-e5.mjs`) sondea `GET /documents/{id}/artifacts/{kind}`,
+`GET` y `POST /documents/{id}/deliveries`, las cabeceras de seguridad y los cuerpos que Java no lee.
+`run.mjs` arranca Java con el correo habilitado hacia un puerto que no atiende y el worker apagado: se
+puede pedir una entrega y nadie la envía. Sobre el escenario de E4 añade dos hooks:
+
+- `hooks.seedArtifacts(documentId)` guarda `SEEDED_ARTIFACTS`, con contenido fijo para que el ETag y la
+  descarga sean los mismos.
+- `hooks.seedDeliveries(documentId, deliveries)` inserta `SEEDED_DELIVERIES` o `LIMIT_DELIVERIES`; sus
+  instantes se conservan como los de E4.
+
+Los valores ganan `archivedDocumentId`, `bareDocumentId`, `mailedDocumentId` y `limitDocumentId`. Un caso
+con `checkHeaders` guarda además esas cabeceras de la respuesta en `headers`. Un `GET` o `DELETE` con
+cuerpo necesita su `content-length`: sin ella `node:http` no lo declara y el servidor lo toma por la
+petición siguiente.

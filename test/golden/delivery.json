@@ -1,0 +1,1970 @@
+{
+  "addresses": [
+    {
+      "address": "ana.perez+facturas@mi-empresa.com.ec",
+      "valid": true
+    },
+    {
+      "address": "a@b",
+      "valid": true
+    },
+    {
+      "address": "a@localhost",
+      "valid": true
+    },
+    {
+      "address": "a@b.test",
+      "valid": true
+    },
+    {
+      "address": "A@B.TEST",
+      "valid": true
+    },
+    {
+      "address": "a@b.c.d.e",
+      "valid": true
+    },
+    {
+      "address": "1@2",
+      "valid": true
+    },
+    {
+      "address": "a-b_c@d-e.test",
+      "valid": true
+    },
+    {
+      "address": "a!#$%&'*+-/=?^_`{|}~b@c.test",
+      "valid": true
+    },
+    {
+      "address": "a..b@c.test",
+      "valid": false
+    },
+    {
+      "address": ".a@b.test",
+      "valid": false
+    },
+    {
+      "address": "a.@b.test",
+      "valid": false
+    },
+    {
+      "address": "a@.b.test",
+      "valid": false
+    },
+    {
+      "address": "a@b..test",
+      "valid": false
+    },
+    {
+      "address": "a@b.test.",
+      "valid": false
+    },
+    {
+      "address": "a@b-",
+      "valid": true
+    },
+    {
+      "address": "a@-b",
+      "valid": true
+    },
+    {
+      "address": "a@b_c.test",
+      "valid": false
+    },
+    {
+      "address": "a@b!c.test",
+      "valid": false
+    },
+    {
+      "address": "a@",
+      "valid": false
+    },
+    {
+      "address": "@b.test",
+      "valid": false
+    },
+    {
+      "address": "a",
+      "valid": false
+    },
+    {
+      "address": "",
+      "valid": false
+    },
+    {
+      "address": " ",
+      "valid": false
+    },
+    {
+      "address": "@",
+      "valid": false
+    },
+    {
+      "address": "@@",
+      "valid": false
+    },
+    {
+      "address": "a@b@c.test",
+      "valid": false
+    },
+    {
+      "address": "a@@b.test",
+      "valid": false
+    },
+    {
+      "address": "@a@b.test",
+      "valid": false
+    },
+    {
+      "address": "@a,@b:c@d.test",
+      "valid": false
+    },
+    {
+      "address": "@a:b@c.test",
+      "valid": false
+    },
+    {
+      "address": "a@[127.0.0.1]",
+      "valid": true
+    },
+    {
+      "address": "a@[IPv6:::1]",
+      "valid": false
+    },
+    {
+      "address": "a@[]",
+      "valid": true
+    },
+    {
+      "address": "a@[b",
+      "valid": false
+    },
+    {
+      "address": "a@b]",
+      "valid": true
+    },
+    {
+      "address": "a@[b]c",
+      "valid": false
+    },
+    {
+      "address": "a@c[b]",
+      "valid": false
+    },
+    {
+      "address": "a@[a b]",
+      "valid": false
+    },
+    {
+      "address": "a[b@c.test",
+      "valid": false
+    },
+    {
+      "address": "a]b@c.test",
+      "valid": false
+    },
+    {
+      "address": "a\\b@c.test",
+      "valid": true
+    },
+    {
+      "address": "a\\@b.test",
+      "valid": false
+    },
+    {
+      "address": "a\\@b@c.test",
+      "valid": true
+    },
+    {
+      "address": "\\@b.test",
+      "valid": false
+    },
+    {
+      "address": "a\\",
+      "valid": false
+    },
+    {
+      "address": "a\\@",
+      "valid": false
+    },
+    {
+      "address": "a@b\\c",
+      "valid": false
+    },
+    {
+      "address": "a/b@c.test",
+      "valid": true
+    },
+    {
+      "address": "a=b@c.test",
+      "valid": true
+    },
+    {
+      "address": "ñandú@empresa.test",
+      "valid": true
+    },
+    {
+      "address": "a@ñandú.test",
+      "valid": true
+    },
+    {
+      "address": "a@empresa.ñ",
+      "valid": true
+    },
+    {
+      "address": "a@東京.test",
+      "valid": true
+    },
+    {
+      "address": "東京@a.test",
+      "valid": true
+    },
+    {
+      "address": "a@😀.test",
+      "valid": false
+    },
+    {
+      "address": "😀@a.test",
+      "valid": true
+    },
+    {
+      "address": "a@٣.test",
+      "valid": true
+    },
+    {
+      "address": "a@Ⅷ.test",
+      "valid": false
+    },
+    {
+      "address": "a@²",
+      "valid": false
+    },
+    {
+      "address": "a@ª.test",
+      "valid": true
+    },
+    {
+      "address": "a b@c.test",
+      "valid": true
+    },
+    {
+      "address": "a@b c.test",
+      "valid": false
+    },
+    {
+      "address": "ab@c.test",
+      "valid": false
+    },
+    {
+      "address": "a@b",
+      "valid": false
+    },
+    {
+      "address": "a​b@c.test",
+      "valid": true
+    },
+    {
+      "address": "a@b​c.test",
+      "valid": false
+    },
+    {
+      "address": "a b@c.test",
+      "valid": false
+    },
+    {
+      "address": "a　b@c.test",
+      "valid": false
+    },
+    {
+      "address": "a b@c.test",
+      "valid": false
+    },
+    {
+      "address": " a@b.test",
+      "valid": false
+    },
+    {
+      "address": "a@b.test ",
+      "valid": false
+    },
+    {
+      "address": "a\t@b.test",
+      "valid": false
+    },
+    {
+      "address": "a@b.test\n",
+      "valid": false
+    },
+    {
+      "address": "a@b.test\r\nBcc: x@evil.test",
+      "valid": false
+    },
+    {
+      "address": "a\u0000@b.test",
+      "valid": false
+    },
+    {
+      "address": "a@b.test",
+      "valid": false
+    },
+    {
+      "address": "a@b.test",
+      "valid": false
+    },
+    {
+      "address": "a,b@c.test",
+      "valid": false
+    },
+    {
+      "address": "a@b.test,c@d.test",
+      "valid": false
+    },
+    {
+      "address": "a@b.test;c@d.test",
+      "valid": false
+    },
+    {
+      "address": "grupo:a@x.test,b@y.test;",
+      "valid": false
+    },
+    {
+      "address": "grupo:a@x.test;",
+      "valid": false
+    },
+    {
+      "address": "a:b@c.test",
+      "valid": false
+    },
+    {
+      "address": "<a@x.test>",
+      "valid": false
+    },
+    {
+      "address": "a<b@c.test",
+      "valid": false
+    },
+    {
+      "address": "a>b@c.test",
+      "valid": false
+    },
+    {
+      "address": "\"Ana\" <a@x.test>",
+      "valid": false
+    },
+    {
+      "address": "\"a b\"@c.test",
+      "valid": false
+    },
+    {
+      "address": "a@x.test (Ana)",
+      "valid": false
+    },
+    {
+      "address": "a(b)@c.test",
+      "valid": false
+    },
+    {
+      "address": "Ana <a@x.test>",
+      "valid": false
+    },
+    {
+      "address": "no-es-un-correo",
+      "valid": false
+    },
+    {
+      "address": "a@x.test b@y.test",
+      "valid": false
+    },
+    {
+      "address": "a%b@c.test",
+      "valid": true
+    },
+    {
+      "address": "a%b@c",
+      "valid": true
+    },
+    {
+      "address": "a!b@c",
+      "valid": true
+    },
+    {
+      "address": "mailto&a@b.test",
+      "valid": true
+    },
+    {
+      "address": "'a'@b.test",
+      "valid": true
+    },
+    {
+      "address": "a@b.test'",
+      "valid": false
+    },
+    {
+      "address": "a`b@c.test",
+      "valid": true
+    },
+    {
+      "address": "a{b}@c.test",
+      "valid": true
+    },
+    {
+      "address": "a@1.2.3.4",
+      "valid": true
+    },
+    {
+      "address": "a@b.test:25",
+      "valid": false
+    },
+    {
+      "address": "a@b/c",
+      "valid": false
+    },
+    {
+      "address": "a@b?c",
+      "valid": false
+    },
+    {
+      "address": "a@b#c",
+      "valid": false
+    },
+    {
+      "address": "a~@b.test",
+      "valid": true
+    },
+    {
+      "address": "=?UTF-8?Q?a?=@b.test",
+      "valid": true
+    },
+    {
+      "address": "a@=?UTF-8?Q?b?=",
+      "valid": false
+    },
+    {
+      "address": "a@xn--andu-hqa.test",
+      "valid": true
+    },
+    {
+      "address": "a@b--c.test",
+      "valid": true
+    },
+    {
+      "address": "­x@b.test",
+      "valid": true
+    },
+    {
+      "address": "x@b­.test",
+      "valid": false
+    },
+    {
+      "address": "x@á.test",
+      "valid": false
+    },
+    {
+      "address": "á@b.test",
+      "valid": true
+    },
+    {
+      "address": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@b.test",
+      "valid": true
+    },
+    {
+      "address": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@b.test",
+      "valid": false
+    },
+    {
+      "address": "a@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "valid": true
+    },
+    {
+      "address": "a@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "valid": false
+    },
+    {
+      "address": null,
+      "valid": false
+    }
+  ],
+  "headers": [
+    {
+      "value": null,
+      "max": 10,
+      "result": ""
+    },
+    {
+      "value": "",
+      "max": 10,
+      "result": ""
+    },
+    {
+      "value": "Andina",
+      "max": 10,
+      "result": "Andina"
+    },
+    {
+      "value": "  Andina  ",
+      "max": 10,
+      "result": "Andina"
+    },
+    {
+      "value": "Andina\r\nBcc: x@evil.test",
+      "max": 120,
+      "result": "Andina Bcc: x@evil.test"
+    },
+    {
+      "value": "a\u0000b",
+      "max": 10,
+      "result": "a b"
+    },
+    {
+      "value": "abcd",
+      "max": 20,
+      "result": "a b c d"
+    },
+    {
+      "value": "a b",
+      "max": 10,
+      "result": "a b"
+    },
+    {
+      "value": "a b c",
+      "max": 10,
+      "result": "a b c"
+    },
+    {
+      "value": "a b c",
+      "max": 10,
+      "result": "a b c"
+    },
+    {
+      "value": "a　b c​d",
+      "max": 20,
+      "result": "a b c​d"
+    },
+    {
+      "value": "a \t \n b",
+      "max": 10,
+      "result": "a b"
+    },
+    {
+      "value": "\t\n a",
+      "max": 10,
+      "result": "a"
+    },
+    {
+      "value": "a \t\n",
+      "max": 10,
+      "result": "a"
+    },
+    {
+      "value": "a  b",
+      "max": 10,
+      "result": "a b"
+    },
+    {
+      "value": " \u0000 ",
+      "max": 10,
+      "result": ""
+    },
+    {
+      "value": " a ",
+      "max": 10,
+      "result": " a "
+    },
+    {
+      "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "max": 120,
+      "result": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "value": "abcdefghi jkl",
+      "max": 10,
+      "result": "abcdefghi"
+    },
+    {
+      "value": "abcdefghij klm",
+      "max": 11,
+      "result": "abcdefghij"
+    },
+    {
+      "value": "😀😀😀",
+      "max": 4,
+      "result": "😀😀"
+    },
+    {
+      "value": "a😀b",
+      "max": 10,
+      "result": "a😀b"
+    },
+    {
+      "value": "東京 Ñandú",
+      "max": 10,
+      "result": "東京 Ñandú"
+    },
+    {
+      "value": "\u001ca\u001fb",
+      "max": 10,
+      "result": "a b"
+    },
+    {
+      "value": "‎‮a",
+      "max": 10,
+      "result": "‎‮a"
+    },
+    {
+      "value": "a b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b",
+      "max": 120,
+      "result": "a b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b"
+    }
+  ],
+  "emails": [
+    {
+      "fileStem": "factura",
+      "displayName": "Factura",
+      "type": "01",
+      "legalName": "Comercial Andina S.A.",
+      "tradeName": "Andina",
+      "recipientName": "María Pérez",
+      "total": "37.00",
+      "email": {
+        "from": "facturas@plataforma.test",
+        "fromName": "Andina",
+        "to": "cliente@example.test",
+        "subject": "Factura 001-002-000000123 de Andina",
+        "text": "Estimado(a) María Pérez:\n\nComercial Andina S.A. (RUC 1790012345001) le ha emitido la factura electrónica 001-002-000000123.\n\nFecha de emisión: 07/01/2026\nValor total: 37.00 USD\nClave de acceso: 0710202601179001234500110010020000001231234567816\nNúmero de autorización: 0710202601179001234500110010020000001231234567816\n\nSe adjuntan el RIDE (PDF) y el comprobante autorizado (XML). Puede verificar su validez en el portal del SRI con la clave de acceso.\n",
+        "attachments": [
+          {
+            "filename": "factura-001-002-000000123.pdf",
+            "contentType": "application/pdf",
+            "content": "pdf"
+          },
+          {
+            "filename": "0710202601179001234500110010020000001231234567816.xml",
+            "contentType": "application/xml",
+            "content": "xml"
+          }
+        ]
+      }
+    },
+    {
+      "fileStem": "factura",
+      "displayName": "Factura",
+      "type": "01",
+      "legalName": "Comercial Andina S.A.",
+      "tradeName": null,
+      "recipientName": "María Pérez",
+      "total": "37.00",
+      "email": {
+        "from": "facturas@plataforma.test",
+        "fromName": "Comercial Andina S.A.",
+        "to": "cliente@example.test",
+        "subject": "Factura 001-002-000000123 de Comercial Andina S.A.",
+        "text": "Estimado(a) María Pérez:\n\nComercial Andina S.A. (RUC 1790012345001) le ha emitido la factura electrónica 001-002-000000123.\n\nFecha de emisión: 07/01/2026\nValor total: 37.00 USD\nClave de acceso: 0710202601179001234500110010020000001231234567816\nNúmero de autorización: 0710202601179001234500110010020000001231234567816\n\nSe adjuntan el RIDE (PDF) y el comprobante autorizado (XML). Puede verificar su validez en el portal del SRI con la clave de acceso.\n",
+        "attachments": [
+          {
+            "filename": "factura-001-002-000000123.pdf",
+            "contentType": "application/pdf",
+            "content": "pdf"
+          },
+          {
+            "filename": "0710202601179001234500110010020000001231234567816.xml",
+            "contentType": "application/xml",
+            "content": "xml"
+          }
+        ]
+      }
+    },
+    {
+      "fileStem": "factura",
+      "displayName": "Factura",
+      "type": "01",
+      "legalName": "Comercial Andina S.A.",
+      "tradeName": " \n ",
+      "recipientName": "María Pérez",
+      "total": "0.00",
+      "email": {
+        "from": "facturas@plataforma.test",
+        "fromName": "Comercial Andina S.A.",
+        "to": "cliente@example.test",
+        "subject": "Factura 001-002-000000123 de Comercial Andina S.A.",
+        "text": "Estimado(a) María Pérez:\n\nComercial Andina S.A. (RUC 1790012345001) le ha emitido la factura electrónica 001-002-000000123.\n\nFecha de emisión: 07/01/2026\nValor total: 0.00 USD\nClave de acceso: 0710202601179001234500110010020000001231234567816\nNúmero de autorización: 0710202601179001234500110010020000001231234567816\n\nSe adjuntan el RIDE (PDF) y el comprobante autorizado (XML). Puede verificar su validez en el portal del SRI con la clave de acceso.\n",
+        "attachments": [
+          {
+            "filename": "factura-001-002-000000123.pdf",
+            "contentType": "application/pdf",
+            "content": "pdf"
+          },
+          {
+            "filename": "0710202601179001234500110010020000001231234567816.xml",
+            "contentType": "application/xml",
+            "content": "xml"
+          }
+        ]
+      }
+    },
+    {
+      "fileStem": "factura",
+      "displayName": "Factura",
+      "type": "01",
+      "legalName": "Ñandú & Hijos\r\nBcc: x@evil.test",
+      "tradeName": "Andina\r\nBcc: x@evil.test\u0000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "recipientName": "Juan\r\nBcc: y@evil.test 😀",
+      "total": "1234567890.50",
+      "email": {
+        "from": "facturas@plataforma.test",
+        "fromName": "Andina Bcc: x@evil.test xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "to": "cliente@example.test",
+        "subject": "Factura 001-002-000000123 de Andina Bcc: x@evil.test xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "text": "Estimado(a) Juan\r\nBcc: y@evil.test 😀:\n\nÑandú & Hijos\r\nBcc: x@evil.test (RUC 1790012345001) le ha emitido la factura electrónica 001-002-000000123.\n\nFecha de emisión: 07/01/2026\nValor total: 1234567890.50 USD\nClave de acceso: 0710202601179001234500110010020000001231234567816\nNúmero de autorización: 0710202601179001234500110010020000001231234567816\n\nSe adjuntan el RIDE (PDF) y el comprobante autorizado (XML). Puede verificar su validez en el portal del SRI con la clave de acceso.\n",
+        "attachments": [
+          {
+            "filename": "factura-001-002-000000123.pdf",
+            "contentType": "application/pdf",
+            "content": "pdf"
+          },
+          {
+            "filename": "0710202601179001234500110010020000001231234567816.xml",
+            "contentType": "application/xml",
+            "content": "xml"
+          }
+        ]
+      }
+    },
+    {
+      "fileStem": "nota-credito",
+      "displayName": "Nota de crédito",
+      "type": "04",
+      "legalName": "Comercial Andina S.A.",
+      "tradeName": "Andina",
+      "recipientName": "María Pérez",
+      "total": "37.00",
+      "email": {
+        "from": "facturas@plataforma.test",
+        "fromName": "Andina",
+        "to": "cliente@example.test",
+        "subject": "Nota de crédito 001-002-000000123 de Andina",
+        "text": "Estimado(a) María Pérez:\n\nComercial Andina S.A. (RUC 1790012345001) le ha emitido la nota de crédito electrónica 001-002-000000123.\n\nFecha de emisión: 07/01/2026\nValor total: 37.00 USD\nClave de acceso: 0710202601179001234500110010020000001231234567816\nNúmero de autorización: 0710202601179001234500110010020000001231234567816\n\nSe adjuntan el RIDE (PDF) y el comprobante autorizado (XML). Puede verificar su validez en el portal del SRI con la clave de acceso.\n",
+        "attachments": [
+          {
+            "filename": "nota-credito-001-002-000000123.pdf",
+            "contentType": "application/pdf",
+            "content": "pdf"
+          },
+          {
+            "filename": "0710202601179001234500110010020000001231234567816.xml",
+            "contentType": "application/xml",
+            "content": "xml"
+          }
+        ]
+      }
+    },
+    {
+      "fileStem": "nota-debito",
+      "displayName": "Nota de débito",
+      "type": "05",
+      "legalName": "Comercial Andina S.A.",
+      "tradeName": "Andina",
+      "recipientName": "María Pérez",
+      "total": "16.50",
+      "email": {
+        "from": "facturas@plataforma.test",
+        "fromName": "Andina",
+        "to": "cliente@example.test",
+        "subject": "Nota de débito 001-002-000000123 de Andina",
+        "text": "Estimado(a) María Pérez:\n\nComercial Andina S.A. (RUC 1790012345001) le ha emitido la nota de débito electrónica 001-002-000000123.\n\nFecha de emisión: 07/01/2026\nValor total: 16.50 USD\nClave de acceso: 0710202601179001234500110010020000001231234567816\nNúmero de autorización: 0710202601179001234500110010020000001231234567816\n\nSe adjuntan el RIDE (PDF) y el comprobante autorizado (XML). Puede verificar su validez en el portal del SRI con la clave de acceso.\n",
+        "attachments": [
+          {
+            "filename": "nota-debito-001-002-000000123.pdf",
+            "contentType": "application/pdf",
+            "content": "pdf"
+          },
+          {
+            "filename": "0710202601179001234500110010020000001231234567816.xml",
+            "contentType": "application/xml",
+            "content": "xml"
+          }
+        ]
+      }
+    },
+    {
+      "fileStem": "guia-remision",
+      "displayName": "Guía de remisión",
+      "type": "01",
+      "legalName": "Comercial Andina S.A.",
+      "tradeName": "Andina",
+      "recipientName": "María Pérez",
+      "total": null,
+      "email": {
+        "from": "facturas@plataforma.test",
+        "fromName": "Andina",
+        "to": "cliente@example.test",
+        "subject": "Guía de remisión 001-002-000000123 de Andina",
+        "text": "Estimado(a) María Pérez:\n\nComercial Andina S.A. (RUC 1790012345001) le ha emitido la guía de remisión electrónica 001-002-000000123.\n\nFecha de emisión: 07/01/2026\nClave de acceso: 0710202601179001234500110010020000001231234567816\nNúmero de autorización: 0710202601179001234500110010020000001231234567816\n\nSe adjuntan el RIDE (PDF) y el comprobante autorizado (XML). Puede verificar su validez en el portal del SRI con la clave de acceso.\n",
+        "attachments": [
+          {
+            "filename": "guia-remision-001-002-000000123.pdf",
+            "contentType": "application/pdf",
+            "content": "pdf"
+          },
+          {
+            "filename": "0710202601179001234500110010020000001231234567816.xml",
+            "contentType": "application/xml",
+            "content": "xml"
+          }
+        ]
+      }
+    },
+    {
+      "fileStem": "factura",
+      "displayName": "Factura",
+      "type": "01",
+      "legalName": "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+      "tradeName": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "recipientName": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+      "total": "37.00",
+      "email": {
+        "from": "facturas@plataforma.test",
+        "fromName": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+        "to": "cliente@example.test",
+        "subject": "Factura 001-002-000000123 de TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+        "text": "Estimado(a) CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC:\n\nNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN (RUC 1790012345001) le ha emitido la factura electrónica 001-002-000000123.\n\nFecha de emisión: 07/01/2026\nValor total: 37.00 USD\nClave de acceso: 0710202601179001234500110010020000001231234567816\nNúmero de autorización: 0710202601179001234500110010020000001231234567816\n\nSe adjuntan el RIDE (PDF) y el comprobante autorizado (XML). Puede verificar su validez en el portal del SRI con la clave de acceso.\n",
+        "attachments": [
+          {
+            "filename": "factura-001-002-000000123.pdf",
+            "contentType": "application/pdf",
+            "content": "pdf"
+          },
+          {
+            "filename": "0710202601179001234500110010020000001231234567816.xml",
+            "contentType": "application/xml",
+            "content": "xml"
+          }
+        ]
+      }
+    }
+  ],
+  "authorizedXml": [
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBWzw/eG1sIHZlcnNpb249IjEuMCIgZW5jb2Rpbmc9IlVURi04Ij8+PGZhY3R1cmEgaWQ9ImNvbXByb2JhbnRlIj7DkWFuZMO6ICZhbXA7IEPDrWEuIPCfmIA8L2ZhY3R1cmE+XV0+PC9jb21wcm9iYW50ZT4KPG1lbnNhamVzLz4KPC9hdXRvcml6YWNpb24+Cg==",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2012-03-05T21:57:34.997000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAxMi0wMy0wNVQxNjo1NzozNC45OTctMDU6MDA8L2ZlY2hhQXV0b3JpemFjaW9uPgo8YW1iaWVudGU+UFJVRUJBUzwvYW1iaWVudGU+Cjxjb21wcm9iYW50ZT48IVtDREFUQVs8P3htbCB2ZXJzaW9uPSIxLjAiIGVuY29kaW5nPSJVVEYtOCI/PjxmYWN0dXJhIGlkPSJjb21wcm9iYW50ZSI+w5FhbmTDuiAmYW1wOyBDw61hLiDwn5iAPC9mYWN0dXJhPl1dPjwvY29tcHJvYmFudGU+CjxtZW5zYWplcy8+CjwvYXV0b3JpemFjaW9uPgo=",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2012-03-05T21:57:34.123456",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAxMi0wMy0wNVQxNjo1NzozNC4xMjM0NTYtMDU6MDA8L2ZlY2hhQXV0b3JpemFjaW9uPgo8YW1iaWVudGU+UFJVRUJBUzwvYW1iaWVudGU+Cjxjb21wcm9iYW50ZT48IVtDREFUQVs8P3htbCB2ZXJzaW9uPSIxLjAiIGVuY29kaW5nPSJVVEYtOCI/PjxmYWN0dXJhIGlkPSJjb21wcm9iYW50ZSI+w5FhbmTDuiAmYW1wOyBDw61hLiDwn5iAPC9mYWN0dXJhPl1dPjwvY29tcHJvYmFudGU+CjxtZW5zYWplcy8+CjwvYXV0b3JpemFjaW9uPgo=",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2012-03-05T21:57:34.500000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAxMi0wMy0wNVQxNjo1NzozNC41LTA1OjAwPC9mZWNoYUF1dG9yaXphY2lvbj4KPGFtYmllbnRlPlBSVUVCQVM8L2FtYmllbnRlPgo8Y29tcHJvYmFudGU+PCFbQ0RBVEFbPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT5dXT48L2NvbXByb2JhbnRlPgo8bWVuc2FqZXMvPgo8L2F1dG9yaXphY2lvbj4K",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2012-03-05T21:57:34.000001",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAxMi0wMy0wNVQxNjo1NzozNC4wMDAwMDEtMDU6MDA8L2ZlY2hhQXV0b3JpemFjaW9uPgo8YW1iaWVudGU+UFJVRUJBUzwvYW1iaWVudGU+Cjxjb21wcm9iYW50ZT48IVtDREFUQVs8P3htbCB2ZXJzaW9uPSIxLjAiIGVuY29kaW5nPSJVVEYtOCI/PjxmYWN0dXJhIGlkPSJjb21wcm9iYW50ZSI+w5FhbmTDuiAmYW1wOyBDw61hLiDwn5iAPC9mYWN0dXJhPl1dPjwvY29tcHJvYmFudGU+CjxtZW5zYWplcy8+CjwvYXV0b3JpemFjaW9uPgo=",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-01-01T03:00:00.100000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNS0xMi0zMVQyMjowMDowMC4xLTA1OjAwPC9mZWNoYUF1dG9yaXphY2lvbj4KPGFtYmllbnRlPlBSVUVCQVM8L2FtYmllbnRlPgo8Y29tcHJvYmFudGU+PCFbQ0RBVEFbPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT5dXT48L2NvbXByb2JhbnRlPgo8bWVuc2FqZXMvPgo8L2F1dG9yaXphY2lvbj4K",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-03-01T04:59:59.999999",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0wMi0yOFQyMzo1OTo1OS45OTk5OTktMDU6MDA8L2ZlY2hhQXV0b3JpemFjaW9uPgo8YW1iaWVudGU+UFJVRUJBUzwvYW1iaWVudGU+Cjxjb21wcm9iYW50ZT48IVtDREFUQVs8P3htbCB2ZXJzaW9uPSIxLjAiIGVuY29kaW5nPSJVVEYtOCI/PjxmYWN0dXJhIGlkPSJjb21wcm9iYW50ZSI+w5FhbmTDuiAmYW1wOyBDw61hLiDwn5iAPC9mYWN0dXJhPl1dPjwvY29tcHJvYmFudGU+CjxtZW5zYWplcy8+CjwvYXV0b3JpemFjaW9uPgo=",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2024-03-01T00:00:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNC0wMi0yOVQxOTowMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBWzw/eG1sIHZlcnNpb249IjEuMCIgZW5jb2Rpbmc9IlVURi04Ij8+PGZhY3R1cmEgaWQ9ImNvbXByb2JhbnRlIj7DkWFuZMO6ICZhbXA7IEPDrWEuIPCfmIA8L2ZhY3R1cmE+XV0+PC9jb21wcm9iYW50ZT4KPG1lbnNhamVzLz4KPC9hdXRvcml6YWNpb24+Cg==",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "9999-12-31T23:59:59.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+OTk5OS0xMi0zMVQxODo1OTo1OS0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBWzw/eG1sIHZlcnNpb249IjEuMCIgZW5jb2Rpbmc9IlVURi04Ij8+PGZhY3R1cmEgaWQ9ImNvbXByb2JhbnRlIj7DkWFuZMO6ICZhbXA7IEPDrWEuIPCfmIA8L2ZhY3R1cmE+XV0+PC9jb21wcm9iYW50ZT4KPG1lbnNhamVzLz4KPC9hdXRvcml6YWNpb24+Cg==",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "0001-01-01T05:00:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MDAwMS0wMS0wMVQwMDowMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBWzw/eG1sIHZlcnNpb249IjEuMCIgZW5jb2Rpbmc9IlVURi04Ij8+PGZhY3R1cmEgaWQ9ImNvbXByb2JhbnRlIj7DkWFuZMO6ICZhbXA7IEPDrWEuIPCfmIA8L2ZhY3R1cmE+XV0+PC9jb21wcm9iYW50ZT4KPG1lbnNhamVzLz4KPC9hdXRvcml6YWNpb24+Cg==",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "PRODUCTION",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUk9EVUNDScOTTjwvYW1iaWVudGU+Cjxjb21wcm9iYW50ZT48IVtDREFUQVs8P3htbCB2ZXJzaW9uPSIxLjAiIGVuY29kaW5nPSJVVEYtOCI/PjxmYWN0dXJhIGlkPSJjb21wcm9iYW50ZSI+w5FhbmTDuiAmYW1wOyBDw61hLiDwn5iAPC9mYWN0dXJhPl1dPjwvY29tcHJvYmFudGU+CjxtZW5zYWplcy8+CjwvYXV0b3JpemFjaW9uPgo=",
+      "error": null
+    },
+    {
+      "authorizationNumber": null,
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": null,
+      "error": "Falta el número de autorización"
+    },
+    {
+      "authorizationNumber": "",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": null,
+      "error": "Falta el número de autorización"
+    },
+    {
+      "authorizationNumber": " ",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": null,
+      "error": "Falta el número de autorización"
+    },
+    {
+      "authorizationNumber": "123456789",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": null,
+      "error": "Falta el número de autorización"
+    },
+    {
+      "authorizationNumber": "1234567890",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MTIzNDU2Nzg5MDwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBWzw/eG1sIHZlcnNpb249IjEuMCIgZW5jb2Rpbmc9IlVURi04Ij8+PGZhY3R1cmEgaWQ9ImNvbXByb2JhbnRlIj7DkWFuZMO6ICZhbXA7IEPDrWEuIPCfmIA8L2ZhY3R1cmE+XV0+PC9jb21wcm9iYW50ZT4KPG1lbnNhamVzLz4KPC9hdXRvcml6YWNpb24+Cg==",
+      "error": null
+    },
+    {
+      "authorizationNumber": "1111111111111111111111111111111111111111111111111",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBWzw/eG1sIHZlcnNpb249IjEuMCIgZW5jb2Rpbmc9IlVURi04Ij8+PGZhY3R1cmEgaWQ9ImNvbXByb2JhbnRlIj7DkWFuZMO6ICZhbXA7IEPDrWEuIPCfmIA8L2ZhY3R1cmE+XV0+PC9jb21wcm9iYW50ZT4KPG1lbnNhamVzLz4KPC9hdXRvcml6YWNpb24+Cg==",
+      "error": null
+    },
+    {
+      "authorizationNumber": "11111111111111111111111111111111111111111111111111",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": null,
+      "error": "Falta el número de autorización"
+    },
+    {
+      "authorizationNumber": "12<3456789012",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": null,
+      "error": "Falta el número de autorización"
+    },
+    {
+      "authorizationNumber": "١١١١١١١١١١",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": null,
+      "error": "Falta el número de autorización"
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": null,
+      "environment": "TEST",
+      "signed": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48ZmFjdHVyYSBpZD0iY29tcHJvYmFudGUiPsORYW5kw7ogJmFtcDsgQ8OtYS4g8J+YgDwvZmFjdHVyYT4=",
+      "xml": null,
+      "error": "Falta la fecha de autorización"
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": null,
+      "xml": null,
+      "error": "Falta el comprobante firmado"
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "",
+      "xml": null,
+      "error": "Falta el comprobante firmado"
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "YSBdXT4gYg==",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBW2EgXV1dXT48IVtDREFUQVs+IGJdXT48L2NvbXByb2JhbnRlPgo8bWVuc2FqZXMvPgo8L2F1dG9yaXphY2lvbj4K",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "XV0+",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBW11dXV0+PCFbQ0RBVEFbPl1dPjwvY29tcHJvYmFudGU+CjxtZW5zYWplcy8+CjwvYXV0b3JpemFjaW9uPgo=",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "XV1dXT4+",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBW11dXV1dXT48IVtDREFUQVs+Pl1dPjwvY29tcHJvYmFudGU+CjxtZW5zYWplcy8+CjwvYXV0b3JpemFjaW9uPgo=",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "XV0+XV0+",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBW11dXV0+PCFbQ0RBVEFbPl1dXV0+PCFbQ0RBVEFbPl1dPjwvY29tcHJvYmFudGU+CjxtZW5zYWplcy8+CjwvYXV0b3JpemFjaW9uPgo=",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "77u/PGEvPg==",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBW++7vzxhLz5dXT48L2NvbXByb2JhbnRlPgo8bWVuc2FqZXMvPgo8L2F1dG9yaXphY2lvbj4K",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PGE+DQoJPC9hPgo=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBWzxhPg0KCTwvYT4KXV0+PC9jb21wcm9iYW50ZT4KPG1lbnNhamVzLz4KPC9hdXRvcml6YWNpb24+Cg==",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "AA==",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBWwBdXT48L2NvbXByb2JhbnRlPgo8bWVuc2FqZXMvPgo8L2F1dG9yaXphY2lvbj4K",
+      "error": null
+    },
+    {
+      "authorizationNumber": "0710202601179001234500110010020000001231234567816",
+      "authorizedAt": "2026-10-12T14:30:00.000000",
+      "environment": "TEST",
+      "signed": "PMMo/+2ggD4=",
+      "xml": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGF1dG9yaXphY2lvbj4KPGVzdGFkbz5BVVRPUklaQURPPC9lc3RhZG8+CjxudW1lcm9BdXRvcml6YWNpb24+MDcxMDIwMjYwMTE3OTAwMTIzNDUwMDExMDAxMDAyMDAwMDAwMTIzMTIzNDU2NzgxNjwvbnVtZXJvQXV0b3JpemFjaW9uPgo8ZmVjaGFBdXRvcml6YWNpb24+MjAyNi0xMC0xMlQwOTozMDowMC0wNTowMDwvZmVjaGFBdXRvcml6YWNpb24+CjxhbWJpZW50ZT5QUlVFQkFTPC9hbWJpZW50ZT4KPGNvbXByb2JhbnRlPjwhW0NEQVRBWzzvv70o77+977+9Pl1dPjwvY29tcHJvYmFudGU+CjxtZW5zYWplcy8+CjwvYXV0b3JpemFjaW9uPgo=",
+      "error": null
+    }
+  ],
+  "mailer": [
+    {
+      "name": "acepta",
+      "to": "cliente@example.test",
+      "script": {},
+      "result": {
+        "sent": true,
+        "permanent": false,
+        "error": null,
+        "hasMessageId": true
+      }
+    },
+    {
+      "name": "rcpt 421",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "421 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 421: 421 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "mail 421",
+      "to": "cliente@example.test",
+      "script": {
+        "MAIL": "421 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 421: 421 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "data 421",
+      "to": "cliente@example.test",
+      "script": {
+        "DATA": "421 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 421: 421 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 421",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "421 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 421: 421 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "rcpt 450",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "450 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 450: 450 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "mail 450",
+      "to": "cliente@example.test",
+      "script": {
+        "MAIL": "450 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 450: 450 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "data 450",
+      "to": "cliente@example.test",
+      "script": {
+        "DATA": "450 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 450: 450 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 450",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "450 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 450: 450 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "rcpt 451",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "451 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 451: 451 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "mail 451",
+      "to": "cliente@example.test",
+      "script": {
+        "MAIL": "451 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 451: 451 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "data 451",
+      "to": "cliente@example.test",
+      "script": {
+        "DATA": "451 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 451: 451 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 451",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "451 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 451: 451 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "rcpt 452",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "452 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 452: 452 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "mail 452",
+      "to": "cliente@example.test",
+      "script": {
+        "MAIL": "452 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 452: 452 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "data 452",
+      "to": "cliente@example.test",
+      "script": {
+        "DATA": "452 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 452: 452 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 452",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "452 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 452: 452 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "rcpt 500",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "500 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 500: 500 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "mail 500",
+      "to": "cliente@example.test",
+      "script": {
+        "MAIL": "500 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 500: 500 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "data 500",
+      "to": "cliente@example.test",
+      "script": {
+        "DATA": "500 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 500: 500 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 500",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "500 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 500: 500 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "rcpt 501",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "501 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 501: 501 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "mail 501",
+      "to": "cliente@example.test",
+      "script": {
+        "MAIL": "501 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 501: 501 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "data 501",
+      "to": "cliente@example.test",
+      "script": {
+        "DATA": "501 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 501: 501 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 501",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "501 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 501: 501 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "rcpt 550",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "550 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 550: 550 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "mail 550",
+      "to": "cliente@example.test",
+      "script": {
+        "MAIL": "550 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 550: 550 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "data 550",
+      "to": "cliente@example.test",
+      "script": {
+        "DATA": "550 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 550: 550 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 550",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "550 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 550: 550 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "rcpt 552",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "552 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 552: 552 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "mail 552",
+      "to": "cliente@example.test",
+      "script": {
+        "MAIL": "552 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 552: 552 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "data 552",
+      "to": "cliente@example.test",
+      "script": {
+        "DATA": "552 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 552: 552 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 552",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "552 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 552: 552 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "rcpt 554",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "554 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 554: 554 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "mail 554",
+      "to": "cliente@example.test",
+      "script": {
+        "MAIL": "554 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 554: 554 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "data 554",
+      "to": "cliente@example.test",
+      "script": {
+        "DATA": "554 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 554: 554 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 554",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "554 5.1.1 respuesta de prueba"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 554: 554 5.1.1 respuesta de prueba",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "rcpt 251",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "251 se reenviará"
+      },
+      "result": {
+        "sent": true,
+        "permanent": false,
+        "error": null,
+        "hasMessageId": true
+      }
+    },
+    {
+      "name": "rcpt 252",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "252 no se puede verificar"
+      },
+      "result": {
+        "sent": true,
+        "permanent": false,
+        "error": null,
+        "hasMessageId": true
+      }
+    },
+    {
+      "name": "rcpt 350",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "350 raro"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 350: 350 raro",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 251",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "251 raro"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP 251: 251 raro",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin sin texto",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "554"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 554: 554",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin varias líneas",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "554-primera línea\r\n554-segunda línea\r\n554 tercera"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 554: 554-primera lÃ­nea",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "rcpt varias líneas",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "550-primera línea\r\n550 segunda"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 550: 550-primera lÃ­nea",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin 400 letras",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "554 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 554: 554 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "fin con tildes",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "550 5.1.1 El buzón no existe"
+      },
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "SMTP 550: 550 5.1.1 El buzÃ³n no existe",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "saludo 421",
+      "to": "cliente@example.test",
+      "script": {
+        "GREETING": "421 ocupado"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: MessagingException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "saludo 554",
+      "to": "cliente@example.test",
+      "script": {
+        "GREETING": "554 no se atiende"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: MessagingException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "ehlo 502",
+      "to": "cliente@example.test",
+      "script": {
+        "EHLO": "502 no implementado"
+      },
+      "result": {
+        "sent": true,
+        "permanent": false,
+        "error": null,
+        "hasMessageId": true
+      }
+    },
+    {
+      "name": "ehlo y helo 554",
+      "to": "cliente@example.test",
+      "script": {
+        "EHLO": "554 no",
+        "HELO": "554 no"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: MessagingException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "corte en el saludo",
+      "to": "cliente@example.test",
+      "script": {
+        "GREETING": "DROP"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: MessagingException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "corte en mail",
+      "to": "cliente@example.test",
+      "script": {
+        "MAIL": "DROP"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP -1: [EOF]",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "corte en rcpt",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "DROP"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP -1: [EOF]",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "corte en data",
+      "to": "cliente@example.test",
+      "script": {
+        "DATA": "DROP"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP -1: [EOF]",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "corte al final",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "DROP"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "SMTP -1: [EOF]",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "sin respuesta en el saludo",
+      "to": "cliente@example.test",
+      "script": {
+        "GREETING": "HANG"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: SocketTimeoutException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "sin respuesta en rcpt",
+      "to": "cliente@example.test",
+      "script": {
+        "RCPT": "HANG"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: MailSendException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "sin respuesta al final",
+      "to": "cliente@example.test",
+      "script": {
+        "END": "HANG"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: MailSendException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "puerto cerrado",
+      "to": "cliente@example.test",
+      "script": {
+        "OPTION": "CLOSED"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: ConnectException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "servidor inexistente",
+      "to": "cliente@example.test",
+      "script": {
+        "OPTION": "UNKNOWN_HOST"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: UnknownHostException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "STARTTLS exigido y no ofrecido",
+      "to": "cliente@example.test",
+      "script": {
+        "OPTION": "STARTTLS"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: MessagingException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "STARTTLS ofrecido y rechazado",
+      "to": "cliente@example.test",
+      "script": {
+        "EHLO": "250-smtp.stub\r\n250 STARTTLS",
+        "OPTION": "STARTTLS",
+        "STARTTLS": "454 no disponible"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: MessagingException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "credenciales rechazadas 535",
+      "to": "cliente@example.test",
+      "script": {
+        "AUTH": "535 5.7.8 no",
+        "EHLO": "250-smtp.stub\r\n250 AUTH PLAIN LOGIN",
+        "OPTION": "AUTH"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: AuthenticationFailedException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "credenciales rechazadas 454",
+      "to": "cliente@example.test",
+      "script": {
+        "AUTH": "454 4.7.0 luego",
+        "EHLO": "250-smtp.stub\r\n250 AUTH PLAIN LOGIN",
+        "OPTION": "AUTH"
+      },
+      "result": {
+        "sent": false,
+        "permanent": false,
+        "error": "Sin respuesta del servidor de correo: AuthenticationFailedException",
+        "hasMessageId": false
+      }
+    },
+    {
+      "name": "credenciales sin AUTH ofrecido",
+      "to": "cliente@example.test",
+      "script": {
+        "OPTION": "AUTH"
+      },
+      "result": {
+        "sent": true,
+        "permanent": false,
+        "error": null,
+        "hasMessageId": true
+      }
+    },
+    {
+      "name": "dirección en grupo",
+      "to": "grupo:a@x.test,b@y.test;",
+      "script": {},
+      "result": {
+        "sent": true,
+        "permanent": false,
+        "error": null,
+        "hasMessageId": true
+      }
+    },
+    {
+      "name": "dirección sin arroba",
+      "to": "no-es-un-correo",
+      "script": {},
+      "result": {
+        "sent": false,
+        "permanent": true,
+        "error": "Dirección de correo no válida",
+        "hasMessageId": false
+      }
+    }
+  ]
+}

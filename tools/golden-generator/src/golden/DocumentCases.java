@@ -245,7 +245,7 @@ final class DocumentCases {
 		return value == null ? null : value.toPlainString();
 	}
 
-	private static Map<String, Object> invoiceData(InvoiceXmlData d) {
+	static Map<String, Object> invoiceData(InvoiceXmlData d) {
 		Map<String, Object> m = new LinkedHashMap<>();
 		m.put("environment", d.environment());
 		m.put("issuerLegalName", d.issuerLegalName());
@@ -321,14 +321,14 @@ final class DocumentCases {
 		return m;
 	}
 
-	private static Map<String, Object> noteData(DocumentEnvelope e, Map<String, Object> content) {
+	static Map<String, Object> noteData(DocumentEnvelope e, Map<String, Object> content) {
 		Map<String, Object> m = new LinkedHashMap<>();
 		m.put("envelope", envelopeData(e));
 		m.put("content", content);
 		return m;
 	}
 
-	private static Map<String, Object> envelopeData(DocumentEnvelope e) {
+	static Map<String, Object> envelopeData(DocumentEnvelope e) {
 		Map<String, Object> m = new LinkedHashMap<>();
 		m.put("type", e.type().code());
 		m.put("environment", e.environment());
@@ -377,7 +377,7 @@ final class DocumentCases {
 		return m;
 	}
 
-	private static Map<String, Object> creditContent(CreditNoteContent c) {
+	static Map<String, Object> creditContent(CreditNoteContent c) {
 		Map<String, Object> m = new LinkedHashMap<>();
 		m.put("reason", c.reason());
 		List<Object> lines = new ArrayList<>();
@@ -402,7 +402,7 @@ final class DocumentCases {
 		return m;
 	}
 
-	private static Map<String, Object> debitContent(DebitNoteContent c) {
+	static Map<String, Object> debitContent(DebitNoteContent c) {
 		Map<String, Object> m = new LinkedHashMap<>();
 		List<Object> reasons = new ArrayList<>();
 		for (DebitNoteContent.Reason reason : c.reasons()) {

@@ -11,14 +11,16 @@ import {
 } from '../../support/containers.js';
 import { freshIp, startTestApp, type TestApp } from '../../support/test-app.js';
 import { createHash, randomUUID } from 'node:crypto';
-import type { Kysely } from 'kysely';
+import { type Kysely, sql } from 'kysely';
 import { CertificateService } from '../../../src/certificate/certificate.service.js';
 import { BigDecimal } from '../../../src/common/big-decimal.js';
 import { DATABASE } from '../../../src/database/database.module.js';
 import type { DB } from '../../../src/database/schema.js';
+import { DeliveryService } from '../../../src/delivery/delivery.service.js';
 import { DocumentPipeline } from '../../../src/orchestration/document-pipeline.js';
 import { XadesVerifier } from '../../../src/signature/xades-verifier.js';
 import { ArtifactStore } from '../../../src/storage/artifact-store.js';
+import { pdfText } from '../../support/pdf-inspect.js';
 import { processDocument } from '../../support/scenario.js';
 import { SriStub, sriTestEnv } from '../../support/sri-stub.js';
 
@@ -76,7 +78,8 @@ beforeAll(async () => {
   testApp = await startTestApp(
     { databaseUrl: postgres.databaseUrl, rabbitUrl: rabbit.rabbitUrl, redisUrl: redis.redisUrl },
     // El SRI simulado, para llevar por el pipeline de NestJS lo que emitió Java (E4).
-    { ...meta.env, ...sriTestEnv(sri) },
+    // El correo habilitado, hacia el SMTP en memoria (E5).
+    { ...meta.env, ...sriTestEnv(sri), DELIVERY_EMAIL_ENABLED: 'true' },
   );
 });
 afterAll(async () => {
@@ -351,6 +354,62 @@ describe('firma y SRI (E4) con lo que dejó Java', () => {
       .get(ArtifactStore)
       .exists(testApp.app.get<symbol, Kysely<DB>>(DATABASE), meta.tenantId, meta.debitNoteId, 'SRI_AUTHORIZATION');
     expect(artifacts).toBe(true);
+  });
+});
+
+describe('archivo y entrega (E5) de lo que emitió Java', () => {
+  const token = async () =>
+    (
+      (
+        await testApp.http
+          .post('/api/v1/auth/login')
+          .set('X-Forwarded-For', freshIp())
+          .send({ email: meta.email, password: meta.password })
+          .expect(200)
+      ).body as { accessToken: string }
+    ).accessToken;
+
+  it.each([
+    ['invoiceId', 'factura', 'Factura ', 'FACTURA'],
+    ['creditNoteId', 'nota-credito', 'Nota de crédito ', 'NOTA DE CRÉDITO'],
+    ['debitNoteId', 'nota-debito', 'Nota de débito ', 'NOTA DE DÉBITO'],
+  ] as const)('%s se archiva, se entrega y se descarga', async (key, stem, subject, title) => {
+    const id = meta[key];
+    const db = testApp.app.get<symbol, Kysely<DB>>(DATABASE);
+    if (key === 'invoiceId') {
+      // El volcado la dejó en AUTHORIZED por SQL, sin firma ni autorización: aquí hace su recorrido.
+      await sql`UPDATE fiscal_documents SET state = 'RESERVED' WHERE id = ${id}`.execute(db);
+    }
+    await sql`UPDATE fiscal_documents SET customer_email = 'receptor@example.test' WHERE id = ${id}`.execute(db);
+    let state = '';
+    for (let step = 0; step < 10 && state !== 'AUTHORIZED'; step++) {
+      state = await testApp.app.get(DocumentPipeline).advance(meta.tenantId, id);
+    }
+    expect(state).toBe('AUTHORIZED');
+
+    expect(await testApp.app.get(DeliveryService).process(meta.tenantId, id)).toBe(1);
+
+    const mail = testApp.smtp.messages().find((message) => message.subject.startsWith(subject));
+    expect(mail?.to).toContain('receptor@example.test');
+    const owner = { Authorization: `Bearer ${await token()}`, 'X-Tenant-Id': meta.tenantId };
+    const ride = await testApp.http.get(`/api/v1/documents/${id}/artifacts/ride`).set(owner).responseType('blob').expect(200);
+    expect(ride.headers['content-disposition']).toMatch(new RegExp(`filename="${stem}-[0-9]{3}-[0-9]{3}-[0-9]{9}-ride[.]pdf"`));
+    const text = await pdfText(ride.body as Buffer);
+    expect(text).toContain(title);
+    const row = await sql<{ access_key: string; customer_name: string }>`
+      SELECT access_key, customer_name FROM fiscal_documents WHERE id = ${id}`.execute(db);
+    expect(text).toContain(row.rows[0]!.access_key);
+    expect(text).toContain(row.rows[0]!.customer_name);
+    const xml = await testApp.http
+      .get(`/api/v1/documents/${id}/artifacts/xml-authorized`)
+      .set(owner)
+      .responseType('blob')
+      .expect(200);
+    expect((xml.body as Buffer).toString('utf8')).toContain(
+      `<numeroAutorizacion>${row.rows[0]!.access_key}</numeroAutorizacion>`,
+    );
+    const deliveries = await testApp.http.get(`/api/v1/documents/${id}/deliveries`).set(owner).expect(200);
+    expect(deliveries.body).toMatchObject([{ status: 'SENT', automatic: true, recipient: 'receptor@example.test' }]);
   });
 });
 

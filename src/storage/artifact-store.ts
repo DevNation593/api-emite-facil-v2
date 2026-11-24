@@ -16,6 +16,12 @@ export interface StoredArtifact {
   sha256: string;
 }
 
+/** Artefacto con el número del comprobante al que pertenece, para nombrar la descarga. */
+export interface ArtifactDownload extends StoredArtifact {
+  documentType: string;
+  number: string;
+}
+
 export function sha256Hex(content: Buffer): string {
   return createHash('sha256').update(content).digest('hex');
 }
@@ -44,6 +50,23 @@ export class ArtifactStore {
       WHERE tenant_id = ${tenantId} AND document_id = ${documentId} AND kind = ${kind}`.execute(db);
     const row = result.rows[0];
     return row === undefined ? null : { content: row.content, sha256: row.sha256 };
+  }
+
+  async findForDownload(
+    db: Db,
+    tenantId: string,
+    documentId: string,
+    kind: ArtifactKind,
+  ): Promise<ArtifactDownload | null> {
+    const result = await sql<{ content: Buffer; sha256: string; document_type: string; number: string }>`
+      SELECT a.content, a.sha256, d.document_type,
+             d.establishment_code || '-' || d.emission_point_code || '-' || lpad(d.sequence::text, 9, '0') AS number
+        FROM document_artifacts a JOIN fiscal_documents d ON d.tenant_id = a.tenant_id AND d.id = a.document_id
+       WHERE a.tenant_id = ${tenantId} AND a.document_id = ${documentId} AND a.kind = ${kind}`.execute(db);
+    const row = result.rows[0];
+    return row === undefined
+      ? null
+      : { content: row.content, sha256: row.sha256, documentType: row.document_type, number: row.number };
   }
 
   async exists(db: Db, tenantId: string, documentId: string, kind: ArtifactKind): Promise<boolean> {

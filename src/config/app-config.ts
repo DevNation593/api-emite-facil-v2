@@ -4,6 +4,7 @@ import {
   type DatabaseConnection,
   type RabbitConnection,
 } from './connection-urls.js';
+import { type DeliveryConfig, loadDeliveryConfig } from '../delivery/delivery-config.js';
 import { loadSriConfig, type SriConfig } from '../sri/sri-config.js';
 import { parseDuration } from './durations.js';
 
@@ -39,6 +40,7 @@ export interface AppConfig {
     startTls: boolean;
     from: string | null;
   };
+  delivery: DeliveryConfig;
   metricsToken: string | null;
   rateLimit: { requestsPerMinute: number; writesPerMinute: number };
   sri: SriConfig;
@@ -297,6 +299,7 @@ export function loadConfig(env: NodeJS.ProcessEnv): AppConfig {
     masterKey: loadMasterKey(env),
     auth: loadAuth(env),
     mail: loadMail(env),
+    delivery: loadDeliveryConfig(env),
     metricsToken: loadMetricsToken(env),
     rateLimit: {
       requestsPerMinute: integer(env, 'EINVOICE_RATE_LIMIT_REQUESTS', 1200, 1),

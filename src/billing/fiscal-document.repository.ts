@@ -5,6 +5,7 @@ import type { DB } from '../database/schema.js';
 import { documentTypeOf } from '../xml/document-type.js';
 import type { TaxTotal } from './invoice-calculator.js';
 import type { DocumentEnvelope } from './document-envelope.js';
+import type { RideEnvelope } from './ride-envelope.js';
 
 // Port de billing/FiscalDocumentRepository.java. Toda consulta filtra por `tenant_id`; las escrituras
 // exigen una transacción abierta (Propagation.MANDATORY en Java no aplica a todas, pero una escritura
@@ -557,6 +558,38 @@ export class FiscalDocumentRepository {
       WHERE id = ${documentId} AND tenant_id = ${tenantId}`.execute(db);
     const row = result.rows[0];
     return row === undefined ? null : envelopeOf(row);
+  }
+
+  /** Sobre y autorización para el RIDE; nulo si el comprobante no existe en esa empresa o no está autorizado. */
+  async rideEnvelope(db: Db, tenantId: string, documentId: string): Promise<RideEnvelope | null> {
+    const result = await sql<{ authorization_number: string; authorized_at: string }>`
+      SELECT authorization_number, to_char(authorized_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US') AS authorized_at
+      FROM fiscal_documents
+      WHERE id = ${documentId} AND tenant_id = ${tenantId} AND state = 'AUTHORIZED'
+       AND authorization_number IS NOT NULL AND authorized_at IS NOT NULL`.execute(db);
+    const authorization = result.rows[0];
+    if (authorization === undefined) return null;
+    const envelope = await this.envelope(db, tenantId, documentId);
+    if (envelope === null) return null;
+    return {
+      envelope,
+      authorizationNumber: authorization.authorization_number,
+      authorizedAt: authorization.authorized_at,
+    };
+  }
+
+  /** Correo del cliente que el comprobante guardó al emitirse; nulo si no existe en esa empresa o no tiene. */
+  async customerEmail(db: Db, tenantId: string, documentId: string): Promise<string | null> {
+    const result = await sql<{ customer_email: string | null }>`
+      SELECT customer_email FROM fiscal_documents
+      WHERE id = ${documentId} AND tenant_id = ${tenantId}`.execute(db);
+    return result.rows[0]?.customer_email ?? null;
+  }
+
+  /** Nombre de cada forma de pago del catálogo del SRI, por código. */
+  async paymentMethodNames(db: Db): Promise<Map<string, string>> {
+    const result = await sql<{ code: string; name: string }>`SELECT code, name FROM payment_methods`.execute(db);
+    return new Map(result.rows.map((row) => [row.code, row.name]));
   }
 
   /** JSON del contenido propio del comprobante; nulo si no existe en esa empresa o no tiene (la factura). */

@@ -1,13 +1,10 @@
 import { Logger } from '@nestjs/common';
 import { createTransport, type Transporter } from 'nodemailer';
+import { smtpOptions } from '../common/smtp-options.js';
 import type { AppConfig } from '../config/app-config.js';
 
 /** Nombre visible del remitente; el del producto aún no está decidido. */
 const PRODUCT = 'Facturación electrónica';
-
-const CONNECTION_TIMEOUT_MS = 10_000;
-const GREETING_TIMEOUT_MS = 30_000;
-const SOCKET_TIMEOUT_MS = 30_000;
 
 const HOUR_MS = 3_600_000;
 const MINUTE_MS = 60_000;
@@ -113,19 +110,8 @@ export class AuthMailer {
       return;
     }
     this.transport = createTransport({
-      host: mail.host,
-      port: mail.port,
-      secure: false,
-      // STARTTLS exigido salvo SMTP_STARTTLS=false.
-      requireTLS: mail.startTls,
-      ignoreTLS: !mail.startTls,
-      auth:
-        mail.user !== null
-          ? { user: mail.user, pass: mail.password ?? '' }
-          : undefined,
-      connectionTimeout: CONNECTION_TIMEOUT_MS,
-      greetingTimeout: GREETING_TIMEOUT_MS,
-      socketTimeout: SOCKET_TIMEOUT_MS,
+      ...smtpOptions({ ...mail, host: mail.host }),
+      auth: mail.user !== null ? { user: mail.user, pass: mail.password ?? '' } : undefined,
     });
   }
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Regenera test/golden/ con el código de la API Java (solo lectura sobre ese repo,
 // salvo el target/ propio de Maven). Uso:
-//   node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil [--only bean-validation|certificates|xsd|calculations|documents|xades|xades-verify|sri]
+//   node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil [--only bean-validation|certificates|xsd|calculations|documents|xades|xades-verify|sri|delivery|ride]
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -51,8 +51,8 @@ if (!existsSync(join(javaRepo, 'pom.xml'))) fail('argumentos', `${javaRepo} no e
 
 const onlyFlag = argv.indexOf('--only');
 const only = onlyFlag === -1 ? undefined : argv[onlyFlag + 1];
-if (onlyFlag !== -1 && !['bean-validation', 'certificates', 'xsd', 'calculations', 'documents', 'xades', 'xades-verify', 'sri'].includes(only)) {
-  fail('argumentos', '--only admite: bean-validation, certificates, xsd, calculations, documents, xades, xades-verify, sri');
+if (onlyFlag !== -1 && !['bean-validation', 'certificates', 'xsd', 'calculations', 'documents', 'xades', 'xades-verify', 'sri', 'delivery', 'ride'].includes(only)) {
+  fail('argumentos', '--only admite: bean-validation, certificates, xsd, calculations, documents, xades, xades-verify, sri, delivery, ride');
 }
 
 const outDir = join(projectRoot, 'test', 'golden');

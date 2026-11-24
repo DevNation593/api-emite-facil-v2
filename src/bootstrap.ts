@@ -14,6 +14,7 @@ import { RateLimiter } from './common/rate-limiter.js';
 import { correlationIdMiddleware } from './common/correlation-id.middleware.js';
 import { jsonBodyMiddleware } from './common/json-body.js';
 import { allowedMethods } from './common/route-methods.js';
+import { securityHeadersMiddleware } from './common/security-headers.middleware.js';
 import { loadConfig } from './config/app-config.js';
 import { AccessTokens } from './identity/access-tokens.js';
 import { authenticationMiddleware } from './identity/authentication.middleware.js';
@@ -67,6 +68,7 @@ export async function createApp(
   app.useLogger(app.get(Logger));
   // Orden: el id de correlación debe existir antes de que el cuerpo pueda fallar.
   app.use(inFlightMiddleware);
+  app.use(securityHeadersMiddleware);
   app.use(correlationIdMiddleware);
   // La autenticación va antes del cuerpo: sin credenciales no se lee ni se parsea nada. Se
   // construye con los providers ya creados porque corre fuera del ciclo de rutas de Nest.

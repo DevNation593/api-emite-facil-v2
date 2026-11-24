@@ -16,7 +16,7 @@ import {
   debitEnvelope,
 } from './note-fixtures.js';
 
-// Traducción de NoteKindsTest (sin el RIDE, que llega en E5).
+// Traducción de NoteKindsTest.
 const noRepository = null as unknown as FiscalDocumentRepository;
 const credit = new CreditNoteKind(noRepository);
 const debit = new DebitNoteKind(noRepository);

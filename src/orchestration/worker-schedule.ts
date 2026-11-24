@@ -1,11 +1,12 @@
 import { Logger } from '@nestjs/common';
+import type { DueDeliveryScheduler } from '../delivery/due-delivery-scheduler.js';
 import type { DueDocumentScheduler } from './due-document-scheduler.js';
 import { describeError } from './fixed-delay-scheduler.js';
 import type { OutboxRelay } from './outbox-relay.js';
 
 /*
- * Latido del worker, como orchestration/WorkerSchedule.java: encola los comprobantes vencidos y publica el
- * outbox. Los atrasados de entregas (E5) y de avisos (E6) se añadirán aquí.
+ * Latido del worker, como orchestration/WorkerSchedule.java: encola los comprobantes y las
+ * entregas vencidos y publica el outbox. Los atrasados de avisos (E6) se añadirán aquí, con su propio try.
  */
 
 /** Tope de lotes por latido, para que una avalancha de eventos no acapare el planificador. */
@@ -18,12 +19,14 @@ export class WorkerSchedule {
 
   constructor(
     private readonly due: DueDocumentScheduler,
+    private readonly dueDeliveries: DueDeliveryScheduler,
     private readonly relay: OutboxRelay,
   ) {}
 
   async tick(): Promise<void> {
     try {
       await this.due.enqueueDue();
+      await this.dueDeliveries.enqueueDue();
       let batches = 0;
       // Sigue mientras queden eventos por publicar.
       while ((await this.relay.publishPending()) > 0 && ++batches < MAX_BATCHES_PER_TICK);

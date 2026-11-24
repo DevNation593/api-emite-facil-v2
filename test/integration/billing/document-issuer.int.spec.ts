@@ -98,6 +98,10 @@ class BrokenLiquidationKind extends JsonContentKind<Sample> {
   buildXml(_envelope: DocumentEnvelope, _content: Sample): Buffer {
     return Buffer.from('<liquidacionCompra/>', 'utf8');
   }
+
+  buildRide(): Promise<Buffer> {
+    throw new Error('no se usa');
+  }
 }
 
 async function ownerAccess(): Promise<TenantAccess> {
