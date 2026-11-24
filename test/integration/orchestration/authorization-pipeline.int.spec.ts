@@ -27,7 +27,7 @@ import {
 import { Reply, SriStub, sriTestEnv } from '../../support/sri-stub.js';
 import { startTestApp, type TestApp } from '../../support/test-app.js';
 
-// Traducción de orchestration/AuthorizationPipelineIT.java (salvo artifactIsDownloadable, que llega en E5):
+// Traducción de orchestration/AuthorizationPipelineIT.java :
 // consulta de autorización al SRI (simulado) y cierre del comprobante.
 let stack: StackHandle;
 let sri: SriStub;
@@ -103,7 +103,7 @@ it('receivedInvoiceBecomesAuthorized', async () => {
     new Date(AUTHORIZATION_DATE).getTime(),
   );
   expect((await authorizationArtifact())!.content.toString('utf8')).toBe(authorized(key));
-  // Queda programado hasta que se archive (E5).
+  // Queda programado hasta que se archive.
   expect((await nextAttemptAt())!.getTime()).toBeGreaterThan(Date.now());
   expect(await transitions()).toEqual([
     '->RESERVED',
@@ -395,4 +395,16 @@ describe('avances duplicados en RECEIVED', () => {
     expect(await running).toBe('RECEIVED');
     expect(await attemptCount()).toBe(0);
   });
+});
+
+it('artifactIsDownloadable', async () => {
+  await pipeline.advance(s.tenant, document);
+
+  const downloaded = await testApp.http
+    .get(`/api/v1/documents/${document}/artifacts/sri-authorization`)
+    .set('Authorization', bearer(s.owner))
+    .responseType('blob')
+    .expect(200);
+
+  expect((downloaded.body as Buffer).toString('utf8')).toBe(authorized(key));
 });
