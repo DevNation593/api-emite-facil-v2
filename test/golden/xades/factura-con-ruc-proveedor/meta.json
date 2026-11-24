@@ -1,5 +1,15 @@
 {
   "signingTime": "2026-10-29T10:15:30-05:00",
   "p12": "certificado-prueba.p12",
-  "p12Password": "clave-de-prueba-p12"
+  "p12Password": "clave-de-prueba-p12",
+  "numbers": [
+    724618,
+    635361,
+    663761,
+    856370,
+    288731,
+    866688,
+    129522,
+    674273
+  ]
 }

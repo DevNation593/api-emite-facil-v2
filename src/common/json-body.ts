@@ -14,6 +14,17 @@ const parseJson = express.json({
 });
 
 /**
+ * Rutas de escritura cuyo manejador en Java no tiene `@RequestBody`: Spring no lee el cuerpo, así que uno
+ * ilegible no es un error. Aquí tampoco se lee.
+ */
+const BODYLESS_ROUTES: ReadonlyArray<{ method: string; path: RegExp }> = [
+  { method: 'POST', path: /^\/api\/v1\/documents\/[^/]+\/retry$/ },
+];
+
+const bodyless = (req: Request) =>
+  BODYLESS_ROUTES.some((route) => route.method === req.method && route.path.test(req.path));
+
+/**
  * Parser JSON propio (el de Nest se desactiva): los errores de body-parser se
  * traducen aquí, porque Nest los degradaría a un 400 genérico sin distinguir
  * "JSON ilegible" de "cuerpo demasiado grande".
@@ -23,6 +34,11 @@ export function jsonBodyMiddleware(
   res: Response,
   next: NextFunction,
 ): void {
+  if (bodyless(req)) {
+    req.body = undefined;
+    next();
+    return;
+  }
   parseJson(req, res, (err?: unknown) => {
     // El contexto abierto por el middleware de correlación se pierde al leer el
     // cuerpo, así que se reabre desde el id que dejó en la respuesta para que

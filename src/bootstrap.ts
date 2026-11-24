@@ -6,7 +6,8 @@ import {
 import type { Application, NextFunction, Request, Response } from 'express';
 import { NestFactory } from '@nestjs/core';
 import { Logger, LoggerModule } from 'nestjs-pino';
-import type { NestExpressApplication } from '@nestjs/platform-express';
+import { ExpressAdapter, type NestExpressApplication } from '@nestjs/platform-express';
+import expressFactory from 'express';
 import { AppModule } from './app.module.js';
 import { ApiKeyService } from './apikey/api-key.service.js';
 import { RateLimiter } from './common/rate-limiter.js';
@@ -53,7 +54,11 @@ export async function createApp(
   })
   class RootModule {}
 
-  const app = await NestFactory.create<NestExpressApplication>(RootModule, {
+  // Rutas estrictas, como Spring 6: /documents/{id}/retry/ (con barra final) no es la misma ruta y responde
+  // 404. La opción solo vale si se fija antes de que Express cree su router, de ahí la instancia propia.
+  const server = expressFactory();
+  server.set('strict routing', true);
+  const app = await NestFactory.create<NestExpressApplication>(RootModule, new ExpressAdapter(server), {
     // El parser JSON propio (límite 10mb, errores traducidos) sustituye al de Nest.
     bodyParser: false,
     // Los logs de arranque se retienen hasta conectar pino (app.useLogger).

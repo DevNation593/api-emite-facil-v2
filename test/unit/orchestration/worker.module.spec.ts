@@ -29,8 +29,9 @@ describe('WorkerModule en la aplicación', () => {
   it('por defecto el worker está encendido y programa la purga', async () => {
     const app = await appWithWorker(undefined);
     expect(app.get(AuthPurge, { strict: false })).toBeInstanceOf(AuthPurge);
-    expect(app.get(FixedDelayScheduler, { strict: false }).taskNames()).toEqual(['auth-purge']);
-    // Arrancar y cerrar no necesita la base: la primera pasada es dentro de una hora.
+    expect(app.get(FixedDelayScheduler, { strict: false }).taskNames()).toEqual(['auth-purge', 'worker-tick']);
+    // Arrancar y cerrar no necesita la base ni RabbitMQ: la primera purga es dentro de una hora, el primer latido
+    // dentro de un intervalo y el consumidor reintenta en segundo plano.
     await app.init();
     await app.close();
   });

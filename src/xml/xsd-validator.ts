@@ -10,6 +10,7 @@
  * Java. No ve el disco ni la red, de modo que un `import` o un `schemaLocation` externo no se resuelve.
  */
 import { readFile } from 'node:fs/promises';
+import { Counter, type Registry } from 'prom-client';
 import { validateXML } from 'xmllint-wasm';
 import { XMLDSIG_FILE, xsdFile, type DocumentSchema } from './document-type.js';
 import { readXml, XmlMalformedError, XmlRejectedError } from './secure-sax.js';
@@ -76,72 +77,108 @@ export interface XsdValidatorOptions {
   readonly engine?: SchemaEngine;
   readonly timeoutMs?: number;
   readonly maxConcurrent?: number;
+  /** Registro donde contar los plazos vencidos (`einvoice_xsd_validation_timeouts_total`). */
+  readonly registry?: Registry;
+}
+
+/** Quien espera turno: `grant` es nulo si abandonó la cola; `given`, si el turno ya le llegó. */
+interface Waiter {
+  grant: (() => void) | null;
+  given: boolean;
 }
 
 export class XsdValidator {
   private readonly engine: SchemaEngine;
   private readonly timeoutMs: number;
   private readonly maxConcurrent: number;
+  private readonly timeouts: Counter | null;
   private active = 0;
-  private readonly waiting: (() => void)[] = [];
+  private readonly waiting: Waiter[] = [];
   private readonly files = new Map<string, Promise<string>>();
 
   constructor(options: XsdValidatorOptions = {}) {
     this.engine = options.engine ?? validateWithSchema;
     this.timeoutMs = options.timeoutMs ?? VALIDATION_TIMEOUT_MS;
     this.maxConcurrent = options.maxConcurrent ?? MAX_CONCURRENT_VALIDATIONS;
-  }
-
-  private async acquire(): Promise<void> {
-    if (this.active < this.maxConcurrent) {
-      this.active++;
-      return;
-    }
-    // El turno pasa directamente al primero de la cola (FIFO): `active` no baja ni sube.
-    await new Promise<void>((resolve) => this.waiting.push(resolve));
-  }
-
-  private release(): void {
-    const next = this.waiting.shift();
-    if (next) next();
-    else this.active--;
+    this.timeouts =
+      options.registry === undefined
+        ? null
+        : new Counter({
+            name: 'einvoice_xsd_validation_timeouts_total',
+            help: 'Validaciones XSD que vencieron su plazo, contando la espera de turno',
+            registers: [options.registry],
+          });
   }
 
   /**
-   * Corre el motor con turno y plazo. xmllint-wasm no expone el Worker, así que no se puede terminar uno
-   * colgado: al vencer el plazo (o al fallar el motor) se libera el turno y se lanza un `Error`; el Worker
-   * queda a lo que haga, sin forma de cancelarlo desde aquí.
+   * Pide turno. `cancel` lo abandona: si aún esperaba, sale de la cola sin consumir un turno; si el turno ya
+   * le llegó (a la vez que vencía su plazo), lo devuelve.
+   */
+  private acquire(): { granted: Promise<void>; cancel: () => void } {
+    if (this.active < this.maxConcurrent) {
+      this.active++;
+      return { granted: Promise.resolve(), cancel: () => this.release() };
+    }
+    // El turno pasa directamente al primero de la cola (FIFO): `active` no baja ni sube.
+    const entry: Waiter = { grant: null, given: false };
+    const granted = new Promise<void>((resolve) => {
+      entry.grant = resolve;
+    });
+    this.waiting.push(entry);
+    return {
+      granted,
+      cancel: () => {
+        if (entry.given) this.release();
+        else entry.grant = null;
+      },
+    };
+  }
+
+  private release(): void {
+    for (let next = this.waiting.shift(); next !== undefined; next = this.waiting.shift()) {
+      if (next.grant !== null) {
+        next.given = true;
+        next.grant();
+        return;
+      }
+    }
+    this.active--;
+  }
+
+  /**
+   * Corre el motor con turno y plazo. El plazo cuenta desde que se pide turno, no desde que se obtiene: la
+   * espera en la cola más la validación nunca pasan de `timeoutMs` con el secuencial o el comprobante
+   * bloqueados. xmllint-wasm no expone el Worker, así que no se puede terminar uno colgado: al vencer el
+   * plazo (o al fallar el motor) se libera el turno y se lanza un `Error`; el Worker queda a lo que haga,
+   * sin forma de cancelarlo desde aquí (docs/14-xsd-integration.md).
    */
   private async runLimited(
     xml: Buffer,
     main: SchemaFile,
     preload: readonly SchemaFile[],
   ): Promise<ValidationResult> {
-    await this.acquire();
     let timer: NodeJS.Timeout | undefined;
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        this.timeouts?.inc();
+        reject(new Error(`La validación XSD no terminó en ${this.timeoutMs / 1000} s`));
+      }, this.timeoutMs);
+    });
+    const turn = this.acquire();
+    let holding = false;
     try {
-      const timeout = new Promise<never>((_, reject) => {
-        timer = setTimeout(
-          () =>
-            reject(
-              new Error(
-                `La validación XSD no terminó en ${this.timeoutMs / 1000} s`,
-              ),
-            ),
-          this.timeoutMs,
-        );
+      await Promise.race([turn.granted, timeout]);
+      holding = true;
+      const run = this.engine(xml, main, preload).catch((): never => {
+        // El texto del motor (stderr de libxml2) puede incluir un fragmento del XML, con datos del
+        // comprador: no se copia ni al mensaje ni a `cause`.
+        throw new Error('Falló el motor XSD');
       });
-      const run = this.engine(xml, main, preload).catch(
-        (): never => {
-          // El texto del motor (stderr de libxml2) puede incluir un fragmento del XML, con datos del
-          // comprador: no se copia ni al mensaje ni a `cause`.
-          throw new Error('Falló el motor XSD');
-        },
-      );
       return await Promise.race([run, timeout]);
     } finally {
       clearTimeout(timer);
-      this.release();
+      if (holding) this.release();
+      else turn.cancel();
     }
   }
 

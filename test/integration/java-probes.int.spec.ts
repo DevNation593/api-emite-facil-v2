@@ -1,11 +1,12 @@
 import { readFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
-import type { Kysely } from 'kysely';
+import { type Kysely, sql } from 'kysely';
 import {
   type ProbeCase,
   type ProbeResult,
   runProbes,
   runScenario,
+  SEEDED_ATTEMPTS,
   type ScenarioHooks,
   sendRaw,
 } from '../../tools/java-probe/probe.mjs';
@@ -21,7 +22,7 @@ import { startTestApp, type TestApp } from '../support/test-app.js';
  * contra Java: el RUC del escenario es único en la plataforma.
  */
 function replay(
-  casesName: 'e2' | 'e3',
+  casesName: 'e2' | 'e3' | 'e4',
   env: Record<string, string>,
   hooksFor?: (testApp: TestApp) => ScenarioHooks,
 ): void {
@@ -83,4 +84,50 @@ replay(
         .execute();
     },
   }),
+);
+
+// E4: retry e intentos ante el SRI. Mismos topes que E3; el escenario necesita además sembrar intentos, cambiar
+// estados y añadir miembros, como tools/java-probe/run.mjs lo hace por SQL en la base de Java. Sin worker ni SRI
+// habilitado, como corrió Java: los comprobantes se quedan donde el escenario los deja.
+replay(
+  'e4',
+  { EINVOICE_RATE_LIMIT_REQUESTS: '1000000', EINVOICE_RATE_LIMIT_WRITES: '1000000' },
+  (testApp) => {
+    const db = () => testApp.app.get<symbol, Kysely<DB>>(DATABASE);
+    return {
+      async authorize(documentId) {
+        await db().updateTable('fiscal_documents').set({ state: 'AUTHORIZED' }).where('id', '=', documentId).execute();
+      },
+      async setState(documentId, state) {
+        await db().updateTable('fiscal_documents').set({ state }).where('id', '=', documentId).execute();
+      },
+      async addMember(tenantId, email, role) {
+        await sql`INSERT INTO memberships (user_id, tenant_id, role)
+          SELECT id, ${tenantId}, ${role} FROM users WHERE email = ${email}`.execute(db());
+      },
+      async seedAttempts(documentId) {
+        const owner = await sql<{ tenant_id: string }>`SELECT tenant_id FROM fiscal_documents WHERE id = ${documentId}`.execute(
+          db(),
+        );
+        const tenantId = owner.rows[0]!.tenant_id;
+        for (const attempt of SEEDED_ATTEMPTS) {
+          // El instante sembrado ya trae sus decimales: se inserta como texto, sin pasar por Date.
+          const inserted = await sql<{ id: string }>`
+            INSERT INTO sri_attempts (tenant_id, document_id, operation, environment, started_at, completed_at,
+              outcome, sri_status, http_status, error_detail, response)
+            VALUES (${tenantId}, ${documentId}, ${attempt.operation}, ${attempt.environment},
+              ${attempt.startedAt}::timestamptz, ${attempt.completedAt}::timestamptz, ${attempt.outcome},
+              ${attempt.sriStatus}, ${attempt.httpStatus}, ${attempt.errorDetail},
+              ${attempt.response === null ? null : Buffer.from(attempt.response, 'utf8')})
+            RETURNING id`.execute(db());
+          for (const [index, message] of attempt.messages.entries()) {
+            await sql`
+              INSERT INTO sri_messages (attempt_id, position, identifier, message, additional_info, type)
+              VALUES (${inserted.rows[0]!.id}, ${index + 1}, ${message.identifier}, ${message.message},
+                ${message.additionalInfo}, ${message.type})`.execute(db());
+          }
+        }
+      },
+    };
+  },
 );

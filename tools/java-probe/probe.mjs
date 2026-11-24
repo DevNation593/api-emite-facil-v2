@@ -59,16 +59,47 @@ function jsonRequest(method, path, body, headers = {}) {
 }
 
 /**
- * Crea lo que los casos necesitan: una persona con su sesión, una empresa, un emisor, un
- * establecimiento, un punto de emisión, un cliente y un producto. Devuelve sus valores.
- * Con `hooks`, además emite una factura del producto y la pasa a AUTHORIZED con `hooks.authorize`
- * (la emisión deja el comprobante en RESERVED; una nota solo acepta una factura autorizada); sus
- * valores ganan `invoiceId`.
+ * Los intentos que `hooks.seedAttempts` siembra en un comprobante. El instante de cada uno es el
+ * texto que la API debe devolver (Java serializa un `Instant` con 0, 3, 6 o 9 decimales según los
+ * que tenga) y `normalize` lo conserva tal cual para fijar esa precisión. Van del más antiguo al más
+ * reciente; la API los lista del más reciente al más antiguo.
  */
-export async function runScenario(send, hooks) {
-  // El día fiscal se fija una vez: con él se rellenan los casos y se normalizan las respuestas.
-  const today = fiscalToday();
-  const email = `sondeo-${randomUUID()}@example.test`;
+export const SEEDED_ATTEMPTS = [
+  {
+    operation: 'RECEPTION',
+    environment: '1',
+    startedAt: '2001-01-15T10:20:30.123456Z',
+    completedAt: '2001-01-15T10:20:30.500Z',
+    outcome: 'RETURNED',
+    sriStatus: 'DEVUELTA',
+    httpStatus: 200,
+    errorDetail: null,
+    response: '<respuesta>cruda del SRI que no sale por la API</respuesta>',
+    messages: [
+      { identifier: '35', message: 'ARCHIVO NO CUMPLE ESTRUCTURA XML', additionalInfo: 'Elemento inválido: razónSocial', type: 'ERROR' },
+      { identifier: '43', message: 'CLAVE ACCESO REGISTRADA', additionalInfo: 'Ya existe el comprobante', type: 'ERROR' },
+    ],
+  },
+  {
+    operation: 'AUTHORIZATION',
+    environment: '1',
+    startedAt: '2001-01-15T10:20:31Z',
+    completedAt: null,
+    outcome: null,
+    sriStatus: null,
+    httpStatus: null,
+    errorDetail: null,
+    response: null,
+    messages: [],
+  },
+];
+
+/** Los roles de los miembros que el escenario siembra con `hooks.addMember`. */
+const MEMBER_ROLES = ['AUDITOR', 'BILLER'];
+
+/** Registra a una persona y devuelve su correo y la cabecera con su sesión. */
+async function signUp(send, label) {
+  const email = `sondeo-${label}${randomUUID()}@example.test`;
   const ip = { 'x-forwarded-for': '198.51.100.7' };
   await expectJson(send, 'registro', jsonRequest('POST', '/api/v1/auth/register', { email, password: PASSWORD }, ip), 202);
   const tokens = await expectJson(
@@ -77,13 +108,12 @@ export async function runScenario(send, hooks) {
     jsonRequest('POST', '/api/v1/auth/login', { email, password: PASSWORD }, ip),
     200,
   );
-  const auth = { authorization: `Bearer ${tokens.accessToken}` };
-  const tenant = await expectJson(
-    send,
-    'empresa',
-    jsonRequest('POST', '/api/v1/tenants', { name: 'Empresa de sondeo' }, auth),
-    201,
-  );
+  return { email, auth: { authorization: `Bearer ${tokens.accessToken}` } };
+}
+
+/** Una empresa con su emisor, establecimiento, punto de emisión, cliente y producto. */
+async function createWorld(send, auth, { ruc, name, sku }) {
+  const tenant = await expectJson(send, 'empresa', jsonRequest('POST', '/api/v1/tenants', { name }, auth), 201);
   const owner = { ...auth, 'x-tenant-id': tenant.id };
   const taxpayer = await expectJson(
     send,
@@ -91,12 +121,7 @@ export async function runScenario(send, hooks) {
     jsonRequest(
       'POST',
       '/api/v1/taxpayers',
-      {
-        ruc: SCENARIO_RUC,
-        legalName: 'Emisor de Sondeo S.A.',
-        headOfficeAddress: 'Av. Amazonas 100',
-        defaultEnvironment: '1',
-      },
+      { ruc, legalName: 'Emisor de Sondeo S.A.', headOfficeAddress: 'Av. Amazonas 100', defaultEnvironment: '1' },
       owner,
     ),
     201,
@@ -127,47 +152,101 @@ export async function runScenario(send, hooks) {
   const product = await expectJson(
     send,
     'producto',
-    jsonRequest(
-      'POST',
-      '/api/v1/products',
-      { sku: 'SKU-SONDEO', name: 'Producto de Sondeo', unitPrice: '10.50', ivaRateCode: '4' },
-      owner,
-    ),
+    jsonRequest('POST', '/api/v1/products', { sku, name: 'Producto de Sondeo', unitPrice: '10.50', ivaRateCode: '4' }, owner),
     201,
   );
+  return { owner, tenant, taxpayer, establishment, point, customer, product };
+}
+
+/** Emite la factura de 12.08 (un producto de 10.50 con IVA del 15 %) y devuelve su id. */
+async function issueInvoice(send, world, key) {
+  // 10.50 con IVA del 15 % (código 4): subtotal 10.50, IVA 1.58 (1.575 redondeado) y total 12.08.
+  const issued = await expectJson(
+    send,
+    'factura',
+    jsonRequest(
+      'POST',
+      '/api/v1/invoices',
+      {
+        taxpayerId: world.taxpayer.id,
+        establishmentCode: '001',
+        emissionPointCode: '001',
+        customerId: world.customer.id,
+        lines: [{ productId: world.product.id, quantity: '1' }],
+        payments: [{ methodCode: '01', amount: INVOICE_TOTAL }],
+      },
+      { ...world.owner, 'idempotency-key': key },
+    ),
+    202,
+  );
+  return issued.id;
+}
+
+/**
+ * Crea lo que los casos necesitan: una persona con su sesión, una empresa, un emisor, un
+ * establecimiento, un punto de emisión, un cliente y un producto. Devuelve sus valores.
+ * Con `hooks`, además emite una factura del producto y la pasa a AUTHORIZED con `hooks.authorize`
+ * (la emisión deja el comprobante en RESERVED; una nota solo acepta una factura autorizada); sus
+ * valores ganan `invoiceId`.
+ * Con `hooks.seedAttempts`, el escenario sigue con lo que necesita E4: siembra los intentos
+ * `SEEDED_ATTEMPTS` en `invoiceId`; emite tres facturas más que quedan en RESERVED
+ * (`retryDocumentId`), RETURNED (`returnedDocumentId`) y NOT_AUTHORIZED (`notAuthorizedDocumentId`,
+ * las dos últimas con `hooks.setState`); crea una segunda empresa con su factura (`otherTenantId`,
+ * `otherInvoiceId`) y, con `hooks.addMember`, dos miembros de la primera con rol AUDITOR y BILLER
+ * (`scenario.actors.auditor` y `.biller`) y una persona sin membresía (`.stranger`).
+ */
+export async function runScenario(send, hooks) {
+  // El día fiscal se fija una vez: con él se rellenan los casos y se normalizan las respuestas.
+  const today = fiscalToday();
+  const { email, auth } = await signUp(send, '');
+  const world = await createWorld(send, auth, {
+    ruc: SCENARIO_RUC,
+    name: 'Empresa de sondeo',
+    sku: 'SKU-SONDEO',
+  });
   const values = {
     email,
-    tenantId: tenant.id,
-    taxpayerId: taxpayer.id,
-    establishmentId: establishment.id,
-    emissionPointId: point.id,
-    customerId: customer.id,
-    productId: product.id,
+    tenantId: world.tenant.id,
+    taxpayerId: world.taxpayer.id,
+    establishmentId: world.establishment.id,
+    emissionPointId: world.point.id,
+    customerId: world.customer.id,
+    productId: world.product.id,
   };
+  const scenario = { headers: world.owner, values, today };
   if (hooks !== undefined) {
-    // 10.50 con IVA del 15 % (código 4): subtotal 10.50, IVA 1.58 (1.575 redondeado) y total 12.08.
-    const issued = await expectJson(
-      send,
-      'factura',
-      jsonRequest(
-        'POST',
-        '/api/v1/invoices',
-        {
-          taxpayerId: taxpayer.id,
-          establishmentCode: '001',
-          emissionPointCode: '001',
-          customerId: customer.id,
-          lines: [{ productId: product.id, quantity: '1' }],
-          payments: [{ methodCode: '01', amount: INVOICE_TOTAL }],
-        },
-        { ...owner, 'idempotency-key': 'sondeo-factura' },
-      ),
-      202,
-    );
-    await hooks.authorize(issued.id);
-    values.invoiceId = issued.id;
+    values.invoiceId = await issueInvoice(send, world, 'sondeo-factura');
+    await hooks.authorize(values.invoiceId);
   }
-  return { headers: owner, values, today };
+  if (hooks?.seedAttempts !== undefined) {
+    await hooks.seedAttempts(values.invoiceId);
+    values.retryDocumentId = await issueInvoice(send, world, 'sondeo-reintento');
+    values.returnedDocumentId = await issueInvoice(send, world, 'sondeo-devuelta');
+    await hooks.setState(values.returnedDocumentId, 'RETURNED');
+    values.notAuthorizedDocumentId = await issueInvoice(send, world, 'sondeo-no-autorizada');
+    await hooks.setState(values.notAuthorizedDocumentId, 'NOT_AUTHORIZED');
+
+    const second = await signUp(send, 'otra-');
+    const otherWorld = await createWorld(send, second.auth, {
+      ruc: '1790012346001',
+      name: 'Otra empresa de sondeo',
+      sku: 'SKU-OTRA',
+    });
+    values.otherTenantId = otherWorld.tenant.id;
+    values.otherInvoiceId = await issueInvoice(send, otherWorld, 'sondeo-factura-ajena');
+
+    const actors = {};
+    for (const role of MEMBER_ROLES) {
+      const member = await signUp(send, `${role.toLowerCase()}-`);
+      await hooks.addMember(world.tenant.id, member.email, role);
+      actors[role.toLowerCase()] = { ...member.auth, 'x-tenant-id': world.tenant.id };
+    }
+    // Una persona registrada que no pertenece a la empresa del escenario.
+    const stranger = await signUp(send, 'ajena-');
+    actors.stranger = { ...stranger.auth, 'x-tenant-id': world.tenant.id };
+    scenario.actors = actors;
+  }
+  return scenario;
 }
 
 const PLACEHOLDER = /\{([A-Za-z0-9]+)\}/g;
@@ -200,7 +279,8 @@ function fill(value, values) {
 export function caseRequest(probe, scenario) {
   const values = { ...placeholders(scenario.values), ...dateValues(scenario.today ?? fiscalToday()) };
   const path = fill(probe.path, values) + (probe.query === undefined ? '' : `?${fill(probe.query, values)}`);
-  const headers = { ...(probe.auth === 'owner' ? scenario.headers : {}), ...(probe.headers ?? {}) };
+  const actor = probe.auth === 'owner' ? scenario.headers : scenario.actors?.[probe.auth];
+  const headers = { ...(actor ?? {}), ...fill(probe.headers ?? {}, values) };
   let body;
   if (probe.rawBody !== undefined) {
     body = fill(probe.rawBody, values);
@@ -214,6 +294,9 @@ export function caseRequest(probe, scenario) {
 
 const UUID = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/g;
 const TIMESTAMP = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})/g;
+const SEEDED_INSTANTS = new Set(
+  SEEDED_ATTEMPTS.flatMap((attempt) => [attempt.startedAt, attempt.completedAt]).filter((instant) => instant !== null),
+);
 const ACCESS_KEY = /(?<!\d)\d{49}(?!\d)/g;
 
 /** La fecha fiscal de hoy (YYYY-MM-DD en America/Guayaquil): la de un comprobante sin `issueDate`. */
@@ -258,7 +341,8 @@ export function normalize(value, scenario) {
     }
     return text
       .replace(UUID, '{uuid}')
-      .replace(TIMESTAMP, '{timestamp}')
+      // Los instantes sembrados se conservan: fijan cuántos decimales muestra la API.
+      .replace(TIMESTAMP, (instant) => (SEEDED_INSTANTS.has(instant) ? instant : '{timestamp}'))
       .replace(ACCESS_KEY, '{accessKey}')
       .replaceAll(scenario.today ?? fiscalToday(), '{today}');
   }
