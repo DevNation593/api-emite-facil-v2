@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { Test } from 'supertest';
+import { DocumentArchiver } from '../../../src/delivery/document-archiver.js';
 import { type AuthorizedInvoice, DeliveryHarness } from '../../support/delivery-scenario.js';
 import { bearer, billingScenario, invoiceJson, issueInvoice, memberToken } from '../../support/scenario.js';
 import { startTestApp } from '../../support/test-app.js';
@@ -145,23 +146,95 @@ it('notAuthorizedDocumentCannotBeDelivered', async () => {
   expect((await h.db.query('SELECT 1 FROM deliveries WHERE document_id = $1', [reserved])).rowCount).toBe(0);
 });
 
-it('limitPerDocument', async () => {
-  // El tope por comprobante es 10, contando la entrega automática.
-  for (let i = 0; i < 10; i++) await request().expect(202);
+/** Inserta por SQL entregas pedidas por el usuario, como las que pudo dejar Java. */
+const insertManual = (count: number) =>
+  h.db.query(
+    `INSERT INTO deliveries (tenant_id, document_id, channel, recipient, status, next_attempt_at, requested_by)
+     SELECT tenant_id, id, 'EMAIL', customer_email, 'PENDING', now(), created_by
+     FROM fiscal_documents, generate_series(1, $2::int) WHERE id = $1`,
+    [invoice.document, count],
+  );
+
+const automaticCount = async () => (await invoice.rows()).filter((row) => row.requested_by === null).length;
+
+// El tope por comprobante es 10, contando la entrega automática. Diferencia deliberada con DeliveryApiIT de Java, que
+// admite 10 reenvíos antes de que exista la automática y acaba enviando 11 (docs/route-inventory.md).
+it('limitPerDocument: el tope reserva sitio para la entrega automática que falta', async () => {
+  for (let i = 0; i < 9; i++) await request().expect(202);
 
   const res = await request();
 
   expect(res.status).toBe(409);
   expect(res.body).toMatchObject({ errorCode: 'DELIVERY_LIMIT_REACHED' });
+  expect(await invoice.rows()).toHaveLength(9);
+
+  // El worker crea la automática en el sitio reservado: salen 10 correos, no 11.
+  expect(await invoice.process()).toBe(10);
+  expect(h.smtp.raw(invoice.email)).toHaveLength(10);
   expect(await invoice.rows()).toHaveLength(10);
+  expect(await automaticCount()).toBe(1);
+
+  await request().expect(409);
+  expect(await invoice.process()).toBe(0);
+  expect(h.smtp.raw(invoice.email)).toHaveLength(10);
+});
+
+it('con la entrega automática ya creada quedan nueve reenvíos', async () => {
+  await invoice.process();
+  for (let i = 0; i < 9; i++) await request().expect(202);
+
+  await request().expect(409);
+
+  expect(await invoice.process()).toBe(9);
+  expect(h.smtp.raw(invoice.email)).toHaveLength(10);
+});
+
+it('sin correo del cliente no hay entrega automática que reservar', async () => {
+  await h.db.query('UPDATE fiscal_documents SET customer_email = NULL WHERE id = $1', [invoice.document]);
+  const other = `otra-${randomUUID()}@cliente.test`;
+  for (let i = 0; i < 10; i++) await request(invoice.s.owner, { email: other }).expect(202);
+
+  await request(invoice.s.owner, { email: other }).expect(409);
+
+  expect(await invoice.process()).toBe(10);
+  expect(h.smtp.raw(other)).toHaveLength(10);
+  expect(await automaticCount()).toBe(0);
+});
+
+it('con el tope ya alcanzado por reenvíos (datos de Java) no se añade la entrega automática', async () => {
+  await insertManual(10);
+
+  expect(await invoice.process()).toBe(10);
+
+  expect(h.smtp.raw(invoice.email)).toHaveLength(10);
+  expect(await invoice.rows()).toHaveLength(10);
+  expect(await automaticCount()).toBe(0);
 });
 
 it('peticiones simultáneas no superan el tope', async () => {
   const statuses = (await Promise.all(Array.from({ length: 14 }, () => request()))).map((res) => res.status);
 
-  expect(statuses.filter((status) => status === 202)).toHaveLength(10);
-  expect(statuses.filter((status) => status === 409)).toHaveLength(4);
+  expect(statuses.filter((status) => status === 202)).toHaveLength(9);
+  expect(statuses.filter((status) => status === 409)).toHaveLength(5);
+  expect(await invoice.rows()).toHaveLength(9);
+});
+
+it('peticiones a la vez que el worker crea la automática no superan el tope', async () => {
+  // Archivado de antemano: así el worker llega a crear la entrega automática mientras entran las peticiones.
+  await h.testApp.app.get(DocumentArchiver).archive(invoice.s.tenant, invoice.document);
+  await insertManual(7);
+
+  const [sent, ...responses] = await Promise.all([
+    invoice.process(),
+    ...Array.from({ length: 6 }, async () => (await request()).status),
+  ]);
+
+  expect(sent).toBeGreaterThanOrEqual(8);
+  expect(responses.filter((status) => status === 202)).toHaveLength(2);
   expect(await invoice.rows()).toHaveLength(10);
+  expect(await automaticCount()).toBe(1);
+  await invoice.process();
+  expect(h.smtp.raw(invoice.email)).toHaveLength(10);
 });
 
 it('billerCanResendAndAuditorCanOnlyList', async () => {

@@ -137,6 +137,10 @@ cualquier otro (400 o 404 en problem+json).
 
 ### Entrega por correo (E5)
 
+- Diferencia deliberada: el tope de entregas por comprobante (10) reserva sitio para la automática mientras el worker
+  no la ha creado, si el cliente tiene correo. En Java, diez reenvíos pedidos antes de que el worker procese el
+  comprobante se aceptan y después se suma la automática: salen 11 correos. Aquí se aceptan nueve. La automática se crea
+  con el comprobante bloqueado, y no se crea si ya hay tantas entregas como el tope.
 - El texto con que el servidor SMTP rechaza un mensaje (`lastError`) se lee en UTF-8; JavaMail lo lee en Latin-1.
 - Una respuesta `251` o `252` al mensaje completo cuenta como aceptado; JavaMail la da por fallo temporal y el correo
   se repetiría.

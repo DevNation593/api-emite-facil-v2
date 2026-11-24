@@ -75,6 +75,14 @@ export class DeliveryRepository {
     return Number(result.numAffectedRows ?? 0) === 1;
   }
 
+  /** Si el comprobante ya tiene su entrega automática. */
+  async hasAutomatic(db: Db, documentId: string): Promise<boolean> {
+    const result = await sql<{ found: boolean }>`
+      SELECT EXISTS (SELECT 1 FROM deliveries WHERE document_id = ${documentId} AND channel = 'EMAIL'
+       AND requested_by IS NULL) AS found`.execute(db);
+    return result.rows[0]!.found;
+  }
+
   /** Crea una entrega pedida por un usuario. */
   async create(db: Db, tenantId: string, documentId: string, recipient: string, requestedBy: string): Promise<string> {
     const result = await sql<{ id: string }>`

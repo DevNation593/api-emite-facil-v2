@@ -3,6 +3,7 @@ import type { Kysely } from 'kysely';
 import type { DocumentKinds } from '../billing/document-kind.js';
 import type { FiscalDocumentRepository } from '../billing/fiscal-document.repository.js';
 import type { RideEnvelope } from '../billing/ride-envelope.js';
+import { strip } from '../common/java-text.js';
 import type { DB } from '../database/schema.js';
 import { retryDelayMs } from '../orchestration/retry-policy.js';
 import type { WebhookRecorder } from '../orchestration/webhook-recorder.js';
@@ -17,6 +18,11 @@ import type { DocumentArchiver } from './document-archiver.js';
 export const DELIVERY_MAILER = Symbol('DELIVERY_MAILER');
 
 const MAX_ERROR = 500;
+
+/** Si a ese correo del cliente le corresponde una entrega automática. */
+export function hasAutomaticDelivery(customerEmail: string | null): customerEmail is string {
+  return customerEmail !== null && strip(customerEmail) !== '';
+}
 
 const errorName = (error: unknown): string => (error instanceof Error ? error.constructor.name : typeof error);
 
@@ -58,15 +64,25 @@ export class DeliveryService {
     const ride = await this.documents.rideEnvelope(this.db, tenantId, documentId);
     if (ride === null) return 0;
     const customerEmail = ride.envelope.recipient.email;
-    if (customerEmail !== null && customerEmail.trim() !== '') {
-      await this.deliveries.ensureAutomatic(this.db, tenantId, documentId, customerEmail);
-    }
+    if (hasAutomaticDelivery(customerEmail)) await this.ensureAutomatic(tenantId, documentId, customerEmail);
     let sent = 0;
     for (const deliveryId of await this.deliveries.pending(this.db, tenantId, documentId, this.config.sendLeaseMs)) {
       const claim = await this.deliveries.claim(this.db, deliveryId, this.config.sendLeaseMs);
       if (claim !== null && (await this.send(tenantId, documentId, deliveryId, claim, ride))) sent++;
     }
     return sent;
+  }
+
+  /**
+   * Crea la entrega automática si falta y cabe. El bloqueo del comprobante la ordena con las peticiones de reenvío,
+   * que le reservan su sitio en el tope; solo no cabe si ya había tantos reenvíos como el tope (datos de Java).
+   */
+  private ensureAutomatic(tenantId: string, documentId: string, recipient: string): Promise<void> {
+    return this.db.transaction().execute(async (trx) => {
+      await this.documents.lockForProcessing(trx, tenantId, documentId);
+      if ((await this.deliveries.count(trx, documentId)) >= this.config.maxPerDocument) return;
+      await this.deliveries.ensureAutomatic(trx, tenantId, documentId, recipient);
+    });
   }
 
   private async send(

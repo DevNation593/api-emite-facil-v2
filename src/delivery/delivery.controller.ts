@@ -14,6 +14,7 @@ import { TenantAccessGuard } from '../tenancy/tenant-access.guard.js';
 import { validAddress } from './delivery-config.js';
 import { DeliveryRequestDto } from './delivery.dto.js';
 import { DeliveryRepository, type DeliveryRow } from './delivery.repository.js';
+import { hasAutomaticDelivery } from './delivery.service.js';
 
 export const DELIVERY_REQUESTED = 'DELIVERY_REQUESTED';
 
@@ -94,8 +95,8 @@ export class DeliveryController {
         throw new ApiException(409, 'DELIVERY_DISABLED', 'El envío de comprobantes por correo no está habilitado');
       }
       const requested = strip((request as DeliveryRequestDto | null)?.email ?? '');
-      const recipient =
-        requested === '' ? strip((await this.documents.customerEmail(trx, access.tenantId, id)) ?? '') : requested;
+      const customerEmail = await this.documents.customerEmail(trx, access.tenantId, id);
+      const recipient = requested === '' ? strip(customerEmail ?? '') : requested;
       if (recipient === '') {
         throw new ApiException(
           422,
@@ -106,7 +107,9 @@ export class DeliveryController {
       if (!validAddress(recipient)) {
         throw new ApiException(400, 'MALFORMED_REQUEST', 'La dirección de correo no es válida');
       }
-      if ((await this.deliveries.count(trx, id)) >= delivery.maxPerDocument) {
+      // La entrega automática que el worker aún no ha creado también cuenta: se le guarda el sitio.
+      const reserved = hasAutomaticDelivery(customerEmail) && !(await this.deliveries.hasAutomatic(trx, id)) ? 1 : 0;
+      if ((await this.deliveries.count(trx, id)) + reserved >= delivery.maxPerDocument) {
         throw new ApiException(409, 'DELIVERY_LIMIT_REACHED', 'El comprobante alcanzó el máximo de entregas');
       }
       const deliveryId = await this.deliveries.create(trx, access.tenantId, id, recipient, access.userId);
