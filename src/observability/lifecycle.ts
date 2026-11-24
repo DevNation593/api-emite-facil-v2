@@ -9,7 +9,8 @@ let state: ReadinessState = 'OUT_OF_SERVICE';
 
 /**
  * Estado de readiness del proceso. Empieza fuera de servicio (como Spring antes de
- * ApplicationReadyEvent): main.ts lo marca listo tras escuchar y lo baja al recibir SIGTERM.
+ * ApplicationReadyEvent): main.ts lo marca listo al inicializarse, justo antes de escuchar, y lo baja
+ * al recibir SIGTERM.
  */
 export const readiness = {
   markReady(): void {
