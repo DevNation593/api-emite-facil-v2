@@ -243,6 +243,65 @@ it('authorizationRetriesAreExhausted', async () => {
   expect(await transitions()).toEqual(before);
 });
 
+it('lateEventsAfterExhaustionAreDiscarded', async () => {
+  sri.onAuthorization(key, Reply.xml(processing(key)));
+  await advance();
+  await db.query('UPDATE fiscal_documents SET attempt_count = 4 WHERE id = $1', [document]);
+  await elapseBackoff();
+  await advance();
+  const before = await transitions();
+  const calls = sri.authorizationCalls(key);
+
+  // El evento llega cuando ya pasó la espera del último intento: el backoff ya no lo frena.
+  await elapseBackoff();
+  expect(await advance()).toBe('RECEIVED');
+
+  expect(sri.authorizationCalls(key)).toBe(calls);
+  expect(await nextAttemptAt()).toBeNull();
+  expect(await attemptCount()).toBe(5);
+  expect(await transitions()).toEqual(before);
+
+  // El reintento manual pone la cuenta a cero y sí vuelve a consultar.
+  sri.onAuthorization(key, Reply.xml(authorized(key)));
+  await testApp.http.post(`/api/v1/documents/${document}/retry`).set('Authorization', bearer(s.owner)).expect(202);
+  expect(await advance()).toBe('AUTHORIZED');
+});
+
+it('lateEventsAfterExhaustedSendAreDiscarded', async () => {
+  sri.onReception(key, Reply.status(500, 'Internal Server Error'));
+  sri.onAuthorization(key, Reply.status(503, 'Service Unavailable'));
+  expect(await advance()).toBe('SENDING');
+  await db.query('UPDATE fiscal_documents SET attempt_count = 4 WHERE id = $1', [document]);
+  await elapseBackoff();
+  expect(await advance()).toBe('SENDING');
+  expect(await lastReason()).toBe('SRI_RETRIES_EXHAUSTED');
+  const before = await transitions();
+  const calls = sri.authorizationCalls(key);
+
+  await elapseBackoff();
+  expect(await advance()).toBe('SENDING');
+
+  expect(sri.authorizationCalls(key)).toBe(calls);
+  expect(await nextAttemptAt()).toBeNull();
+  expect(await attemptCount()).toBe(5);
+  expect(await transitions()).toEqual(before);
+});
+
+it('scheduledDocumentOverALoweredLimitQueriesOnceMoreAndStops', async () => {
+  sri.onAuthorization(key, Reply.xml(processing(key)));
+  await advance();
+  // Sigue programado con más intentos que el máximo, como si la configuración lo hubiera bajado.
+  await db.query('UPDATE fiscal_documents SET attempt_count = 7 WHERE id = $1', [document]);
+  await elapseBackoff();
+
+  expect(await advance()).toBe('RECEIVED');
+
+  // Se detiene con constancia; descartarlo lo dejaría volviendo a la cola sin fin.
+  expect(sri.authorizationCalls(key)).toBe(2);
+  expect(await nextAttemptAt()).toBeNull();
+  expect(await lastReason()).toBe('SRI_RETRIES_EXHAUSTED');
+});
+
 it('uncertainSendThatWasAuthorizedEndsAuthorized', async () => {
   sri.onReception(key, Reply.status(500, 'Internal Server Error'));
   expect(await advance()).toBe('SENDING');

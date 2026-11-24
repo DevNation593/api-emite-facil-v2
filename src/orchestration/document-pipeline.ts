@@ -32,7 +32,8 @@ import type { WebhookRecorder } from './webhook-recorder.js';
  *
  * Un evento puede llegar repetido. La consulta de autorización se reserva con el comprobante bloqueado
  * (`reserveQuery`): los avances que la encuentran en curso, o que llegan antes de que pase la espera desde el
- * último resultado, se descartan sin llamar al SRI ni gastar un intento. Java no lo hace (docs/route-inventory.md).
+ * último resultado, se descartan sin llamar al SRI ni gastar un intento. También los que llegan con los reintentos
+ * agotados: el comprobante solo vuelve a avanzar con un reintento manual. Java no lo hace (docs/route-inventory.md).
  */
 
 export const SENDING = 'SENDING';
@@ -296,7 +297,10 @@ export class DocumentPipeline {
   /**
    * Abre la consulta de autorización de un comprobante bloqueado y lo programa para el plazo de la llamada, por
    * si este proceso muere antes de anotar el resultado. Nulo si el avance es un duplicado: hay una consulta en
-   * curso, o no ha pasado la espera desde el último resultado no concluyente.
+   * curso, no ha pasado la espera desde el último resultado no concluyente, o se agotaron los reintentos.
+   *
+   * Agotado es con el máximo de intentos y nada programado. Si sigue programado (se bajó el máximo) hace una última
+   * consulta, que lo detiene con su constancia; descartarlo lo dejaría volviendo a la cola.
    *
    * La espera se mide desde el último intento y no con `next_attempt_at`, porque el planificador lo mueve a su
    * plazo de reentrega al encolar el evento legítimo. Cuenta la espera más corta posible (sin la variación al
@@ -312,7 +316,8 @@ export class DocumentPipeline {
     const lease = sendLeaseMs(this.config);
     if (await this.attempts.queryInFlight(trx, documentId, lease)) return null;
     if (locked.attemptCount > 0) {
-      const { retryBackoffMs, retryMaxBackoffMs } = this.config;
+      const { retryBackoffMs, retryMaxAttempts, retryMaxBackoffMs } = this.config;
+      if (locked.attemptCount >= retryMaxAttempts && !locked.scheduled) return null;
       const since = await this.attempts.sinceLastResultMs(trx, documentId);
       const remaining = since === null ? 0 : retryDelayMs(locked.attemptCount, retryBackoffMs, retryMaxBackoffMs, 0) - since;
       if (remaining > 0) {
