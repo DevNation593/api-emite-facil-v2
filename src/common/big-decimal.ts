@@ -74,6 +74,14 @@ export class BigDecimal {
     return new BigDecimal(this.value.toDecimalPlaces(scale, Decimal.ROUND_HALF_UP), scale);
   }
 
+  /**
+   * `stripTrailingZeros()` con escala mínima 0: 1.50 pasa a 1.5 y 10.00 a 10 (Java dejaría 1E+1, que solo se
+   * distingue por su escala negativa).
+   */
+  stripTrailingZeros(): BigDecimal {
+    return new BigDecimal(this.value, Math.min(this.scale, this.value.decimalPlaces()));
+  }
+
   /** `divide(divisor, scale, RoundingMode.HALF_UP)`. */
   divide(divisor: BigDecimal, scale: number): BigDecimal {
     checkScale(scale);
