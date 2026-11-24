@@ -1,3 +1,5 @@
+// Vercel solo reconoce como entrada de NestJS un archivo que importe @nestjs/core directamente.
+import '@nestjs/core';
 import { createApp } from './bootstrap.js';
 import { APP_CONFIG, type AppConfig } from './config/app-config.js';
 import { gracefulShutdown, readiness } from './observability/lifecycle.js';
