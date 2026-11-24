@@ -61,11 +61,11 @@ Para `spring-boot:run` la aplicación necesita `EINVOICE_JWT_SECRET` (clave con 
 
 **Transmisión al SRI.** Por defecto la aplicación **no transmite**: genera y firma, y los comprobantes esperan en `SIGNED`. Para enviar al ambiente de pruebas del SRI hay que definir `SRI_ENABLED_ENVIRONMENTS=1` (y `1,2` para producción, solo después de la certificación). El procesamiento en segundo plano necesita RabbitMQ en marcha; `EINVOICE_WORKER_ENABLED=false` lo apaga en esa instancia. Los tiempos de espera y reintentos están en el doc 08.
 
-**Entrega por correo.** Apagada por defecto: el comprobante autorizado se archiva (XML autorizado y RIDE) pero no se envía. Para probarla en local hace falta un servidor SMTP de desarrollo (por ejemplo uno que solo capture los mensajes) y definir `DELIVERY_EMAIL_ENABLED=true`, `DELIVERY_EMAIL_FROM`, `SPRING_MAIL_HOST`, `SPRING_MAIL_PORT` y, si ese servidor no habla TLS, `SMTP_STARTTLS=false`. `./mvnw test -Dtest=RidePdfBuilderTest` deja un RIDE de ejemplo en `target/ride-ejemplo.pdf`.
+**Entrega por correo.** Apagada por defecto: el comprobante autorizado se archiva (XML autorizado y RIDE) pero no se envía. Para probarla en local hace falta un servidor SMTP de desarrollo (por ejemplo uno que solo capture los mensajes) y definir `DELIVERY_EMAIL_ENABLED=true`, `DELIVERY_EMAIL_FROM`, `SPRING_MAIL_HOST`, `SPRING_MAIL_PORT` y, si ese servidor no habla TLS, `SMTP_STARTTLS=false`. Los RIDE de referencia, generados con la API Java, están en `test/golden/ride/`.
 
 **Cobertura y certificación.** `./mvnw verify` falla si la cobertura de líneas de algún paquete crítico baja del 90 %. La cobertura se mide con todas las pruebas: al ejecutar solo algunas (`-Dtest=…`, `-Dit.test=…`) hay que añadir `-Djacoco.skip=true`, o la comprobación fallará. `./mvnw -B verify -Pcertification` es la certificación contra el SRI de pruebas: transmite comprobantes reales y solo corre con sus variables definidas ([doc 15](15-produccion.md)).
 
-**Dependencias con licencia a tener en cuenta.** El RIDE se genera con OpenPDF (LGPL 2.1 / MPL 2.0), usado como biblioteca sin modificar.
+**Dependencias con licencia a tener en cuenta.** El RIDE se genera con `pdfkit` y `bwip-js` (las dos MIT), usadas como bibliotecas sin modificar.
 
 ### Arrancar todo en local, con la aplicación web
 
