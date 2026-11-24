@@ -9,6 +9,9 @@ export const JSON_BODY_LIMIT = '10mb';
 const parseJson = express.json({
   limit: JSON_BODY_LIMIT,
   type: ['application/json', 'application/*+json'],
+  // Cualquier valor JSON es legible, como en Jackson: un `null` vale donde el cuerpo es opcional, y lo que no es un
+  // objeto lo rechaza SpringValidationPipe.
+  strict: false,
   // Anota el texto de cada número: Jackson lo lee del texto, no del double (json-source.ts).
   reviver: recordNumberSource,
 });

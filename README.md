@@ -44,7 +44,7 @@ Reemplazo 1:1 de la API Java/Spring Boot de facturación electrónica del SRI de
    node --env-file=.env dist/main.js   # o npm run start con las variables ya exportadas
    ```
 
-   Comprobación: `curl -s localhost:8080/actuator/health` devuelve `{"status":"UP","groups":["liveness","readiness"]}`.
+   Comprobación: `curl -s localhost:8080/actuator/health` devuelve `{"groups":["liveness","readiness"],"status":"UP"}`.
 
 ### Notas de operación
 

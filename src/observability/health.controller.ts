@@ -70,7 +70,7 @@ export class HealthController {
   @Get()
   async health(@Res() res: Response): Promise<void> {
     const status = await checkHealth(this.checks);
-    send(res, status === 'UP' ? 200 : 503, { status, groups: GROUPS });
+    send(res, status === 'UP' ? 200 : 503, { groups: GROUPS, status });
   }
 
   @Get('liveness')

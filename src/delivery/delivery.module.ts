@@ -5,13 +5,16 @@ import { DocumentKinds } from '../billing/document-kind.js';
 import { FiscalDocumentRepository } from '../billing/fiscal-document.repository.js';
 import { OutboxWriter } from '../billing/outbox-writer.js';
 import { APP_CONFIG, type AppConfig } from '../config/app-config.js';
+import { ComplianceModule } from '../compliance/compliance.module.js';
 import { DATABASE, DatabaseModule } from '../database/database.module.js';
 import type { DB } from '../database/schema.js';
 import { OrchestrationModule } from '../orchestration/orchestration.module.js';
 import { WEBHOOK_RECORDER, type WebhookRecorder } from '../orchestration/webhook-recorder.js';
 import { ArtifactStore } from '../storage/artifact-store.js';
 import { StorageModule } from '../storage/storage.module.js';
+import { TenancyModule } from '../tenancy/tenancy.module.js';
 import type { DeliveryMailer } from './delivery-mailer.js';
+import { DeliveryController } from './delivery.controller.js';
 import { DeliveryRepository } from './delivery.repository.js';
 import { DELIVERY_MAILER, DeliveryService } from './delivery.service.js';
 import { DocumentArchiver } from './document-archiver.js';
@@ -23,7 +26,8 @@ import { SmtpDeliveryMailer } from './smtp-delivery-mailer.js';
  * lo pone en marcha (el consumidor y el latido) está en WorkerModule.
  */
 @Module({
-  imports: [DatabaseModule, BillingModule, StorageModule, OrchestrationModule],
+  imports: [DatabaseModule, BillingModule, StorageModule, OrchestrationModule, TenancyModule, ComplianceModule],
+  controllers: [DeliveryController],
   providers: [
     { provide: DeliveryRepository, useFactory: () => new DeliveryRepository() },
     {

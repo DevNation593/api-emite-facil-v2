@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
 import { type Kysely, sql } from 'kysely';
@@ -6,6 +7,7 @@ import {
   type ProbeResult,
   runProbes,
   runScenario,
+  SEEDED_ARTIFACTS,
   SEEDED_ATTEMPTS,
   type ScenarioHooks,
   sendRaw,
@@ -22,7 +24,7 @@ import { startTestApp, type TestApp } from '../support/test-app.js';
  * contra Java: el RUC del escenario es único en la plataforma.
  */
 function replay(
-  casesName: 'e2' | 'e3' | 'e4',
+  casesName: 'e2' | 'e3' | 'e4' | 'e5',
   env: Record<string, string>,
   hooksFor?: (testApp: TestApp) => ScenarioHooks,
 ): void {
@@ -89,10 +91,7 @@ replay(
 // E4: retry e intentos ante el SRI. Mismos topes que E3; el escenario necesita además sembrar intentos, cambiar
 // estados y añadir miembros, como tools/java-probe/run.mjs lo hace por SQL en la base de Java. Sin worker ni SRI
 // habilitado, como corrió Java: los comprobantes se quedan donde el escenario los deja.
-replay(
-  'e4',
-  { EINVOICE_RATE_LIMIT_REQUESTS: '1000000', EINVOICE_RATE_LIMIT_WRITES: '1000000' },
-  (testApp) => {
+function e4Hooks(testApp: TestApp): Required<Omit<ScenarioHooks, 'seedArtifacts' | 'seedDeliveries'>> {
     const db = () => testApp.app.get<symbol, Kysely<DB>>(DATABASE);
     return {
       async authorize(documentId) {
@@ -126,6 +125,40 @@ replay(
               VALUES (${inserted.rows[0]!.id}, ${index + 1}, ${message.identifier}, ${message.message},
                 ${message.additionalInfo}, ${message.type})`.execute(db());
           }
+        }
+      },
+    };
+}
+
+const HIGH_LIMITS = { EINVOICE_RATE_LIMIT_REQUESTS: '1000000', EINVOICE_RATE_LIMIT_WRITES: '1000000' };
+
+replay('e4', HIGH_LIMITS, e4Hooks);
+
+// E5: artefactos y entregas, con el correo habilitado hacia un puerto que no atiende y sin worker: se puede pedir
+// una entrega y nadie la envía, como corrió Java.
+replay(
+  'e5',
+  { ...HIGH_LIMITS, DELIVERY_EMAIL_ENABLED: 'true', DELIVERY_EMAIL_FROM: 'facturas@example.test', SPRING_MAIL_PORT: '9' },
+  (testApp) => {
+    const db = () => testApp.app.get<symbol, Kysely<DB>>(DATABASE);
+    return {
+      ...e4Hooks(testApp),
+      async seedArtifacts(documentId) {
+        for (const { kind, content } of SEEDED_ARTIFACTS) {
+          const bytes = Buffer.from(content, 'utf8');
+          await sql`INSERT INTO document_artifacts (tenant_id, document_id, kind, sha256, content)
+            SELECT tenant_id, id, ${kind}, ${createHash('sha256').update(bytes).digest('hex')}, ${bytes}
+            FROM fiscal_documents WHERE id = ${documentId}`.execute(db());
+        }
+      },
+      async seedDeliveries(documentId, deliveries) {
+        for (const delivery of deliveries) {
+          await sql`INSERT INTO deliveries (tenant_id, document_id, channel, recipient, status, attempt_count, last_error,
+              created_at, sent_at, requested_by)
+            SELECT tenant_id, id, 'EMAIL', ${delivery.recipient}, ${delivery.status}, ${delivery.attemptCount},
+              ${delivery.lastError}, ${delivery.createdAt}::timestamptz, ${delivery.sentAt}::timestamptz,
+              CASE WHEN ${delivery.requestedBy === 'owner'} THEN created_by END
+            FROM fiscal_documents WHERE id = ${documentId}`.execute(db());
         }
       },
     };

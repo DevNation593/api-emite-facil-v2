@@ -578,6 +578,14 @@ export class FiscalDocumentRepository {
     };
   }
 
+  /** Correo del cliente que el comprobante guardó al emitirse; nulo si no existe en esa empresa o no tiene. */
+  async customerEmail(db: Db, tenantId: string, documentId: string): Promise<string | null> {
+    const result = await sql<{ customer_email: string | null }>`
+      SELECT customer_email FROM fiscal_documents
+      WHERE id = ${documentId} AND tenant_id = ${tenantId}`.execute(db);
+    return result.rows[0]?.customer_email ?? null;
+  }
+
   /** Nombre de cada forma de pago del catálogo del SRI, por código. */
   async paymentMethodNames(db: Db): Promise<Map<string, string>> {
     const result = await sql<{ code: string; name: string }>`SELECT code, name FROM payment_methods`.execute(db);

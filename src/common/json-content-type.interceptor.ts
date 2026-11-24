@@ -13,6 +13,9 @@ import { ApiException } from './api-exception.js';
 import { UnreadableBody } from './json-body.js';
 import { ACCEPTS_MULTIPART_KEY } from './validation.js';
 
+/** application/json o application/*+json, con o sin parámetros. */
+const JSON_MEDIA_TYPE = /^\s*application\/(?:json|[^;\s/]+\+json)\s*(?:;|$)/i;
+
 const BODY_METHODS = new Set(['POST', 'PUT', 'PATCH']);
 
 /**
@@ -31,7 +34,7 @@ function readsBody(context: ExecutionContext): boolean {
 }
 
 /**
- * 415 si llega un cuerpo que no es JSON, salvo en handlers con @AcceptsMultipart(). Es un
+ * 415 si llega un cuerpo que no es JSON, o ninguno con un tipo que no lo es, salvo en handlers con @AcceptsMultipart(). Es un
  * interceptor y no un guard para que corra después de los guards de seguridad: Spring decide
  * 401 y 403 antes que el tipo de contenido.
  */
@@ -44,14 +47,15 @@ export class JsonContentTypeInterceptor implements NestInterceptor {
     if (BODY_METHODS.has(req.method) && readsBody(context)) {
       const length = Number(req.headers['content-length'] ?? 0);
       const hasBody = length > 0 || req.headers['transfer-encoding'] !== undefined;
+      const contentType = req.headers['content-type'] ?? '';
       const multipart = this.reflector.getAllAndOverride<boolean | undefined>(
         ACCEPTS_MULTIPART_KEY,
         [context.getHandler(), context.getClass()],
       );
       if (
-        hasBody &&
+        (hasBody || contentType !== '') &&
         multipart !== true &&
-        req.is(['application/json', 'application/*+json']) === false
+        !JSON_MEDIA_TYPE.test(contentType)
       ) {
         // Salta al leer el cuerpo, después de los parámetros de la ruta, como en Spring.
         req.body = new UnreadableBody(
