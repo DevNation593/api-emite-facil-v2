@@ -113,7 +113,9 @@ a la cola de mensajes muertos. Al apagarse, un mensaje que espera su reintento v
 Diferencia deliberada en el pipeline: si llegan varios eventos del mismo comprobante en `RECEIVED` o `SENDING`,
 Java consulta al SRI por cada uno y cada respuesta no concluyente gasta un reintento. NestJS reserva la consulta
 con el comprobante bloqueado: descarta el avance si ya hay una consulta en curso (conexión + lectura + 30 s) o si
-no ha pasado la espera mínima desde el último resultado, sin llamar al SRI ni tocar `attempt_count`. Una consulta
+no ha pasado la espera mínima desde el último resultado, sin llamar al SRI ni tocar `attempt_count`. Agotados los
+reintentos (`attempt_count` en el máximo y nada programado), descarta también los eventos que lleguen después, hasta
+el reintento manual; Java vuelve a consultar y repite `SRI_RETRIES_EXHAUSTED`. Una consulta
 que pasa ese plazo queda `ABANDONED` y su resultado tardío no se aplica. El reintento manual pone la cuenta a
 cero, así que consulta de inmediato.
 

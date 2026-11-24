@@ -120,6 +120,8 @@ export interface ProcessingState {
   accessKey: string;
   attemptCount: number;
   version: number;
+  /** Si tiene un siguiente intento programado (`next_attempt_at`). */
+  scheduled: boolean;
 }
 
 const DOCUMENT_COLUMNS =
@@ -138,7 +140,7 @@ const ENVELOPE_COLUMNS =
   issuer_phone, customer_phone`);
 
 const PROCESSING_COLUMNS = sql.raw(
-  'state, taxpayer_id, document_type, environment, access_key, attempt_count, version',
+  'state, taxpayer_id, document_type, environment, access_key, attempt_count, version, next_attempt_at IS NOT NULL AS scheduled',
 );
 
 interface ProcessingSqlRow {
@@ -149,6 +151,7 @@ interface ProcessingSqlRow {
   access_key: string;
   attempt_count: number;
   version: string;
+  scheduled: boolean;
 }
 
 function processingState(row: ProcessingSqlRow): ProcessingState {
@@ -160,6 +163,7 @@ function processingState(row: ProcessingSqlRow): ProcessingState {
     accessKey: row.access_key,
     attemptCount: row.attempt_count,
     version: Number(row.version),
+    scheduled: row.scheduled,
   };
 }
 
