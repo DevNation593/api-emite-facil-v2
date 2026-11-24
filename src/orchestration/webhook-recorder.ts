@@ -8,12 +8,19 @@ import type { DB } from '../database/schema.js';
  */
 export interface WebhookRecorder {
   stateReached(trx: Transaction<DB>, tenantId: string, documentId: string, state: string): Promise<void>;
+
+  /** Aviso de que salió un correo de entrega del comprobante, en la transacción que lo anota. */
+  delivered(trx: Transaction<DB>, tenantId: string, documentId: string): Promise<void>;
 }
 
 export const WEBHOOK_RECORDER = Symbol('WEBHOOK_RECORDER');
 
 export class NoWebhooks implements WebhookRecorder {
   async stateReached(): Promise<void> {
+    // Sin webhooks hasta E6.
+  }
+
+  async delivered(_trx: Transaction<DB>, _tenantId: string, _documentId: string): Promise<void> {
     // Sin webhooks hasta E6.
   }
 }
