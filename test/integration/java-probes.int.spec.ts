@@ -1,11 +1,14 @@
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
-import type { Kysely } from 'kysely';
+import { type Kysely, sql } from 'kysely';
 import {
   type ProbeCase,
   type ProbeResult,
   runProbes,
   runScenario,
+  SEEDED_ARTIFACTS,
+  SEEDED_ATTEMPTS,
   type ScenarioHooks,
   sendRaw,
 } from '../../tools/java-probe/probe.mjs';
@@ -21,7 +24,7 @@ import { startTestApp, type TestApp } from '../support/test-app.js';
  * contra Java: el RUC del escenario es único en la plataforma.
  */
 function replay(
-  casesName: 'e2' | 'e3',
+  casesName: 'e2' | 'e3' | 'e4' | 'e5',
   env: Record<string, string>,
   hooksFor?: (testApp: TestApp) => ScenarioHooks,
 ): void {
@@ -83,4 +86,81 @@ replay(
         .execute();
     },
   }),
+);
+
+// E4: retry e intentos ante el SRI. Mismos topes que E3; el escenario necesita además sembrar intentos, cambiar
+// estados y añadir miembros, como tools/java-probe/run.mjs lo hace por SQL en la base de Java. Sin worker ni SRI
+// habilitado, como corrió Java: los comprobantes se quedan donde el escenario los deja.
+function e4Hooks(testApp: TestApp): Required<Omit<ScenarioHooks, 'seedArtifacts' | 'seedDeliveries'>> {
+    const db = () => testApp.app.get<symbol, Kysely<DB>>(DATABASE);
+    return {
+      async authorize(documentId) {
+        await db().updateTable('fiscal_documents').set({ state: 'AUTHORIZED' }).where('id', '=', documentId).execute();
+      },
+      async setState(documentId, state) {
+        await db().updateTable('fiscal_documents').set({ state }).where('id', '=', documentId).execute();
+      },
+      async addMember(tenantId, email, role) {
+        await sql`INSERT INTO memberships (user_id, tenant_id, role)
+          SELECT id, ${tenantId}, ${role} FROM users WHERE email = ${email}`.execute(db());
+      },
+      async seedAttempts(documentId) {
+        const owner = await sql<{ tenant_id: string }>`SELECT tenant_id FROM fiscal_documents WHERE id = ${documentId}`.execute(
+          db(),
+        );
+        const tenantId = owner.rows[0]!.tenant_id;
+        for (const attempt of SEEDED_ATTEMPTS) {
+          // El instante sembrado ya trae sus decimales: se inserta como texto, sin pasar por Date.
+          const inserted = await sql<{ id: string }>`
+            INSERT INTO sri_attempts (tenant_id, document_id, operation, environment, started_at, completed_at,
+              outcome, sri_status, http_status, error_detail, response)
+            VALUES (${tenantId}, ${documentId}, ${attempt.operation}, ${attempt.environment},
+              ${attempt.startedAt}::timestamptz, ${attempt.completedAt}::timestamptz, ${attempt.outcome},
+              ${attempt.sriStatus}, ${attempt.httpStatus}, ${attempt.errorDetail},
+              ${attempt.response === null ? null : Buffer.from(attempt.response, 'utf8')})
+            RETURNING id`.execute(db());
+          for (const [index, message] of attempt.messages.entries()) {
+            await sql`
+              INSERT INTO sri_messages (attempt_id, position, identifier, message, additional_info, type)
+              VALUES (${inserted.rows[0]!.id}, ${index + 1}, ${message.identifier}, ${message.message},
+                ${message.additionalInfo}, ${message.type})`.execute(db());
+          }
+        }
+      },
+    };
+}
+
+const HIGH_LIMITS = { EINVOICE_RATE_LIMIT_REQUESTS: '1000000', EINVOICE_RATE_LIMIT_WRITES: '1000000' };
+
+replay('e4', HIGH_LIMITS, e4Hooks);
+
+// E5: artefactos y entregas, con el correo habilitado hacia un puerto que no atiende y sin worker: se puede pedir
+// una entrega y nadie la envía, como corrió Java.
+replay(
+  'e5',
+  { ...HIGH_LIMITS, DELIVERY_EMAIL_ENABLED: 'true', DELIVERY_EMAIL_FROM: 'facturas@example.test', SPRING_MAIL_PORT: '9' },
+  (testApp) => {
+    const db = () => testApp.app.get<symbol, Kysely<DB>>(DATABASE);
+    return {
+      ...e4Hooks(testApp),
+      async seedArtifacts(documentId) {
+        for (const { kind, content } of SEEDED_ARTIFACTS) {
+          const bytes = Buffer.from(content, 'utf8');
+          await sql`INSERT INTO document_artifacts (tenant_id, document_id, kind, sha256, content)
+            SELECT tenant_id, id, ${kind}, ${createHash('sha256').update(bytes).digest('hex')}, ${bytes}
+            FROM fiscal_documents WHERE id = ${documentId}`.execute(db());
+        }
+      },
+      async seedDeliveries(documentId, deliveries) {
+        for (const delivery of deliveries) {
+          await sql`INSERT INTO deliveries (tenant_id, document_id, channel, recipient, status, attempt_count, last_error,
+              created_at, sent_at, requested_by)
+            SELECT tenant_id, id, 'EMAIL', ${delivery.recipient}, ${delivery.status}, ${delivery.attemptCount},
+              ${delivery.lastError}, ${delivery.createdAt}::timestamptz, ${delivery.sentAt}::timestamptz,
+              CASE WHEN ${delivery.requestedBy === 'owner'} THEN created_by END
+            FROM fiscal_documents WHERE id = ${documentId}`.execute(db());
+        }
+      },
+    };
+  },
 );

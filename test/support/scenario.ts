@@ -1,6 +1,9 @@
 import { randomInt, randomUUID } from 'node:crypto';
 import type pg from 'pg';
 import type request from 'supertest';
+import type { INestApplicationContext } from '@nestjs/common';
+import { DocumentProcessor } from '../../src/orchestration/document-processor.js';
+import { TEST_P12_PASSWORD, testP12, type TestP12 } from './test-certificates.js';
 import { registerAndLogin } from './test-app.js';
 
 /*
@@ -302,4 +305,44 @@ export async function issueDebitNote(
   const res = await debitNoteRequest(http, token, body, key);
   if (res.status !== 202) throw new Error(`Se esperaba 202 y llegó ${res.status}: ${res.text}`);
   return (res.body as { id: string }).id;
+}
+
+/** Carga por la API un certificado de prueba del emisor (uploadCertificate de AbstractIntegrationTest). */
+export async function uploadTestCertificate(
+  http: Http,
+  token: string,
+  taxpayerId: string,
+  kind: TestP12 = 'valid',
+): Promise<string> {
+  const res = await http
+    .post('/api/v1/certificates')
+    .set('Authorization', bearer(token))
+    .send({ taxpayerId, p12: testP12(kind).toString('base64'), password: TEST_P12_PASSWORD });
+  if (res.status !== 201) throw new Error(`Se esperaba 201 y llegó ${res.status}: ${res.text}`);
+  return (res.body as { id: string }).id;
+}
+
+/** Genera y firma el comprobante con el DocumentProcessor de la aplicación; devuelve el estado en que queda. */
+export function processDocument(app: INestApplicationContext, tenantId: string, documentId: string): Promise<string> {
+  return app.get(DocumentProcessor).generateAndSign(tenantId, documentId);
+}
+
+/** Clave de acceso del comprobante. */
+export async function accessKeyOf(db: pg.Client, documentId: string): Promise<string> {
+  return (await db.query<{ access_key: string }>('SELECT access_key FROM fiscal_documents WHERE id = $1', [documentId]))
+    .rows[0]!.access_key;
+}
+
+/** Una factura emitida y procesada hasta SIGNED (el emisor debe tener certificado). Devuelve su id. */
+export async function signedInvoice(
+  http: Http,
+  app: INestApplicationContext,
+  s: BillingScenario,
+  quantity = '2',
+  paymentAmount = '23.00',
+): Promise<string> {
+  const document = await issueInvoice(http, s.owner, invoiceJson(s, quantity, paymentAmount));
+  const state = await processDocument(app, s.tenant, document);
+  if (state !== 'SIGNED') throw new Error(`La factura quedó en ${state}, no en SIGNED`);
+  return document;
 }

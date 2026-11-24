@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Regenera test/golden/ con el código de la API Java (solo lectura sobre ese repo,
 // salvo el target/ propio de Maven). Uso:
-//   node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil [--only bean-validation|certificates|xsd|calculations|documents]
+//   node tools/golden-generator/run.mjs --java-repo ../backend-emite-facil [--only bean-validation|certificates|xsd|calculations|documents|xades|xades-verify|sri|delivery|ride]
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -51,8 +51,8 @@ if (!existsSync(join(javaRepo, 'pom.xml'))) fail('argumentos', `${javaRepo} no e
 
 const onlyFlag = argv.indexOf('--only');
 const only = onlyFlag === -1 ? undefined : argv[onlyFlag + 1];
-if (onlyFlag !== -1 && !['bean-validation', 'certificates', 'xsd', 'calculations', 'documents'].includes(only)) {
-  fail('argumentos', '--only admite: bean-validation, certificates, xsd, calculations, documents');
+if (onlyFlag !== -1 && !['bean-validation', 'certificates', 'xsd', 'calculations', 'documents', 'xades', 'xades-verify', 'sri', 'delivery', 'ride'].includes(only)) {
+  fail('argumentos', '--only admite: bean-validation, certificates, xsd, calculations, documents, xades, xades-verify, sri, delivery, ride');
 }
 
 const outDir = join(projectRoot, 'test', 'golden');
@@ -89,10 +89,13 @@ try {
     argfile('javac.args', ['-encoding', 'UTF-8', '-d', q(classes), '-cp', q(classpath), ...sources.map(q)]),
   ]);
 
+  // El Transformer del JDK escribe cada salto de línea de un texto con el separador del sistema: se fija el de
+  // Linux, donde corre la API, para que el XML firmado no dependa de dónde se genere. En el @argfile, "\n"
+  // entre comillas es un salto de línea.
   run(
     'ejecutar el generador',
     'java',
-    [argfile('java.args', ['-cp', q([classes, classpath].join(delimiter)), 'golden.GoldenGenerator', q(outDir), q(javaRepo), commit, ...(only ? [only] : [])])],
+    [argfile('java.args', ['"-Dline.separator=\\n"', '-cp', q([classes, classpath].join(delimiter)), 'golden.GoldenGenerator', q(outDir), q(javaRepo), commit, ...(only ? [only] : [])])],
     { cwd: work },
   );
   console.log(`[golden] listo: ${outDir}`);

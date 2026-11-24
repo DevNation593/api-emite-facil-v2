@@ -37,6 +37,9 @@ export async function startTestApp(
     SMTP_STARTTLS: 'false',
     DELIVERY_EMAIL_FROM: 'facturas@example.test',
     EINVOICE_WEB_URL: 'http://web.test',
+    // Como AbstractIntegrationTest de Java: sin worker salvo que la prueba lo pida, para que nadie consuma la
+    // cola ni avance comprobantes mientras la prueba llama al pipeline a mano.
+    EINVOICE_WORKER_ENABLED: 'false',
     ...env,
   };
   const previous = new Map<string, string | undefined>();

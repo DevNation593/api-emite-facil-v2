@@ -1,0 +1,257 @@
+{
+  "cases": [
+    {
+      "name": "firmado-factura-500-lineas",
+      "file": "xades/factura-500-lineas/signed.xml",
+      "valid": true,
+      "errors": []
+    },
+    {
+      "name": "firmado-factura-caracteres-especiales",
+      "file": "xades/factura-caracteres-especiales/signed.xml",
+      "valid": true,
+      "errors": []
+    },
+    {
+      "name": "firmado-factura-con-ruc-proveedor",
+      "file": "xades/factura-con-ruc-proveedor/signed.xml",
+      "valid": true,
+      "errors": []
+    },
+    {
+      "name": "firmado-factura-estandar",
+      "file": "xades/factura-estandar/signed.xml",
+      "valid": true,
+      "errors": []
+    },
+    {
+      "name": "firmado-nota-credito-sobre-factura",
+      "file": "xades/nota-credito-sobre-factura/signed.xml",
+      "valid": true,
+      "errors": []
+    },
+    {
+      "name": "firmado-nota-debito-dos-tarifas",
+      "file": "xades/nota-debito-dos-tarifas/signed.xml",
+      "valid": true,
+      "errors": []
+    },
+    {
+      "name": "importe-cambiado",
+      "file": "xades-verify/importe-cambiado.xml",
+      "valid": false,
+      "errors": [
+        "El contenido referido por #comprobante fue alterado"
+      ]
+    },
+    {
+      "name": "hora-de-firma-cambiada",
+      "file": "xades-verify/hora-de-firma-cambiada.xml",
+      "valid": false,
+      "errors": [
+        "El contenido referido por #Signature367512-SignedProperties398902 fue alterado"
+      ]
+    },
+    {
+      "name": "certificado-cambiado",
+      "file": "xades-verify/certificado-cambiado.xml",
+      "valid": false,
+      "errors": [
+        "El certificado de KeyInfo no es el declarado en SigningCertificate"
+      ]
+    },
+    {
+      "name": "firmado-con-otra-clave",
+      "file": "xades-verify/firmado-con-otra-clave.xml",
+      "valid": false,
+      "errors": [
+        "El valor de la firma no corresponde al certificado"
+      ]
+    },
+    {
+      "name": "firma-fuera-de-la-raiz",
+      "file": "xades-verify/firma-fuera-de-la-raiz.xml",
+      "valid": false,
+      "errors": [
+        "Debe haber exactamente una firma, hija del elemento raíz"
+      ]
+    },
+    {
+      "name": "dos-firmas",
+      "file": "xades-verify/dos-firmas.xml",
+      "valid": false,
+      "errors": [
+        "Debe haber exactamente una firma, hija del elemento raíz"
+      ]
+    },
+    {
+      "name": "cuarta-referencia",
+      "file": "xades-verify/cuarta-referencia.xml",
+      "valid": false,
+      "errors": [
+        "La firma contiene una referencia que el perfil no admite",
+        "La firma debe cubrir el comprobante, SignedProperties y KeyInfo"
+      ]
+    },
+    {
+      "name": "transformacion-cambiada",
+      "file": "xades-verify/transformacion-cambiada.xml",
+      "valid": false,
+      "errors": [
+        "La firma contiene una referencia que el perfil no admite",
+        "La firma debe cubrir el comprobante, SignedProperties y KeyInfo"
+      ]
+    },
+    {
+      "name": "c14n-exclusiva",
+      "file": "xades-verify/c14n-exclusiva.xml",
+      "valid": false,
+      "errors": [
+        "La firma no usa los algoritmos del perfil del SRI"
+      ]
+    },
+    {
+      "name": "digest-sha256",
+      "file": "xades-verify/digest-sha256.xml",
+      "valid": false,
+      "errors": [
+        "Una referencia no usa el digest del perfil del SRI"
+      ]
+    },
+    {
+      "name": "firma-rsa-sha256",
+      "file": "xades-verify/firma-rsa-sha256.xml",
+      "valid": false,
+      "errors": [
+        "La firma no usa los algoritmos del perfil del SRI"
+      ]
+    },
+    {
+      "name": "raiz-sin-id",
+      "file": "xades-verify/raiz-sin-id.xml",
+      "valid": false,
+      "errors": [
+        "La firma no tiene la estructura XAdES-BES esperada"
+      ]
+    },
+    {
+      "name": "keyinfo-sin-id",
+      "file": "xades-verify/keyinfo-sin-id.xml",
+      "valid": false,
+      "errors": [
+        "La firma contiene una referencia que el perfil no admite",
+        "La firma debe cubrir el comprobante, SignedProperties y KeyInfo"
+      ]
+    },
+    {
+      "name": "valor-de-firma-cambiado",
+      "file": "xades-verify/valor-de-firma-cambiado.xml",
+      "valid": false,
+      "errors": [
+        "El valor de la firma no corresponde al certificado"
+      ]
+    },
+    {
+      "name": "valor-de-firma-corto",
+      "file": "xades-verify/valor-de-firma-corto.xml",
+      "valid": false,
+      "errors": [
+        "La firma no se pudo evaluar: XMLSignatureException"
+      ]
+    },
+    {
+      "name": "serie-cambiada",
+      "file": "xades-verify/serie-cambiada.xml",
+      "valid": false,
+      "errors": [
+        "El certificado de KeyInfo no es el declarado en SigningCertificate"
+      ]
+    },
+    {
+      "name": "emisor-cambiado",
+      "file": "xades-verify/emisor-cambiado.xml",
+      "valid": false,
+      "errors": [
+        "El certificado de KeyInfo no es el declarado en SigningCertificate"
+      ]
+    },
+    {
+      "name": "sin-signing-certificate",
+      "file": "xades-verify/sin-signing-certificate.xml",
+      "valid": false,
+      "errors": [
+        "SigningCertificate está incompleto"
+      ]
+    },
+    {
+      "name": "certificado-ilegible",
+      "file": "xades-verify/certificado-ilegible.xml",
+      "valid": false,
+      "errors": [
+        "La firma no se pudo evaluar: CertificateException"
+      ]
+    },
+    {
+      "name": "sin-signature-method",
+      "file": "xades-verify/sin-signature-method.xml",
+      "valid": false,
+      "errors": [
+        "La firma no se pudo evaluar: MarshalException"
+      ]
+    },
+    {
+      "name": "keyinfo-cambiado",
+      "file": "xades-verify/keyinfo-cambiado.xml",
+      "valid": false,
+      "errors": [
+        "El contenido referido por #Certificate731539 fue alterado"
+      ]
+    },
+    {
+      "name": "con-comentario",
+      "file": "xades-verify/con-comentario.xml",
+      "valid": true,
+      "errors": []
+    },
+    {
+      "name": "espacio-en-el-comprobante",
+      "file": "xades-verify/espacio-en-el-comprobante.xml",
+      "valid": false,
+      "errors": [
+        "El contenido referido por #comprobante fue alterado"
+      ]
+    },
+    {
+      "name": "sin-firmar",
+      "file": "xades-verify/sin-firmar.xml",
+      "valid": false,
+      "errors": [
+        "Debe haber exactamente una firma, hija del elemento raíz"
+      ]
+    },
+    {
+      "name": "ilegible",
+      "file": "xades-verify/ilegible.xml",
+      "valid": false,
+      "errors": [
+        "El comprobante no es un XML legible"
+      ]
+    },
+    {
+      "name": "vacio",
+      "file": "xades-verify/vacio.xml",
+      "valid": false,
+      "errors": [
+        "El comprobante no es un XML legible"
+      ]
+    },
+    {
+      "name": "con-doctype",
+      "file": "xades-verify/con-doctype.xml",
+      "valid": false,
+      "errors": [
+        "El comprobante no es un XML legible"
+      ]
+    }
+  ]
+}

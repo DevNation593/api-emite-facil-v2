@@ -4,7 +4,7 @@
 ```mermaid
 sequenceDiagram
  participant U as Next.js/Integración
- participant A as Spring API
+ participant A as API NestJS
  participant D as PostgreSQL
  participant Q as RabbitMQ
  participant W as Worker
@@ -99,7 +99,7 @@ El RIDE es una representación visual: **no sustituye al XML firmado**.
 - **Por defecto no se envía ningún correo** (`DELIVERY_EMAIL_ENABLED=false`): el comprobante se archiva y nada más. Nunca se ha enviado un correo a un servidor real; las pruebas usan un servidor SMTP simulado.
 - **`SENT` significa que el servidor de correo aceptó el mensaje**, no que el cliente lo recibió. No hay detección de rebotes.
 - **Entrega al menos una vez.** Si el proceso muere justo después de que el servidor acepta el mensaje, el correo se repite al vencer el plazo de envío (10 minutos). También se repite si un envío tarda más que ese plazo.
-- **RIDE sin verificación visual automática.** Las pruebas comprueban su texto y su estructura, no su aspecto: conviene abrir uno (`target/ride-ejemplo.pdf` tras ejecutar las pruebas) antes de darlo por bueno. Usa Helvetica, así que los caracteres fuera del alfabeto latino se omiten; no lleva logotipo.
+- **RIDE igual al de Java.** `test/golden/ride.spec.ts` compara 42 RIDE con los PDF que generó la API Java: mismas páginas y, en el mismo sitio, los mismos textos, fondos, rayas y barras. Usa Helvetica, así que los caracteres fuera del alfabeto latino se omiten; no lleva logotipo.
 - **Comprobantes autorizados con el correo apagado:** al habilitar el correo no se envían solos; la entrega automática se crea la primera vez que se procesa una entrega de ese comprobante (por ejemplo, al pedir un reenvío).
 - **Webhooks (Plan 6b):** cuando un comprobante pasa a `RECEIVED`, `AUTHORIZED`, `RETURNED` o `NOT_AUTHORIZED`, o sale un correo de entrega, en la misma transacción se anota un aviso por cada suscripción activa de la empresa que pidió ese evento. Un planificador los devuelve a una cola propia (`webhook.deliver`) y un worker los envía; un receptor lento no retrasa ni al SRI ni al correo. El aviso tiene su propio estado: pase lo que pase con él, el comprobante no cambia. Vienen apagados (`EINVOICE_WEBHOOKS_ENABLED`). Formato, firma y reintentos, en el [doc 11](11-api-specification.md#webhooks-salientes); límites, en el [doc 10](10-security.md). `XSD_INVALID` y `SIGNATURE_FAILED` no se avisan.
 

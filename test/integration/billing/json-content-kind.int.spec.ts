@@ -39,6 +39,10 @@ class SampleKind extends JsonContentKind<Sample> {
   buildXml(_envelope: DocumentEnvelope, _content: Sample): Buffer {
     throw new Error('no se usa');
   }
+
+  buildRide(): Promise<Buffer> {
+    throw new Error('no se usa');
+  }
 }
 
 let handle: DbHandle;

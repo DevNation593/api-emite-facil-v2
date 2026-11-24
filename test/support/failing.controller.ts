@@ -5,13 +5,18 @@ import {
   HttpCode,
   InternalServerErrorException,
   Module,
+  Param,
   Post,
+  Put,
+  Res,
 } from '@nestjs/common';
 import { Type } from 'class-transformer';
+import type { Response } from 'express';
 import { IsPositive, ValidateNested } from 'class-validator';
 import { JsonString, NotBlank, Size } from '../../src/common/bean-validation.js';
 import { AcceptsMultipart } from '../../src/common/validation.js';
 import { ApiException } from '../../src/common/api-exception.js';
+import { UuidPipe } from '../../src/common/uuid.pipe.js';
 
 class LineDto {
   @IsPositive()
@@ -62,6 +67,20 @@ class FailingController {
   @AcceptsMultipart()
   multipart(@Body() _body: unknown): { ok: boolean } {
     return { ok: true };
+  }
+
+  /** Una descarga que falla con las cabeceras y parte del cuerpo ya enviados. */
+  @Get('cut')
+  async cut(@Res() res: Response): Promise<void> {
+    res.setHeader('Content-Type', 'application/pdf');
+    res.write('%PDF-1.5 a medias');
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    throw new Error('fallo a mitad de la descarga: secreto-interno');
+  }
+
+  @Put('echo/:id')
+  replace(@Param('id', UuidPipe) id: string, @Body() body: EchoDto): unknown {
+    return { id, body };
   }
 
   @Post('echo')

@@ -1,0 +1,4331 @@
+{
+  "source": {
+    "javaCommit": "ca53bcae19a468c1164465425a59db6c5e68b809",
+    "javaDirty": false,
+    "javaVersion": "java version \"25.0.5.0.2\" 2026-10-21 LTS",
+    "generatedAt": "2026-11-24T00:29:08.977Z"
+  },
+  "results": [
+    {
+      "name": "cabeceras de una lista",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents",
+        "auth": "owner",
+        "query": "size=1&documentType=06"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "items": [],
+        "page": 0,
+        "size": 1,
+        "total": 0
+      },
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "cabeceras de un 404",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{uuid}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      },
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "cabeceras de un 401",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents",
+        "auth": "none"
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Se requiere un token de acceso válido",
+        "instance": "/api/v1/documents",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "UNAUTHENTICATED"
+      },
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "cabeceras de una ruta que no existe",
+      "request": {
+        "method": "GET",
+        "path": "/otra",
+        "auth": "none"
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Se requiere un token de acceso válido",
+        "instance": "/otra",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "UNAUTHENTICATED"
+      },
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "cabeceras de un 405",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/documents",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      },
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "cabeceras de OPTIONS",
+      "request": {
+        "method": "OPTIONS",
+        "path": "/api/v1/documents",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": null,
+      "allow": "GET,HEAD,OPTIONS",
+      "body": "",
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "cabeceras de health",
+      "request": {
+        "method": "GET",
+        "path": "/actuator/health",
+        "auth": "none"
+      },
+      "status": 200,
+      "contentType": "application/vnd.spring-boot.actuator.v3+json",
+      "allow": null,
+      "body": {
+        "groups": [
+          "liveness",
+          "readiness"
+        ],
+        "status": "UP"
+      },
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "cabeceras de un ingreso rechazado",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/auth/login",
+        "auth": "none",
+        "headers": {
+          "x-forwarded-for": "198.51.100.9"
+        },
+        "body": {
+          "email": "nadie@example.test",
+          "password": "una contraseña larga"
+        }
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Correo o contraseña incorrectos",
+        "instance": "/api/v1/auth/login",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "INVALID_CREDENTIALS"
+      },
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "cabeceras de un cuerpo ilegible",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      },
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "cabeceras tras un proxy con TLS",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000",
+        "auth": "owner",
+        "headers": {
+          "x-forwarded-proto": "https"
+        }
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{uuid}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      },
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto xml-unsigned",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/xml-unsigned",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/xml",
+      "allow": null,
+      "body": "<factura id=\"comprobante\">sin firmar ñ</factura>",
+      "headers": {
+        "etag": "\"47ee7b8bdfd8b05dd6a0e3480b8337578cb6aa2a412996037991f77997806b91\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-xml-unsigned.xml\"",
+        "content-length": "49",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto xml-signed",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/xml-signed",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/xml",
+      "allow": null,
+      "body": "<factura id=\"comprobante\">firmada ñ</factura>",
+      "headers": {
+        "etag": "\"85caa73d49f72351162283bf7780a3e08751954636ae8235dec771b24385da00\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-xml-signed.xml\"",
+        "content-length": "46",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto sri-authorization",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/sri-authorization",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/xml",
+      "allow": null,
+      "body": "<RespuestaAutorizacionComprobante/>",
+      "headers": {
+        "etag": "\"23126f8bcbd4d6e7e65aceb86f0f743ca19a52c8bc4de5cf1e154073b8323347\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-sri-authorization.xml\"",
+        "content-length": "35",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto xml-authorized",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/xml-authorized",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/xml",
+      "allow": null,
+      "body": "<autorizacion><estado>AUTORIZADO</estado></autorizacion>",
+      "headers": {
+        "etag": "\"c7f3920ecec6710521ff518e7add5ec5c511886e69c98281afa70e122ca14edc\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-xml-authorized.xml\"",
+        "content-length": "56",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto ride",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con rol AUDITOR",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "auditor"
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con rol BILLER",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "biller"
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo"
+    },
+    {
+      "name": "artefacto con id en mayúsculas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentIdUpper}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo"
+    },
+    {
+      "name": "artefacto con id sin guiones",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentIdNoDash}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/{archivedDocumentIdNoDash}/artifacts/ride",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "artefacto HEAD",
+      "request": {
+        "method": "HEAD",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con parámetros que se ignoran",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "query": "download=1"
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo"
+    },
+    {
+      "name": "artefacto con If-None-Match igual",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+        }
+      },
+      "status": 304,
+      "contentType": null,
+      "allow": null,
+      "body": "",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": null,
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": null,
+        "pragma": null,
+        "expires": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-None-Match débil",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": "W/\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+        }
+      },
+      "status": 304,
+      "contentType": null,
+      "allow": null,
+      "body": "",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": null,
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": null,
+        "pragma": null,
+        "expires": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-None-Match comodín",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": "*"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-None-Match distinto",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": "\"otro\""
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-None-Match en lista",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": "\"otro\", \"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+        }
+      },
+      "status": 304,
+      "contentType": null,
+      "allow": null,
+      "body": "",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": null,
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": null,
+        "pragma": null,
+        "expires": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-None-Match en lista sin espacios",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": "\"otro\",\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+        }
+      },
+      "status": 304,
+      "contentType": null,
+      "allow": null,
+      "body": "",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": null,
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": null,
+        "pragma": null,
+        "expires": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-None-Match repetido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": [
+            "\"otro\"",
+            "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+          ]
+        }
+      },
+      "status": 304,
+      "contentType": null,
+      "allow": null,
+      "body": "",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": null,
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": null,
+        "pragma": null,
+        "expires": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-None-Match sin comillas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": "83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-None-Match vacío",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": ""
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-None-Match igual y HEAD",
+      "request": {
+        "method": "HEAD",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+        }
+      },
+      "status": 304,
+      "contentType": null,
+      "allow": null,
+      "body": "",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": null,
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": null,
+        "pragma": null,
+        "expires": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-None-Match igual y If-Match distinto",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+          "if-match": "\"otro\""
+        }
+      },
+      "status": 304,
+      "contentType": null,
+      "allow": null,
+      "body": "",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": null,
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": null,
+        "pragma": null,
+        "expires": null,
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-Match igual",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-match": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-Match comodín",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-match": "*"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-Match distinto",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-match": "\"otro\""
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-Match débil",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-match": "W/\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-Modified-Since",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-modified-since": "Wed, 21 Oct 2099 07:28:00 GMT"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con If-Unmodified-Since",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-unmodified-since": "Wed, 21 Oct 2009 07:28:00 GMT"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con Range",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "range": "bytes=0-3"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con Range fuera del contenido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "range": "bytes=1000-"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con Accept application/json",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "accept": "application/json"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con Accept text/html",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "accept": "text/html"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con Accept application/pdf;q=0",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "accept": "application/pdf;q=0"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto con Accept mal formado",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "accept": "esto no es un tipo"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo",
+      "headers": {
+        "etag": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-ride.pdf\"",
+        "content-length": "23",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto XML con Accept application/json",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/xml-signed",
+        "auth": "owner",
+        "headers": {
+          "accept": "application/json"
+        }
+      },
+      "status": 200,
+      "contentType": "application/xml",
+      "allow": null,
+      "body": "<factura id=\"comprobante\">firmada ñ</factura>",
+      "headers": {
+        "etag": "\"85caa73d49f72351162283bf7780a3e08751954636ae8235dec771b24385da00\"",
+        "content-disposition": "attachment; filename=\"factura-001-001-000000005-xml-signed.xml\"",
+        "content-length": "46",
+        "accept-ranges": null,
+        "vary": null,
+        "last-modified": null,
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "0",
+        "strict-transport-security": null
+      }
+    },
+    {
+      "name": "artefacto inexistente con If-None-Match comodín",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{bareDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "if-none-match": "*"
+        }
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{bareDocumentId}/artifacts/ride",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "artefacto de un tipo desconocido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/pdf",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Tipo de artefacto desconocido",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/pdf",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "artefacto de un tipo en mayúsculas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/RIDE",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Tipo de artefacto desconocido",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/RIDE",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "artefacto de un tipo con espacio",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride%20",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Tipo de artefacto desconocido",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/ride%20",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "artefacto de un tipo con el nombre interno",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/RIDE_PDF",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Tipo de artefacto desconocido",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/RIDE_PDF",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "artefacto de un tipo con extensión",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride.pdf",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Tipo de artefacto desconocido",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/ride.pdf",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "artefacto de un tipo vacío",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "artefacto de un tipo con barra final",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride/",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/ride/",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "artefacto de un tipo desconocido con Accept XML",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/pdf",
+        "auth": "owner",
+        "headers": {
+          "accept": "application/xml"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Tipo de artefacto desconocido",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/pdf",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "artefacto con id mal formado",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/no-es-un-uuid/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/no-es-un-uuid/artifacts/ride",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "artefacto con id mal formado y tipo desconocido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/no-es-un-uuid/artifacts/pdf",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/no-es-un-uuid/artifacts/pdf",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "artefacto de un id desconocido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{uuid}/artifacts/ride",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "artefacto de un id y un tipo desconocidos",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/artifacts/pdf",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Tipo de artefacto desconocido",
+        "instance": "/api/v1/documents/{uuid}/artifacts/pdf",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "artefacto aún no generado",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{bareDocumentId}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{bareDocumentId}/artifacts/ride",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "artefacto de otra empresa",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{otherInvoiceId}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{otherInvoiceId}/artifacts/ride",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "artefacto con otra empresa activa",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "headers": {
+          "x-tenant-id": "{otherTenantId}"
+        }
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Sin acceso al tenant indicado",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "TENANT_FORBIDDEN"
+      }
+    },
+    {
+      "name": "artefacto sin membresía",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "stranger"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Sin acceso al tenant indicado",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "TENANT_FORBIDDEN"
+      }
+    },
+    {
+      "name": "artefacto sin autenticación",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "none"
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Se requiere un token de acceso válido",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "UNAUTHENTICATED"
+      }
+    },
+    {
+      "name": "artefacto POST",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "artefacto PUT",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "artefacto DELETE",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "artefacto PATCH",
+      "request": {
+        "method": "PATCH",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "artefacto OPTIONS",
+      "request": {
+        "method": "OPTIONS",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": null,
+      "allow": "GET,HEAD,OPTIONS",
+      "body": ""
+    },
+    {
+      "name": "artefactos sin tipo",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{archivedDocumentId}/artifacts",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "entregas sembradas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "enviando@example.test",
+          "status": "SENDING",
+          "attemptCount": 3,
+          "lastError": "Sin respuesta del servidor de correo: ConnectException",
+          "createdAt": "2001-02-03T04:05:09.000001Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "otra@example.test",
+          "status": "FAILED",
+          "attemptCount": 1,
+          "lastError": "SMTP 550: 550 5.1.1 El buzón no existe",
+          "createdAt": "2001-02-03T04:05:07Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "cliente@example.test",
+          "status": "SENT",
+          "attemptCount": 2,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:06.123456Z",
+          "sentAt": "2001-02-03T04:06:07.500Z",
+          "automatic": true
+        }
+      ]
+    },
+    {
+      "name": "entregas sembradas con rol AUDITOR",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "auditor"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "enviando@example.test",
+          "status": "SENDING",
+          "attemptCount": 3,
+          "lastError": "Sin respuesta del servidor de correo: ConnectException",
+          "createdAt": "2001-02-03T04:05:09.000001Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "otra@example.test",
+          "status": "FAILED",
+          "attemptCount": 1,
+          "lastError": "SMTP 550: 550 5.1.1 El buzón no existe",
+          "createdAt": "2001-02-03T04:05:07Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "cliente@example.test",
+          "status": "SENT",
+          "attemptCount": 2,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:06.123456Z",
+          "sentAt": "2001-02-03T04:06:07.500Z",
+          "automatic": true
+        }
+      ]
+    },
+    {
+      "name": "entregas sembradas con rol BILLER",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "biller"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "enviando@example.test",
+          "status": "SENDING",
+          "attemptCount": 3,
+          "lastError": "Sin respuesta del servidor de correo: ConnectException",
+          "createdAt": "2001-02-03T04:05:09.000001Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "otra@example.test",
+          "status": "FAILED",
+          "attemptCount": 1,
+          "lastError": "SMTP 550: 550 5.1.1 El buzón no existe",
+          "createdAt": "2001-02-03T04:05:07Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "cliente@example.test",
+          "status": "SENT",
+          "attemptCount": 2,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:06.123456Z",
+          "sentAt": "2001-02-03T04:06:07.500Z",
+          "automatic": true
+        }
+      ]
+    },
+    {
+      "name": "entregas sin ninguna",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": []
+    },
+    {
+      "name": "entregas de un comprobante reservado",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{retryDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": []
+    },
+    {
+      "name": "entregas con id en mayúsculas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentIdUpper}/deliveries",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "enviando@example.test",
+          "status": "SENDING",
+          "attemptCount": 3,
+          "lastError": "Sin respuesta del servidor de correo: ConnectException",
+          "createdAt": "2001-02-03T04:05:09.000001Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "otra@example.test",
+          "status": "FAILED",
+          "attemptCount": 1,
+          "lastError": "SMTP 550: 550 5.1.1 El buzón no existe",
+          "createdAt": "2001-02-03T04:05:07Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "cliente@example.test",
+          "status": "SENT",
+          "attemptCount": 2,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:06.123456Z",
+          "sentAt": "2001-02-03T04:06:07.500Z",
+          "automatic": true
+        }
+      ]
+    },
+    {
+      "name": "entregas con parámetros que se ignoran",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "owner",
+        "query": "page=1&size=1"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "enviando@example.test",
+          "status": "SENDING",
+          "attemptCount": 3,
+          "lastError": "Sin respuesta del servidor de correo: ConnectException",
+          "createdAt": "2001-02-03T04:05:09.000001Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "otra@example.test",
+          "status": "FAILED",
+          "attemptCount": 1,
+          "lastError": "SMTP 550: 550 5.1.1 El buzón no existe",
+          "createdAt": "2001-02-03T04:05:07Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "cliente@example.test",
+          "status": "SENT",
+          "attemptCount": 2,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:06.123456Z",
+          "sentAt": "2001-02-03T04:06:07.500Z",
+          "automatic": true
+        }
+      ]
+    },
+    {
+      "name": "entregas con id mal formado",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/no-es-un-uuid/deliveries",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/no-es-un-uuid/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entregas de un id desconocido",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/deliveries",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{uuid}/deliveries",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "entregas de otra empresa",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{otherInvoiceId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{otherInvoiceId}/deliveries",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "entregas sin membresía",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "stranger"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Sin acceso al tenant indicado",
+        "instance": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "TENANT_FORBIDDEN"
+      }
+    },
+    {
+      "name": "entregas sin autenticación",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "none"
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Se requiere un token de acceso válido",
+        "instance": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "UNAUTHENTICATED"
+      }
+    },
+    {
+      "name": "entregas con Accept text/html",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "owner",
+        "headers": {
+          "accept": "text/html"
+        }
+      },
+      "status": 406,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "status": 406,
+        "title": "Not Acceptable",
+        "errorCode": "REQUEST_REJECTED"
+      }
+    },
+    {
+      "name": "entregas con barra final",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries/",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{archivedDocumentId}/deliveries/",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "entregas PUT",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET, POST",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "entregas DELETE",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET, POST",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "entregas PATCH",
+      "request": {
+        "method": "PATCH",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET, POST",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "entregas OPTIONS",
+      "request": {
+        "method": "OPTIONS",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": null,
+      "allow": "GET,HEAD,OPTIONS,POST",
+      "body": ""
+    },
+    {
+      "name": "entregas HEAD",
+      "request": {
+        "method": "HEAD",
+        "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": ""
+    },
+    {
+      "name": "entrega sin cuerpo ni correo del cliente",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante no tiene correo del cliente: indique una dirección",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "DELIVERY_RECIPIENT_MISSING"
+      }
+    },
+    {
+      "name": "entrega con {} y sin correo del cliente",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {}
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante no tiene correo del cliente: indique una dirección",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "DELIVERY_RECIPIENT_MISSING"
+      }
+    },
+    {
+      "name": "entrega con null y sin correo del cliente",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "null",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante no tiene correo del cliente: indique una dirección",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "DELIVERY_RECIPIENT_MISSING"
+      }
+    },
+    {
+      "name": "entrega con email null",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": null
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante no tiene correo del cliente: indique una dirección",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "DELIVERY_RECIPIENT_MISSING"
+      }
+    },
+    {
+      "name": "entrega con email vacío",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": ""
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante no tiene correo del cliente: indique una dirección",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "DELIVERY_RECIPIENT_MISSING"
+      }
+    },
+    {
+      "name": "entrega con email de espacios",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "  \t"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante no tiene correo del cliente: indique una dirección",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "DELIVERY_RECIPIENT_MISSING"
+      }
+    },
+    {
+      "name": "entrega con email de espacio duro",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": " "
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con email de espacio ideográfico",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "　"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante no tiene correo del cliente: indique una dirección",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "DELIVERY_RECIPIENT_MISSING"
+      }
+    },
+    {
+      "name": "entrega con propiedad desconocida",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "correo": "a@b.test"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante no tiene correo del cliente: indique una dirección",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "DELIVERY_RECIPIENT_MISSING"
+      }
+    },
+    {
+      "name": "entrega con Email en otra caja",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "Email": "a@b.test"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante no tiene correo del cliente: indique una dirección",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "DELIVERY_RECIPIENT_MISSING"
+      }
+    },
+    {
+      "name": "entrega con Content-Type JSON y sin cuerpo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 422,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante no tiene correo del cliente: indique una dirección",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 422,
+        "title": "Unprocessable Content",
+        "errorCode": "DELIVERY_RECIPIENT_MISSING"
+      }
+    },
+    {
+      "name": "entrega con Content-Type de texto y sin cuerpo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "headers": {
+          "content-type": "text/plain"
+        }
+      },
+      "status": 415,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 415,
+        "title": "Unsupported Media Type",
+        "errorCode": "UNSUPPORTED_MEDIA_TYPE"
+      }
+    },
+    {
+      "name": "entrega con cuerpo de espacios",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "   ",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección sin arroba",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "no-es-un-correo"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección con salto de línea",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a@b.test\r\nBcc: x@evil.test"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección con nombre",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "Nombre <a@b.test>"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección en lista",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a@b.test, c@d.test"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección en grupo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "grupo:a@b.test,c@d.test;"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección demasiado larga",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@b.test"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección con dos arrobas",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a@b@c.test"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección sin dominio",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a@"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección sin nombre",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "@b.test"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección con punto final",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a@b.test."
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección con dos puntos seguidos",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a..b@c.test"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección con espacio",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a b@c.test"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección con guion bajo en el dominio",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a@b_c.test"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una dirección con barra invertida",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a\\b@c.test"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "a\\b@c.test",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega con una dirección con NUL",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a\u0000@b.test"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con email objeto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": {
+            "a": 1
+          }
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con email lista",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": [
+            "a@b.test"
+          ]
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con email número",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": 5
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con email booleano",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": true
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con una lista",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "[]",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con un texto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "\"a@b.test\"",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con un texto vacío",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "\"\"",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con un número",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "5",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con JSON ilegible",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con email repetido y el último no válido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "{\"email\":\"a@b.test\",\"email\":\"no\"}",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con cuerpo de texto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "a@b.test",
+        "headers": {
+          "content-type": "text/plain"
+        }
+      },
+      "status": 415,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 415,
+        "title": "Unsupported Media Type",
+        "errorCode": "UNSUPPORTED_MEDIA_TYPE"
+      }
+    },
+    {
+      "name": "entrega con cuerpo XML",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "<email>a@b.test</email>",
+        "headers": {
+          "content-type": "application/xml"
+        }
+      },
+      "status": 415,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 415,
+        "title": "Unsupported Media Type",
+        "errorCode": "UNSUPPORTED_MEDIA_TYPE"
+      }
+    },
+    {
+      "name": "entrega con cuerpo y Content-Type vacío",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "{}",
+        "headers": {
+          "content-type": ""
+        }
+      },
+      "status": 415,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 415,
+        "title": "Unsupported Media Type",
+        "errorCode": "UNSUPPORTED_MEDIA_TYPE"
+      }
+    },
+    {
+      "name": "entrega sin cuerpo",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "cliente@example.test",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega con {}",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {}
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "cliente@example.test",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega con null",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "null",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "cliente@example.test",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega a otra dirección",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "otra.persona+facturas@mi-empresa.com.ec"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "otra.persona+facturas@mi-empresa.com.ec",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega a una dirección con espacios alrededor",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "  rodeada@example.test\t"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "rodeada@example.test",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega a un dominio sin punto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a@localhost"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "a@localhost",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega con rol BILLER",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "biller",
+        "body": {
+          "email": "biller@example.test"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "biller@example.test",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega a una dirección dada",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "nueva@example.test"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "nueva@example.test",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega a un dominio literal",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a@[127.0.0.1]"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "a@[127.0.0.1]",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega con vnd.api+json",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "{\"email\":\"vnd@example.test\"}",
+        "headers": {
+          "content-type": "application/vnd.api+json"
+        }
+      },
+      "status": 202,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{uuid}",
+        "channel": "EMAIL",
+        "recipient": "vnd@example.test",
+        "status": "PENDING",
+        "attemptCount": 0,
+        "lastError": null,
+        "createdAt": "{timestamp}",
+        "sentAt": null,
+        "automatic": false
+      }
+    },
+    {
+      "name": "entrega con Accept text/html",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "html@example.test"
+        },
+        "headers": {
+          "accept": "text/html"
+        }
+      },
+      "status": 406,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "status": 406,
+        "title": "Not Acceptable",
+        "errorCode": "REQUEST_REJECTED"
+      }
+    },
+    {
+      "name": "entregas tras pedirlas",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "biller@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "a@localhost",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "rodeada@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "otra.persona+facturas@mi-empresa.com.ec",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "cliente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "cliente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "cliente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "a\\b@c.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        }
+      ]
+    },
+    {
+      "name": "entregas tras pedirlas sin correo del cliente",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "html@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "vnd@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "a@[127.0.0.1]",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "nueva@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "{timestamp}",
+          "sentAt": null,
+          "automatic": false
+        }
+      ]
+    },
+    {
+      "name": "entrega en el tope",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{limitDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El comprobante alcanzó el máximo de entregas",
+        "instance": "/api/v1/documents/{limitDocumentId}/deliveries",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "DELIVERY_LIMIT_REACHED"
+      }
+    },
+    {
+      "name": "entrega en el tope con una dirección no válida",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{limitDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "no"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La dirección de correo no es válida",
+        "instance": "/api/v1/documents/{limitDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega de un comprobante reservado",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "a@b.test"
+        }
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Solo se entrega un comprobante autorizado",
+        "instance": "/api/v1/documents/{retryDocumentId}/deliveries",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "DOCUMENT_NOT_AUTHORIZED"
+      }
+    },
+    {
+      "name": "entrega de un comprobante reservado con una dirección no válida",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{retryDocumentId}/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "no"
+        }
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Solo se entrega un comprobante autorizado",
+        "instance": "/api/v1/documents/{retryDocumentId}/deliveries",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "DOCUMENT_NOT_AUTHORIZED"
+      }
+    },
+    {
+      "name": "entrega de un comprobante devuelto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{returnedDocumentId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 409,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Solo se entrega un comprobante autorizado",
+        "instance": "/api/v1/documents/{returnedDocumentId}/deliveries",
+        "status": 409,
+        "title": "Conflict",
+        "errorCode": "DOCUMENT_NOT_AUTHORIZED"
+      }
+    },
+    {
+      "name": "entrega con rol AUDITOR",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "auditor"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El rol no permite esta operación",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "ROLE_FORBIDDEN"
+      }
+    },
+    {
+      "name": "entrega con rol AUDITOR y JSON ilegible",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "auditor",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con rol AUDITOR sobre un id desconocido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/deliveries",
+        "auth": "auditor"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El rol no permite esta operación",
+        "instance": "/api/v1/documents/{uuid}/deliveries",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "ROLE_FORBIDDEN"
+      }
+    },
+    {
+      "name": "entrega con id mal formado",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/no-es-un-uuid/deliveries",
+        "auth": "owner"
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/no-es-un-uuid/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega con id mal formado y JSON ilegible",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/no-es-un-uuid/deliveries",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/no-es-un-uuid/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega de un id desconocido",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/deliveries",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{uuid}/deliveries",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "entrega de un id desconocido con una dirección no válida",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/deliveries",
+        "auth": "owner",
+        "body": {
+          "email": "no"
+        }
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{uuid}/deliveries",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "entrega de otra empresa",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{otherInvoiceId}/deliveries",
+        "auth": "owner"
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/documents/{otherInvoiceId}/deliveries",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "entrega sin membresía",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "stranger"
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Sin acceso al tenant indicado",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "TENANT_FORBIDDEN"
+      }
+    },
+    {
+      "name": "entrega sin autenticación",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "none"
+      },
+      "status": 401,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Se requiere un token de acceso válido",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 401,
+        "title": "Unauthorized",
+        "errorCode": "UNAUTHENTICATED"
+      }
+    },
+    {
+      "name": "documento con cuerpo ilegible",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{bareDocumentId}",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json",
+          "content-length": "1"
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": {
+        "id": "{bareDocumentId}",
+        "documentType": "01",
+        "state": "AUTHORIZED",
+        "environment": "1",
+        "taxpayerId": "{taxpayerId}",
+        "number": "001-001-000000006",
+        "sequence": "000000006",
+        "accessKey": "{accessKey}",
+        "issueDate": "{today}",
+        "currency": "USD",
+        "customer": {
+          "idType": "05",
+          "idNumber": "1712345678",
+          "name": "Cliente de Sondeo"
+        },
+        "subtotal": "10.50",
+        "totalDiscount": "0.00",
+        "taxes": [
+          {
+            "taxCode": "2",
+            "rateCode": "4",
+            "rate": "15.00",
+            "base": "10.50",
+            "amount": "1.58"
+          }
+        ],
+        "totalTax": "1.58",
+        "total": "12.08",
+        "lines": [
+          {
+            "lineNo": 1,
+            "invoiceLineNo": null,
+            "productId": "{productId}",
+            "mainCode": "SKU-SONDEO",
+            "description": "Producto de Sondeo",
+            "quantity": "1.000000",
+            "unitPrice": "10.500000",
+            "discount": "0.00",
+            "subtotal": "10.50",
+            "taxCode": "2",
+            "taxRateCode": "4",
+            "taxRate": "15.00",
+            "taxAmount": "1.58"
+          }
+        ],
+        "payments": [
+          {
+            "methodCode": "01",
+            "amount": "12.08",
+            "term": null,
+            "timeUnit": null
+          }
+        ],
+        "authorizationNumber": null,
+        "authorizedAt": null,
+        "customerId": "{customerId}",
+        "replacesDocumentId": null,
+        "replacedByDocumentId": null,
+        "modifiedDocument": null,
+        "reason": null,
+        "reasons": null,
+        "creditedTotal": "0.00"
+      }
+    },
+    {
+      "name": "entregas con cuerpo ilegible",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{limitDocumentId}/deliveries",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json",
+          "content-length": "1"
+        }
+      },
+      "status": 200,
+      "contentType": "application/json",
+      "allow": null,
+      "body": [
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        },
+        {
+          "id": "{uuid}",
+          "channel": "EMAIL",
+          "recipient": "pendiente@example.test",
+          "status": "PENDING",
+          "attemptCount": 0,
+          "lastError": null,
+          "createdAt": "2001-02-03T04:05:08.120Z",
+          "sentAt": null,
+          "automatic": false
+        }
+      ]
+    },
+    {
+      "name": "artefacto con cuerpo ilegible",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json",
+          "content-length": "1"
+        }
+      },
+      "status": 200,
+      "contentType": "application/pdf",
+      "allow": null,
+      "body": "%PDF-1.5 ride de sondeo"
+    },
+    {
+      "name": "cliente sin borrar, con cuerpo ilegible",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/customers/00000000-0000-4000-8000-000000000000",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json",
+          "content-length": "1"
+        }
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/customers/{uuid}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "producto sin borrar, con cuerpo ilegible",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/products/00000000-0000-4000-8000-000000000000",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json",
+          "content-length": "1"
+        }
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/products/{uuid}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "API key sin borrar, con cuerpo ilegible",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/api-keys/00000000-0000-4000-8000-000000000000",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json",
+          "content-length": "1"
+        }
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La API key no existe",
+        "instance": "/api/v1/api-keys/{uuid}",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "API_KEY_NOT_FOUND"
+      }
+    },
+    {
+      "name": "OPTIONS con cuerpo ilegible",
+      "request": {
+        "method": "OPTIONS",
+        "path": "/api/v1/documents",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json",
+          "content-length": "1"
+        }
+      },
+      "status": 200,
+      "contentType": null,
+      "allow": "GET,HEAD,OPTIONS",
+      "body": ""
+    },
+    {
+      "name": "ruta inexistente con cuerpo ilegible",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/no-existe",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json",
+          "content-length": "1"
+        }
+      },
+      "status": 404,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Recurso no encontrado",
+        "instance": "/api/v1/no-existe",
+        "status": 404,
+        "title": "Not Found",
+        "errorCode": "NOT_FOUND"
+      }
+    },
+    {
+      "name": "método no admitido con cuerpo ilegible",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/documents",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json",
+          "content-length": "1"
+        }
+      },
+      "status": 405,
+      "contentType": "application/problem+json",
+      "allow": "GET",
+      "body": {
+        "detail": "La petición no se pudo procesar",
+        "instance": "/api/v1/documents",
+        "status": 405,
+        "title": "Method Not Allowed",
+        "errorCode": "METHOD_NOT_ALLOWED"
+      }
+    },
+    {
+      "name": "cliente borrado con cuerpo de texto",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/customers/{customerId}",
+        "auth": "owner",
+        "rawBody": "hola",
+        "headers": {
+          "content-type": "text/plain",
+          "content-length": "4"
+        }
+      },
+      "status": 204,
+      "contentType": null,
+      "allow": null,
+      "body": ""
+    },
+    {
+      "name": "cliente con id mal formado y JSON ilegible",
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/customers/no-es-un-uuid",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/customers/no-es-un-uuid",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "cliente sin membresía y JSON ilegible",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "stranger",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Sin acceso al tenant indicado",
+        "instance": "/api/v1/customers",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "TENANT_FORBIDDEN"
+      }
+    },
+    {
+      "name": "cliente con empresa mal formada y JSON ilegible",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json",
+          "x-tenant-id": "no-uuid"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La cabecera X-Tenant-Id debe ser un UUID",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "TENANT_HEADER_INVALID"
+      }
+    },
+    {
+      "name": "cliente con rol AUDITOR y JSON ilegible",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/customers",
+        "auth": "auditor",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/customers",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "factura sin Idempotency-Key y JSON ilegible",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/invoices",
+        "auth": "owner",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "El cuerpo de la petición no es JSON válido",
+        "instance": "/api/v1/invoices",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    },
+    {
+      "name": "entrega sin membresía y JSON ilegible",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "auth": "stranger",
+        "rawBody": "{",
+        "headers": {
+          "content-type": "application/json"
+        }
+      },
+      "status": 403,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "Sin acceso al tenant indicado",
+        "instance": "/api/v1/documents/{mailedDocumentId}/deliveries",
+        "status": 403,
+        "title": "Forbidden",
+        "errorCode": "TENANT_FORBIDDEN"
+      }
+    },
+    {
+      "name": "entrega con id mal formado y cuerpo de texto",
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/documents/no-es-un-uuid/deliveries",
+        "auth": "owner",
+        "rawBody": "hola",
+        "headers": {
+          "content-type": "text/plain"
+        }
+      },
+      "status": 400,
+      "contentType": "application/problem+json",
+      "allow": null,
+      "body": {
+        "detail": "La petición está mal formada",
+        "instance": "/api/v1/documents/no-es-un-uuid/deliveries",
+        "status": 400,
+        "title": "Bad Request",
+        "errorCode": "MALFORMED_REQUEST"
+      }
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import type { DocumentEnvelope } from './document-envelope.js';
 import type { DocumentKind } from './document-kind.js';
 import type { FiscalDocumentRepository } from './fiscal-document.repository.js';
 import type { ContentCodec } from './json-content.js';
+import type { RideEnvelope } from './ride-envelope.js';
 
 /**
  * Base de los tipos cuyo contenido propio viaja como JSON en la columna content del sobre
@@ -21,10 +22,16 @@ export abstract class JsonContentKind<C> implements DocumentKind<C> {
 
   protected constructor(
     private readonly codec: ContentCodec<C>,
-    private readonly documents: FiscalDocumentRepository,
+    protected readonly documents: FiscalDocumentRepository,
   ) {}
 
   abstract buildXml(envelope: DocumentEnvelope, content: C): Buffer;
+
+  abstract buildRide(
+    db: Kysely<DB> | Transaction<DB>,
+    ride: RideEnvelope,
+    content: C,
+  ): Promise<Buffer>;
 
   contentJson(content: C): string | null {
     return this.codec.write(content);

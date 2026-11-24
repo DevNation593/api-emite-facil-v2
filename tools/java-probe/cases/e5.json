@@ -1,0 +1,1971 @@
+[
+  {
+    "name": "cabeceras de una lista",
+    "method": "GET",
+    "path": "/api/v1/documents",
+    "auth": "owner",
+    "query": "size=1&documentType=06",
+    "checkHeaders": [
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "cabeceras de un 404",
+    "method": "GET",
+    "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000",
+    "auth": "owner",
+    "checkHeaders": [
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "cabeceras de un 401",
+    "method": "GET",
+    "path": "/api/v1/documents",
+    "auth": "none",
+    "checkHeaders": [
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "cabeceras de una ruta que no existe",
+    "method": "GET",
+    "path": "/otra",
+    "auth": "none",
+    "checkHeaders": [
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "cabeceras de un 405",
+    "method": "PUT",
+    "path": "/api/v1/documents",
+    "auth": "owner",
+    "checkHeaders": [
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "cabeceras de OPTIONS",
+    "method": "OPTIONS",
+    "path": "/api/v1/documents",
+    "auth": "owner",
+    "checkHeaders": [
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "cabeceras de health",
+    "method": "GET",
+    "path": "/actuator/health",
+    "auth": "none",
+    "checkHeaders": [
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "cabeceras de un ingreso rechazado",
+    "method": "POST",
+    "path": "/api/v1/auth/login",
+    "auth": "none",
+    "headers": {
+      "x-forwarded-for": "198.51.100.9"
+    },
+    "body": {
+      "email": "nadie@example.test",
+      "password": "una contraseña larga"
+    },
+    "checkHeaders": [
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "cabeceras de un cuerpo ilegible",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json"
+    },
+    "checkHeaders": [
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "cabeceras tras un proxy con TLS",
+    "method": "GET",
+    "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000",
+    "auth": "owner",
+    "headers": {
+      "x-forwarded-proto": "https"
+    },
+    "checkHeaders": [
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto xml-unsigned",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/xml-unsigned",
+    "auth": "owner",
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto xml-signed",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/xml-signed",
+    "auth": "owner",
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto sri-authorization",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/sri-authorization",
+    "auth": "owner",
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto xml-authorized",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/xml-authorized",
+    "auth": "owner",
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto ride",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con rol AUDITOR",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "auditor",
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con rol BILLER",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "biller"
+  },
+  {
+    "name": "artefacto con id en mayúsculas",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentIdUpper}/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto con id sin guiones",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentIdNoDash}/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto HEAD",
+    "method": "HEAD",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con parámetros que se ignoran",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "query": "download=1"
+  },
+  {
+    "name": "artefacto con If-None-Match igual",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-None-Match débil",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": "W/\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-None-Match comodín",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": "*"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-None-Match distinto",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": "\"otro\""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-None-Match en lista",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": "\"otro\", \"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-None-Match en lista sin espacios",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": "\"otro\",\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-None-Match repetido",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": [
+        "\"otro\"",
+        "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+      ]
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-None-Match sin comillas",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": "83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-None-Match vacío",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": ""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-None-Match igual y HEAD",
+    "method": "HEAD",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-None-Match igual y If-Match distinto",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\"",
+      "if-match": "\"otro\""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-Match igual",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-match": "\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-Match comodín",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-match": "*"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-Match distinto",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-match": "\"otro\""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-Match débil",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-match": "W/\"83295cb6d5e1ab9f1d32dbcdb8f7fae94e18c7abd5bce6c1d11ca3579226bd5a\""
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-Modified-Since",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-modified-since": "Wed, 21 Oct 2099 07:28:00 GMT"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con If-Unmodified-Since",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-unmodified-since": "Wed, 21 Oct 2009 07:28:00 GMT"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con Range",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "range": "bytes=0-3"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con Range fuera del contenido",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "range": "bytes=1000-"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con Accept application/json",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "accept": "application/json"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con Accept text/html",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "accept": "text/html"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con Accept application/pdf;q=0",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "accept": "application/pdf;q=0"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto con Accept mal formado",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "accept": "esto no es un tipo"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto XML con Accept application/json",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/xml-signed",
+    "auth": "owner",
+    "headers": {
+      "accept": "application/json"
+    },
+    "checkHeaders": [
+      "etag",
+      "content-disposition",
+      "content-length",
+      "accept-ranges",
+      "vary",
+      "last-modified",
+      "cache-control",
+      "pragma",
+      "expires",
+      "x-content-type-options",
+      "x-frame-options",
+      "x-xss-protection",
+      "strict-transport-security"
+    ]
+  },
+  {
+    "name": "artefacto inexistente con If-None-Match comodín",
+    "method": "GET",
+    "path": "/api/v1/documents/{bareDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "if-none-match": "*"
+    }
+  },
+  {
+    "name": "artefacto de un tipo desconocido",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/pdf",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto de un tipo en mayúsculas",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/RIDE",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto de un tipo con espacio",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride%20",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto de un tipo con el nombre interno",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/RIDE_PDF",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto de un tipo con extensión",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride.pdf",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto de un tipo vacío",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto de un tipo con barra final",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride/",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto de un tipo desconocido con Accept XML",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/pdf",
+    "auth": "owner",
+    "headers": {
+      "accept": "application/xml"
+    }
+  },
+  {
+    "name": "artefacto con id mal formado",
+    "method": "GET",
+    "path": "/api/v1/documents/no-es-un-uuid/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto con id mal formado y tipo desconocido",
+    "method": "GET",
+    "path": "/api/v1/documents/no-es-un-uuid/artifacts/pdf",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto de un id desconocido",
+    "method": "GET",
+    "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto de un id y un tipo desconocidos",
+    "method": "GET",
+    "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/artifacts/pdf",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto aún no generado",
+    "method": "GET",
+    "path": "/api/v1/documents/{bareDocumentId}/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto de otra empresa",
+    "method": "GET",
+    "path": "/api/v1/documents/{otherInvoiceId}/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto con otra empresa activa",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "headers": {
+      "x-tenant-id": "{otherTenantId}"
+    }
+  },
+  {
+    "name": "artefacto sin membresía",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "stranger"
+  },
+  {
+    "name": "artefacto sin autenticación",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "none"
+  },
+  {
+    "name": "artefacto POST",
+    "method": "POST",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto PUT",
+    "method": "PUT",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto DELETE",
+    "method": "DELETE",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto PATCH",
+    "method": "PATCH",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefacto OPTIONS",
+    "method": "OPTIONS",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner"
+  },
+  {
+    "name": "artefactos sin tipo",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas sembradas",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas sembradas con rol AUDITOR",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "auditor"
+  },
+  {
+    "name": "entregas sembradas con rol BILLER",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "biller"
+  },
+  {
+    "name": "entregas sin ninguna",
+    "method": "GET",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas de un comprobante reservado",
+    "method": "GET",
+    "path": "/api/v1/documents/{retryDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas con id en mayúsculas",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentIdUpper}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas con parámetros que se ignoran",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "owner",
+    "query": "page=1&size=1"
+  },
+  {
+    "name": "entregas con id mal formado",
+    "method": "GET",
+    "path": "/api/v1/documents/no-es-un-uuid/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas de un id desconocido",
+    "method": "GET",
+    "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas de otra empresa",
+    "method": "GET",
+    "path": "/api/v1/documents/{otherInvoiceId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas sin membresía",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "stranger"
+  },
+  {
+    "name": "entregas sin autenticación",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "none"
+  },
+  {
+    "name": "entregas con Accept text/html",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "owner",
+    "headers": {
+      "accept": "text/html"
+    }
+  },
+  {
+    "name": "entregas con barra final",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries/",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas PUT",
+    "method": "PUT",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas DELETE",
+    "method": "DELETE",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas PATCH",
+    "method": "PATCH",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas OPTIONS",
+    "method": "OPTIONS",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas HEAD",
+    "method": "HEAD",
+    "path": "/api/v1/documents/{archivedDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entrega sin cuerpo ni correo del cliente",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entrega con {} y sin correo del cliente",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {}
+  },
+  {
+    "name": "entrega con null y sin correo del cliente",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "null",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con email null",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": null
+    }
+  },
+  {
+    "name": "entrega con email vacío",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": ""
+    }
+  },
+  {
+    "name": "entrega con email de espacios",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "  \t"
+    }
+  },
+  {
+    "name": "entrega con email de espacio duro",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": " "
+    }
+  },
+  {
+    "name": "entrega con email de espacio ideográfico",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "　"
+    }
+  },
+  {
+    "name": "entrega con propiedad desconocida",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "correo": "a@b.test"
+    }
+  },
+  {
+    "name": "entrega con Email en otra caja",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "Email": "a@b.test"
+    }
+  },
+  {
+    "name": "entrega con Content-Type JSON y sin cuerpo",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con Content-Type de texto y sin cuerpo",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "headers": {
+      "content-type": "text/plain"
+    }
+  },
+  {
+    "name": "entrega con cuerpo de espacios",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "   ",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con una dirección sin arroba",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "no-es-un-correo"
+    }
+  },
+  {
+    "name": "entrega con una dirección con salto de línea",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a@b.test\r\nBcc: x@evil.test"
+    }
+  },
+  {
+    "name": "entrega con una dirección con nombre",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "Nombre <a@b.test>"
+    }
+  },
+  {
+    "name": "entrega con una dirección en lista",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a@b.test, c@d.test"
+    }
+  },
+  {
+    "name": "entrega con una dirección en grupo",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "grupo:a@b.test,c@d.test;"
+    }
+  },
+  {
+    "name": "entrega con una dirección demasiado larga",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@b.test"
+    }
+  },
+  {
+    "name": "entrega con una dirección con dos arrobas",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a@b@c.test"
+    }
+  },
+  {
+    "name": "entrega con una dirección sin dominio",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a@"
+    }
+  },
+  {
+    "name": "entrega con una dirección sin nombre",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "@b.test"
+    }
+  },
+  {
+    "name": "entrega con una dirección con punto final",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a@b.test."
+    }
+  },
+  {
+    "name": "entrega con una dirección con dos puntos seguidos",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a..b@c.test"
+    }
+  },
+  {
+    "name": "entrega con una dirección con espacio",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a b@c.test"
+    }
+  },
+  {
+    "name": "entrega con una dirección con guion bajo en el dominio",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a@b_c.test"
+    }
+  },
+  {
+    "name": "entrega con una dirección con barra invertida",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a\\b@c.test"
+    }
+  },
+  {
+    "name": "entrega con una dirección con NUL",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a\u0000@b.test"
+    }
+  },
+  {
+    "name": "entrega con email objeto",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": {
+        "a": 1
+      }
+    }
+  },
+  {
+    "name": "entrega con email lista",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": [
+        "a@b.test"
+      ]
+    }
+  },
+  {
+    "name": "entrega con email número",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": 5
+    }
+  },
+  {
+    "name": "entrega con email booleano",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": true
+    }
+  },
+  {
+    "name": "entrega con una lista",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "[]",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con un texto",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "\"a@b.test\"",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con un texto vacío",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "\"\"",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con un número",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "5",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con JSON ilegible",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con email repetido y el último no válido",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "{\"email\":\"a@b.test\",\"email\":\"no\"}",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con cuerpo de texto",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "a@b.test",
+    "headers": {
+      "content-type": "text/plain"
+    }
+  },
+  {
+    "name": "entrega con cuerpo XML",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "<email>a@b.test</email>",
+    "headers": {
+      "content-type": "application/xml"
+    }
+  },
+  {
+    "name": "entrega con cuerpo y Content-Type vacío",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "{}",
+    "headers": {
+      "content-type": ""
+    }
+  },
+  {
+    "name": "entrega sin cuerpo",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entrega con {}",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {}
+  },
+  {
+    "name": "entrega con null",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "null",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega a otra dirección",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "otra.persona+facturas@mi-empresa.com.ec"
+    }
+  },
+  {
+    "name": "entrega a una dirección con espacios alrededor",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "  rodeada@example.test\t"
+    }
+  },
+  {
+    "name": "entrega a un dominio sin punto",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a@localhost"
+    }
+  },
+  {
+    "name": "entrega con rol BILLER",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "biller",
+    "body": {
+      "email": "biller@example.test"
+    }
+  },
+  {
+    "name": "entrega a una dirección dada",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "nueva@example.test"
+    }
+  },
+  {
+    "name": "entrega a un dominio literal",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a@[127.0.0.1]"
+    }
+  },
+  {
+    "name": "entrega con vnd.api+json",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "{\"email\":\"vnd@example.test\"}",
+    "headers": {
+      "content-type": "application/vnd.api+json"
+    }
+  },
+  {
+    "name": "entrega con Accept text/html",
+    "method": "POST",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "html@example.test"
+    },
+    "headers": {
+      "accept": "text/html"
+    }
+  },
+  {
+    "name": "entregas tras pedirlas",
+    "method": "GET",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entregas tras pedirlas sin correo del cliente",
+    "method": "GET",
+    "path": "/api/v1/documents/{bareDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entrega en el tope",
+    "method": "POST",
+    "path": "/api/v1/documents/{limitDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entrega en el tope con una dirección no válida",
+    "method": "POST",
+    "path": "/api/v1/documents/{limitDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "no"
+    }
+  },
+  {
+    "name": "entrega de un comprobante reservado",
+    "method": "POST",
+    "path": "/api/v1/documents/{retryDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "a@b.test"
+    }
+  },
+  {
+    "name": "entrega de un comprobante reservado con una dirección no válida",
+    "method": "POST",
+    "path": "/api/v1/documents/{retryDocumentId}/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "no"
+    }
+  },
+  {
+    "name": "entrega de un comprobante devuelto",
+    "method": "POST",
+    "path": "/api/v1/documents/{returnedDocumentId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entrega con rol AUDITOR",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "auditor"
+  },
+  {
+    "name": "entrega con rol AUDITOR y JSON ilegible",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "auditor",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con rol AUDITOR sobre un id desconocido",
+    "method": "POST",
+    "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/deliveries",
+    "auth": "auditor"
+  },
+  {
+    "name": "entrega con id mal formado",
+    "method": "POST",
+    "path": "/api/v1/documents/no-es-un-uuid/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entrega con id mal formado y JSON ilegible",
+    "method": "POST",
+    "path": "/api/v1/documents/no-es-un-uuid/deliveries",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega de un id desconocido",
+    "method": "POST",
+    "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entrega de un id desconocido con una dirección no válida",
+    "method": "POST",
+    "path": "/api/v1/documents/00000000-0000-4000-8000-000000000000/deliveries",
+    "auth": "owner",
+    "body": {
+      "email": "no"
+    }
+  },
+  {
+    "name": "entrega de otra empresa",
+    "method": "POST",
+    "path": "/api/v1/documents/{otherInvoiceId}/deliveries",
+    "auth": "owner"
+  },
+  {
+    "name": "entrega sin membresía",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "stranger"
+  },
+  {
+    "name": "entrega sin autenticación",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "none"
+  },
+  {
+    "name": "documento con cuerpo ilegible",
+    "method": "GET",
+    "path": "/api/v1/documents/{bareDocumentId}",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "1"
+    }
+  },
+  {
+    "name": "entregas con cuerpo ilegible",
+    "method": "GET",
+    "path": "/api/v1/documents/{limitDocumentId}/deliveries",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "1"
+    }
+  },
+  {
+    "name": "artefacto con cuerpo ilegible",
+    "method": "GET",
+    "path": "/api/v1/documents/{archivedDocumentId}/artifacts/ride",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "1"
+    }
+  },
+  {
+    "name": "cliente sin borrar, con cuerpo ilegible",
+    "method": "DELETE",
+    "path": "/api/v1/customers/00000000-0000-4000-8000-000000000000",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "1"
+    }
+  },
+  {
+    "name": "producto sin borrar, con cuerpo ilegible",
+    "method": "DELETE",
+    "path": "/api/v1/products/00000000-0000-4000-8000-000000000000",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "1"
+    }
+  },
+  {
+    "name": "API key sin borrar, con cuerpo ilegible",
+    "method": "DELETE",
+    "path": "/api/v1/api-keys/00000000-0000-4000-8000-000000000000",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "1"
+    }
+  },
+  {
+    "name": "OPTIONS con cuerpo ilegible",
+    "method": "OPTIONS",
+    "path": "/api/v1/documents",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "1"
+    }
+  },
+  {
+    "name": "ruta inexistente con cuerpo ilegible",
+    "method": "POST",
+    "path": "/api/v1/no-existe",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "1"
+    }
+  },
+  {
+    "name": "método no admitido con cuerpo ilegible",
+    "method": "PUT",
+    "path": "/api/v1/documents",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "1"
+    }
+  },
+  {
+    "name": "cliente borrado con cuerpo de texto",
+    "method": "DELETE",
+    "path": "/api/v1/customers/{customerId}",
+    "auth": "owner",
+    "rawBody": "hola",
+    "headers": {
+      "content-type": "text/plain",
+      "content-length": "4"
+    }
+  },
+  {
+    "name": "cliente con id mal formado y JSON ilegible",
+    "method": "PUT",
+    "path": "/api/v1/customers/no-es-un-uuid",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "cliente sin membresía y JSON ilegible",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "stranger",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "cliente con empresa mal formada y JSON ilegible",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json",
+      "x-tenant-id": "no-uuid"
+    }
+  },
+  {
+    "name": "cliente con rol AUDITOR y JSON ilegible",
+    "method": "POST",
+    "path": "/api/v1/customers",
+    "auth": "auditor",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "factura sin Idempotency-Key y JSON ilegible",
+    "method": "POST",
+    "path": "/api/v1/invoices",
+    "auth": "owner",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega sin membresía y JSON ilegible",
+    "method": "POST",
+    "path": "/api/v1/documents/{mailedDocumentId}/deliveries",
+    "auth": "stranger",
+    "rawBody": "{",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  {
+    "name": "entrega con id mal formado y cuerpo de texto",
+    "method": "POST",
+    "path": "/api/v1/documents/no-es-un-uuid/deliveries",
+    "auth": "owner",
+    "rawBody": "hola",
+    "headers": {
+      "content-type": "text/plain"
+    }
+  }
+]

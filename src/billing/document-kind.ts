@@ -2,11 +2,11 @@ import type { Kysely, Transaction } from 'kysely';
 import type { DB } from '../database/schema.js';
 import type { DocumentSchema, DocumentType } from '../xml/document-type.js';
 import type { DocumentEnvelope } from './document-envelope.js';
+import type { RideEnvelope } from './ride-envelope.js';
 
 /**
  * Un tipo de comprobante como pieza: qué esquema emite, cómo se llama, cómo guarda y lee su contenido
- * propio y cómo genera su XML a partir del sobre común (billing/DocumentKind.java; el RIDE llega en
- * E5). Hay una implementación por tipo habilitado; `DocumentKinds` las reúne. Los métodos se declaran
+ * propio y cómo genera su XML y su RIDE a partir del sobre común (billing/DocumentKind.java). Hay una implementación por tipo habilitado; `DocumentKinds` las reúne. Los métodos se declaran
  * con sintaxis de método para que un `DocumentKind<InvoiceBody>` sirva donde se pide `DocumentKind<unknown>`.
  */
 export interface DocumentKind<C> {
@@ -47,6 +47,9 @@ export interface DocumentKind<C> {
 
   /** XML sin firmar del comprobante. */
   buildXml(envelope: DocumentEnvelope, content: C): Buffer;
+
+  /** PDF del RIDE del comprobante autorizado; `db` lee los nombres del catálogo que muestra. */
+  buildRide(db: Kysely<DB> | Transaction<DB>, ride: RideEnvelope, content: C): Promise<Buffer>;
 }
 
 /** Las piezas de cada tipo de comprobante habilitado, por tipo. Dos piezas para el mismo tipo no arrancan. */

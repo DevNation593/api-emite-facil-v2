@@ -10,7 +10,7 @@ class FakeModel extends EventEmitter {
   close = vi.fn(async () => {
     this.emit('close');
   });
-  createConfirmChannel = vi.fn(async () => ({}));
+  createConfirmChannel = vi.fn(async () => new EventEmitter());
 }
 
 const asModel = (model: FakeModel) =>
@@ -28,6 +28,17 @@ it('no conecta al crearse y conecta en la primera operación', async () => {
   connectMock.mockResolvedValue(asModel(new FakeModel()));
   await rabbit.channel();
   expect(rabbit.isOpen()).toBe(true);
+  await rabbit.onApplicationShutdown();
+});
+
+it('un error del canal queda atendido y se registra sin tumbar el proceso', async () => {
+  connectMock.mockResolvedValue(asModel(new FakeModel()));
+  const rabbit = new RabbitConnection(testConfig);
+  const channel = (await rabbit.channel()) as unknown as EventEmitter;
+  expect(channel.listenerCount('error')).toBeGreaterThan(0);
+  // Sin un listener, emitir 'error' lanzaría.
+  expect(() => channel.emit('error', Object.assign(new Error('NOT_FOUND - no exchange'), { code: 404 }))).not.toThrow();
+  expect(() => channel.emit('close')).not.toThrow();
   await rabbit.onApplicationShutdown();
 });
 

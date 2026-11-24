@@ -11,8 +11,18 @@ import {
 } from '../../support/containers.js';
 import { freshIp, startTestApp, type TestApp } from '../../support/test-app.js';
 import { createHash, randomUUID } from 'node:crypto';
+import { type Kysely, sql } from 'kysely';
 import { CertificateService } from '../../../src/certificate/certificate.service.js';
 import { BigDecimal } from '../../../src/common/big-decimal.js';
+import { DATABASE } from '../../../src/database/database.module.js';
+import type { DB } from '../../../src/database/schema.js';
+import { DeliveryService } from '../../../src/delivery/delivery.service.js';
+import { DocumentPipeline } from '../../../src/orchestration/document-pipeline.js';
+import { XadesVerifier } from '../../../src/signature/xades-verifier.js';
+import { ArtifactStore } from '../../../src/storage/artifact-store.js';
+import { pdfText } from '../../support/pdf-inspect.js';
+import { processDocument } from '../../support/scenario.js';
+import { SriStub, sriTestEnv } from '../../support/sri-stub.js';
 
 /**
  * Datos escritos por la API Java (tools/java-dump): una cuenta, su sesión, una empresa y una API key,
@@ -52,8 +62,10 @@ let postgres: PostgresHandle;
 let rabbit: RabbitHandle;
 let redis: RedisHandle;
 let testApp: TestApp;
+let sri: SriStub;
 
 beforeAll(async () => {
+  sri = await SriStub.start();
   [postgres, rabbit, redis] = await Promise.all([startPostgres(), startRabbit(), startRedis()]);
   // El volcado lleva órdenes de psql (COPY ... FROM stdin): se carga con psql dentro del contenedor.
   await postgres.container.copyFilesToContainer([
@@ -65,11 +77,14 @@ beforeAll(async () => {
   if (load.exitCode !== 0) throw new Error(`no se pudo cargar el volcado:\n${load.output}`);
   testApp = await startTestApp(
     { databaseUrl: postgres.databaseUrl, rabbitUrl: rabbit.rabbitUrl, redisUrl: redis.redisUrl },
-    meta.env,
+    // El SRI simulado, para llevar por el pipeline de NestJS lo que emitió Java (E4).
+    // El correo habilitado, hacia el SMTP en memoria (E5).
+    { ...meta.env, ...sriTestEnv(sri), DELIVERY_EMAIL_ENABLED: 'true' },
   );
 });
 afterAll(async () => {
   await testApp?.close();
+  await sri?.close();
   await Promise.allSettled([postgres?.stop(), rabbit?.stop(), redis?.stop()]);
 });
 
@@ -307,6 +322,94 @@ describe('comprobantes de E3 emitidos por Java', () => {
       errorCode: 'CREDIT_EXCEEDS_INVOICE',
       detail: `Las notas de crédito de la factura superarían su total; saldo disponible: ${balance}`,
     });
+  });
+});
+
+describe('firma y SRI (E4) con lo que dejó Java', () => {
+  const signedXml = async (id: string) =>
+    (await testApp.app.get(ArtifactStore).find(testApp.app.get<symbol, Kysely<DB>>(DATABASE), meta.tenantId, id, 'XML_SIGNED'))!
+      .content;
+
+  it('NestJS firma con el certificado que cargó Java y la firma verifica', async () => {
+    // La nota de crédito escrita a mano quedó en RESERVED en Java.
+    expect(await processDocument(testApp.app, meta.tenantId, meta.manualCreditNoteId)).toBe('SIGNED');
+    const xml = await signedXml(meta.manualCreditNoteId);
+    expect(new XadesVerifier().verify(xml)).toEqual({ valid: true, errors: [] });
+    // Firmado con el certificado de Java: su huella es la que Java guardó.
+    const certificate = /<ds:X509Certificate>([^<]+)</.exec(xml.toString('utf8'))![1]!;
+    expect(createHash('sha256').update(Buffer.from(certificate, 'base64')).digest('hex')).toBe(
+      meta.certificateFingerprint,
+    );
+  });
+
+  it('un comprobante emitido por Java llega a AUTORIZADO con el pipeline de NestJS', async () => {
+    const pipeline = testApp.app.get(DocumentPipeline);
+    let state = '';
+    for (let step = 0; step < 10 && state !== 'AUTHORIZED'; step++) {
+      state = await pipeline.advance(meta.tenantId, meta.debitNoteId);
+    }
+    expect(state).toBe('AUTHORIZED');
+    expect(new XadesVerifier().verify(await signedXml(meta.debitNoteId)).valid).toBe(true);
+    const artifacts = await testApp.app
+      .get(ArtifactStore)
+      .exists(testApp.app.get<symbol, Kysely<DB>>(DATABASE), meta.tenantId, meta.debitNoteId, 'SRI_AUTHORIZATION');
+    expect(artifacts).toBe(true);
+  });
+});
+
+describe('archivo y entrega (E5) de lo que emitió Java', () => {
+  const token = async () =>
+    (
+      (
+        await testApp.http
+          .post('/api/v1/auth/login')
+          .set('X-Forwarded-For', freshIp())
+          .send({ email: meta.email, password: meta.password })
+          .expect(200)
+      ).body as { accessToken: string }
+    ).accessToken;
+
+  it.each([
+    ['invoiceId', 'factura', 'Factura ', 'FACTURA'],
+    ['creditNoteId', 'nota-credito', 'Nota de crédito ', 'NOTA DE CRÉDITO'],
+    ['debitNoteId', 'nota-debito', 'Nota de débito ', 'NOTA DE DÉBITO'],
+  ] as const)('%s se archiva, se entrega y se descarga', async (key, stem, subject, title) => {
+    const id = meta[key];
+    const db = testApp.app.get<symbol, Kysely<DB>>(DATABASE);
+    if (key === 'invoiceId') {
+      // El volcado la dejó en AUTHORIZED por SQL, sin firma ni autorización: aquí hace su recorrido.
+      await sql`UPDATE fiscal_documents SET state = 'RESERVED' WHERE id = ${id}`.execute(db);
+    }
+    await sql`UPDATE fiscal_documents SET customer_email = 'receptor@example.test' WHERE id = ${id}`.execute(db);
+    let state = '';
+    for (let step = 0; step < 10 && state !== 'AUTHORIZED'; step++) {
+      state = await testApp.app.get(DocumentPipeline).advance(meta.tenantId, id);
+    }
+    expect(state).toBe('AUTHORIZED');
+
+    expect(await testApp.app.get(DeliveryService).process(meta.tenantId, id)).toBe(1);
+
+    const mail = testApp.smtp.messages().find((message) => message.subject.startsWith(subject));
+    expect(mail?.to).toContain('receptor@example.test');
+    const owner = { Authorization: `Bearer ${await token()}`, 'X-Tenant-Id': meta.tenantId };
+    const ride = await testApp.http.get(`/api/v1/documents/${id}/artifacts/ride`).set(owner).responseType('blob').expect(200);
+    expect(ride.headers['content-disposition']).toMatch(new RegExp(`filename="${stem}-[0-9]{3}-[0-9]{3}-[0-9]{9}-ride[.]pdf"`));
+    const text = await pdfText(ride.body as Buffer);
+    expect(text).toContain(title);
+    const row = await sql<{ access_key: string; customer_name: string }>`
+      SELECT access_key, customer_name FROM fiscal_documents WHERE id = ${id}`.execute(db);
+    expect(text).toContain(row.rows[0]!.access_key);
+    expect(text).toContain(row.rows[0]!.customer_name);
+    const xml = await testApp.http
+      .get(`/api/v1/documents/${id}/artifacts/xml-authorized`)
+      .set(owner)
+      .responseType('blob')
+      .expect(200);
+    expect((xml.body as Buffer).toString('utf8')).toContain(
+      `<numeroAutorizacion>${row.rows[0]!.access_key}</numeroAutorizacion>`,
+    );
+    const deliveries = await testApp.http.get(`/api/v1/documents/${id}/deliveries`).set(owner).expect(200);
+    expect(deliveries.body).toMatchObject([{ status: 'SENT', automatic: true, recipient: 'receptor@example.test' }]);
   });
 });
 
