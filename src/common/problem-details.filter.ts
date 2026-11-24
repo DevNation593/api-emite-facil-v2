@@ -73,7 +73,13 @@ export class ProblemDetailsFilter implements ExceptionFilter {
     const http = host.switchToHttp();
     const req = http.getRequest<Request>();
     const res = http.getResponse<Response>();
-    if (res.headersSent) return;
+    if (res.headersSent) {
+      // Ya no se puede responder con el error. Se corta la conexión: terminarla con `end()` haría pasar por
+      // completa una respuesta a medias.
+      this.logUnhandled(exception);
+      if (!res.writableEnded) res.destroy();
+      return;
+    }
 
     const resolved = this.resolve(exception, req);
     const correlationId =

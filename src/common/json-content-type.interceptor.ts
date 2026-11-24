@@ -10,6 +10,7 @@ import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
 import type { Observable } from 'rxjs';
 import { ApiException } from './api-exception.js';
+import { UnreadableBody } from './json-body.js';
 import { ACCEPTS_MULTIPART_KEY } from './validation.js';
 
 const BODY_METHODS = new Set(['POST', 'PUT', 'PATCH']);
@@ -52,10 +53,9 @@ export class JsonContentTypeInterceptor implements NestInterceptor {
         multipart !== true &&
         req.is(['application/json', 'application/*+json']) === false
       ) {
-        throw new ApiException(
-          415,
-          'UNSUPPORTED_MEDIA_TYPE',
-          'La petición no se pudo procesar',
+        // Salta al leer el cuerpo, después de los parámetros de la ruta, como en Spring.
+        req.body = new UnreadableBody(
+          new ApiException(415, 'UNSUPPORTED_MEDIA_TYPE', 'La petición no se pudo procesar'),
         );
       }
     }

@@ -118,6 +118,41 @@ it('JSON ilegible', async () => {
   );
 });
 
+it('una ruta inexistente con JSON ilegible es un 404: el cuerpo no llega a leerse', async () => {
+  const res = await authed.post('/api/v1/no-existe').set('Content-Type', 'application/json').send('{');
+  expect(res.status).toBe(404);
+});
+
+it.each([
+  ['application/json', '{'],
+  ['application/json', '[]'],
+  ['text/plain', 'hola'],
+])('un id mal formado va antes que el cuerpo (%s %s)', async (type, body) => {
+  const res = await http
+    .put('/api/v1/test/echo/no-es-un-uuid')
+    .set('Authorization', await testAuthHeader())
+    .set('Content-Type', type)
+    .send(body);
+  expect(res.body).toMatchObject({ status: 400, detail: 'La petición está mal formada' });
+});
+
+it('una respuesta que falla con las cabeceras ya enviadas se corta y se registra', async () => {
+  const lines: string[] = [];
+  const spy = vi.spyOn(Logger.prototype, 'error').mockImplementation((...args: unknown[]) => {
+    lines.push(args.map(String).join(' '));
+  });
+  try {
+    const started = Date.now();
+    await expect(authed.get('/api/v1/test/cut').timeout(5_000)).rejects.toThrow('aborted');
+    expect(Date.now() - started).toBeLessThan(2_000);
+    expect(lines.some((line) => line.includes('Error no controlado'))).toBe(true);
+  } finally {
+    spy.mockRestore();
+  }
+  // El proceso sigue atendiendo.
+  await authed.get('/api/v1/no-existe').expect(404);
+});
+
 it('Content-Type no JSON', async () => {
   const res = await authed
     .post('/api/v1/test/echo')

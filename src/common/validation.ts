@@ -7,6 +7,7 @@ import {
 import type { ValidatorOptions } from 'class-validator';
 import { ApiException, type FieldError } from './api-exception.js';
 import { NOT_NULL_ELEMENTS } from './bean-validation.js';
+import { UnreadableBody } from './json-body.js';
 
 export const ACCEPTS_MULTIPART_KEY = 'common:acceptsMultipart';
 
@@ -76,6 +77,12 @@ class SpringValidationPipe extends ValidationPipe {
     // La consulta y la ruta las convierten sus pipes (query-params.ts, UuidPipe) con las reglas de
     // Spring; si este pipe los tocara antes, un parámetro repetido llegaría ya unido con comas.
     if (metadata.type === 'query' || metadata.type === 'param') return value;
+    if (metadata.type === 'body') {
+      // Nest resuelve los parámetros del manejador a la vez y responde con el primer error. Los de la ruta y la
+      // consulta se deciden sin esperar a nada: cediendo el turno, van antes que el cuerpo, como en Spring.
+      if (value instanceof UnreadableBody || !isPlainObject(value)) await new Promise(setImmediate);
+      if (value instanceof UnreadableBody) throw value.error;
+    }
     if (metadata.type === 'body' && this.toValidate(metadata) && !isPlainObject(value)) {
       throw new ApiException(400, 'MALFORMED_REQUEST', MALFORMED_BODY);
     }

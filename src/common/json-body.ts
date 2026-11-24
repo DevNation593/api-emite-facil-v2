@@ -14,6 +14,18 @@ const parseJson = express.json({
 });
 
 /**
+ * Lo que queda en `req.body` cuando el cuerpo no se pudo leer. El error no salta en el middleware sino al
+ * leer el cuerpo (SpringValidationPipe): en Spring, que la ruta exista, el acceso a la empresa y los
+ * parámetros de la ruta se comprueban antes que el `@RequestBody`, y quien no lo declara nunca lo ve.
+ */
+export class UnreadableBody {
+  constructor(readonly error: ApiException) {}
+}
+
+/** Métodos cuyos manejadores de Java nunca declaran `@RequestBody`. */
+const BODYLESS_METHODS = new Set(['GET', 'HEAD', 'DELETE', 'OPTIONS']);
+
+/**
  * Rutas de escritura cuyo manejador en Java no tiene `@RequestBody`: Spring no lee el cuerpo, así que uno
  * ilegible no es un error. Aquí tampoco se lee.
  */
@@ -22,6 +34,7 @@ const BODYLESS_ROUTES: ReadonlyArray<{ method: string; path: RegExp }> = [
 ];
 
 const bodyless = (req: Request) =>
+  BODYLESS_METHODS.has(req.method) ||
   BODYLESS_ROUTES.some((route) => route.method === req.method && route.path.test(req.path));
 
 /**
@@ -46,6 +59,10 @@ export function jsonBodyMiddleware(
     const correlationId = res.getHeader(CORRELATION_ID_HEADER);
     // body-parser deja {} cuando el cuerpo viene vacío; Spring lo trata como cuerpo ausente.
     if (err === undefined && !hasBody(req)) req.body = undefined;
+    if (isUnreadable(err)) {
+      req.body = new UnreadableBody(new ApiException(400, 'MALFORMED_REQUEST', 'El cuerpo de la petición no es JSON válido'));
+      err = undefined;
+    }
     const forward = () => next(err === undefined ? undefined : toApiException(err));
     if (typeof correlationId === 'string') runWithContext({ correlationId }, forward);
     else forward();
@@ -59,15 +76,12 @@ function hasBody(req: Request): boolean {
   );
 }
 
+function isUnreadable(err: unknown): boolean {
+  return (err as { type?: string } | null | undefined)?.type === 'entity.parse.failed';
+}
+
 function toApiException(err: unknown): unknown {
   const type = (err as { type?: string } | null)?.type;
-  if (type === 'entity.parse.failed') {
-    return new ApiException(
-      400,
-      'MALFORMED_REQUEST',
-      'El cuerpo de la petición no es JSON válido',
-    );
-  }
   if (type === 'entity.too.large') {
     return new ApiException(413, 'REQUEST_REJECTED', 'La petición no se pudo procesar');
   }
