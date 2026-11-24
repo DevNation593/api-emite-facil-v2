@@ -26,6 +26,15 @@ export interface SchemaFile {
   readonly contents: string | Uint8Array;
 }
 
+/**
+ * El motor que xmllint-wasm carga en su worker. No se usa aquí: la referencia hace que el empaquetador de
+ * Vercel, que solo copia los archivos que ve en el código, lo incluya en la función.
+ */
+export const XMLLINT_WASM = new URL(
+  '../../node_modules/xmllint-wasm/xmllint.wasm',
+  import.meta.url,
+);
+
 const XMLDSIG_NAME = 'xmldsig-core-schema.xsd';
 /** El DTD que declara xmldsig-core-schema.xsd: su subconjunto interno ya trae lo necesario. */
 const EMPTY_DTD: SchemaFile = { fileName: 'XMLSchema.dtd', contents: '' };
