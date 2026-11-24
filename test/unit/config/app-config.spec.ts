@@ -26,6 +26,58 @@ function messageOf(env: NodeJS.ProcessEnv): string {
   throw new Error('se esperaba un error');
 }
 
+describe('entrega', () => {
+  it('por defecto está apagada, con los plazos de application.yml', () => {
+    expect(loadConfig(base()).delivery).toEqual({
+      email: { enabled: false, from: null },
+      retryBackoffMs: 60_000,
+      retryMaxBackoffMs: 6 * 3_600_000,
+      retryMaxAttempts: 12,
+      sendLeaseMs: 600_000,
+      maxPerDocument: 10,
+    });
+  });
+
+  it.each(['true', 'TRUE', 'on', 'yes', '1'])('DELIVERY_EMAIL_ENABLED=%s la habilita', (value) => {
+    const env = { ...base(), DELIVERY_EMAIL_ENABLED: value, DELIVERY_EMAIL_FROM: 'facturas@plataforma.test' };
+    expect(loadConfig(env).delivery.email).toEqual({ enabled: true, from: 'facturas@plataforma.test' });
+  });
+
+  it.each(['false', 'off', 'no', '0', ''])('DELIVERY_EMAIL_ENABLED=%s la deja apagada', (value) => {
+    expect(loadConfig({ ...base(), DELIVERY_EMAIL_ENABLED: value }).delivery.email.enabled).toBe(false);
+  });
+
+  it('un valor que no es booleano no arranca', () => {
+    expect(messageOf({ ...base(), DELIVERY_EMAIL_ENABLED: 'quizá' })).toBe('DELIVERY_EMAIL_ENABLED debe ser true o false');
+  });
+
+  it.each([undefined, '', 'no-es-un-correo', 'Nombre <a@b.test>'])('habilitada con el remitente %s no arranca', (from) => {
+    const env: NodeJS.ProcessEnv = { ...base(), DELIVERY_EMAIL_ENABLED: 'true' };
+    if (from !== undefined) env.DELIVERY_EMAIL_FROM = from;
+    expect(messageOf(env)).toContain('einvoice.delivery.email.from');
+  });
+
+  it('lee los plazos y los topes', () => {
+    const config = loadConfig({
+      ...base(),
+      EINVOICE_DELIVERY_RETRY_BACKOFF: '1s',
+      EINVOICE_DELIVERY_RETRY_MAX_BACKOFF: '2m',
+      EINVOICE_DELIVERY_RETRY_MAX_ATTEMPTS: '3',
+      EINVOICE_DELIVERY_SEND_LEASE: '30s',
+      EINVOICE_DELIVERY_MAX_PER_DOCUMENT: '4',
+    });
+    expect(config.delivery).toMatchObject({
+      retryBackoffMs: 1_000,
+      retryMaxBackoffMs: 120_000,
+      retryMaxAttempts: 3,
+      sendLeaseMs: 30_000,
+      maxPerDocument: 4,
+    });
+    expect(messageOf({ ...base(), EINVOICE_DELIVERY_SEND_LEASE: 'x' })).toContain('EINVOICE_DELIVERY_SEND_LEASE');
+    expect(messageOf({ ...base(), EINVOICE_DELIVERY_MAX_PER_DOCUMENT: '0' })).toContain('max-per-document');
+  });
+});
+
 describe('loadConfig', () => {
   it('aplica los valores por defecto con un entorno mínimo válido', () => {
     const config = loadConfig(base());

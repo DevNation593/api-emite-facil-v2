@@ -40,6 +40,39 @@ export function isoInstant(utc: string): string {
   return `${seconds}.${shown}Z`;
 }
 
+const ECUADOR_OFFSET_MS = -5 * 3_600_000;
+
+/** Los segundos de un instante UTC de PostgreSQL en la hora de Ecuador continental (-05:00) y su fracción. */
+function inEcuador(utc: string): { seconds: string; fraction: string } {
+  const match = UTC_TIMESTAMP.exec(utc);
+  if (match === null) throw new Error(`No es un instante UTC sin zona: ${utc}`);
+  const [, seconds, fraction = ''] = match;
+  const local = new Date(new Date(`${seconds}Z`).getTime() + ECUADOR_OFFSET_MS);
+  return { seconds: local.toISOString().slice(0, 19), fraction };
+}
+
+/**
+ * El instante (`YYYY-MM-DDTHH:MM:SS.ffffff` en UTC) en hora de Ecuador como ISO_OFFSET_DATE_TIME: los segundos
+ * siempre y la fracción sin ceros finales (`2012-03-05T16:57:34.997-05:00`).
+ */
+export function ecuadorOffsetDateTime(utc: string): string {
+  const { seconds, fraction } = inEcuador(utc);
+  const shown = fraction.replace(/0+$/, '');
+  return `${seconds}${shown === '' ? '' : `.${shown}`}-05:00`;
+}
+
+/** El mismo instante como `dd/MM/yyyy HH:mm:ss` en hora de Ecuador. */
+export function ecuadorDateTime(utc: string): string {
+  const { seconds } = inEcuador(utc);
+  return `${localDateText(seconds.slice(0, 10))} ${seconds.slice(11)}`;
+}
+
+/** Una fecha `YYYY-MM-DD` como `dd/MM/yyyy`. */
+export function localDateText(date: string): string {
+  const [year, month, day] = date.split('-');
+  return `${day}/${month}/${year}`;
+}
+
 /*
  * LocalDate como lo lee y escribe Java: ISO_LOCAL_DATE con ResolverStyle.STRICT y el calendario
  * ISO proléptico, en el rango de LocalDate (años -999999999 a 999999999).
