@@ -94,6 +94,65 @@ export const SEEDED_ATTEMPTS = [
   },
 ];
 
+/**
+ * Los artefactos que `hooks.seedArtifacts` guarda en un comprobante, con contenido de texto fijo: así el
+ * ETag (su SHA-256) y el cuerpo de la descarga son los mismos en Java y en NestJS.
+ */
+export const SEEDED_ARTIFACTS = [
+  { kind: 'XML_UNSIGNED', content: '<factura id="comprobante">sin firmar ñ</factura>' },
+  { kind: 'XML_SIGNED', content: '<factura id="comprobante">firmada ñ</factura>' },
+  { kind: 'SRI_AUTHORIZATION', content: '<RespuestaAutorizacionComprobante/>' },
+  { kind: 'XML_AUTHORIZED', content: '<autorizacion><estado>AUTORIZADO</estado></autorizacion>' },
+  { kind: 'RIDE_PDF', content: '%PDF-1.5 ride de sondeo' },
+];
+
+/**
+ * Las entregas que `hooks.seedDeliveries` inserta, de la más antigua a la más reciente (la API las lista al
+ * revés). `requestedBy: 'owner'` es quien creó el comprobante; nulo, la entrega automática. Los instantes
+ * se conservan como los de `SEEDED_ATTEMPTS`.
+ */
+export const SEEDED_DELIVERIES = [
+  {
+    recipient: 'cliente@example.test',
+    status: 'SENT',
+    attemptCount: 2,
+    lastError: null,
+    createdAt: '2001-02-03T04:05:06.123456Z',
+    sentAt: '2001-02-03T04:06:07.500Z',
+    requestedBy: null,
+  },
+  {
+    recipient: 'otra@example.test',
+    status: 'FAILED',
+    attemptCount: 1,
+    lastError: 'SMTP 550: 550 5.1.1 El buzón no existe',
+    createdAt: '2001-02-03T04:05:07Z',
+    sentAt: null,
+    requestedBy: 'owner',
+  },
+  {
+    recipient: 'pendiente@example.test',
+    status: 'PENDING',
+    attemptCount: 0,
+    lastError: null,
+    createdAt: '2001-02-03T04:05:08.120Z',
+    sentAt: null,
+    requestedBy: 'owner',
+  },
+  {
+    recipient: 'enviando@example.test',
+    status: 'SENDING',
+    attemptCount: 3,
+    lastError: 'Sin respuesta del servidor de correo: ConnectException',
+    createdAt: '2001-02-03T04:05:09.000001Z',
+    sentAt: null,
+    requestedBy: 'owner',
+  },
+];
+
+/** Diez entregas pedidas por el usuario: el tope por comprobante. */
+export const LIMIT_DELIVERIES = Array.from({ length: 10 }, () => ({ ...SEEDED_DELIVERIES[2] }));
+
 /** Los roles de los miembros que el escenario siembra con `hooks.addMember`. */
 const MEMBER_ROLES = ['AUDITOR', 'BILLER'];
 
@@ -159,7 +218,7 @@ async function createWorld(send, auth, { ruc, name, sku }) {
 }
 
 /** Emite la factura de 12.08 (un producto de 10.50 con IVA del 15 %) y devuelve su id. */
-async function issueInvoice(send, world, key) {
+async function issueInvoice(send, world, key, customerId = world.customer.id) {
   // 10.50 con IVA del 15 % (código 4): subtotal 10.50, IVA 1.58 (1.575 redondeado) y total 12.08.
   const issued = await expectJson(
     send,
@@ -171,7 +230,7 @@ async function issueInvoice(send, world, key) {
         taxpayerId: world.taxpayer.id,
         establishmentCode: '001',
         emissionPointCode: '001',
-        customerId: world.customer.id,
+        customerId,
         lines: [{ productId: world.product.id, quantity: '1' }],
         payments: [{ methodCode: '01', amount: INVOICE_TOTAL }],
       },
@@ -194,6 +253,9 @@ async function issueInvoice(send, world, key) {
  * las dos últimas con `hooks.setState`); crea una segunda empresa con su factura (`otherTenantId`,
  * `otherInvoiceId`) y, con `hooks.addMember`, dos miembros de la primera con rol AUDITOR y BILLER
  * (`scenario.actors.auditor` y `.biller`) y una persona sin membresía (`.stranger`).
+ * Con `hooks.seedArtifacts`, añade lo de E5, cuatro facturas autorizadas más: `archivedDocumentId` (con los
+ * artefactos y las entregas sembrados), `bareDocumentId` (sin artefactos ni correo de cliente),
+ * `mailedDocumentId` (de un cliente con correo) y `limitDocumentId` (con el máximo de entregas).
  */
 export async function runScenario(send, hooks) {
   // El día fiscal se fija una vez: con él se rellenan los casos y se normalizan las respuestas.
@@ -246,6 +308,30 @@ export async function runScenario(send, hooks) {
     actors.stranger = { ...stranger.auth, 'x-tenant-id': world.tenant.id };
     scenario.actors = actors;
   }
+  if (hooks?.seedArtifacts !== undefined) {
+    values.archivedDocumentId = await issueInvoice(send, world, 'sondeo-archivada');
+    await hooks.authorize(values.archivedDocumentId);
+    await hooks.seedArtifacts(values.archivedDocumentId);
+    await hooks.seedDeliveries(values.archivedDocumentId, SEEDED_DELIVERIES);
+    values.bareDocumentId = await issueInvoice(send, world, 'sondeo-sin-artefactos');
+    await hooks.authorize(values.bareDocumentId);
+    const mailed = await expectJson(
+      send,
+      'cliente con correo',
+      jsonRequest(
+        'POST',
+        '/api/v1/customers',
+        { idType: '05', idNumber: '1710034065', name: 'Cliente con correo', email: 'cliente@example.test' },
+        world.owner,
+      ),
+      201,
+    );
+    values.mailedDocumentId = await issueInvoice(send, world, 'sondeo-con-correo', mailed.id);
+    await hooks.authorize(values.mailedDocumentId);
+    values.limitDocumentId = await issueInvoice(send, world, 'sondeo-tope', mailed.id);
+    await hooks.authorize(values.limitDocumentId);
+    await hooks.seedDeliveries(values.limitDocumentId, LIMIT_DELIVERIES);
+  }
   return scenario;
 }
 
@@ -295,7 +381,10 @@ export function caseRequest(probe, scenario) {
 const UUID = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/g;
 const TIMESTAMP = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})/g;
 const SEEDED_INSTANTS = new Set(
-  SEEDED_ATTEMPTS.flatMap((attempt) => [attempt.startedAt, attempt.completedAt]).filter((instant) => instant !== null),
+  [
+    ...SEEDED_ATTEMPTS.flatMap((attempt) => [attempt.startedAt, attempt.completedAt]),
+    ...SEEDED_DELIVERIES.flatMap((delivery) => [delivery.createdAt, delivery.sentAt]),
+  ].filter((instant) => instant !== null),
 );
 const ACCESS_KEY = /(?<!\d)\d{49}(?!\d)/g;
 
@@ -382,7 +471,7 @@ export async function runProbes(send, cases, scenario) {
     if (probe.capture !== undefined && res.status >= 200 && res.status < 300 && typeof body?.id === 'string') {
       scenario.values[probe.capture] = body.id;
     }
-    const { name, capture, ...request } = probe;
+    const { name, capture, checkHeaders, ...request } = probe;
     let allow = res.headers.allow ?? null;
     // Spring lista los métodos permitidos de un conjunto cuyo orden cambia entre arranques, en el
     // 405 y en OPTIONS: se comparan ordenados, conservando el separador (", " o ",").
@@ -397,6 +486,10 @@ export async function runProbes(send, cases, scenario) {
       contentType: res.headers['content-type'] ?? null,
       allow,
       body: normalize(body, scenario),
+      // Solo en los casos que lo piden: las cabeceras que fijan (null si la respuesta no la trae).
+      ...(checkHeaders === undefined
+        ? {}
+        : { headers: Object.fromEntries(checkHeaders.map((header) => [header, res.headers[header] ?? null])) }),
     });
   }
   return results;
